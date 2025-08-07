@@ -1,0 +1,855 @@
+'use client'
+
+import React, { useState, useMemo } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Bar, BarChart, Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell } from 'recharts'
+import { CalendarIcon, Download, BarChart2, Table2, Filter, Save, Plus, X } from 'lucide-react'
+import { format, subDays, isWithinInterval, parseISO } from 'date-fns'
+import { DateRange } from 'react-day-picker'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Slider } from "@/components/ui/slider"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Checkbox } from "@/components/ui/checkbox"
+
+const pipelineData = [
+  { date: '2024-10-01', totalFlowRate: 1000, averageFlowrate: 41.67, averageTemp: 50.2, metricTons: 850 },
+  { date: '2024-10-02', totalFlowRate: 1100, averageFlowrate: 45.83, averageTemp: 26.0, metricTons:2000 },
+  { date: '2024-10-03', totalFlowRate: 950, averageFlowrate: 39.58, averageTemp: 25.2, metricTons: 807 },
+  { date: '2024-10-04', totalFlowRate: 1050, averageFlowrate: 43.75, averageTemp: 25.8, metricTons: 892 },
+  { date: '2024-10-05', totalFlowRate: 1200, averageFlowrate: 50.00, averageTemp: 26.5, metricTons: 1020 },
+]
+
+const readingLinesData = [
+  { reading: '08:00', flowMeter1: 500, flowMeter2: 510, flowRate1: 20.83, flowRate2: 21.25 },
+  { reading: '10:00', flowMeter1: 550, flowMeter2: 560, flowRate1: 22.92, flowRate2: 23.33 },
+  { reading: '12:00', flowMeter1: 600, flowMeter2: 590, flowRate1: 25.00, flowRate2: 24.58 },
+  { reading: '14:00', flowMeter1: 575, flowMeter2: 580, flowRate1: 23.96, flowRate2: 24.17 },
+  { reading: '16:00', flowMeter1: 525, flowMeter2: 530, flowRate1: 21.88, flowRate2: 22.08 },
+  { reading: '18:00', flowMeter1: 490, flowMeter2: 500, flowRate1: 20.42, flowRate2: 20.83 },
+  { reading: '20:00', flowMeter1: 460, flowMeter2: 470, flowRate1: 19.17, flowRate2: 19.58 },
+  { reading: '22:00', flowMeter1: 440, flowMeter2: 450, flowRate1: 18.33, flowRate2: 18.75 },
+  { reading: '00:00', flowMeter1: 420, flowMeter2: 430, flowRate1: 17.50, flowRate2: 17.92 },
+  { reading: '02:00', flowMeter1: 400, flowMeter2: 410, flowRate1: 16.67, flowRate2: 17.08 },
+  { reading: '04:00', flowMeter1: 425, flowMeter2: 435, flowRate1: 17.71, flowRate2: 18.13 },
+  { reading: '06:00', flowMeter1: 475, flowMeter2: 485, flowRate1: 19.79, flowRate2: 20.21 },
+]
+
+const analyticsData = [
+  { name: 'Observed Density', value: 0.85 },
+  { name: 'Kg in Air per Litre', value: 0.84 },
+  { name: 'Volume Reduction Factor', value: 0.98 },
+]
+
+const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1']
+
+export default function ReportsPage() {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: subDays(new Date(), 6),
+    to: new Date(),
+  })
+  const [showChart, setShowChart] = useState({
+    pipeline: true,
+    reading: true,
+    metricTons: true,
+    analytics: true,
+    flowRate: true,
+    flowMeter: true,
+  })
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filters, setFilters] = useState({
+    totalFlowRate: [0, 1500],
+    averageFlowrate: [0, 60],
+    averageTemp: [20, 30],
+    metricTons: [0, 1500],
+  })
+  const [selectedMetrics, setSelectedMetrics] = useState(['totalFlowRate', 'averageFlowrate', 'averageTemp', 'metricTons'])
+  const [compareMode, setCompareMode] = useState(false)
+  const [compareDateRange, setCompareDateRange] = useState<DateRange | undefined>()
+
+  const filteredData = useMemo(() => {
+    return pipelineData.filter(item => {
+      const matchesSearch = Object.values(item).some(val => 
+        val.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      const withinDateRange = dateRange?.from && dateRange?.to
+        ? isWithinInterval(parseISO(item.date), { start: dateRange.from, end: dateRange.to })
+        : true
+      const matchesFilters = 
+        item.totalFlowRate >= filters.totalFlowRate[0] && item.totalFlowRate <= filters.totalFlowRate[1] &&
+        item.averageFlowrate >= filters.averageFlowrate[0] && item.averageFlowrate <= filters.averageFlowrate[1] &&
+        item.averageTemp >= filters.averageTemp[0] && item.averageTemp <= filters.averageTemp[1] &&
+        item.metricTons >= filters.metricTons[0] && item.metricTons <= filters.metricTons[1]
+      
+      return matchesSearch && withinDateRange && matchesFilters
+    })
+  }, [pipelineData, searchTerm, dateRange, filters])
+
+  const compareData = useMemo(() => {
+    if (!compareMode || !compareDateRange?.from || !compareDateRange?.to) return []
+    return pipelineData.filter(item => 
+      isWithinInterval(parseISO(item.date), { start: compareDateRange.from, end: compareDateRange.to })
+    )
+  }, [compareMode, compareDateRange])
+
+  const toggleChart = (tab: keyof typeof showChart) => {
+    setShowChart(prev => ({ ...prev, [tab]: !prev[tab] }))
+  }
+
+  const handleExport = (format: 'csv' | 'excel' | 'pdf') => {
+    // Implement export logic here
+    console.log(`Exporting data in ${format} format`)
+  }
+
+  const handleFilterChange = (metric: string, values: number[]) => {
+    setFilters(prev => ({ ...prev, [metric]: values }))
+  }
+
+  const handleMetricToggle = (metric: string) => {
+    setSelectedMetrics(prev => 
+      prev.includes(metric) ? prev.filter(m => m !== metric) : [...prev, metric]
+    )
+  }
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">Reports</h1>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Flow Rate</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">5300</div>
+            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Average Flow Rate</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">44.17</div>
+            <p className="text-xs text-muted-foreground">+15.5% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Metric Tons</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">4504</div>
+            <p className="text-xs text-muted-foreground">+18.2% from last month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Average Temperature</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">25.8°C</div>
+            <p className="text-xs text-muted-foreground">+0.5°C from last month</p>
+          </CardContent>
+        </Card>
+      </div>
+      <Tabs defaultValue="pipeline" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="pipeline">Pipeline Data</TabsTrigger>
+          <TabsTrigger value="reading">Reading Lines</TabsTrigger>
+          <TabsTrigger value="metricTons">Metric Tons</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics Chart</TabsTrigger>
+          <TabsTrigger value="flowRate">FlowRate Graph</TabsTrigger>
+          <TabsTrigger value="flowMeter">FlowMeter Reading</TabsTrigger>
+        </TabsList>
+        <TabsContent value="pipeline" className="space-y-4">
+          <div className="flex justify-between items-center flex-wrap gap-4">
+            <h2 className="text-2xl font-semibold">Pipeline Data Report</h2>
+            <div className="flex items-center space-x-2 flex-wrap gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[300px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? (
+                      dateRange.to ? (
+                        <>
+                          {format(dateRange.from, "LLL dd, y")} -{" "}
+                          {format(dateRange.to, "LLL dd, y")}
+                        </>
+                      ) : (
+                        format(dateRange.from, "LLL dd, y")
+                      )
+                    ) : (
+                      <span>Pick a date range</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={dateRange?.from}
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select report type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">Daily</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex items-center space-x-2">
+                <Switch id="chart-mode-pipeline" checked={showChart.pipeline} onCheckedChange={() => toggleChart('pipeline')} />
+                <Label htmlFor="chart-mode-pipeline">{showChart.pipeline ? <BarChart2 className="h-4 w-4" /> : <Table2 className="h-4 w-4" />}</Label>
+              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <Filter className="mr-2 h-4 w-4" />
+                    Filters
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Advanced Filters</DialogTitle>
+                    <DialogDescription>Set filters for pipeline data</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    {Object.entries(filters).map(([metric, values]) => (
+                      <div key={metric} className="space-y-2">
+                        <Label>{metric}</Label>
+                        <Slider
+                          min={0}
+                          max={metric === 'averageTemp' ? 40 : 2000}
+                          step={1}
+                          value={values}
+                          onValueChange={(newValues) => handleFilterChange(metric, newValues)}
+                        />
+                        <div className="flex justify-between text-sm text-muted-foreground">
+                          <span>{values[0]}</span>
+                          
+                          <span>{values[1]}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <Save className="mr-2 h-4 w-4" />
+                    Export
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Export Data</DialogTitle>
+                    <DialogDescription>Choose a format to export the data</DialogDescription>
+                  </DialogHeader>
+                  <div className="flex justify-center space-x-4">
+                    <Button onClick={() => handleExport('csv')}>CSV</Button>
+                    <Button onClick={() => handleExport('excel')}>Excel</Button>
+                    <Button onClick={() => handleExport('pdf')}>PDF</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Customize
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Customize Dashboard</DialogTitle>
+                    <DialogDescription>Select metrics to display</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-2">
+                    {Object.keys(filters).map((metric) => (
+                      <div key={metric} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={metric}
+                          checked={selectedMetrics.includes(metric)}
+                          onCheckedChange={() => handleMetricToggle(metric)}
+                        />
+                        <Label htmlFor={metric}>{metric}</Label>
+                      </div>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button variant="outline" onClick={() => setCompareMode(!compareMode)}>
+                {compareMode ? <X className="mr-2 h-4 w-4" /> : <Plus className="mr-2 h-4 w-4" />}
+                {compareMode ? 'Cancel Compare' : 'Compare'}
+              </Button>
+            </div>
+          </div>
+          {compareMode && (
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">Comparison Date Range</h3>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[300px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {compareDateRange?.from ? (
+                      compareDateRange.to ? (
+                        <>
+                          {format(compareDateRange.from, "LLL dd, y")} -{" "}
+                          {format(compareDateRange.to, "LLL dd, y")}
+                        </>
+                      ) : (
+                        format(compareDateRange.from, "LLL dd, y")
+                      )
+                    ) : (
+                      <span>Pick a date range for comparison</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={compareDateRange?.from}
+                    selected={compareDateRange}
+                    onSelect={setCompareDateRange}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+          <Card>
+            <CardHeader>
+              <CardTitle>Flow Rate Overview</CardTitle>
+              <CardDescription>Daily total and average flow rates</CardDescription>
+              <Input
+                placeholder="Search data..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="max-w-sm"
+              />
+            </CardHeader>
+            <CardContent className="pl-2">
+              {showChart.pipeline ? (
+                <ChartContainer config={{
+                  totalFlowRate: {
+                    label: "Total Flow Rate",
+                    color: "hsl(var(--chart-1))",
+                  },
+                  averageFlowrate: {
+                    label: "Average Flow Rate",
+                    color: "hsl(var(--chart-2))",
+                  },
+                }} className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis yAxisId="left" />
+                      <YAxis yAxisId="right" orientation="right" />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend />
+                      <Line yAxisId="left" type="monotone" dataKey="totalFlowRate" stroke="var(--color-totalFlowRate)" name="Total Flow Rate" data={filteredData} />
+                      <Line yAxisId="right" type="monotone" dataKey="averageFlowrate" stroke="var(--color-averageFlowrate)" name="Average Flow Rate" data={filteredData} />
+                      {compareMode && compareData.length > 0 && (
+                        <>
+                          <Line yAxisId="left" type="monotone" dataKey="totalFlowRate" stroke="var(--color-compare-totalFlowRate)" name="Compare Total Flow Rate" data={compareData} />
+                          <Line yAxisId="right" type="monotone" dataKey="averageFlowrate" stroke="var(--color-compare-averageFlowrate)" name="Compare Average Flow Rate" data={compareData} />
+                        </>
+                      )}
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date</TableHead>
+                        {selectedMetrics.includes('totalFlowRate') && <TableHead>Total Flow Rate</TableHead>}
+                        {selectedMetrics.includes('averageFlowrate') && <TableHead>Average Flow Rate</TableHead>}
+                        {selectedMetrics.includes('averageTemp') && <TableHead>Average Temperature</TableHead>}
+                        {selectedMetrics.includes('metricTons') && <TableHead>Metric Tons</TableHead>}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.date}</TableCell>
+                          {selectedMetrics.includes('totalFlowRate') && <TableCell>{item.totalFlowRate}</TableCell>}
+                          {selectedMetrics.includes('averageFlowrate') && <TableCell>{item.averageFlowrate}</TableCell>}
+                          {selectedMetrics.includes('averageTemp') && <TableCell>{item.averageTemp}</TableCell>}
+                          {selectedMetrics.includes('metricTons') && <TableCell>{item.metricTons}</TableCell>}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="reading" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">Reading Lines Report</h2>
+            <div className="flex items-center space-x-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? format(dateRange.from, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateRange?.from}
+                    onSelect={(date) => setDateRange(date ? { from: date, to: date } : undefined)}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <Select>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select line" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Lines</SelectItem>
+                  <SelectItem value="line1">Line 1</SelectItem>
+                  <SelectItem value="line2">Line 2</SelectItem>
+                </SelectContent>
+              </Select>
+              <div className="flex items-center space-x-2">
+                <Switch id="chart-mode-reading" checked={showChart.reading} onCheckedChange={() => toggleChart('reading')} />
+                <Label htmlFor="chart-mode-reading">{showChart.reading ? <BarChart2 className="h-4 w-4" /> : <Table2 className="h-4 w-4" />}</Label>
+              </div>
+              <Button>
+                <Download className="mr-2 h-4 w-4" /> Export
+              </Button>
+            </div>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Flow Meter Readings</CardTitle>
+              <CardDescription>Hourly flow meter readings and rates</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              {showChart.reading ? (
+                <ChartContainer config={{
+                  flowMeter1: {
+                    label: "Flow Meter 1",
+                    color: "hsl(var(--chart-1))",
+                  },
+                  flowMeter2: {
+                    label: "Flow Meter 2",
+                    color: "hsl(var(--chart-2))",
+                  },
+                  flowRate1: {
+                    label: "Flow Rate 1",
+                    color: "hsl(var(--chart-3))",
+                  },
+                  flowRate2: {
+                    label: "Flow Rate 2",
+                    color: "hsl(var(--chart-4))",
+                  },
+                }} className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={readingLinesData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="reading" />
+                      <YAxis yAxisId="left" />
+                      <YAxis yAxisId="right" orientation="right" />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend />
+                      <Bar yAxisId="left" dataKey="flowMeter1" fill="var(--color-flowMeter1)" name="Flow Meter 1" />
+                      <Bar yAxisId="left" dataKey="flowMeter2" fill="var(--color-flowMeter2)" name="Flow Meter 2" />
+                      <Bar yAxisId="right" dataKey="flowRate1" fill="var(--color-flowRate1)" name="Flow Rate 1" />
+                      <Bar yAxisId="right" dataKey="flowRate2" fill="var(--color-flowRate2)" name="Flow Rate 2" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Reading</TableHead>
+                        <TableHead>Flow Meter 1</TableHead>
+                        <TableHead>Flow Meter 2</TableHead>
+                        <TableHead>Flow Rate 1</TableHead>
+                        <TableHead>Flow Rate 2</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {readingLinesData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.reading}</TableCell>
+                          <TableCell>{item.flowMeter1}</TableCell>
+                          <TableCell>{item.flowMeter2}</TableCell>
+                          <TableCell>{item.flowRate1}</TableCell>
+                          <TableCell>{item.flowRate2}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="metricTons" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">Metric Tons Report</h2>
+            <div className="flex items-center space-x-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? format(dateRange.from, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateRange?.from}
+                    onSelect={(date) => setDateRange(date ? { from: date, to: date } : undefined)}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <div className="flex items-center space-x-2">
+                <Switch id="chart-mode-metricTons" checked={showChart.metricTons} onCheckedChange={() => toggleChart('metricTons')} />
+                <Label htmlFor="chart-mode-metricTons">{showChart.metricTons ? <BarChart2 className="h-4 w-4" /> : <Table2 className="h-4 w-4" />}</Label>
+              </div>
+              <Button>
+                <Download className="mr-2 h-4 w-4" /> Export
+              </Button>
+            </div>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Daily Metric Tons</CardTitle>
+              <CardDescription>Metric tons transported per day</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              {showChart.metricTons ? (
+                <ChartContainer config={{
+                  metricTons: {
+                    label: "Metric Tons",
+                    color: "hsl(var(--chart-1))",
+                  },
+                }} className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={pipelineData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend />
+                      <Area type="monotone" dataKey="metricTons" stroke="var(--color-metricTons)" fill="var(--color-metricTons)" fillOpacity={0.3} name="Metric Tons" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Metric Tons</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {pipelineData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.date}</TableCell>
+                          <TableCell>{item.metricTons}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">Analytics Chart</h2>
+            <div className="flex items-center space-x-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? format(dateRange.from, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateRange?.from}
+                    onSelect={(date) => setDateRange(date ? { from: date, to: date } : undefined)}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <div className="flex items-center space-x-2">
+                <Switch id="chart-mode-analytics" checked={showChart.analytics} onCheckedChange={() => toggleChart('analytics')} />
+                <Label htmlFor="chart-mode-analytics">{showChart.analytics ? <BarChart2 className="h-4 w-4" /> : <Table2 className="h-4 w-4" />}</Label>
+              </div>
+              <Button>
+                <Download className="mr-2 h-4 w-4" /> Export
+              </Button>
+            </div>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Oil Properties Analysis</CardTitle>
+              <CardDescription>Distribution of observed density, kg in air per litre, and volume reduction factor</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              {showChart.analytics ? (
+                <ChartContainer config={{
+                  obsDensity: {
+                    label: "Observed Density",
+                    color: COLORS[0],
+                  },
+                  kgInAirPerLitre: {
+                    label: "Kg in Air per Litre",
+                    color: COLORS[1],
+                  },
+                  volumeReductionFactor: {
+                    label: "Volume Reduction Factor",
+                    color: COLORS[2],
+                  },
+                }} className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={analyticsData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      >
+                        {analyticsData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Property</TableHead>
+                        <TableHead>Value</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {analyticsData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.name}</TableCell>
+                          <TableCell>{item.value}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="flowRate" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">FlowRate Graph</h2>
+            <div className="flex items-center space-x-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? format(dateRange.from, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateRange?.from}
+                    onSelect={(date) => setDateRange(date ? { from: date, to: date } : undefined)}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <div className="flex items-center space-x-2">
+                <Switch id="chart-mode-flowRate" checked={showChart.flowRate} onCheckedChange={() => toggleChart('flowRate')} />
+                <Label htmlFor="chart-mode-flowRate">{showChart.flowRate ? <BarChart2 className="h-4 w-4" /> : <Table2 className="h-4 w-4" />}</Label>
+              </div>
+              <Button>
+                <Download className="mr-2 h-4 w-4" /> Export
+              </Button>
+            </div>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Flow Rate Comparison</CardTitle>
+              <CardDescription>Hourly flow rates for different lines</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              {showChart.flowRate ? (
+                <ChartContainer config={{
+                  flowRate1: {
+                    label: "Flow Rate 1",
+                    color: "hsl(var(--chart-1))",
+                  },
+                  flowRate2: {
+                    label: "Flow Rate 2",
+                    color: "hsl(var(--chart-2))",
+                  },
+                }} className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={readingLinesData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="reading" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend />
+                      <Line type="monotone" dataKey="flowRate1" stroke="var(--color-flowRate1)" name="Flow Rate 1" />
+                      <Line type="monotone" dataKey="flowRate2" stroke="var(--color-flowRate2)" name="Flow Rate 2" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Reading</TableHead>
+                        <TableHead>Flow Rate 1</TableHead>
+                        <TableHead>Flow Rate 2</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {readingLinesData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.reading}</TableCell>
+                          <TableCell>{item.flowRate1}</TableCell>
+                          <TableCell>{item.flowRate2}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="flowMeter" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-semibold">FlowMeter Reading</h2>
+            <div className="flex items-center space-x-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? format(dateRange.from, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateRange?.from}
+                    onSelect={(date) => setDateRange(date ? { from: date, to: date } : undefined)}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <div className="flex items-center space-x-2">
+                <Switch id="chart-mode-flowMeter" checked={showChart.flowMeter} onCheckedChange={() => toggleChart('flowMeter')} />
+                <Label htmlFor="chart-mode-flowMeter">{showChart.flowMeter ? <BarChart2 className="h-4 w-4" /> : <Table2 className="h-4 w-4" />}</Label>
+              </div>
+              <Button>
+                <Download className="mr-2 h-4 w-4" /> Export
+              </Button>
+            </div>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Flow Meter Readings</CardTitle>
+              <CardDescription>Hourly flow meter readings for different lines</CardDescription>
+            </CardHeader>
+            <CardContent className="pl-2">
+              {showChart.flowMeter ? (
+                <ChartContainer config={{
+                  flowMeter1: {
+                    label: "Flow Meter 1",
+                    color: "hsl(var(--chart-1))",
+                  },
+                  flowMeter2: {
+                    label: "Flow Meter 2",
+                    color: "hsl(var(--chart-2))",
+                  },
+                }} className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={readingLinesData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="reading" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Legend />
+                      <Line type="monotone" dataKey="flowMeter1" stroke="var(--color-flowMeter1)" name="Flow Meter 1" />
+                      <Line type="monotone" dataKey="flowMeter2" stroke="var(--color-flowMeter2)" name="Flow Meter 2" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              ) : (
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Reading</TableHead>
+                        <TableHead>Flow Meter 1</TableHead>
+                        <TableHead>Flow Meter 2</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {readingLinesData.map((item, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{item.reading}</TableCell>
+                          <TableCell>{item.flowMeter1}</TableCell>
+                          <TableCell>{item.flowMeter2}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}

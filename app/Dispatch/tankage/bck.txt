@@ -1,0 +1,815 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Calendar, Download, LineChart, RefreshCcw, Filter, Search, Plus, Edit, Database, AlertCircle, AlertTriangle, Mail } from "lucide-react"
+import { Progress } from "@/components/ui/progress"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { TankVisualization } from "@/components/tank-visualization"
+import { AddTankDataModal } from "@/components/add-tank-data-modal"
+import { AddNewTankModal } from "@/components/add-new-tank-modal"
+import { AddTankageRecordModal } from "@/components/add-tankage-record-modal"
+import { TankDetailsModal } from "@/components/tank-details-modal"
+import { TankHistoryModal } from "@/components/tank-history-modal"
+import { useToast } from "@/hooks/use-toast"
+import { cn } from "@/lib/utils"
+import { DashboardHeader } from "@/components/dashboard-header"
+import { DashboardShell } from "@/components/dashboard-shell"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import axios from "axios"
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { useSession } from "next-auth/react"
+
+// API functions for tankage data
+const fetchTankageData = async (days: number) => {
+  const response = await axios.get(`/api/tankage?days=${days}`);
+  return response.data.tankageData;
+}
+
+const addTankageRecord = async (newRecord: any) => {
+  const response = await axios.post('/api/tankage', newRecord);
+  return response.data.record;
+}
+
+const updateTankData = async (updatedData: any) => {
+  const response = await axios.put('/api/tankage', updatedData);
+  return response.data.record;
+}
+
+export default function TankagePage() {
+  const [activeTab, setActiveTab] = useState("overview")
+  const [dateRange, setDateRange] = useState("30")
+  const [showRealTimeData, setShowRealTimeData] = useState(true)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [tankFilter, setTankFilter] = useState("all")
+  const [levelRange, setLevelRange] = useState([0, 100])
+  const {data: session} = useSession()
+  const [isLoadings, setIsLoading] = useState(true)
+  const [hasPermission,setHasPermission] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(true);
+
+
+  // State for managing the modals
+  const [isAddDataModalOpen, setIsAddDataModalOpen] = useState(false)
+  const [isAddNewTankModalOpen, setIsAddNewTankModalOpen] = useState(false)
+  const [isAddTankageRecordModalOpen, setIsAddTankageRecordModalOpen] = useState(false)
+  const [isTankDetailsModalOpen, setIsTankDetailsModalOpen] = useState(false)
+  const [isTankHistoryModalOpen, setIsTankHistoryModalOpen] = useState(false)
+  const [selectedTank, setSelectedTank] = useState<any>(null)
+
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+
+  // Fetch tankage data using React Query
+  const {
+    data: tankageApiData,
+    isLoading,
+    isError,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: ['tankageData', dateRange],
+    queryFn: async () => {
+      const response = await axios.get(`/api/tankage?days=${dateRange}`);
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+
+  // Extract tankageHistory and tanks from API response
+  const tankageHistory = tankageApiData?.tankageData || [];
+  const tanks = tankageApiData?.tanks || [];
+
+  // Current tank data (most recent entry)
+  const currentTankData = tankageHistory && tankageHistory.length > 0
+    ? tankageHistory[tankageHistory.length - 1]
+    : (tanks.reduce((acc: any, tank: any) => {
+        acc[tank.id] = 0;
+        return acc;
+      }, { date: new Date().toISOString() }) as any);
+
+  // Tank metadata (dynamic)
+  // const [tankMetadata, setTankMetadata] = useState<any[]>([]);
+
+  // Update tankMetadata when tanks change
+  // useEffect(() => {
+  //   if (tanks && Array.isArray(tanks)) {
+  //     setTankMetadata(tanks);
+  //   }
+  // }, [tanks]);
+
+
+  //Check user permission
+  useEffect(()=>{
+
+    const checkPermission = async () => {
+     try {
+       const response = await fetch("/api/auth/check-permission", {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify({
+           permission: "tankage.view"
+         })
+       })
+ 
+       if (!response.ok) {
+         throw new Error("Failed to check permission")
+       }
+ 
+       const data = await response.json()
+       console.log("Permission check response:", data)
+       setHasPermission(data.hasPermission)
+     } catch (error) {
+       console.error("Error checking permission:", error)
+       setHasPermission(false)
+     } finally {
+       setIsLoading(false)
+     }
+   }
+ 
+   checkPermission()
+ 
+   },[session])
+ 
+ 
+  //ENd of chcek user permission
+
+
+
+
+
+
+  // Mutation for adding a tankage record
+  const addTankageRecordMutation = useMutation({
+    mutationFn: addTankageRecord,
+    onSuccess: () => {
+      // Invalidate and refetch the tankage data query
+      queryClient.invalidateQueries({ queryKey: ['tankageData'] });
+
+      toast({
+        title: "Tankage Record Added",
+        description: "New tankage data record has been added successfully.",
+      });
+
+      setIsAddTankageRecordModalOpen(false);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: `Failed to add tankage record: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Handle adding a complete tankage record
+  const handleAddTankageRecord = (newRecord: any) => {
+    // Create a new record with the provided date and tank levels
+    const newTankageRecord = {
+      date: new Date(newRecord.date).toISOString(),
+      T1: newRecord.T1,
+      T2: newRecord.T2,
+      T3: newRecord.T3,
+      T4: newRecord.T4,
+      T5: newRecord.T5,
+      T6: newRecord.T6,
+    };
+
+    // Call the mutation
+    addTankageRecordMutation.mutate(newTankageRecord);
+  }
+
+  // Function to get color based on tank level
+  const getLevelColor = (level: number) => {
+    if (level > 90) return "bg-red-500"
+    if (level > 75) return "bg-amber-500"
+    if (level > 50) return "bg-green-500"
+    if (level > 25) return "bg-blue-500"
+    return "bg-slate-500"
+  }
+
+  // Filter tanks based on search term, tank filter, and level range
+  const filteredTanks = tanks.filter((tank) => {
+    const matchesSearch =
+      tank.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tank.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tank.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tank.location.toLowerCase().includes(searchTerm.toLowerCase())
+
+    const matchesFilter = tankFilter === "all" || tank.id === tankFilter
+
+    // Get the current level for this tank
+    const level = currentTankData[tank.id as keyof typeof currentTankData] as number
+
+    // Check if the level is within the selected range
+    const matchesLevelRange = level >= levelRange[0] && level <= levelRange[1]
+
+    return matchesSearch && matchesFilter && matchesLevelRange
+  })
+
+  // Handle refresh data
+  const handleRefreshData = async () => {
+    toast({
+      title: "Refreshing Data",
+      description: "Fetching the latest tank data...",
+    });
+
+    try {
+      await refetch();
+      toast({
+        title: "Data Refreshed",
+        description: "Tank data has been updated with the latest information.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: `Failed to refresh data: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  }
+
+  // Mutation for updating tank data
+  const updateTankDataMutation = useMutation({
+    mutationFn: updateTankData,
+    onSuccess: () => {
+      // Invalidate and refetch the tankage data query
+      queryClient.invalidateQueries({ queryKey: ['tankageData'] });
+
+      toast({
+        title: "Tank Data Updated",
+        description: "Tank level has been updated successfully.",
+      });
+
+      setIsAddDataModalOpen(false);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: `Failed to update tank data: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+
+  // Function to handle updating tank data (levels)
+  const handleAddTankData = (newData: any) => {
+    if (!tankageHistory || tankageHistory.length === 0) return;
+
+    // Get the latest entry
+    const latestEntry = { ...tankageHistory[tankageHistory.length - 1] };
+
+    // Update the specific tank level
+    latestEntry[newData.tankId as keyof typeof latestEntry] = newData.level;
+
+    // Call the mutation
+    updateTankDataMutation.mutate(latestEntry);
+  }
+
+  // Mutation for adding a new tank
+  const addNewTankMutation = useMutation({
+    mutationFn: async (newTank: any) => {
+      // In a real application, this would be an API call to add a new tank
+      // For now, we'll just return the new tank data
+      const newId = `T${tanks.length + 1}`;
+      const newTankWithId = {
+        ...newTank,
+        id: newId,
+        lastInspection: new Date().toISOString().split("T")[0],
+      };
+      return newTankWithId;
+    },
+    onSuccess: (newTankWithId) => {
+      // Update the tank metadata
+      // setTankMetadata([...tankMetadata, newTankWithId]); // This line is removed
+
+      // Invalidate and refetch the tankage data query
+      // In a real application, the API would handle adding the new tank to all history records
+      queryClient.invalidateQueries({ queryKey: ['tankageData'] });
+
+      toast({
+        title: "New Tank Added",
+        description: `${newTankWithId.name} has been added successfully.`,
+      });
+
+      setIsAddNewTankModalOpen(false);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: `Failed to add new tank: ${error.message}`,
+        variant: "destructive",
+      });
+    }
+  });
+
+  const handleAddNewTank = (newTank: any) => {
+    addNewTankMutation.mutate(newTank);
+  }
+
+
+  //If user has no permission,display a message
+  // if (!hasPermission) {
+  //   return (
+  //     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+  //       <AlertDialogContent
+  //         className="border-2 border-yellow-400 bg-yellow-50 rounded-2xl shadow-xl animate-fadeIn"
+  //         aria-label="Permission Warning Dialog"
+  //       >
+  //         <AlertDialogHeader>
+  //           <div className="flex items-center gap-3 mb-2">
+  //             <AlertTriangle className="text-yellow-500 w-10 h-10 animate-pulse" />
+  //             <AlertDialogTitle className="text-yellow-800 text-2xl font-extrabold">Not Permitted</AlertDialogTitle>
+  //           </div>
+  //           <div className="font-bold text-yellow-700 mb-1">Access Denied</div>
+  //           <AlertDialogDescription className="text-yellow-900">
+  //             You do not have permission to view this page. Please contact your administrator if you believe this is an error.
+  //           </AlertDialogDescription>
+  //           <div className="mt-2 text-sm text-yellow-700 bg-yellow-100 rounded p-2">
+  //             <span className="font-semibold">Why am I seeing this?</span> <br />
+  //             For your security and to protect sensitive data, access to this page is restricted to authorized users only. If you need access, please reach out to your administrator.
+  //           </div>
+  //         </AlertDialogHeader>
+  //         <AlertDialogFooter>
+  //           <a
+  //             href="mailto:Czulu@tazama.co.zm?subject=Access%20Request%20-%20Tankage%20Page"
+  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-600 transition-colors"
+  //             aria-label="Contact Administrator"
+  //           >
+  //             <Mail className="w-5 h-5" /> Contact Admin
+  //           </a>
+  //           <AlertDialogCancel className="ml-2">Close</AlertDialogCancel>
+  //         </AlertDialogFooter>
+  //       </AlertDialogContent>
+  //     </AlertDialog>
+  //   )
+  // }
+
+  return (
+    <div className="flex min-h-screen flex-col bg-muted/30">
+      {/*<DashboardHeader />*/}
+      <DashboardShell>
+        <>
+          {/* Top content: Filters and Summary */}
+          <div className="w-full flex flex-col md:flex-row gap-4 md:gap-6 mb-6">
+            <Card className="border-none shadow-sm flex-1 min-w-0">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium">Filters</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="tank-search">Search</Label>
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="tank-search"
+                      placeholder="Search tanks..."
+                      className="pl-8"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tank-filter">Tank</Label>
+                  <Select value={tankFilter} onValueChange={setTankFilter}>
+                    <SelectTrigger id="tank-filter">
+                      <SelectValue placeholder="Select tank" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Tanks</SelectItem>
+                      {tanks.map((tank) => (
+                        <SelectItem key={tank.id} value={tank.id}>
+                          {tank.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Level Range</Label>
+                  <Slider
+                    value={levelRange}
+                    onValueChange={setLevelRange}
+                    max={100}
+                    step={1}
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>{levelRange[0]}%</span>
+                    <span>{levelRange[1]}%</span>
+                  </div>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setTankFilter("all");
+                    setLevelRange([0, 100]);
+                  }}
+                >
+                  <Filter className="mr-2 h-4 w-4" />
+                  Reset Filters
+                </Button>
+
+                <div className="pt-4 border-t">
+                  <h3 className="text-sm font-medium mb-3">Data Management</h3>
+
+                  <div className="space-y-2">
+                    {/*<Button size="sm" className="w-full" onClick={() => setIsAddTankageRecordModalOpen(true)}>*/}
+                    {/*  <Database className="mr-2 h-4 w-4" />*/}
+                    {/*  Add Tankage Record*/}
+                    {/*</Button>*/}
+
+                    <Button size="sm" className="w-full" onClick={() => setIsAddDataModalOpen(true)}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      Update Tank Level
+                    </Button>
+
+                    {/*<Button size="sm" className="w-full" onClick={() => setIsAddNewTankModalOpen(true)}>*/}
+                    {/*  <Plus className="mr-2 h-4 w-4" />*/}
+                    {/*  Add New Tank*/}
+                    {/*</Button>*/}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-none shadow-sm flex-1 min-w-0">
+              <CardHeader >
+                <CardTitle className="text-sm font-medium">Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {isLoading ? (
+                  <div className="py-2 flex items-center justify-center">
+                    <RefreshCcw className="h-4 w-4 animate-spin mr-2" />
+                    <span className="text-sm text-muted-foreground">Loading summary...</span>
+                  </div>
+                ) : isError ? (
+                  <div className="py-2 flex items-center justify-center">
+                    <AlertCircle className="h-4 w-4 text-red-500 mr-2" />
+                    <span className="text-sm text-red-500">Failed to load data</span>
+                  </div>
+                ) : (
+                  <>
+                    {(() => {
+                      // Calculate summary values
+                      const totalCapacity = tanks.reduce((sum: number, tank: any) => sum + tank.capacity, 0);
+
+                      let currentUsage = 0;
+                      let criticalTanksCount = 0;
+
+                      tanks.forEach(tank => {
+                        const level = currentTankData[tank.id as keyof typeof currentTankData] as number;
+                        currentUsage += (tank.capacity * level) / 100;
+                        if (level > 90) criticalTanksCount++;
+                      });
+
+                      const currentUsageRounded = Math.round(currentUsage);
+                      const usagePercentage = Math.round((currentUsageRounded / totalCapacity) * 100);
+                      const availableSpace = totalCapacity - currentUsageRounded;
+                      const availablePercentage = 100 - usagePercentage;
+
+                      return (
+                        <>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-muted-foreground">Total Capacity:</span>
+                            <span className="font-medium">{totalCapacity.toLocaleString()} MT</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-muted-foreground">Current Usage:</span>
+                            <span className="font-medium">{currentUsageRounded.toLocaleString()} MT ({usagePercentage}%)</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-muted-foreground">Available Space:</span>
+                            <span className="font-medium">{availableSpace.toLocaleString()} MT ({availablePercentage}%)</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-muted-foreground">Critical Tanks:</span>
+                            <span className="font-medium text-red-500">{criticalTanksCount}</span>
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          <div className="md:col-span-2 lg:col-span-3 space-y-4 md:space-y-6">
+            <Tabs defaultValue="overview" className="space-y-4 md:space-y-6 mt-0" onValueChange={setActiveTab} value={activeTab}>
+              <div className="bg-background  top-16 z-30 pb-3 pt-1 -mx-1 px-1">
+                <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
+                  <TabsTrigger value="overview" className="relative text-xs sm:text-sm">
+                    Overview
+                    {activeTab === "overview" && (
+                      <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="history" className="relative text-xs sm:text-sm">
+                    History
+                    {activeTab === "history" && (
+                      <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="visualization" className="relative text-xs sm:text-sm">
+                    3D View
+                    {activeTab === "visualization" && (
+                      <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="analytics" className="relative text-xs sm:text-sm">
+                    Analytics
+                    {activeTab === "analytics" && (
+                      <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                    )}
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="overview" className="space-y-4 md:space-y-6 mt-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+                  {isLoading ? (
+                    <div className="col-span-full flex flex-col items-center justify-center h-40">
+                      <RefreshCcw className="h-10 w-10 text-primary animate-spin mb-4" />
+                      <p className="text-muted-foreground">Loading tank data...</p>
+                    </div>
+                  ) : isError ? (
+                    <div className="col-span-full flex flex-col items-center justify-center h-40">
+                      <AlertCircle className="h-10 w-10 text-red-500 mb-4" />
+                      <p className="text-red-500 mb-2">Failed to load tank data</p>
+                      <Button variant="outline" onClick={() => refetch()}>
+                        Try Again
+                      </Button>
+                    </div>
+                  ) : filteredTanks.length === 0 ? (
+                    <div className="col-span-full flex flex-col items-center justify-center h-40 text-muted-foreground">
+                      <div className="h-10 w-10 rounded-full border-2 border-muted mb-2 flex items-center justify-center">
+                        <Search className="h-5 w-5" />
+                      </div>
+                      <p>No tanks match your search criteria</p>
+                      <Button
+                        variant="link"
+                        className="mt-2"
+                        onClick={() => {
+                          setSearchTerm("")
+                          setTankFilter("all")
+                          setLevelRange([0, 100])
+                        }}
+                      >
+                        Reset filters
+                      </Button>
+                    </div>
+                  ) : (
+                    filteredTanks.map((tank) => {
+                      const level = currentTankData[tank.id as keyof typeof currentTankData] as number
+                      const currentVolume = ((tank.capacity * level) / 100).toFixed(0)
+
+                      return (
+                        <Card
+                          key={tank.id}
+                          className={cn(
+                            "overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow",
+                            level > 90 ? "ring-1 ring-red-500 dark:ring-red-800" : "",
+                          )}
+                        >
+                          <CardHeader
+                            className={cn(
+                              "pb-2",
+                              level > 90
+                                ? "bg-red-50/50 dark:bg-red-950/20"
+                                : level > 75
+                                  ? "bg-amber-50/50 dark:bg-amber-950/20"
+                                  : "bg-muted/30",
+                            )}
+                          >
+                            <div className="flex items-center justify-between">
+                              <CardTitle className="text-base">{tank.name}</CardTitle>
+                              <div
+                                className={cn(
+                                  "px-2 py-1 rounded-full text-xs font-medium",
+                                  level > 90
+                                    ? "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300"
+                                    : level > 75
+                                      ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
+                                      : "bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300",
+                                )}
+                              >
+                                {level}%
+                              </div>
+                            </div>
+                            <CardDescription className="flex justify-between">
+                              <span>{tank.product}</span>
+                              <span>{tank.location}</span>
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="p-4">
+                            <Progress
+                              value={level}
+                              className={`h-4 ${level > 90 ? "animate-pulse" : ""}`}
+                              indicatorClassName={getLevelColor(level)}
+                            />
+                            <div className="mt-2 flex items-center justify-between text-sm">
+                              <span className="text-muted-foreground">Capacity: {tank.capacity} MT</span>
+                              <span className="font-medium">{currentVolume} MT</span>
+                            </div>
+                            <div className="mt-4 flex justify-between">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedTank(tank);
+                                  setIsTankDetailsModalOpen(true);
+                                }}
+                              >
+                                Details
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedTank(tank);
+                                  setIsTankHistoryModalOpen(true);
+                                }}
+                              >
+                                History
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )
+                    })
+                  )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="history" className="space-y-4 md:space-y-6 mt-0">
+                <Card className="border-none shadow-sm">
+                  <CardHeader className="pb-2 md:pb-4">
+                    <CardTitle>Tank Level History</CardTitle>
+                    <CardDescription>Historical tank level data for the past {dateRange} days</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-0 md:p-6">
+                    <ScrollArea className="h-[400px] md:h-[500px]">
+                      <div className="rounded-md border overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="w-[100px] md:w-[120px] text-xs md:text-sm">Date</TableHead>
+                              <TableHead className="text-xs md:text-sm">T1 (%)</TableHead>
+                              <TableHead className="text-xs md:text-sm">T2 (%)</TableHead>
+                              <TableHead className="text-xs md:text-sm">T3 (%)</TableHead>
+                              <TableHead className="hidden sm:table-cell text-xs md:text-sm">T4 (%)</TableHead>
+                              <TableHead className="hidden md:table-cell text-xs md:text-sm">T5 (%)</TableHead>
+                              <TableHead className="hidden md:table-cell text-xs md:text-sm">T6 (%)</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {isLoading ? (
+                              <TableRow>
+                                <TableCell colSpan={7} className="h-24 text-center">
+                                  <RefreshCcw className="h-5 w-5 animate-spin mx-auto mb-2" />
+                                  <p className="text-muted-foreground">Loading data...</p>
+                                </TableCell>
+                              </TableRow>
+                            ) : isError ? (
+                              <TableRow>
+                                <TableCell colSpan={7} className="h-24 text-center">
+                                  <AlertCircle className="h-5 w-5 mx-auto mb-2 text-red-500" />
+                                  <p className="text-red-500 mb-2">Failed to load data</p>
+                                  <Button variant="outline" size="sm" onClick={() => refetch()}>
+                                    Try Again
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ) : tankageHistory && tankageHistory.length > 0 ? (
+                              tankageHistory
+                                .slice()
+                                .reverse()
+                                .map((entry, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell className="text-xs md:text-sm">{new Date(entry.date).toLocaleDateString()}</TableCell>
+                                    <TableCell className="text-xs md:text-sm">{entry.T1}</TableCell>
+                                    <TableCell className="text-xs md:text-sm">{entry.T2}</TableCell>
+                                    <TableCell className={`text-xs md:text-sm ${entry.T3 > 90 ? "text-red-600 font-medium" : ""}`}>
+                                      {entry.T3}
+                                    </TableCell>
+                                    <TableCell className="hidden sm:table-cell text-xs md:text-sm">{entry.T4}</TableCell>
+                                    <TableCell className="hidden md:table-cell text-xs md:text-sm">{entry.T5}</TableCell>
+                                    <TableCell className="hidden md:table-cell text-xs md:text-sm">{entry.T6}</TableCell>
+                                  </TableRow>
+                                ))
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={7} className="h-24 text-center">
+                                  <p className="text-muted-foreground">No data available</p>
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="visualization" className="space-y-4 md:space-y-6 mt-0">
+                <Card className="border-none shadow-sm">
+                  <CardHeader className="pb-2 md:pb-4">
+                    <CardTitle>3D Tank Visualization</CardTitle>
+                    <CardDescription>Interactive 3D view of tank farm and levels</CardDescription>
+                  </CardHeader>
+                  <CardContent className="h-[350px] sm:h-[400px] md:h-[500px] p-0">
+                    <TankVisualization
+                      tanks={tanks.map((tank) => ({
+                        id: tank.id,
+                        name: tank.name,
+                        level: (currentTankData[tank.id as keyof typeof currentTankData] as number) || 0,
+                        product: tank.product,
+                        capacity: tank.capacity,
+                      }))}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="analytics" className="space-y-4 md:space-y-6 mt-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                  <Card className="border-none shadow-sm">
+                    <CardHeader className="pb-2 md:pb-4">
+                      <CardTitle className="text-base md:text-lg">Usage Trends</CardTitle>
+                      <CardDescription>Tank level changes over time</CardDescription>
+                    </CardHeader>
+                    <CardContent className="h-[250px] sm:h-[300px] flex items-center justify-center p-2 md:p-6">
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm md:text-base">
+                        <LineChart className="h-5 w-5 md:h-6 md:w-6" />
+                        <span>Usage trend chart would be displayed here</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="border-none shadow-sm">
+                    <CardHeader className="pb-2 md:pb-4">
+                      <CardTitle className="text-base md:text-lg">Capacity Forecast</CardTitle>
+                      <CardDescription>Projected capacity based on current usage</CardDescription>
+                    </CardHeader>
+                    <CardContent className="h-[250px] sm:h-[300px] flex items-center justify-center p-2 md:p-6">
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm md:text-base">
+                        <LineChart className="h-5 w-5 md:h-6 md:w-6" />
+                        <span>Capacity forecast chart would be displayed here</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <Card className="border-none shadow-sm">
+                  <CardHeader className="pb-2 md:pb-4">
+                    <CardTitle className="text-base md:text-lg">Efficiency Analysis</CardTitle>
+                    <CardDescription>Storage efficiency and optimization recommendations</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3 md:space-y-4 p-3 md:p-6">
+                    <div className="p-3 md:p-4 rounded-md bg-blue-50 border border-blue-200 dark:bg-blue-950/20 dark:border-blue-800/30">
+                      <h4 className="font-medium text-sm md:text-base text-blue-800 dark:text-blue-300">Optimization Opportunity</h4>
+                      <p className="text-xs md:text-sm text-blue-700 dark:text-blue-400 mt-1">
+                        Redistributing product from Tank T3 (92%) to Tank T4 (45%) would balance capacity and reduce
+                        risk.
+                      </p>
+                    </div>
+
+                    <div className="p-3 md:p-4 rounded-md bg-amber-50 border border-amber-200 dark:bg-amber-950/20 dark:border-amber-800/30">
+                      <h4 className="font-medium text-sm md:text-base text-amber-800 dark:text-amber-300">Maintenance Recommendation</h4>
+                      <p className="text-xs md:text-sm text-amber-700 dark:text-amber-400 mt-1">
+                        Tank T2 is due for inspection in the next 30 days. Consider scheduling during low usage period.
+                      </p>
+                    </div>
+
+                    <div className="p-3 md:p-4 rounded-md bg-green-50 border border-green-200 dark:bg-green-950/20 dark:border-green-800/30">
+                      <h4 className="font-medium text-sm md:text-base text-green-800 dark:text-green-300">Efficiency Score: 82%</h4>
+                      <p className="text-xs md:text-sm text-green-700 dark:text-green-400 mt-1">
+                        Current tank utilization is efficient. Storage capacity is well-distributed across most tanks.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </>
+      </DashboardShell>
+    </div>
+  )
+}
