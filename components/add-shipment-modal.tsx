@@ -55,9 +55,7 @@ export function AddShipmentModal({ isOpen, onClose, onAdd }: AddShipmentModalPro
 
     if (!formData.vessel_id) {
       newErrors.vessel_id = "Vessel ID is required"
-    } else if (!/^\d+$/.test(formData.vessel_id)) {
-      newErrors.vessel_id = "Vessel ID must be a number"
-    }
+    } 
 
     if (!formData.supplier) {
       newErrors.supplier = "Supplier is required"
@@ -85,7 +83,7 @@ export function AddShipmentModal({ isOpen, onClose, onAdd }: AddShipmentModalPro
     // Submit form
     onAdd({
       ...formData,
-      vessel_id: Number.parseInt(formData.vessel_id),
+      vessel_id: formData.vessel_id,
       cargo_metric_tons: Number.parseFloat(formData.cargo_metric_tons),
       estimated_day_of_arrival: date?.toISOString().split("T")[0] || "",
     })

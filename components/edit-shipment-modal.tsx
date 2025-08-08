@@ -72,9 +72,7 @@ export function EditShipmentModal({ isOpen, onClose, shipment, onUpdate }: EditS
 
     if (!formData.vessel_id) {
       newErrors.vessel_id = "Vessel ID is required"
-    } else if (!/^\d+$/.test(formData.vessel_id)) {
-      newErrors.vessel_id = "Vessel ID must be a number"
-    }
+    } 
 
     if (!formData.supplier) {
       newErrors.supplier = "Supplier is required"

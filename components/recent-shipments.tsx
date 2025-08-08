@@ -76,6 +76,16 @@ export function RecentShipments() {
             Unloading
           </Badge>
         )
+
+        case "completed":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-purple-300 dark:border-purple-800"
+          >
+            Completed
+          </Badge>
+        )
       default:
         return <Badge variant="outline">Unknown</Badge>
     }
@@ -147,11 +157,11 @@ export function RecentShipments() {
                     {getSupplierAvatar(shipment.supplier)}
                     <div>
                       <div className="font-medium">{shipment.supplier}</div>
-                      <div className="text-xs text-muted-foreground md:hidden">ID: {shipment.versel_id}</div>
+                      <div className="text-xs text-muted-foreground md:hidden">ID: {shipment.vessel_id}</div>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="hidden md:table-cell font-medium">{shipment.versel_id}</TableCell>
+                <TableCell className="hidden md:table-cell font-medium">{shipment.vessel_id}</TableCell>
                 <TableCell>{new Date(shipment.estimated_day_of_arrival).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-1">
@@ -159,7 +169,7 @@ export function RecentShipments() {
                     <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
                       <div
                         className={`h-full ${
-                          shipment.status === "arrived" || shipment.status === "unloading"
+                          shipment.status === "arrived" || shipment.status === "unloading" || shipment.status === "completed"
                             ? "bg-green-500"
                             : shipment.status === "arriving"
                               ? "bg-amber-500"

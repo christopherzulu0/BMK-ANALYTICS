@@ -99,7 +99,7 @@ export async function POST(request: Request) {
     // Ensure vessel_id is stored as a number
     const newShipment = await prisma.shipment.create({
       data: {
-        vessel_id: parseInt(body.vessel_id),
+        vessel_id: body.vessel_id,
         supplier: body.supplier,
         cargo_metric_tons: parseFloat(body.cargo_metric_tons),
         status: body.status,
