@@ -84,3 +84,44 @@ The script uses the Prisma ORM to interact with the database and follows these s
 4. Checks for existing tankage records
 5. Creates an initial tankage record if none exists
 6. Handles errors and properly disconnects from the database
+
+# Tanks/Remarks Migration Notes
+
+Date: 2025-08-12
+
+We renamed the column `order` to `position` on the `Remarks` table to avoid SQL Server reserved keyword conflicts that prevented saving remarks.
+
+What changed:
+- Prisma model Remark: `order:Int` -> `position:Int`
+- Index: `@@index([entryId, position])`
+- API route uses `position` for ordering and inserts.
+
+How to apply the change to the database (SQL Server):
+
+Option A — Prisma migrate (recommended in non-prod):
+1. Set DATABASE_URL in .env to your SQL Server connection.
+2. Generate a migration and apply:
+   - pnpm prisma generate
+   - pnpm prisma migrate dev -n rename-remark-order-to-position
+
+Option B — Prisma db push (quick sync for dev):
+- pnpm prisma db push
+
+Option C — Manual SQL (use carefully in prod):
+Execute on your database (adjust schema name if needed):
+
+```
+EXEC sp_rename 'Remarks.order', 'position', 'COLUMN';
+-- Create index if not present; drop old one if it specifically referenced [order]
+-- Example (names may differ if Prisma generated random names):
+-- DROP INDEX IF EXISTS [Remarks_entryId_order_idx] ON [Remarks];
+-- CREATE INDEX [Remarks_entryId_position_idx] ON [Remarks] ([entryId], [position]);
+```
+
+After applying the DB change, restart the app/server and test:
+- Add a few remarks and click "Save Day".
+- Refresh the page or navigate away/back — remarks should persist and load in the same order.
+
+Troubleshooting:
+- If POST /api/entries returns 500, check server logs; ensure column rename succeeded.
+- If remarks still don’t appear, verify that the DailyEntry exists and that /api/entries GET includes `remarks` with `position` ordering.

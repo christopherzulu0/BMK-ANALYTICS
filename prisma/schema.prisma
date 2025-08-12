@@ -78,47 +78,7 @@ model ReadingLines {
   previousReadingMeter2 Float
 }
 
-model Tankage {
-  id        String   @id @default(cuid())
-  date      DateTime
-  T1        Float
-  T2        Float
-  T3        Float
-  T4        Float
-  T5        Float
-  T6        Float
-  notes     String?  @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@index([date])
-}
-
-model Tank {
-  id             String            @id
-  name           String
-  capacity       Float
-  product        String
-  location       String
-  lastInspection DateTime          @default(now())
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  levelUpdates   TankLevelUpdate[]
-}
-
-model TankLevelUpdate {
-  id        String   @id @default(cuid())
-  tankId    String
-  level     Float
-  timestamp DateTime @default(now())
-  notes     String?  @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tank      Tank     @relation(fields: [tankId], references: [id])
-
-  @@index([tankId])
-  @@index([timestamp])
-}
 
 model Shipment {
   id                       String   @id @default(cuid())
@@ -256,4 +216,95 @@ model AuditLog {
   @@index([resource])
   @@index([action])
   @@index([timestamp])
+}
+
+
+/// A physical location/depot.
+/// One station has many daily entries.
+model Station {
+  id        String        @id @default(uuid())
+  name      String        @unique @db.NVarChar(100)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  entries   DailyEntry[]
+
+  @@map("Stations")
+}
+
+/// One saved report per station per day with summary fields.
+/// Holds many tanks and ordered remarks.
+model DailyEntry {
+  id        String    @id @default(uuid())
+
+  stationId String
+  station   Station   @relation(fields: [stationId], references: [id], onDelete: Cascade)
+
+  /// Date of the report (no time component).
+  date      DateTime  @db.Date
+
+  // Summary metrics
+  tfarmDischargeM3     Decimal   @db.Decimal(18, 3)
+  kigamboniDischargeM3 Decimal   @db.Decimal(18, 3)
+  netDeliveryM3At20C   Decimal   @db.Decimal(18, 3)
+  netDeliveryMT        Decimal   @db.Decimal(18, 3)
+  pumpOverDate         DateTime? @db.Date
+  prevVolumeM3         Decimal   @db.Decimal(18, 3)
+  opUllageVolM3        Decimal   @db.Decimal(18, 3)
+
+  tanks    Tank[]
+  remarks  Remark[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  /// Ensure one entry per station per date
+  @@unique([stationId, date])
+  @@index([stationId, date])
+  @@map("DailyEntries")
+}
+
+/// A tank row within a daily entry.
+/// Numeric fields are nullable to represent missing values; waterCm NULL means "NIL".
+model Tank {
+  id       String      @id @default(uuid())
+
+  entryId  String
+  entry    DailyEntry  @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  name     String      @db.NVarChar(50)
+
+  // Replaced Prisma enum with String for SQL Server compatibility.
+  // Allowed values in app code: "Active" | "Rehabilitation"
+  status   String      @default("Active") @db.NVarChar(20)
+
+  levelMm  Int?
+  volumeM3 Decimal?    @db.Decimal(18, 3)
+  waterCm  Decimal?    @db.Decimal(18, 3) // NULL => NIL
+  sg       Decimal?    @db.Decimal(10, 5)
+  tempC    Decimal?    @db.Decimal(6, 2)
+  volAt20C Decimal?    @db.Decimal(18, 3)
+  mts      Decimal?    @db.Decimal(18, 3)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([entryId, name])
+  @@index([entryId])
+  @@index([status])
+  @@map("Tanks")
+}
+
+/// Ordered remarks attached to an entry.
+model Remark {
+  id      String     @id @default(uuid())
+
+  entryId String
+  entry   DailyEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  position Int
+  text     String     @db.NVarChar(1000)
+
+  @@index([entryId, position])
+  @@map("Remarks")
 }

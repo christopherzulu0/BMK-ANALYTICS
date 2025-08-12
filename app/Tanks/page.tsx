@@ -8,32 +8,31 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table"
 import { Textarea } from "@/components/ui/textarea"
 import {
     Pencil,
     Trash2,
-    RefreshCw,
     Info,
     ClipboardList,
     Save,
@@ -49,1556 +48,1682 @@ import {
     Droplet,
     Factory,
     Thermometer,
-    Package,
+    Package, ViewIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LineChart, Line, ResponsiveContainer, CartesianGrid, XAxis, YAxis, Legend } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart" // shadcn/ui charts [^2]
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  getEntry as apiGetEntry,
+  saveEntry as apiSaveEntry,
+  listStations as apiListStations,
+  createStation as apiCreateStation,
+  renameStation as apiRenameStation,
+  deleteStation as apiDeleteStation,
+  listEntryHistory as apiListEntryHistory,
+} from "@/lib/api"
+import {TankVisualization} from "@/components/tank-visualization";
 
 type TankStatus = "Active" | "Rehabilitation"
 
 type Tank = {
-    id: string
-    name: string // e.g., T1
-    status: TankStatus
-    levelMm?: number
-    volumeM3?: number
-    waterCm?: number | null
-    sg?: number | null
-    tempC?: number | null
-    volAt20C?: number | null
-    mts?: number | null
+  id: string
+  name: string
+  status: TankStatus
+  levelMm?: number
+  volumeM3?: number
+  waterCm?: number | null
+  sg?: number | null
+  tempC?: number | null
+  volAt20C?: number | null
+  mts?: number | null
 }
 
 type DischargeSummary = {
-    tfarmDischargeM3: number
-    kigamboniDischargeM3: number
-    netDeliveryM3At20C: number
-    netDeliveryMT: number
-    pumpOverDate: string
-    prevVolumeM3: number
-    opUllageVolM3: number
+  tfarmDischargeM3: number
+  kigamboniDischargeM3: number
+  netDeliveryM3At20C: number
+  netDeliveryMT: number
+  pumpOverDate: string
+  prevVolumeM3: number
+  opUllageVolM3: number
 }
 
 type EntryData = {
-    tanks: Tank[]
-    summary: DischargeSummary
-    remarks: string[]
+  tanks: Tank[]
+  summary: DischargeSummary
+  remarks: string[]
 }
 
 type Station = { id: string; name: string }
 
-const LS_KEY_DATA = "tankfarm-entries-v3"
-const LS_KEY_STATIONS = "tankfarm-stations-v3"
-
-const defaultStations: Station[] = [
-    { id: "s1", name: "Tankfarm" },
-    { id: "s2", name: "Kigamboni" },
-    { id: "s3", name: "NFT" },
-]
-
-const initialTanks: Tank[] = [
-    {
-        id: "t1",
-        name: "T1",
-        status: "Active",
-        levelMm: 15006,
-        volumeM3: 35041,
-        waterCm: 4.5,
-        sg: 0.822,
-        tempC: 33.0,
-        volAt20C: 34594.825,
-        mts: 28675.651,
-    },
-    {
-        id: "t2",
-        name: "T2",
-        status: "Active",
-        levelMm: 1650,
-        volumeM3: 3619,
-        waterCm: 5.0,
-        sg: 0.834,
-        tempC: 24.5,
-        volAt20C: 3580.881,
-        mts: 3009.73,
-    },
-    {
-        id: "t3",
-        name: "T3",
-        status: "Active",
-        levelMm: 1619,
-        volumeM3: 3507,
-        waterCm: 9.0,
-        sg: 0.83,
-        tempC: 30.0,
-        volAt20C: 3419.959,
-        mts: 2866.952,
-    },
-    {
-        id: "t4",
-        name: "T4",
-        status: "Active",
-        levelMm: 9077,
-        volumeM3: 21116,
-        waterCm: 0.2,
-        sg: 0.829,
-        tempC: 27.5,
-        volAt20C: 20979.703,
-        mts: 17543.228,
-    },
-    {
-        id: "t5",
-        name: "T5",
-        status: "Rehabilitation",
-    },
-    {
-        id: "t6",
-        name: "T6",
-        status: "Active",
-        levelMm: 1023,
-        volumeM3: 2814,
-        waterCm: null, // NIL
-        sg: 0.82,
-        tempC: 28.5,
-        volAt20C: 2793.406,
-        mts: 2300.37,
-    },
-]
-
-const initialSummary: DischargeSummary = {
-    tfarmDischargeM3: 3942,
-    kigamboniDischargeM3: 3879,
-    netDeliveryM3At20C: 3912.567,
-    netDeliveryMT: 3221.999,
-    pumpOverDate: "2025-08-05",
-    prevVolumeM3: 70039,
-    opUllageVolM3: 122730,
+function emptySummary(date: string): DischargeSummary {
+  return {
+    tfarmDischargeM3: 0,
+    kigamboniDischargeM3: 0,
+    netDeliveryM3At20C: 0,
+    netDeliveryMT: 0,
+    pumpOverDate: date,
+    prevVolumeM3: 0,
+    opUllageVolM3: 0,
+  }
 }
 
-const defaultRemarks = [
-    "T6 on delivery to NFT by MP3",
-    "Stock Inventory done together with ITS Surveyor",
-    "Discharge from Tankfarm based on tank on delivery",
-    "Pumping days = 13 days",
-]
-
 function formatNumber(value: number | null | undefined, opts: Intl.NumberFormatOptions = {}) {
-    if (value === null || value === undefined || Number.isNaN(value)) return "-"
-    return new Intl.NumberFormat("en-US", { maximumFractionDigits: 3, ...opts }).format(value)
+  if (value === null || value === undefined || Number.isNaN(value)) return "-"
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: 3, ...opts }).format(value)
 }
 
 function uid() {
-    return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
 }
 
-type DataMap = Record<string, Record<string, EntryData>> // stationId -> date(YYYY-MM-DD) -> EntryData
+type DataMap = Record<string, Record<string, EntryData>>
 type SortKey = "name" | "volumeM3" | "volAt20C" | "mts"
 
 export default function Page() {
-    const { toast } = useToast()
+  const { toast } = useToast()
 
-    // Stations
-    const [stations, setStations] = useState<Station[]>(defaultStations)
-    const [stationId, setStationId] = useState<string>(defaultStations[0].id)
+  const [stations, setStations] = useState<Station[]>([])
+  const [stationId, setStationId] = useState<string>("")
 
-    // Date selection (default to today)
-    const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10))
+  const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10))
 
-    // All entries map
-    const [dataMap, setDataMap] = useState<DataMap>({})
+  const [dataMap, setDataMap] = useState<DataMap>({})
 
-    // Working copy for the current station+date
-    const [tanks, setTanks] = useState<Tank[]>(initialTanks)
-    const [summary, setSummary] = useState<DischargeSummary>(initialSummary)
-    const [remarks, setRemarks] = useState<string[]>(defaultRemarks)
+  const [tanks, setTanks] = useState<Tank[]>([])
+  const [summary, setSummary] = useState<DischargeSummary>(emptySummary(new Date().toISOString().slice(0, 10)))
+  const [remarks, setRemarks] = useState<string[]>([])
 
-    // UI state
-    const [openForm, setOpenForm] = useState(false)
-    const [editing, setEditing] = useState<Tank | null>(null)
-    const [confirmDelete, setConfirmDelete] = useState<Tank | null>(null)
-    const [showRefs, setShowRefs] = useState(false)
-    const [manageStationsOpen, setManageStationsOpen] = useState(false)
-    const [sheetOpen, setSheetOpen] = useState(false)
+  const [openForm, setOpenForm] = useState(false)
+  const [editing, setEditing] = useState<Tank | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<Tank | null>(null)
+  const [showRefs, setShowRefs] = useState(false)
+  const [manageStationsOpen, setManageStationsOpen] = useState(false)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
-    // Filters/sorting
-    const [query, setQuery] = useState("")
-    const [statusFilter, setStatusFilter] = useState<TankStatus | "All">("All")
-    const [sortKey, setSortKey] = useState<SortKey>("name")
-    const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
+  const [query, setQuery] = useState("")
+  const [statusFilter, setStatusFilter] = useState<TankStatus | "All">("All")
+  const [sortKey, setSortKey] = useState<SortKey>("name")
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
 
-    // CSV import
-    const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-    // Load persisted stations and entries
-    useEffect(() => {
-        try {
-            const stationRaw = localStorage.getItem(LS_KEY_STATIONS)
-            if (stationRaw) {
-                const parsed = JSON.parse(stationRaw)
-                if (Array.isArray(parsed) && parsed.length) {
-                    setStations(parsed)
-                    setStationId(parsed[0].id)
-                }
-            }
-            const dataRaw = localStorage.getItem(LS_KEY_DATA)
-            if (dataRaw) {
-                const parsed = JSON.parse(dataRaw) as DataMap
-                setDataMap(parsed || {})
-            }
-        } catch (e) {
-            console.warn("Failed to parse saved data", e)
+
+  useEffect(() => {
+    let ignore = false
+    apiListStations()
+      .then((rows) => {
+        if (ignore) return
+        if (Array.isArray(rows) && rows.length) {
+          setStations(rows.map((r) => ({ id: r.id, name: r.name })))
+          setStationId(rows[0].id)
         }
-    }, [])
+      })
+      .catch(() => {
+        // ignore; DB not configured yet
+      })
+    return () => {
+      ignore = true
+    }
+  }, [])
 
-    // Persist stations and entries
-    useEffect(() => {
-        localStorage.setItem(LS_KEY_STATIONS, JSON.stringify(stations))
-    }, [stations])
+  // Load full history for the selected station to populate trend data
+  useEffect(() => {
+    let ignore = false
+    if (!stationId) {
+      return
+    }
+    apiListEntryHistory(stationId)
+      .then((rows) => {
+        if (ignore) return
+        if (Array.isArray(rows) && rows.length) {
+          setDataMap((prev) => {
+            const next = { ...prev }
+            const stationEntries: Record<string, any> = {}
+            for (const r of rows) {
+              stationEntries[r.date] = { tanks: r.entry.tanks, summary: r.entry.summary, remarks: r.entry.remarks || [] }
+            }
+            next[stationId] = stationEntries
+            return next
+          })
+        } else {
+          // No history: clear station map to avoid stale data
+          setDataMap((prev) => ({ ...prev, [stationId]: {} as any }))
+        }
+      })
+      .catch(() => {
+        // ignore errors; trend will just show empty state
+      })
+    return () => {
+      ignore = true
+    }
+  }, [stationId])
 
-    useEffect(() => {
-        localStorage.setItem(LS_KEY_DATA, JSON.stringify(dataMap))
-    }, [dataMap])
+  useEffect(() => {
+    let cancelled = false
 
-    // Whenever station/date changes, load working data or default
-    useEffect(() => {
-        const stationEntries = dataMap[stationId] || {}
-        const entry = stationEntries[date]
+    if (!stationId) {
+      // No station selected; ensure empty state
+      setTanks([])
+      setSummary(emptySummary(date))
+      setRemarks([])
+      return
+    }
+
+    apiGetEntry(stationId, date)
+      .then((entry) => {
+        if (cancelled) return
         if (entry) {
-            setTanks(entry.tanks)
-            setSummary(entry.summary)
-            setRemarks(entry.remarks)
-        } else {
-            setTanks(initialTanks)
-            setSummary(initialSummary)
-            setRemarks(defaultRemarks)
+          setTanks(
+            entry.tanks.map((t) => ({
+              id: uid(),
+              name: t.name,
+              status: (t.status === "Rehabilitation" ? "Rehabilitation" : "Active") as any,
+              levelMm: t.levelMm,
+              volumeM3: t.volumeM3,
+              waterCm: t.waterCm ?? undefined,
+              sg: t.sg ?? undefined,
+              tempC: t.tempC ?? undefined,
+              volAt20C: t.volAt20C ?? undefined,
+              mts: t.mts ?? undefined,
+            })),
+          )
+          setSummary({
+            tfarmDischargeM3: entry.summary.tfarmDischargeM3,
+            kigamboniDischargeM3: entry.summary.kigamboniDischargeM3,
+            netDeliveryM3At20C: entry.summary.netDeliveryM3At20C,
+            netDeliveryMT: entry.summary.netDeliveryMT,
+            pumpOverDate: entry.summary.pumpOverDate || date,
+            prevVolumeM3: entry.summary.prevVolumeM3,
+            opUllageVolM3: entry.summary.opUllageVolM3,
+          })
+          setRemarks(entry.remarks ?? [])
+          return
         }
-    }, [stationId, date, dataMap])
-
-    // Keyboard shortcuts
-    useEffect(() => {
-        function onKey(e: KeyboardEvent) {
-            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
-                e.preventDefault()
-                saveCurrent()
-            } else if (!e.ctrlKey && !e.metaKey && e.key.toLowerCase() === "n") {
-                e.preventDefault()
-                onAddNew()
-            }
-        }
-        window.addEventListener("keydown", onKey)
-        return () => window.removeEventListener("keydown", onKey)
-    }, [tanks, summary, remarks, stationId, date])
-
-    const totals = useMemo(() => calcTotals(tanks), [tanks])
-
-    // Actions
-    function onAddNew() {
-        setEditing(null)
-        setOpenForm(true)
+        // No entry in DB; keep empty state
+        setTanks([])
+        setSummary(emptySummary(date))
+        setRemarks([])
+      })
+      .catch(() => {
+        // On error, keep empty state (no fallback data)
+        setTanks([])
+        setSummary(emptySummary(date))
+        setRemarks([])
+      })
+    return () => {
+      cancelled = true
     }
-    function onEdit(t: Tank) {
-        setEditing(t)
-        setOpenForm(true)
-    }
-    function onDelete(t: Tank) {
-        setConfirmDelete(t)
-    }
-    function doDelete() {
-        if (confirmDelete) {
-            setTanks((prev) => prev.filter((x) => x.id !== confirmDelete.id))
-            setConfirmDelete(null)
-        }
+  }, [stationId, date])
+
+  useEffect(() => {
+    function isEditableTarget(el: EventTarget | null) {
+      const node = el as HTMLElement | null
+      if (!node) return false
+      if (node.isContentEditable) return true
+      const tag = node.tagName?.toLowerCase()
+      if (tag === "input" || tag === "textarea" || tag === "select") return true
+      if (node.closest?.("[role='combobox']")) return true
+      return false
     }
 
-    function resetSample() {
-        setTanks(initialTanks)
-        setSummary(initialSummary)
-        setRemarks(defaultRemarks)
-        toast({ title: "Sample data restored" })
+    function onKey(e: KeyboardEvent) {
+      if (e.repeat) return
+      if (isEditableTarget(e.target)) return
+      if (openForm || manageStationsOpen || sheetOpen) return
+
+      const key = e.key.toLowerCase()
+      if ((e.ctrlKey || e.metaKey) && key === "s") {
+        e.preventDefault()
+        saveCurrent()
+      } else if (!e.ctrlKey && !e.metaKey && key === "n") {
+        e.preventDefault()
+        onAddNew()
+      }
     }
 
-    function saveCurrent() {
-        setDataMap((prev) => {
-            const stationEntries = { ...(prev[stationId] || {}) }
-            stationEntries[date] = { tanks, summary, remarks }
-            return { ...prev, [stationId]: stationEntries }
-        })
-        toast({ title: "Saved", description: `${currentStationName(stations, stationId)} - ${date}` })
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [tanks, summary, remarks, stationId, date, openForm, manageStationsOpen, sheetOpen])
+
+  const totals = useMemo(() => calcTotals(tanks), [tanks])
+
+  function onAddNew() {
+    setEditing(null)
+    setOpenForm(true)
+  }
+  function onEdit(t: Tank) {
+    setEditing(t)
+    setOpenForm(true)
+  }
+  function onDelete(t: Tank) {
+    setConfirmDelete(t)
+  }
+  function doDelete() {
+    if (confirmDelete) {
+      setTanks((prev) => prev.filter((x) => x.id !== confirmDelete.id))
+      setConfirmDelete(null)
     }
+  }
 
-    function copyFromPrevious() {
-        const entries = Object.entries(dataMap[stationId] || {})
-            .filter(([d]) => d < date)
-            .sort((a, b) => (a[0] > b[0] ? -1 : 1))
-        if (entries.length) {
-            const prevData = entries[0][1]
-            setTanks(prevData.tanks.map((t) => ({ ...t, id: uid() })))
-            setSummary({ ...prevData.summary })
-            setRemarks([...prevData.remarks])
-            toast({ title: "Copied from previous day", description: entries[0][0] })
-        } else {
-            toast({ title: "No previous day found", variant: "destructive" as any })
-        }
-    }
 
-    function exportCSV() {
-        const header = ["name", "status", "levelMm", "volumeM3", "waterCm", "sg", "tempC", "volAt20C", "mts"].join(",")
-        const rows = tanks.map((t) =>
-            [
-                safe(t.name),
-                safe(t.status),
-                numOrEmpty(t.levelMm),
-                numOrEmpty(t.volumeM3),
-                t.waterCm === null ? "NIL" : numOrEmpty(t.waterCm ?? undefined),
-                numOrEmpty(t.sg),
-                numOrEmpty(t.tempC),
-                numOrEmpty(t.volAt20C),
-                numOrEmpty(t.mts),
-            ].join(","),
-        )
-        const text = [header, ...rows].join("\n")
-        const blob = new Blob([text], { type: "text/csv;charset=utf-8;" })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = `${currentStationName(stations, stationId)}-${date}-tanks.csv`
-        a.click()
-        URL.revokeObjectURL(url)
-    }
+  function saveCurrent(overrides?: { remarks?: string[] }) {
+    const nextRemarks = overrides?.remarks ?? remarks
 
-    function importCSV(text: string) {
-        const lines = text.split(/\r?\n/).filter(Boolean)
-        if (lines.length <= 1) return
-        const header = lines[0].split(",").map((s) => s.trim().toLowerCase())
+    setDataMap((prev) => {
+      const stationEntries = { ...(prev[stationId] || {}) }
+      stationEntries[date] = { tanks, summary, remarks: nextRemarks }
+      return { ...prev, [stationId]: stationEntries }
+    })
+    toast({ title: "Saved", description: `${currentStationName(stations, stationId)} - ${date}` })
 
-        const idx = {
-            name: findIdx(header, ["name"]),
-            status: findIdx(header, ["status"]),
-            levelMm: findIdx(header, ["levelmm", "level_mm"]),
-            volumeM3: findIdx(header, ["volumem3", "volume m3", "volume"]),
-            waterCm: findIdx(header, ["watercm", "water cm"]),
-            sg: findIdx(header, ["sg"]),
-            tempC: findIdx(header, ["tempc", "temp c"]),
-            volAt20C: findIdx(header, ["volm3 @ 20c", "volm3@20c", "volat20c", "vol m3 @ 20c"]),
-            mts: findIdx(header, ["mts"]),
-        }
+    // Save to DB with proper error handling
+    saveToDatabaseAsync()
 
-        const parsed: Tank[] = lines.slice(1).map((ln) => {
-            const cells = splitCsv(ln)
-            const status = (cells[idx.status] || "Active") as TankStatus
-            const waterRaw = cells[idx.waterCm]
-            const waterVal = waterRaw?.toUpperCase?.() === "NIL" ? null : toNumMaybe(waterRaw)
-            return {
-                id: uid(),
-                name: (cells[idx.name] || "").toUpperCase(),
-                status: status === "Rehabilitation" ? "Rehabilitation" : "Active",
-                levelMm: toNumMaybe(cells[idx.levelMm]) ?? undefined,
-                volumeM3: toNumMaybe(cells[idx.volumeM3]) ?? undefined,
-                waterCm: waterVal,
-                sg: toNumMaybe(cells[idx.sg]) ?? undefined,
-                tempC: toNumMaybe(cells[idx.tempC]) ?? undefined,
-                volAt20C: toNumMaybe(cells[idx.volAt20C]) ?? undefined,
-                mts: toNumMaybe(cells[idx.mts]) ?? undefined,
-            }
+    async function saveToDatabaseAsync() {
+      try {
+        console.log("Attempting to save to database...", { stationId, date, tanksCount: tanks.length })
+
+        await apiSaveEntry({
+          stationId,
+          date,
+          entry: {
+            tanks: tanks.map(({ name, status, levelMm, volumeM3, waterCm, sg, tempC, volAt20C, mts }) => ({
+              name,
+              status,
+              levelMm,
+              volumeM3,
+              waterCm: waterCm === null ? null : waterCm,
+              sg,
+              tempC,
+              volAt20C,
+              mts,
+            })),
+            summary: { ...summary },
+            remarks: nextRemarks,
+          },
         })
 
-        setTanks(parsed)
-        toast({ title: "Imported CSV", description: `${parsed.length} tank rows` })
-    }
-
-    function onPickFile() {
-        fileInputRef.current?.click()
-    }
-
-    const stationHistory = useMemo(() => {
-        const entries = Object.entries(dataMap[stationId] || {}).sort((a, b) => (a[0] > b[0] ? -1 : 1))
-        return entries
-    }, [dataMap, stationId])
-
-    const filteredSorted = useMemo(() => {
-        let rows = tanks
-        if (query.trim()) {
-            const q = query.trim().toLowerCase()
-            rows = rows.filter((t) => t.name.toLowerCase().includes(q))
-        }
-        if (statusFilter !== "All") {
-            rows = rows.filter((t) => t.status === statusFilter)
-        }
-        rows = [...rows].sort((a: any, b: any) => {
-            const A = a[sortKey] ?? (sortKey === "name" ? "" : Number.NEGATIVE_INFINITY)
-            const B = b[sortKey] ?? (sortKey === "name" ? "" : Number.NEGATIVE_INFINITY)
-            if (A < B) return sortDir === "asc" ? -1 : 1
-            if (A > B) return sortDir === "asc" ? 1 : -1
-            return 0
+        console.log("Successfully saved to database")
+        toast({
+          title: "Saved to database",
+          description: `${currentStationName(stations, stationId)} - ${date}`,
         })
-        return rows
-    }, [tanks, query, statusFilter, sortKey, sortDir])
-
-    const trendData = useMemo(() => {
-        const list = Object.entries(dataMap[stationId] || {})
-            .sort((a, b) => (a[0] > b[0] ? 1 : -1))
-            .map(([d, e]) => {
-                const t = calcTotals(e.tanks)
-                return {
-                    date: d,
-                    vol20C: Number(t.totalVol20C.toFixed(3)),
-                    mts: Number(t.totalMTS.toFixed(3)),
-                    deliveryMT: Number(e.summary.netDeliveryMT.toFixed(3)),
-                }
-            })
-        return list
-    }, [dataMap, stationId])
-
-    function clearFilters() {
-        setQuery("")
-        setStatusFilter("All")
-        setSortKey("name")
-        setSortDir("asc")
+      } catch (e: any) {
+        console.error("Database save failed:", e)
+        toast({
+          title: "Database save failed",
+          description: e?.message || "Check server logs/connection",
+          variant: "destructive" as any,
+        })
+      }
     }
+  }
 
-    return (
-        <main className="min-h-screen w-full bg-muted/30">
-            <div className="mx-auto w-full max-w-7xl p-4 md:p-8">
-                {/* Header / Toolbar */}
-                <header className="mb-6 space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                        <div className="space-y-1">
-                            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">TANKFARM DATA</h1>
-                            <p className="text-sm text-muted-foreground">
-                                Enter daily stock data per station. Saved locally in your browser.
-                            </p>
-                        </div>
+  function copyFromPrevious() {
+    const entries = Object.entries(dataMap[stationId] || {})
+      .filter(([d]) => d < date)
+      .sort((a, b) => (a[0] > b[0] ? -1 : 1))
+    if (entries.length) {
+      const prevData = entries[0][1]
+      setTanks(prevData.tanks.map((t) => ({ ...t, id: uid() })))
+      setSummary({ ...prevData.summary })
+      setRemarks([...prevData.remarks])
+      toast({ title: "Copied from previous day", description: entries[0][0] })
+    } else {
+      toast({ title: "No previous day found", variant: "destructive" as any })
+    }
+  }
 
-                        {/* Mobile sheet trigger */}
-                        <div className="md:hidden">
-                            <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                                <SheetTrigger asChild>
-                                    <Button variant="outline">
-                                        <Menu className="mr-2 h-4 w-4" />
-                                        Controls
-                                    </Button>
-                                </SheetTrigger>
-                                <SheetContent side="right" className="w-[90vw] sm:max-w-sm">
-                                    <SheetHeader>
-                                        <SheetTitle>Controls</SheetTitle>
-                                    </SheetHeader>
-                                    <div className="mt-4 grid gap-4">
-                                        <StationControls
-                                            stations={stations}
-                                            stationId={stationId}
-                                            onStationChange={setStationId}
-                                            onManage={() => setManageStationsOpen(true)}
-                                            date={date}
-                                            onDateChange={setDate}
-                                        />
-
-                                        <FilterControls
-                                            query={query}
-                                            onQuery={setQuery}
-                                            statusFilter={statusFilter}
-                                            onStatusFilter={setStatusFilter}
-                                            sortKey={sortKey}
-                                            onSortKey={setSortKey}
-                                            sortDir={sortDir}
-                                            onSortDir={setSortDir}
-                                        />
-
-                                        <div className="grid gap-2">
-                                            <Button onClick={saveCurrent}>
-                                                <Save className="mr-2 h-4 w-4" />
-                                                Save Day
-                                            </Button>
-                                            {/*<Button variant="outline" onClick={copyFromPrevious}>*/}
-                                            {/*    <Copy className="mr-2 h-4 w-4" />*/}
-                                            {/*    Copy Previous*/}
-                                            {/*</Button>*/}
-
-                                            <div className="flex gap-2">
-                                                <Button
-                                                    className="flex-1 bg-transparent"
-                                                    variant="outline"
-                                                    onClick={() => setShowRefs((s) => !s)}
-                                                >
-                                                    <Info className="mr-2 h-4 w-4" />
-                                                    {showRefs ? "Hide Refs" : "Show Refs"}
-                                                </Button>
-                                                <Button className="flex-1 bg-transparent" variant="outline" onClick={resetSample}>
-                                                    <RefreshCw className="mr-2 h-4 w-4" />
-                                                    Reset
-                                                </Button>
-                                            </div>
-
-                                            <div className="flex gap-2">
-                                                <Button className="flex-1 bg-transparent" variant="outline" onClick={exportCSV}>
-                                                    <Download className="mr-2 h-4 w-4" />
-                                                    Export
-                                                </Button>
-                                                <Button className="flex-1 bg-transparent" variant="outline" onClick={onPickFile}>
-                                                    <Upload className="mr-2 h-4 w-4" />
-                                                    Import
-                                                </Button>
-                                                <input
-                                                    ref={fileInputRef}
-                                                    type="file"
-                                                    accept=".csv,text/csv"
-                                                    className="hidden"
-                                                    onChange={async (e) => {
-                                                        const file = e.target.files?.[0]
-                                                        if (!file) return
-                                                        const text = await file.text()
-                                                        importCSV(text)
-                                                        e.currentTarget.value = ""
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </SheetContent>
-                            </Sheet>
-                        </div>
-                    </div>
-
-                    {/* Desktop Controls */}
-                    <div className="hidden md:grid grid-cols-1 xl:grid-cols-[1fr_auto] items-start gap-3">
-                        <StationControls
-                            stations={stations}
-                            stationId={stationId}
-                            onStationChange={setStationId}
-                            onManage={() => setManageStationsOpen(true)}
-                            date={date}
-                            onDateChange={setDate}
-                        />
-
-                        <div className="flex items-end gap-2 justify-start xl:justify-end">
-                            <Button onClick={saveCurrent}>
-                                <Save className="mr-2 h-4 w-4" />
-                                Save Day
-                            </Button>
-                            <Button variant="outline" onClick={copyFromPrevious}>
-                                <Copy className="mr-2 h-4 w-4" />
-                                Copy Previous
-                            </Button>
-
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="outline">
-                                        <ChevronDown className="mr-2 h-4 w-4" />
-                                        More
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                    <DropdownMenuItem onClick={() => setShowRefs((s) => !s)}>
-                                        <Info className="mr-2 h-4 w-4" />
-                                        {showRefs ? "Hide references" : "Show references"}
-                                    </DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={exportCSV}>
-                                        <Download className="mr-2 h-4 w-4" />
-                                        Export CSV
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={onPickFile}>
-                                        <Upload className="mr-2 h-4 w-4" />
-                                        Import CSV
-                                    </DropdownMenuItem>
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept=".csv,text/csv"
-                                        className="hidden"
-                                        onChange={async (e) => {
-                                            const file = e.target.files?.[0]
-                                            if (!file) return
-                                            const text = await file.text()
-                                            importCSV(text)
-                                            e.currentTarget.value = ""
-                                        }}
-                                    />
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={resetSample}>
-                                        <RefreshCw className="mr-2 h-4 w-4" />
-                                        Reset Sample
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-
-                        <FilterControls
-                            className="md:col-span-1 xl:col-span-2"
-                            query={query}
-                            onQuery={setQuery}
-                            statusFilter={statusFilter}
-                            onStatusFilter={setStatusFilter}
-                            sortKey={sortKey}
-                            onSortKey={setSortKey}
-                            sortDir={sortDir}
-                            onSortDir={setSortDir}
-                        />
-                    </div>
-                </header>
-
-                {/* Summary cards and chart */}
-                <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
-                    <SummaryCard
-                        title="T/Farm Discharge"
-                        value={`${formatNumber(summary.tfarmDischargeM3)} m3`}
-                        icon={<Droplet className="h-4 w-4" />}
-                        color="from-emerald-500/15 to-emerald-500/0"
-                    />
-                    <SummaryCard
-                        title="Kigamboni Discharge"
-                        value={`${formatNumber(summary.kigamboniDischargeM3)} m3`}
-                        icon={<Factory className="h-4 w-4" />}
-                        color="from-amber-500/20 to-amber-500/0"
-                    />
-                    <SummaryCard
-                        title="Net Delivery @ 20C"
-                        value={`${formatNumber(summary.netDeliveryM3At20C)} m3`}
-                        icon={<Thermometer className="h-4 w-4" />}
-                        color="from-rose-500/15 to-rose-500/0"
-                    />
-                    <SummaryCard
-                        title="Net Delivery (MT)"
-                        value={`${formatNumber(summary.netDeliveryMT)} MT`}
-                        icon={<Package className="h-4 w-4" />}
-                        color="from-violet-500/15 to-violet-500/0"
-                    />
-                </section>
-
-                <Tabs defaultValue="table" className="space-y-6">
-                    <TabsList>
-                        <TabsTrigger value="table">Table</TabsTrigger>
-                        <TabsTrigger value="remarks">Remarks & Summary</TabsTrigger>
-                        <TabsTrigger value="trend">
-                            <BarChart3 className="h-4 w-4 mr-2" />
-                            Trend
-                        </TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="table" className="space-y-6">
-                        {/* Table */}
-                        <section className="rounded-lg border bg-background shadow-sm">
-                            <div className="p-4 border-b flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                <div className="flex items-center gap-2">
-                                    <ClipboardList className="h-5 w-5" />
-                                    <h2 className="font-semibold">
-                                        {"AA: Stock Position - "}
-                                        {currentStationName(stations, stationId)}
-                                        {" - "}
-                                        {date}
-                                    </h2>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Button size="sm" onClick={onAddNew}>
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        Add Tank
-                                    </Button>
-                                    <Badge variant="outline">Pump over NFT: {new Date(summary.pumpOverDate).toLocaleDateString()}</Badge>
-                                </div>
-                            </div>
-
-                            <div className="overflow-x-auto">
-                                <Table>
-                                    <TableCaption>All volumes in cubic meters unless otherwise specified.</TableCaption>
-                                    <TableHeader className="sticky top-0 z-10 bg-background">
-                                        <TableRow>
-                                            <TableHead className="min-w-[80px]">Tank</TableHead>
-                                            <TableHead className="text-right">Level mm</TableHead>
-                                            <TableHead className="text-right">Volume m3</TableHead>
-                                            <TableHead className="text-right">Water cm</TableHead>
-                                            <TableHead className="text-right">SG</TableHead>
-                                            <TableHead className="text-right">Temp C</TableHead>
-                                            <TableHead className="text-right">Vol m3 @ 20C</TableHead>
-                                            <TableHead className="text-right">MTS</TableHead>
-                                            <TableHead className="w-[120px] text-right">Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {filteredSorted.length === 0 ? (
-                                            <TableRow>
-                                                <TableCell colSpan={9}>
-                                                    <div className="flex flex-col items-center justify-center py-10 text-center gap-3">
-                                                        <p className="text-sm text-muted-foreground">No tanks match the current filters.</p>
-                                                        <div className="flex gap-2">
-                                                            <Button variant="outline" onClick={clearFilters}>
-                                                                Clear filters
-                                                            </Button>
-                                                            <Button onClick={onAddNew}>
-                                                                <Plus className="mr-2 h-4 w-4" />
-                                                                Add Tank
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        ) : (
-                                            filteredSorted.map((t) => (
-                                                <TableRow
-                                                    key={t.id}
-                                                    className={cn(
-                                                        "hover:bg-muted/50 transition-colors",
-                                                        t.status === "Rehabilitation" && "opacity-70",
-                                                    )}
-                                                >
-                                                    <TableCell className="font-medium">
-                                                        <div className="flex items-center gap-2">
-                                                            <span>{t.name}</span>
-                                                            {t.status === "Rehabilitation" && <Badge variant="secondary">Under Rehabilitation</Badge>}
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="text-right">{formatNumber(t.levelMm)}</TableCell>
-                                                    <TableCell className="text-right">{formatNumber(t.volumeM3)}</TableCell>
-                                                    <TableCell className="text-right">
-                                                        {t.waterCm === null ? "NIL" : formatNumber(t.waterCm)}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        {formatNumber(t.sg, { maximumFractionDigits: 4 })}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        {formatNumber(t.tempC, { maximumFractionDigits: 1 })}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        {formatNumber(t.volAt20C, { maximumFractionDigits: 3 })}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        {formatNumber(t.mts, { maximumFractionDigits: 3 })}
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        <div className="flex justify-end gap-1">
-                                                            <Button
-                                                                size="icon"
-                                                                variant="ghost"
-                                                                onClick={() => onEdit(t)}
-                                                                aria-label={`Edit ${t.name}`}
-                                                            >
-                                                                <Pencil className="h-4 w-4" />
-                                                            </Button>
-                                                            <Button
-                                                                size="icon"
-                                                                variant="ghost"
-                                                                onClick={() => onDelete(t)}
-                                                                aria-label={`Delete ${t.name}`}
-                                                                className="text-destructive"
-                                                            >
-                                                                <Trash2 className="h-4 w-4" />
-                                                            </Button>
-                                                        </div>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))
-                                        )}
-                                    </TableBody>
-                                    <TableFooter>
-                                        <TableRow>
-                                            <TableCell className="font-semibold">TOTAL VOLUME</TableCell>
-                                            <TableCell />
-                                            <TableCell className="text-right font-semibold">{formatNumber(totals.totalVolume)}</TableCell>
-                                            <TableCell />
-                                            <TableCell />
-                                            <TableCell />
-                                            <TableCell className="text-right font-semibold">{formatNumber(totals.totalVol20C)}</TableCell>
-                                            <TableCell className="text-right font-semibold">{formatNumber(totals.totalMTS)}</TableCell>
-                                            <TableCell />
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell className="font-semibold">PREV. VOLUME</TableCell>
-                                            <TableCell />
-                                            <TableCell className="text-right">{formatNumber(summary.prevVolumeM3)}</TableCell>
-                                            <TableCell colSpan={5} />
-                                            <TableCell />
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell className="font-semibold">OP. ULLAGE VOL</TableCell>
-                                            <TableCell />
-                                            <TableCell className="text-right">{formatNumber(summary.opUllageVolM3)}</TableCell>
-                                            <TableCell colSpan={5} />
-                                            <TableCell />
-                                        </TableRow>
-                                    </TableFooter>
-                                </Table>
-                            </div>
-                        </section>
-                    </TabsContent>
-
-                    <TabsContent value="remarks">
-                        <section className="grid gap-4 lg:grid-cols-2">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>CC: Remarks</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
-                                    <ul className="list-decimal pl-5 space-y-2">
-                                        {remarks.map((r, idx) => (
-                                            <li key={idx} className="leading-relaxed">
-                                                {r}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <Separator />
-                                    <RemarkEditor remarks={remarks} onChange={setRemarks} />
-                                </CardContent>
-                            </Card>
-
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Update Summary</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-3">
-                                    <FieldNumber
-                                        label="T/Farm Discharge (m3)"
-                                        value={summary.tfarmDischargeM3}
-                                        onChange={(v) => setSummary({ ...summary, tfarmDischargeM3: v })}
-                                    />
-                                    <FieldNumber
-                                        label="Kigamboni Discharge (m3)"
-                                        value={summary.kigamboniDischargeM3}
-                                        onChange={(v) => setSummary({ ...summary, kigamboniDischargeM3: v })}
-                                    />
-                                    <FieldNumber
-                                        label="Net Delivery @ 20C (m3)"
-                                        value={summary.netDeliveryM3At20C}
-                                        onChange={(v) => setSummary({ ...summary, netDeliveryM3At20C: v })}
-                                    />
-                                    <FieldNumber
-                                        label="Net Delivery (MT)"
-                                        value={summary.netDeliveryMT}
-                                        onChange={(v) => setSummary({ ...summary, netDeliveryMT: v })}
-                                    />
-                                    <div className="grid gap-1">
-                                        <Label htmlFor="pump">Pump over NFT Date</Label>
-                                        <Input
-                                            id="pump"
-                                            type="date"
-                                            value={summary.pumpOverDate}
-                                            onChange={(e) => setSummary({ ...summary, pumpOverDate: e.target.value })}
-                                        />
-                                    </div>
-                                    <Separator />
-                                    <FieldNumber
-                                        label="Prev. Volume (m3)"
-                                        value={summary.prevVolumeM3}
-                                        onChange={(v) => setSummary({ ...summary, prevVolumeM3: v })}
-                                    />
-                                    <FieldNumber
-                                        label="Op. Ullage Vol (m3)"
-                                        value={summary.opUllageVolM3}
-                                        onChange={(v) => setSummary({ ...summary, opUllageVolM3: v })}
-                                    />
-
-                                    <div className="flex flex-wrap gap-2 pt-2">
-                                        <Button onClick={saveCurrent}>
-                                            <Save className="mr-2 h-4 w-4" /> Save Day
-                                        </Button>
-                                        <Button variant="outline" onClick={resetSample}>
-                                            <RefreshCw className="mr-2 h-4 w-4" />
-                                            Reset Sample
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </section>
-                    </TabsContent>
-
-                    <TabsContent value="trend">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>
-                                    {"Trend - "}
-                                    {currentStationName(stations, stationId)}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                {trendData.length === 0 ? (
-                                    <p className="text-sm text-muted-foreground">No history yet. Save at least one day to view trends.</p>
-                                ) : (
-                                    <ChartContainer
-                                        className="h-[320px]"
-                                        config={{
-                                            vol20C: { label: "Total m3 @20C", color: "hsl(var(--chart-1))" },
-                                            mts: { label: "Total MTS", color: "hsl(var(--chart-2))" },
-                                            deliveryMT: { label: "Delivery MT", color: "hsl(var(--chart-3))" },
-                                        }}
-                                    >
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <LineChart data={trendData} margin={{ left: 12, right: 12, bottom: 12 }}>
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="date" fontSize={12} />
-                                                <YAxis fontSize={12} />
-                                                <ChartTooltip content={<ChartTooltipContent />} />
-                                                <Legend />
-                                                <Line
-                                                    type="monotone"
-                                                    dataKey="vol20C"
-                                                    name="Total m3 @20C"
-                                                    stroke="var(--color-vol20C)"
-                                                    strokeWidth={2}
-                                                />
-                                                <Line
-                                                    type="monotone"
-                                                    dataKey="mts"
-                                                    name="Total MTS"
-                                                    stroke="var(--color-mts)"
-                                                    strokeWidth={2}
-                                                />
-                                                <Line
-                                                    type="monotone"
-                                                    dataKey="deliveryMT"
-                                                    name="Delivery MT"
-                                                    stroke="var(--color-deliveryMT)"
-                                                    strokeWidth={2}
-                                                />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                    </ChartContainer>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                </Tabs>
-
-                {/* Reference images */}
-                {showRefs && (
-                    <section className="mt-6 space-y-4">
-                        <h3 className="font-semibold text-lg">Reference Screenshots</h3>
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <ReferenceImage src="/images/tank-d1.png" alt="Tankfarm Data page 1 reference" />
-                            <ReferenceImage src="/images/tank-d2.png" alt="Tankfarm Data page 2 reference" />
-                        </div>
-                    </section>
-                )}
-
-                {/* Tank create/edit */}
-                <TankFormDialog
-                    open={openForm}
-                    onOpenChange={setOpenForm}
-                    initial={editing ?? undefined}
-                    onSubmit={(tank) => {
-                        if (editing) {
-                            setTanks((prev) => prev.map((x) => (x.id === editing.id ? { ...tank, id: editing.id } : x)))
-                        } else {
-                            setTanks((prev) => [{ ...tank, id: uid() }, ...prev])
-                        }
-                        setEditing(null)
-                        setOpenForm(false)
-                    }}
-                />
-
-                {/* Tank delete confirmation */}
-                <Dialog open={!!confirmDelete} onOpenChange={(o) => !o && setConfirmDelete(null)}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Delete {confirmDelete?.name}?</DialogTitle>
-                            <DialogDescription>
-                                This will remove the tank row from the table. You can re-add it later.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
-                            <Button variant="outline" onClick={() => setConfirmDelete(null)}>
-                                Cancel
-                            </Button>
-                            <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={doDelete}>
-                                Delete
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-
-                {/* Manage stations */}
-                <ManageStationsDialog
-                    open={manageStationsOpen}
-                    onOpenChange={setManageStationsOpen}
-                    stations={stations}
-                    currentId={stationId}
-                    onCreate={(name) => {
-                        const s: Station = { id: uid(), name: name.trim() }
-                        setStations((prev) => [s, ...prev])
-                        setStationId(s.id)
-                    }}
-                    onRename={(id, name) => {
-                        setStations((prev) => prev.map((s) => (s.id === id ? { ...s, name: name.trim() } : s)))
-                    }}
-                    onDelete={(id) => {
-                        setStations((prev) => prev.filter((s) => s.id !== id))
-                        setDataMap((prev) => {
-                            const copy = { ...prev }
-                            delete copy[id]
-                            return copy
-                        })
-                        setTimeout(() => {
-                            setStationId((sid) => (sid === id ? (stations.filter((s) => s.id !== id)[0]?.id ?? "") : sid))
-                        }, 0)
-                    }}
-                />
-
-                {/* Floating add button on mobile */}
-                <Button
-                    size="icon"
-                    className="md:hidden fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-lg"
-                    onClick={onAddNew}
-                    aria-label="Add tank"
-                >
-                    <Plus className="h-6 w-6" />
-                </Button>
-            </div>
-        </main>
+  function exportCSV() {
+    const header = ["name", "status", "levelMm", "volumeM3", "waterCm", "sg", "tempC", "volAt20C", "mts"].join(",")
+    const rows = tanks.map((t) =>
+      [
+        safe(t.name),
+        safe(t.status),
+        numOrEmpty(t.levelMm),
+        numOrEmpty(t.volumeM3),
+        t.waterCm === null ? "NIL" : numOrEmpty(t.waterCm ?? undefined),
+        numOrEmpty(t.sg),
+        numOrEmpty(t.tempC),
+        numOrEmpty(t.volAt20C),
+        numOrEmpty(t.mts),
+      ].join(","),
     )
+    const text = [header, ...rows].join("\n")
+    const blob = new Blob([text], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `${currentStationName(stations, stationId)}-${date}-tanks.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function importCSV(text: string) {
+    const lines = text.split(/\r?\n/).filter(Boolean)
+    if (lines.length <= 1) return
+    const header = lines[0].split(",").map((s) => s.trim().toLowerCase())
+
+    const idx = {
+      name: findIdx(header, ["name"]),
+      status: findIdx(header, ["status"]),
+      levelMm: findIdx(header, ["levelmm", "level_mm"]),
+      volumeM3: findIdx(header, ["volumem3", "volume m3", "volume"]),
+      waterCm: findIdx(header, ["watercm", "water cm"]),
+      sg: findIdx(header, ["sg"]),
+      tempC: findIdx(header, ["tempc", "temp c"]),
+      volAt20C: findIdx(header, ["volm3 @ 20c", "volm3@20c", "volat20c", "vol m3 @ 20c"]),
+      mts: findIdx(header, ["mts"]),
+    }
+
+    const parsed: Tank[] = lines.slice(1).map((ln) => {
+      const cells = splitCsv(ln)
+      const status = (cells[idx.status] || "Active") as TankStatus
+      const waterRaw = cells[idx.waterCm]
+      const waterVal = waterRaw?.toUpperCase?.() === "NIL" ? null : toNumMaybe(waterRaw)
+      return {
+        id: uid(),
+        name: (cells[idx.name] || "").toUpperCase(),
+        status: status === "Rehabilitation" ? "Rehabilitation" : "Active",
+        levelMm: toNumMaybe(cells[idx.levelMm]) ?? undefined,
+        volumeM3: toNumMaybe(cells[idx.volumeM3]) ?? undefined,
+        waterCm: waterVal,
+        sg: toNumMaybe(cells[idx.sg]) ?? undefined,
+        tempC: toNumMaybe(cells[idx.tempC]) ?? undefined,
+        volAt20C: toNumMaybe(cells[idx.volAt20C]) ?? undefined,
+        mts: toNumMaybe(cells[idx.mts]) ?? undefined,
+      }
+    })
+
+    setTanks(parsed)
+    toast({ title: "Imported CSV", description: `${parsed.length} tank rows` })
+  }
+
+  function onPickFile() {
+    fileInputRef.current?.click()
+  }
+
+  const stationHistory = useMemo(() => {
+    const entries = Object.entries(dataMap[stationId] || {}).sort((a, b) => (a[0] > b[0] ? -1 : 1))
+    return entries
+  }, [dataMap, stationId])
+
+  const filteredSorted = useMemo(() => {
+    let rows = tanks
+    if (query.trim()) {
+      const q = query.trim().toLowerCase()
+      rows = rows.filter((t) => t.name.toLowerCase().includes(q))
+    }
+    if (statusFilter !== "All") {
+      rows = rows.filter((t) => t.status === statusFilter)
+    }
+    rows = [...rows].sort((a: any, b: any) => {
+      const A = a[sortKey] ?? (sortKey === "name" ? "" : Number.NEGATIVE_INFINITY)
+      const B = b[sortKey] ?? (sortKey === "name" ? "" : Number.NEGATIVE_INFINITY)
+      if (A < B) return sortDir === "asc" ? -1 : 1
+      if (A > B) return sortDir === "asc" ? 1 : -1
+      return 0
+    })
+    return rows
+  }, [tanks, query, statusFilter, sortKey, sortDir])
+
+  const trendData = useMemo(() => {
+    const list = Object.entries(dataMap[stationId] || {})
+      .sort((a, b) => (a[0] > b[0] ? 1 : -1))
+      .map(([d, e]) => {
+        const t = calcTotals(e.tanks)
+        return {
+          date: d,
+          vol20C: Number(t.totalVol20C.toFixed(3)),
+          mts: Number(t.totalMTS.toFixed(3)),
+          deliveryMT: Number(e.summary.netDeliveryMT.toFixed(3)),
+        }
+      })
+    return list
+  }, [dataMap, stationId])
+
+  function clearFilters() {
+    setQuery("")
+    setStatusFilter("All")
+    setSortKey("name")
+    setSortDir("asc")
+  }
+
+  return (
+    <main className="min-h-screen w-full bg-muted/30">
+      <div className="mx-auto w-full max-w-7xl p-4 md:p-8">
+        <header className="mb-6 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="space-y-1">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">TANKFARM DATA</h1>
+              <p className="text-sm text-muted-foreground">
+                Enter daily stock data per station.
+              </p>
+            </div>
+
+            <div className="md:hidden">
+              <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline">
+                    <Menu className="mr-2 h-4 w-4" />
+                    Controls
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[90vw] sm:max-w-sm">
+                  <SheetHeader>
+                    <SheetTitle>Controls</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-4 grid gap-4">
+                    <StationControls
+                      stations={stations}
+                      stationId={stationId}
+                      onStationChange={setStationId}
+                      onManage={() => setManageStationsOpen(true)}
+                      date={date}
+                      onDateChange={setDate}
+                    />
+
+                    <FilterControls
+                      query={query}
+                      onQuery={setQuery}
+                      statusFilter={statusFilter}
+                      onStatusFilter={setStatusFilter}
+                      sortKey={sortKey}
+                      onSortKey={setSortKey}
+                      sortDir={sortDir}
+                      onSortDir={setSortDir}
+                    />
+
+                    <div className="grid gap-2">
+                      {/*<Button onClick={saveCurrent}>*/}
+                      {/*  <Save className="mr-2 h-4 w-4" />*/}
+                      {/*  Save Day*/}
+                      {/*</Button>*/}
+                      {/*<Button variant="outline" onClick={copyFromPrevious}>*/}
+                      {/*  <Copy className="mr-2 h-4 w-4" />*/}
+                      {/*  Copy Previous*/}
+                      {/*</Button>*/}
+
+                      {/*<div className="flex gap-2">*/}
+                      {/*  <Button*/}
+                      {/*    className="flex-1 bg-transparent"*/}
+                      {/*    variant="outline"*/}
+                      {/*    onClick={() => setShowRefs((s) => !s)}*/}
+                      {/*  >*/}
+                      {/*    <Info className="mr-2 h-4 w-4" />*/}
+                      {/*    {showRefs ? "Hide Refs" : "Show Refs"}*/}
+                      {/*  </Button>*/}
+                      {/*</div>*/}
+
+                      <div className="flex gap-2">
+                        <Button className="flex-1 bg-transparent" variant="outline" onClick={exportCSV}>
+                          <Download className="mr-2 h-4 w-4" />
+                          Export
+                        </Button>
+                        {/*<Button className="flex-1 bg-transparent" variant="outline" onClick={onPickFile}>*/}
+                        {/*  <Upload className="mr-2 h-4 w-4" />*/}
+                        {/*  Import*/}
+                        {/*</Button>*/}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".csv,text/csv"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            const text = await file.text()
+                            importCSV(text)
+                            e.currentTarget.value = ""
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+          </div>
+
+          <div className="hidden md:grid grid-cols-1 xl:grid-cols-[1fr_auto] items-start gap-3">
+            <StationControls
+              stations={stations}
+              stationId={stationId}
+              onStationChange={setStationId}
+              onManage={() => setManageStationsOpen(true)}
+              date={date}
+              onDateChange={setDate}
+            />
+
+            <div className="flex items-end gap-2 justify-start xl:justify-end mt-5">
+              {/*<Button onClick={saveCurrent}>*/}
+              {/*  <Save className="mr-2 h-4 w-4" />*/}
+              {/*  Save Day*/}
+              {/*</Button>*/}
+              {/*<Button variant="outline" onClick={copyFromPrevious}>*/}
+              {/*  <Copy className="mr-2 h-4 w-4" />*/}
+              {/*  Copy Previous*/}
+              {/*</Button>*/}
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">
+                    <ChevronDown className="mr-2 h-4 w-4" />
+                    More
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  {/*<DropdownMenuItem onClick={() => setShowRefs((s) => !s)}>*/}
+                  {/*  <Info className="mr-2 h-4 w-4" />*/}
+                  {/*  {showRefs ? "Hide references" : "Show references"}*/}
+                  {/*</DropdownMenuItem>*/}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={exportCSV}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Export CSV
+                  </DropdownMenuItem>
+                  {/*<DropdownMenuItem onClick={onPickFile}>*/}
+                  {/*  <Upload className="mr-2 h-4 w-4" />*/}
+                  {/*  Import CSV*/}
+                  {/*</DropdownMenuItem>*/}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv,text/csv"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      const text = await file.text()
+                      importCSV(text)
+                      e.currentTarget.value = ""
+                    }}
+                  />
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            <FilterControls
+              className="md:col-span-1 xl:col-span-2"
+              query={query}
+              onQuery={setQuery}
+              statusFilter={statusFilter}
+              onStatusFilter={setStatusFilter}
+              sortKey={sortKey}
+              onSortKey={setSortKey}
+              sortDir={sortDir}
+              onSortDir={setSortDir}
+            />
+          </div>
+        </header>
+
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
+          <SummaryCard
+            title="T/Farm Discharge"
+            value={`${formatNumber(summary.tfarmDischargeM3)} m3`}
+            icon={<Droplet className="h-4 w-4" />}
+            color="from-emerald-500/15 to-emerald-500/0"
+          />
+          <SummaryCard
+            title="Kigamboni Discharge"
+            value={`${formatNumber(summary.kigamboniDischargeM3)} m3`}
+            icon={<Factory className="h-4 w-4" />}
+            color="from-amber-500/20 to-amber-500/0"
+          />
+          <SummaryCard
+            title="Net Delivery @ 20C"
+            value={`${formatNumber(summary.netDeliveryM3At20C)} m3`}
+            icon={<Thermometer className="h-4 w-4" />}
+            color="from-rose-500/15 to-rose-500/0"
+          />
+          <SummaryCard
+            title="Net Delivery (MT)"
+            value={`${formatNumber(summary.netDeliveryMT)} MT`}
+            icon={<Package className="h-4 w-4" />}
+            color="from-violet-500/15 to-violet-500/0"
+          />
+        </section>
+
+        <Tabs defaultValue="table" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="table">Table</TabsTrigger>
+            <TabsTrigger value="remarks">Remarks & Summary</TabsTrigger>
+            <TabsTrigger value="trend">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Trend
+            </TabsTrigger>
+              <TabsTrigger value="3D">
+                  <ViewIcon className="h-4 w-4 mr-2" />
+                  3D View
+              </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="table" className="space-y-6">
+            <section className="rounded-lg border bg-background shadow-sm">
+              <div className="p-4 border-b flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2">
+                  <ClipboardList className="h-5 w-5" />
+                  <h2 className="font-semibold">
+                    {"AA: Stock Position - "}
+                    {currentStationName(stations, stationId)}
+                    {" - "}
+                    {date}
+                  </h2>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" onClick={onAddNew}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Tank
+                  </Button>
+                  <Badge variant="outline">Pump over NFT: {new Date(summary.pumpOverDate).toLocaleDateString()}</Badge>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableCaption>All volumes in cubic meters unless otherwise specified.</TableCaption>
+                  <TableHeader className="sticky top-0 z-10 bg-background">
+                    <TableRow>
+                      <TableHead className="min-w-[80px]">Tank</TableHead>
+                      <TableHead className="text-right">Level mm</TableHead>
+                      <TableHead className="text-right">Volume m3</TableHead>
+                      <TableHead className="text-right">Water cm</TableHead>
+                      <TableHead className="text-right">SG</TableHead>
+                      <TableHead className="text-right">Temp C</TableHead>
+                      <TableHead className="text-right">Vol m3 @ 20C</TableHead>
+                      <TableHead className="text-right">MTS</TableHead>
+                      <TableHead className="w-[120px] text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredSorted.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={9}>
+                          <div className="flex flex-col items-center justify-center py-10 text-center gap-3">
+                            <p className="text-sm text-muted-foreground">No tanks match the current filters.</p>
+                            <div className="flex gap-2">
+                              <Button variant="outline" onClick={clearFilters}>
+                                Clear filters
+                              </Button>
+                              <Button onClick={onAddNew}>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Tank
+                              </Button>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredSorted.map((t) => (
+                        <TableRow
+                          key={t.id}
+                          className={cn(
+                            "hover:bg-muted/50 transition-colors",
+                            t.status === "Rehabilitation" && "opacity-70",
+                          )}
+                        >
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-2">
+                              <span>{t.name}</span>
+                              {t.status === "Rehabilitation" && <Badge variant="secondary">Under Rehabilitation</Badge>}
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">{formatNumber(t.levelMm)}</TableCell>
+                          <TableCell className="text-right">{formatNumber(t.volumeM3)}</TableCell>
+                          <TableCell className="text-right">
+                            {t.waterCm === null ? "NIL" : formatNumber(t.waterCm)}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {formatNumber(t.sg, { maximumFractionDigits: 4 })}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {formatNumber(t.tempC, { maximumFractionDigits: 1 })}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {formatNumber(t.volAt20C, { maximumFractionDigits: 3 })}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {formatNumber(t.mts, { maximumFractionDigits: 3 })}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-1">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => onEdit(t)}
+                                aria-label={`Edit ${t.name}`}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => onDelete(t)}
+                                aria-label={`Delete ${t.name}`}
+                                className="text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                  <TableFooter>
+                    <TableRow>
+                      <TableCell className="font-semibold">TOTAL VOLUME</TableCell>
+                      <TableCell />
+                      <TableCell className="text-right font-semibold">{formatNumber(totals.totalVolume)}</TableCell>
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell className="text-right font-semibold">{formatNumber(totals.totalVol20C)}</TableCell>
+                      <TableCell className="text-right font-semibold">{formatNumber(totals.totalMTS)}</TableCell>
+                      <TableCell />
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-semibold">PREV. VOLUME</TableCell>
+                      <TableCell />
+                      <TableCell className="text-right">{formatNumber(summary.prevVolumeM3)}</TableCell>
+                      <TableCell colSpan={5} />
+                      <TableCell />
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-semibold">OP. ULLAGE VOL</TableCell>
+                      <TableCell />
+                      <TableCell className="text-right">{formatNumber(summary.opUllageVolM3)}</TableCell>
+                      <TableCell colSpan={5} />
+                      <TableCell />
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </div>
+            </section>
+          </TabsContent>
+
+          <TabsContent value="remarks">
+            <section className="grid gap-4 lg:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>CC: Remarks</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <ul className="list-decimal pl-5 space-y-2">
+                    {remarks.map((r, idx) => (
+                      <li key={idx} className="leading-relaxed flex items-start gap-2">
+                        <span className="flex-1 whitespace-pre-wrap break-words">{r}</span>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label={`Remove remark ${idx + 1}`}
+                          onClick={() => {
+                            const next = remarks.slice()
+                            next.splice(idx, 1)
+                            setRemarks(next)
+                            try {
+                              console.log("Remark removed at index:", idx)
+                            } catch {}
+                            // Persist immediately for visibility
+                            saveCurrent({ remarks: next })
+                          }}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                  <Separator />
+                  <RemarkEditor
+                    remarks={remarks}
+                    onChange={(r) => {
+                      setRemarks(r)
+                      try {
+                        console.log("Remark added/updated:", r[r.length - 1])
+                      } catch {}
+                      // Persist immediately to provide feedback and logs
+                      saveCurrent({ remarks: r })
+                    }}
+                  />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Update Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <FieldNumber
+                    label="T/Farm Discharge (m3)"
+                    value={summary.tfarmDischargeM3}
+                    onChange={(v) => setSummary({ ...summary, tfarmDischargeM3: v })}
+                  />
+                  <FieldNumber
+                    label="Kigamboni Discharge (m3)"
+                    value={summary.kigamboniDischargeM3}
+                    onChange={(v) => setSummary({ ...summary, kigamboniDischargeM3: v })}
+                  />
+                  <FieldNumber
+                    label="Net Delivery @ 20C (m3)"
+                    value={summary.netDeliveryM3At20C}
+                    onChange={(v) => setSummary({ ...summary, netDeliveryM3At20C: v })}
+                  />
+                  <FieldNumber
+                    label="Net Delivery (MT)"
+                    value={summary.netDeliveryMT}
+                    onChange={(v) => setSummary({ ...summary, netDeliveryMT: v })}
+                  />
+                  <div className="grid gap-1">
+                    <Label htmlFor="pump">Pump over NFT Date</Label>
+                    <Input
+                      id="pump"
+                      type="date"
+                      value={summary.pumpOverDate}
+                      onChange={(e) => setSummary({ ...summary, pumpOverDate: e.target.value })}
+                    />
+                  </div>
+                  <Separator />
+                  <FieldNumber
+                    label="Prev. Volume (m3)"
+                    value={summary.prevVolumeM3}
+                    onChange={(v) => setSummary({ ...summary, prevVolumeM3: v })}
+                  />
+                  <FieldNumber
+                    label="Op. Ullage Vol (m3)"
+                    value={summary.opUllageVolM3}
+                    onChange={(v) => setSummary({ ...summary, opUllageVolM3: v })}
+                  />
+
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <Button onClick={saveCurrent}>
+                      <Save className="mr-2 h-4 w-4" /> Save Day
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          </TabsContent>
+
+          <TabsContent value="trend">
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  {"Trend - "}
+                  {currentStationName(stations, stationId)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {trendData.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">No history yet. Save at least one day to view trends.</p>
+                ) : (
+                  <ChartContainer
+                    className="h-[320px]"
+                    config={{
+                      vol20C: { label: "Total m3 @20C", color: "hsl(var(--chart-1))" },
+                      mts: { label: "Total MTS", color: "hsl(var(--chart-2))" },
+                      deliveryMT: { label: "Delivery MT", color: "hsl(var(--chart-3))" },
+                    }}
+                  >
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={trendData} margin={{ left: 12, right: 12, bottom: 12 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" fontSize={12} />
+                        <YAxis fontSize={12} />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <Legend />
+                        <Line
+                          type="monotone"
+                          dataKey="vol20C"
+                          name="Total m3 @20C"
+                          stroke="var(--color-vol20C)"
+                          strokeWidth={2}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="mts"
+                          name="Total MTS"
+                          stroke="var(--color-mts)"
+                          strokeWidth={2}
+                        />
+                        <Line
+                          type="monotone"
+                          dataKey="deliveryMT"
+                          name="Delivery MT"
+                          stroke="var(--color-deliveryMT)"
+                          strokeWidth={2}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+            <TabsContent value="3D">
+                {(() => {
+                  // Build a visualization-friendly dataset from entries data
+                  const vols = tanks.map(t => (t.volAt20C ?? t.volumeM3 ?? 0) || 0)
+                  const maxVol = vols.length ? Math.max(...vols, 0) : 0
+                  const safeMax = maxVol > 0 ? maxVol : 1 // avoid divide-by-zero
+
+                  const vizTanks = tanks.map((t, idx) => {
+                    const vol = vols[idx]
+                    const levelPct = Math.max(0, Math.min(100, Math.round((vol / safeMax) * 100)))
+                    return {
+                      id: t.name || String(idx + 1),
+                      name: t.name,
+                      level: levelPct,
+                      product: "Diesel LSG" as const,
+                      capacity: Math.round(safeMax),
+                    }
+                  })
+
+                  return <TankVisualization tanks={vizTanks} />
+                })()}
+            </TabsContent>
+        </Tabs>
+
+
+        {showRefs && (
+          <section className="mt-6 space-y-4">
+            <h3 className="font-semibold text-lg">Reference Screenshots</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <ReferenceImage src="/images/tank-d1.png" alt="Tankfarm Data page 1 reference" />
+              <ReferenceImage src="/images/tank-d2.png" alt="Tankfarm Data page 2 reference" />
+            </div>
+          </section>
+        )}
+
+        <TankFormDialog
+          key={editing ? editing.id : "new"}
+          open={openForm}
+          onOpenChange={setOpenForm}
+          initial={editing ?? undefined}
+          onSubmit={(tank) => {
+            // Compute the next tanks array synchronously so we can save immediately
+            let nextTanks: Tank[]
+            if (editing) {
+              nextTanks = tanks.map((x) => (x.id === editing.id ? { ...tank, id: editing.id } : x))
+            } else {
+              nextTanks = [{ ...tank, id: uid() }, ...tanks]
+            }
+            setTanks(nextTanks)
+            setEditing(null)
+            setOpenForm(false)
+
+            // Persist to local cache (same as saveCurrent)
+            setDataMap((prev) => {
+              const stationEntries = { ...(prev[stationId] || {}) }
+              stationEntries[date] = { tanks: nextTanks, summary, remarks }
+              return { ...prev, [stationId]: stationEntries }
+            })
+
+            // Persist to database immediately and log the attempt
+            console.log("Attempting to save to database from TankFormDialog...", {
+              stationId,
+              date,
+              tanksCount: nextTanks.length,
+            })
+
+            apiSaveEntry({
+              stationId,
+              date,
+              entry: {
+                tanks: nextTanks.map(({ name, status, levelMm, volumeM3, waterCm, sg, tempC, volAt20C, mts }) => ({
+                  name,
+                  status,
+                  levelMm,
+                  volumeM3,
+                  waterCm: waterCm === null ? null : waterCm,
+                  sg,
+                  tempC,
+                  volAt20C,
+                  mts,
+                })),
+                summary: { ...summary },
+                remarks,
+              },
+            })
+              .then(() => {
+                console.log("Successfully saved to database from TankFormDialog")
+                toast({
+                  title: "Saved to database",
+                  description: `${currentStationName(stations, stationId)} - ${date}`,
+                })
+              })
+              .catch((e) => {
+                console.error("Database save failed from TankFormDialog:", e)
+                toast({
+                  title: "Database save failed",
+                  description: (e as any)?.message || "Check server logs/connection",
+                  variant: "destructive" as any,
+                })
+              })
+          }}
+        />
+
+        <Dialog open={!!confirmDelete} onOpenChange={(o) => !o && setConfirmDelete(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete {confirmDelete?.name}?</DialogTitle>
+              <DialogDescription>
+                This will remove the tank row from the table. You can re-add it later.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setConfirmDelete(null)}>
+                Cancel
+              </Button>
+              <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={doDelete}>
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <ManageStationsDialog
+          open={manageStationsOpen}
+          onOpenChange={setManageStationsOpen}
+          stations={stations}
+          currentId={stationId}
+          onCreate={(name) => {
+            apiCreateStation(name)
+              .then((s) => {
+                const st = { id: s.id, name: s.name }
+                setStations((prev) => [st, ...prev])
+                setStationId(st.id)
+              })
+              .catch((e) => toast({ title: "Create failed", description: String(e), variant: "destructive" as any }))
+          }}
+          onRename={(id, name) => {
+            apiRenameStation(id, name)
+              .then((s) => setStations((prev) => prev.map((x) => (x.id === id ? { ...x, name: s.name } : x))))
+              .catch((e) => toast({ title: "Rename failed", description: String(e), variant: "destructive" as any }))
+          }}
+          onDelete={(id) => {
+            apiDeleteStation(id)
+              .then(() => {
+                setStations((prev) => prev.filter((s) => s.id !== id))
+                setDataMap((prev) => {
+                  const copy = { ...prev }
+                  delete copy[id]
+                  return copy
+                })
+                setTimeout(() => {
+                  setStationId((sid) => (sid === id ? (stations.filter((s) => s.id !== id)[0]?.id ?? "") : sid))
+                }, 0)
+              })
+              .catch((e) => toast({ title: "Delete failed", description: String(e), variant: "destructive" as any }))
+          }}
+        />
+
+        <Button
+          size="icon"
+          className="md:hidden fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-lg"
+          onClick={onAddNew}
+          aria-label="Add tank"
+        >
+          <Plus className="h-6 w-6" />
+        </Button>
+      </div>
+    </main>
+  )
 }
 
 /* ---------- Sub-components ---------- */
 
 function StationControls({
-    stations,
-    stationId,
-    onStationChange,
-    onManage,
-    date,
-    onDateChange,
+  stations,
+  stationId,
+  onStationChange,
+  onManage,
+  date,
+  onDateChange,
 }: {
-    stations: Station[]
-    stationId: string
-    onStationChange: (id: string) => void
-    onManage: () => void
-    date: string
-    onDateChange: (d: string) => void
+  stations: Station[]
+  stationId: string
+  onStationChange: (id: string) => void
+  onManage: () => void
+  date: string
+  onDateChange: (d: string) => void
 }) {
-    return (
-        <div className="grid gap-2">
-            <div className="grid sm:grid-cols-[1fr_auto] gap-2">
-                <div>
-                    <Label className="mb-1 block">Station</Label>
-                    <div className="flex flex-wrap gap-2">
-                        <Select value={stationId} onValueChange={onStationChange}>
-                            <SelectTrigger className="w-full min-w-[180px]">
-                                <SelectValue placeholder="Select station" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {stations.map((s) => (
-                                    <SelectItem key={s.id} value={s.id}>
-                                        {s.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <Button variant="outline" onClick={onManage}>
-                            <Settings className="mr-2 h-4 w-4" /> Manage
-                        </Button>
-                    </div>
-                </div>
-
-                <div>
-                    <Label className="mb-1 block">Date</Label>
-                    <Input type="date" value={date} onChange={(e) => onDateChange(e.target.value)} />
-                </div>
-            </div>
+  return (
+    <div className="grid gap-2">
+      <div className="grid sm:grid-cols-[1fr_auto] gap-2">
+        <div>
+          <Label className="mb-1 block">Station</Label>
+          <div className="flex flex-wrap gap-2">
+            <Select value={stationId} onValueChange={onStationChange}>
+              <SelectTrigger className="w-full min-w-[180px]">
+                <SelectValue placeholder="Select station" />
+              </SelectTrigger>
+              <SelectContent>
+                {stations.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button variant="outline" onClick={onManage}>
+              <Settings className="mr-2 h-4 w-4" /> Manage
+            </Button>
+          </div>
         </div>
-    )
+
+        <div>
+          <Label className="mb-1 block">Date</Label>
+          <Input type="date" value={date} onChange={(e) => onDateChange(e.target.value)} />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function FilterControls({
-    className,
-    query,
-    onQuery,
-    statusFilter,
-    onStatusFilter,
-    sortKey,
-    onSortKey,
-    sortDir,
-    onSortDir,
+  className,
+  query,
+  onQuery,
+  statusFilter,
+  onStatusFilter,
+  sortKey,
+  onSortKey,
+  sortDir,
+  onSortDir,
 }: {
-    className?: string
-    query: string
-    onQuery: (s: string) => void
-    statusFilter: TankStatus | "All"
-    onStatusFilter: (s: TankStatus | "All") => void
-    sortKey: SortKey
-    onSortKey: (s: SortKey) => void
-    sortDir: "asc" | "desc"
-    onSortDir: (d: "asc" | "desc") => void
+  className?: string
+  query: string
+  onQuery: (s: string) => void
+  statusFilter: TankStatus | "All"
+  onStatusFilter: (s: TankStatus | "All") => void
+  sortKey: SortKey
+  onSortKey: (s: SortKey) => void
+  sortDir: "asc" | "desc"
+  onSortDir: (d: "asc" | "desc") => void
 }) {
-    return (
-        <div className={cn("grid gap-2", className)}>
-            <Label className="mb-1 flex items-center gap-2">
-                <Filter className="h-4 w-4" /> Filters
-            </Label>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="col-span-1">
-                    <Input
-                        placeholder="Search tank by name..."
-                        value={query}
-                        onChange={(e) => onQuery(e.target.value)}
-                        className="w-full"
-                    />
-                </div>
-
-                <div className="col-span-1">
-                    <Select value={statusFilter} onValueChange={(v) => onStatusFilter(v as any)}>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="All">All statuses</SelectItem>
-                            <SelectItem value="Active">Active</SelectItem>
-                            <SelectItem value="Rehabilitation">Rehabilitation</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-2">
-                    <Select value={sortKey} onValueChange={(v) => onSortKey(v as SortKey)}>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Sort by" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="name">Tank</SelectItem>
-                            <SelectItem value="volumeM3">Volume m3</SelectItem>
-                            <SelectItem value="volAt20C">Vol @20C</SelectItem>
-                            <SelectItem value="mts">MTS</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={sortDir} onValueChange={(v) => onSortDir(v as "asc" | "desc")}>
-                        <SelectTrigger className="w-full min-w-0">
-                            <SelectValue placeholder="Order" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="asc">Asc</SelectItem>
-                            <SelectItem value="desc">Desc</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-            </div>
+  return (
+    <div className={cn("grid gap-2", className)}>
+      <Label className="mb-1 flex items-center gap-2">
+        <Filter className="h-4 w-4" /> Filters
+      </Label>
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="col-span-1">
+          <Input
+            placeholder="Search tank by name..."
+            value={query}
+            onChange={(e) => onQuery(e.target.value)}
+            className="w-full"
+          />
         </div>
-    )
-}
 
-/* ---------- Removed: Copy setup feature ---------- */
-/* The copy setup dialog and related helpers were removed per request. */
-
-function ManageStationsDialog({
-    open,
-    onOpenChange,
-    stations,
-    currentId,
-    onCreate,
-    onRename,
-    onDelete,
-}: {
-    open: boolean
-    onOpenChange: (o: boolean) => void
-    stations: Station[]
-    currentId: string
-    onCreate: (name: string) => void
-    onRename: (id: string, name: string) => void
-    onDelete: (id: string) => void
-}) {
-    const [newName, setNewName] = useState("")
-    const [edits, setEdits] = useState<Record<string, string>>({})
-
-    useEffect(() => {
-        if (open) {
-            setEdits(Object.fromEntries(stations.map((s) => [s.id, s.name])))
-            setNewName("")
-        }
-    }, [open, stations])
-
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-xl">
-                <DialogHeader>
-                    <DialogTitle>Manage Stations</DialogTitle>
-                    <DialogDescription>Add, rename, or remove stations.</DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        {stations.map((s) => (
-                            <div key={s.id} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                                <Input
-                                    value={edits[s.id] ?? ""}
-                                    onChange={(e) => setEdits((prev) => ({ ...prev, [s.id]: e.target.value }))}
-                                />
-                                <div className="flex gap-2">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => onRename(s.id, edits[s.id] ?? s.name)}
-                                        disabled={!edits[s.id]?.trim()}
-                                    >
-                                        Rename
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        className="text-destructive bg-transparent"
-                                        onClick={() => onDelete(s.id)}
-                                        disabled={stations.length <= 1 || s.id === currentId}
-                                        title={s.id === currentId ? "Cannot delete the currently selected station" : ""}
-                                    >
-                                        Delete
-                                    </Button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <Separator />
-
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
-                        <div className="flex-1">
-                            <Label htmlFor="new-station">New station</Label>
-                            <Input
-                                id="new-station"
-                                placeholder="e.g., Depot B"
-                                value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
-                            />
-                        </div>
-                        <Button onClick={() => newName.trim() && onCreate(newName)}>Add</Button>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>
-                        Close
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
-}
-
-/* ---------- Small helpers & leaf components ---------- */
-
-function SummaryCard({
-    title,
-    value,
-    subtitle,
-    icon,
-    color = "from-emerald-500/10 to-emerald-500/0",
-}: {
-    title: string
-    value: string
-    subtitle?: string
-    icon?: React.ReactNode
-    color?: string
-}) {
-    return (
-        <Card>
-            <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm text-muted-foreground">{title}</CardTitle>
-                    {icon ? (
-                        <span
-                            className={cn("inline-flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br", color)}
-                        >
-                            {icon}
-                        </span>
-                    ) : null}
-                </div>
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
-                {subtitle ? <div className="text-xs text-muted-foreground mt-1">{subtitle}</div> : null}
-            </CardContent>
-        </Card>
-    )
-}
-
-function FieldNumber({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
-    return (
-        <div className="grid gap-1">
-            <Label>{label}</Label>
-            <Input
-                type="number"
-                value={Number.isFinite(value) ? value : 0}
-                step="0.001"
-                onChange={(e) => onChange(Number.parseFloat(e.target.value))}
-            />
+        <div className="col-span-1">
+          <Select value={statusFilter} onValueChange={(v) => onStatusFilter(v as any)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All statuses</SelectItem>
+              <SelectItem value="Active">Active</SelectItem>
+              <SelectItem value="Rehabilitation">Rehabilitation</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-    )
-}
 
-function ReferenceImage({ src, alt }: { src: string; alt: string }) {
-    return (
-        <div className="rounded-lg border bg-background overflow-hidden">
-            <Image
-                src={src || "/placeholder.svg?height=800&width=1200&query=reference%20image"}
-                alt={alt}
-                width={1200}
-                height={800}
-                className="w-full h-auto object-contain"
-                priority={false}
-            />
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 gap-2">
+          <Select value={sortKey} onValueChange={(v) => onSortKey(v as SortKey)}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="name">Tank</SelectItem>
+              <SelectItem value="volumeM3">Volume m3</SelectItem>
+              <SelectItem value="volAt20C">Vol @20C</SelectItem>
+              <SelectItem value="mts">MTS</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={sortDir} onValueChange={(v) => onSortDir(v as "asc" | "desc")}>
+            <SelectTrigger className="w-full min-w-0">
+              <SelectValue placeholder="Order" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="asc">Asc</SelectItem>
+              <SelectItem value="desc">Desc</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-    )
-}
-
-function TankFormDialog({
-    open,
-    onOpenChange,
-    initial,
-    onSubmit,
-}: {
-    open: boolean
-    onOpenChange: (o: boolean) => void
-    initial?: Tank
-    onSubmit: (tank: Omit<Tank, "id">) => void
-}) {
-    const [name, setName] = useState(initial?.name ?? "")
-    const [status, setStatus] = useState<TankStatus>(initial?.status ?? "Active")
-    const [levelMm, setLevelMm] = useState<number | undefined>(initial?.levelMm)
-    const [volumeM3, setVolumeM3] = useState<number | undefined>(initial?.volumeM3)
-    const [waterCm, setWaterCm] = useState<number | null | undefined>(initial?.waterCm ?? undefined)
-    const [sg, setSg] = useState<number | null | undefined>(initial?.sg ?? undefined)
-    const [tempC, setTempC] = useState<number | null | undefined>(initial?.tempC ?? undefined)
-    const [volAt20C, setVolAt20C] = useState<number | null | undefined>(initial?.volAt20C ?? undefined)
-    const [mts, setMts] = useState<number | null | undefined>(initial?.mts ?? undefined)
-
-    useEffect(() => {
-        setName(initial?.name ?? "")
-        setStatus(initial?.status ?? "Active")
-        setLevelMm(initial?.levelMm)
-        setVolumeM3(initial?.volumeM3)
-        setWaterCm(initial?.waterCm ?? undefined)
-        setSg(initial?.sg ?? undefined)
-        setTempC(initial?.tempC ?? undefined)
-        setVolAt20C(initial?.volAt20C ?? undefined)
-        setMts(initial?.mts ?? undefined)
-    }, [initial, open])
-
-    function submit() {
-        if (!name.trim()) return
-        const base: Omit<Tank, "id"> = {
-            name: name.trim().toUpperCase(),
-            status,
-            levelMm: status === "Active" ? toNum(levelMm) : undefined,
-            volumeM3: status === "Active" ? toNum(volumeM3) : undefined,
-            waterCm: status === "Active" ? toNullableNum(waterCm) : undefined,
-            sg: status === "Active" ? toNullableNum(sg) : undefined,
-            tempC: status === "Active" ? toNullableNum(tempC) : undefined,
-            volAt20C: status === "Active" ? toNullableNum(volAt20C) : undefined,
-            mts: status === "Active" ? toNullableNum(mts) : undefined,
-        }
-        onSubmit(base)
-    }
-
-    const disabledFields = status === "Rehabilitation"
-
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>{initial ? `Edit ${initial.name}` : "Add Tank"}</DialogTitle>
-                    <DialogDescription>Enter tank details. Use NIL for Water if not applicable.</DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="col-span-2">
-                            <Label htmlFor="tank-name">Tank Name</Label>
-                            <Input id="tank-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="T7" />
-                        </div>
-                        <div className="col-span-2">
-                            <Label>Status</Label>
-                            <Select value={status} onValueChange={(v) => setStatus(v as TankStatus)}>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="Active">Active</SelectItem>
-                                    <SelectItem value="Rehabilitation">Rehabilitation</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <NumberField label="Level mm" value={levelMm} onChange={setLevelMm} disabled={disabledFields} />
-                        <NumberField label="Volume m3" value={volumeM3} onChange={setVolumeM3} disabled={disabledFields} />
-                        <NumberField
-                            label="Water cm (NIL allowed)"
-                            value={waterCm ?? undefined}
-                            onChange={setWaterCm as any}
-                            disabled={disabledFields}
-                        />
-                        <NumberField
-                            label="SG"
-                            value={sg ?? undefined}
-                            onChange={setSg as any}
-                            step={0.0001}
-                            disabled={disabledFields}
-                        />
-                        <NumberField
-                            label="Temp C"
-                            value={tempC ?? undefined}
-                            onChange={setTempC as any}
-                            step={0.1}
-                            disabled={disabledFields}
-                        />
-                        <NumberField
-                            label="Vol m3 @ 20C"
-                            value={volAt20C ?? undefined}
-                            onChange={setVolAt20C as any}
-                            disabled={disabledFields}
-                        />
-                        <NumberField label="MTS" value={mts ?? undefined} onChange={setMts as any} disabled={disabledFields} />
-                    </div>
-                </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)}>
-                        Cancel
-                    </Button>
-                    <Button onClick={submit}>{initial ? "Save Changes" : "Add Tank"}</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
-}
-
-function NumberField({
-    label,
-    value,
-    onChange,
-    disabled,
-    step = 1,
-}: {
-    label: string
-    value?: number
-    onChange: (v?: number) => void
-    disabled?: boolean
-    step?: number
-}) {
-    return (
-        <div className="grid gap-1">
-            <Label>{label}</Label>
-            <Input
-                type="number"
-                step={step}
-                value={typeof value === "number" ? value : ""}
-                onChange={(e) => {
-                    const v = e.target.value
-                    onChange(v === "" ? undefined : Number(v))
-                }}
-                disabled={disabled}
-            />
-        </div>
-    )
-}
-
-/* ---------- Utility functions ---------- */
-
-function currentStationName(stations: Station[], id: string) {
-    return stations.find((s) => s.id === id)?.name ?? "Station"
+      </div>
+    </div>
+  )
 }
 
 function calcTotals(tanks: Tank[]) {
-    const totalVolume = tanks.reduce((acc, t) => acc + (t.volumeM3 || 0), 0)
-    const totalVol20C = tanks.reduce((acc, t) => acc + (t.volAt20C || 0), 0)
-    const totalMTS = tanks.reduce((acc, t) => acc + (t.mts || 0), 0)
-    return { totalVolume, totalVol20C, totalMTS }
+  const totalVolume = tanks.reduce((acc, t) => acc + (t.volumeM3 || 0), 0)
+  const totalVol20C = tanks.reduce((acc, t) => acc + (t.volAt20C || 0), 0)
+  const totalMTS = tanks.reduce((acc, t) => acc + (t.mts || 0), 0)
+  return { totalVolume, totalVol20C, totalMTS }
 }
 
-function toNum(v?: number) {
-    return typeof v === "number" && !Number.isNaN(v) ? v : 0
+function currentStationName(stations: Station[], stationId: string) {
+  return stations.find((s) => s.id === stationId)?.name || "Unknown"
 }
-function toNullableNum(v?: number | null) {
-    if (v === null) return null
-    return typeof v === "number" && !Number.isNaN(v) ? v : 0
+
+function safe(str: any) {
+  return String(str).replace(/,/g, "")
 }
-function toNumMaybe(v?: string) {
-    if (v == null || v === "") return undefined
-    const n = Number(v)
-    return Number.isFinite(n) ? n : undefined
+function numOrEmpty(val: number | null | undefined) {
+  if (val === null || val === undefined) return ""
+  return val
 }
-function numOrEmpty(n?: number | null) {
-    return typeof n === "number" ? String(n) : ""
+
+function findIdx(header: string[], candidates: string[]) {
+  for (const c of candidates) {
+    const idx = header.indexOf(c)
+    if (idx >= 0) return idx
+  }
+  return -1
 }
-function safe(s: any) {
-    return String(s ?? "").replace(/,/g, " ")
+
+function splitCsv(str: string) {
+  const separator = ","
+  const escapedSeparator = separator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  const regex = new RegExp(`(?:^|${escapedSeparator})("(?:[^"]|"")*"|[^"${escapedSeparator}]*)`, "gi")
+  const arr = []
+  let curMatch
+  while ((curMatch = regex.exec(str))) {
+    arr.push(curMatch[1] ? curMatch[1].replace(/^"|"$/g, "").replace(/""/g, '"') : "")
+  }
+  return arr
 }
-function findIdx(arr: string[], keys: string[]) {
-    for (const k of keys) {
-        const i = arr.findIndex((h) => h.replace(/\s+/g, "").toLowerCase() === k.replace(/\s+/g, "").toLowerCase())
-        if (i >= 0) return i
-    }
-    return -1
+
+function toNumMaybe(str: string | undefined) {
+  if (!str) return undefined
+  const num = Number(str)
+  if (Number.isNaN(num)) return undefined
+  return num
 }
-function splitCsv(line: string) {
-    // Simple CSV split supporting quoted values
-    const out: string[] = []
-    let cur = ""
-    let inQ = false
-    for (let i = 0; i < line.length; i++) {
-        const ch = line[i]
-        if (ch === '"' && line[i + 1] === '"') {
-            cur += '"'
-            i++
-        } else if (ch === '"') {
-            inQ = !inQ
-        } else if (ch === "," && !inQ) {
-            out.push(cur)
-            cur = ""
-        } else {
-            cur += ch
-        }
-    }
-    out.push(cur)
-    return out.map((s) => s.trim())
+
+function SummaryCard({
+  title,
+  value,
+  icon,
+  color,
+}: { title: string; value: string; icon: React.ReactNode; color: string }) {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {icon}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        <p className="text-xs text-muted-foreground">{/* +20.1% from last month */}</p>
+      </CardContent>
+    </Card>
+  )
 }
 
 function RemarkEditor({ remarks, onChange }: { remarks: string[]; onChange: (r: string[]) => void }) {
-    const [draft, setDraft] = useState([...remarks])
+  const [draft, setDraft] = useState("")
+  const maxLen = 1000
+  const remaining = maxLen - draft.length
 
-    useEffect(() => {
-        setDraft([...remarks])
-    }, [remarks])
+  function addRemark() {
+    const text = draft.trim()
+    if (!text) return
+    const clipped = text.length > maxLen ? text.slice(0, maxLen) : text
+    onChange([...remarks, clipped])
+    setDraft("")
+  }
 
-    const addRemark = () => {
-        setDraft([...draft, ""])
-    }
+  return (
+    <div className="grid gap-3">
+      <div className="grid gap-1">
+        <Textarea
+          value={draft}
+          onChange={(e) => setDraft(e.target.value.slice(0, maxLen))}
+          onKeyDown={(e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+              e.preventDefault()
+              addRemark()
+            }
+          }}
+          placeholder="New remark..."
+        />
+        <div className="text-xs text-muted-foreground text-right">{remaining} characters left</div>
+      </div>
+      <Button onClick={addRemark} disabled={!draft.trim()}>
+        Add Remark
+      </Button>
+    </div>
+  )
+}
 
-    const updateRemark = (index: number, value: string) => {
-        const newDraft = [...draft]
-        newDraft[index] = value
-        setDraft(newDraft)
-    }
+function FieldNumber({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+  return (
+    <div className="grid gap-1">
+      <Label>{label}</Label>
+      <Input type="number" value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </div>
+  )
+}
 
-    const deleteRemark = (index: number) => {
-        const newDraft = draft.filter((_, i) => i !== index)
-        setDraft(newDraft)
-    }
+function ReferenceImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <Image
+      src={src || "/placeholder.svg"}
+      alt={alt}
+      width={600}
+      height={400}
+      className="rounded-md border shadow-md aspect-video object-cover"
+    />
+  )
+}
 
-    const saveRemarks = () => {
-        onChange(draft.filter(Boolean)) // Save only non-empty remarks
-    }
+function TankFormDialog({
+  open,
+  onOpenChange,
+  initial,
+  onSubmit,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  initial?: Tank
+  onSubmit: (tank: Omit<Tank, "id">) => void
+}) {
+  const [name, setName] = useState(initial?.name || "")
+  const [status, setStatus] = useState<TankStatus>(initial?.status || "Active")
+  const [levelMm, setLevelMm] = useState(initial?.levelMm ?? 0)
+  const [volumeM3, setVolumeM3] = useState(initial?.volumeM3 ?? 0)
+  const [waterCm, setWaterCm] = useState(initial?.waterCm ?? null)
+  const [sg, setSg] = useState(initial?.sg ?? 0)
+  const [tempC, setTempC] = useState(initial?.tempC ?? 0)
+  const [volAt20C, setVolAt20C] = useState(initial?.volAt20C ?? 0)
+    const [mts, setMts] = useState(initial?.mts ?? 0)
 
-    return (
-        <div className="space-y-2">
-            {draft.map((remark, index) => (
-                <div key={index} className="flex items-center gap-2">
-                    <Textarea
-                        value={remark}
-                        onChange={(e) => updateRemark(index, e.target.value)}
-                        placeholder={`Remark ${index + 1}`}
-                        className="flex-1"
-                    />
-                    <Button variant="outline" size="icon" onClick={() => deleteRemark(index)}>
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
-                </div>
-            ))}
-            <div className="flex gap-2">
-                <Button variant="outline" onClick={addRemark}>
-                    Add Remark
-                </Button>
-                <Button onClick={saveRemarks}>Save Remarks</Button>
-            </div>
+
+
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{initial ? "Edit Tank" : "Add Tank"}</DialogTitle>
+          <DialogDescription>Enter tank details to save.</DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Tank Name
+            </Label>
+            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="status" className="text-right">
+              Status
+            </Label>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Active">Active</SelectItem>
+                <SelectItem value="Rehabilitation">Rehabilitation</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="levelMm" className="text-right">
+              Level mm
+            </Label>
+            <Input
+              id="levelMm"
+              type="number"
+              value={levelMm}
+              onChange={(e) => setLevelMm(Number(e.target.value))}
+              className="col-span-3"
+            />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="volumeM3" className="text-right">
+              Volume m3
+            </Label>
+            <Input
+              id="volumeM3"
+              type="number"
+              value={volumeM3}
+              onChange={(e) => setVolumeM3(Number(e.target.value))}
+              className="col-span-3"
+            />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="waterCm" className="text-right">
+              Water cm
+            </Label>
+            <Input
+              id="waterCm"
+              type="number"
+              value={waterCm === null ? "" : waterCm}
+              onChange={(e) => setWaterCm(e.target.value === "" ? null : Number(e.target.value))}
+              className="col-span-3"
+              placeholder="NIL"
+            />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="sg" className="text-right">
+              SG
+            </Label>
+            <Input
+              id="sg"
+              type="number"
+              value={sg}
+              onChange={(e) => setSg(Number(e.target.value))}
+              className="col-span-3"
+            />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="tempC" className="text-right">
+              Temp C
+            </Label>
+            <Input
+              id="tempC"
+              type="number"
+              value={tempC}
+              onChange={(e) => setTempC(Number(e.target.value))}
+              className="col-span-3"
+            />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="volAt20C" className="text-right">
+              Vol m3 @ 20C
+            </Label>
+            <Input
+              id="volAt20C"
+              type="number"
+              value={volAt20C}
+              onChange={(e) => setVolAt20C(Number(e.target.value))}
+              className="col-span-3"
+            />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="mts" className="text-right">
+              MTS
+            </Label>
+            <Input
+              id="mts"
+              type="number"
+              value={mts}
+              onChange={(e) => setMts(Number(e.target.value))}
+              className="col-span-3"
+            />
+          </div>
         </div>
-    )
+
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            onClick={() => {
+              console.log("TankFormDialog save clicked", { name, status, levelMm, volumeM3, waterCm, sg, tempC, volAt20C, mts })
+              onSubmit({ name, status, levelMm, volumeM3, waterCm, sg, tempC, volAt20C, mts })
+            }}
+          >
+            {initial ? "Update" : "Save"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function ManageStationsDialog({
+  open,
+  onOpenChange,
+  stations,
+  currentId,
+  onCreate,
+  onRename,
+  onDelete,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  stations: Station[]
+  currentId: string
+  onCreate: (name: string) => void
+  onRename: (id: string, name: string) => void
+  onDelete: (id: string) => void
+}) {
+  const [creating, setCreating] = useState(false)
+  const [newName, setNewName] = useState("")
+  const [renamingId, setRenamingId] = useState<string | null>(null)
+  const [renamedName, setRenamedName] = useState("")
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Manage Stations</DialogTitle>
+          <DialogDescription>Create, rename, or delete stations.</DialogDescription>
+        </DialogHeader>
+
+        <section className="space-y-4 py-4">
+          <ul className="space-y-2">
+            {stations.map((s) => (
+              <li key={s.id} className="flex items-center justify-between gap-3">
+                {renamingId === s.id ? (
+                  <div className="flex-1 grid grid-cols-[1fr_auto] gap-2">
+                    <Input value={renamedName} onChange={(e) => setRenamedName(e.target.value)} />
+                    <div className="flex gap-1.5">
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          onRename(s.id, renamedName)
+                          setRenamingId(null)
+                        }}
+                      >
+                        Save
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => setRenamingId(null)}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex-1">{s.name}</div>
+                    <div className="flex gap-1.5">
+                      {stations.length > 1 && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            if (s.id === currentId) {
+                              alert("Cannot delete current station. Switch to another station first.")
+                              return
+                            }
+                            if (confirm(`Delete station ${s.name}?`)) {
+                              onDelete(s.id)
+                            }
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        onClick={() => {
+                          setRenamingId(s.id)
+                          setRenamedName(s.name)
+                        }}
+                      >
+                        Rename
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {creating ? (
+            <div className="grid grid-cols-[1fr_auto] gap-3">
+              <Input placeholder="New station name" value={newName} onChange={(e) => setNewName(e.target.value)} />
+              <div className="flex gap-1.5">
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    onCreate(newName)
+                    setCreating(false)
+                    setNewName("")
+                  }}
+                >
+                  Create
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setCreating(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Button variant="outline" onClick={() => setCreating(true)}>
+              Add Station
+            </Button>
+          )}
+        </section>
+
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            Close
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 }

@@ -107,7 +107,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
     const selectedTankData = selectedTank ? tanks.find((t) => t.id === selectedTank) : null
 
     return (
-        <div className="relative w-full h-full bg-slate-100 dark:bg-slate-900 overflow-hidden flex flex-col">
+        <div className="relative w-full h-full bg-slate-100 dark:bg-slate-900 overflow-hidden flex flex-col ">
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-900 z-50 w-full h-full">
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-16 justify-items-center w-full">
@@ -126,7 +126,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                             transformOrigin: "center center",
                         }}
                     >
-                        <div className="relative w-full h-full overflow-x-auto">
+                        <div className="relative w-full h-full overflow-x-auto mt-3">
                             <div
                                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-x-8 gap-y-16 justify-items-center min-w-[400px]"
                                 style={{ minHeight: "400px" }}
@@ -167,6 +167,8 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                                         className="absolute left-0 right-0 bottom-0 w-full"
                                                         height="100%"
                                                         width="100%"
+                                                        viewBox="0 0 100 100"
+                                                        preserveAspectRatio="none"
                                                         style={{ height: `${tank.level}%` }}
                                                     >
                                                         <defs>
