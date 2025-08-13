@@ -17,7 +17,15 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import {
   Table,
@@ -508,8 +516,8 @@ export default function Page() {
         <header className="mb-6 space-y-3">
           <div className="flex items-center justify-between gap-2">
             <div className="space-y-1">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">TANKFARM DATA</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 text-pretty">TANKFARM DATA</h1>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
                 Enter daily stock data per station.
               </p>
             </div>
@@ -671,7 +679,7 @@ export default function Page() {
           </div>
         </header>
 
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
+        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6 ">
           <SummaryCard
             title="T/Farm Discharge"
             value={`${formatNumber(summary.tfarmDischargeM3)} m3`}
@@ -1018,7 +1026,7 @@ export default function Page() {
             <TabsContent value="3D">
                 {(() => {
                   // Build a visualization-friendly dataset from entries data
-                  const vols = tanks.map(t => (t.volAt20C ?? t.volumeM3 ?? 0) || 0)
+                  const vols = tanks.map(t => (t.volAt20C ?? 0) || 0)
                   const maxVol = vols.length ? Math.max(...vols, 0) : 0
                   const safeMax = maxVol > 0 ? maxVol : 1 // avoid divide-by-zero
 
@@ -1031,6 +1039,7 @@ export default function Page() {
                       level: levelPct,
                       product: "Diesel LSG" as const,
                       capacity: Math.round(safeMax),
+                      volAt20C: t.volAt20C ?? undefined,
                     }
                   })
 
@@ -1368,7 +1377,7 @@ function SummaryCard({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <CardTitle className="text-lg md:text-xl text-muted-foreground   text-pretty">{title}</CardTitle>
         {icon}
       </CardHeader>
       <CardContent>
@@ -1461,145 +1470,214 @@ function TankFormDialog({
 
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{initial ? "Edit Tank" : "Add Tank"}</DialogTitle>
-          <DialogDescription>Enter tank details to save.</DialogDescription>
-        </DialogHeader>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                  <DialogTitle className="text-xl font-semibold">{initial ? "Edit Tank" : "Add Tank"}</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">Enter tank details to save.</DialogDescription>
+              </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Tank Name
-            </Label>
-            <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" />
-          </div>
+              <div className="space-y-6 py-4">
+                  {/* Basic Information Section */}
+                  <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide border-b pb-2">
+                          Basic Information
+                      </h3>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="status" className="text-right">
-              Status
-            </Label>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Rehabilitation">Rehabilitation</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                          {/*<div className="space-y-2">*/}
+                          {/*    <Label htmlFor="name" className="text-sm font-medium">*/}
+                          {/*        Tank Name*/}
+                          {/*    </Label>*/}
+                          {/*    <Input*/}
+                          {/*        id="name"*/}
+                          {/*        value={name}*/}
+                          {/*        onChange={(e) => setName(e.target.value)}*/}
+                          {/*        placeholder="Enter tank name"*/}
+                          {/*        className="w-full"*/}
+                          {/*    />*/}
+                          {/*</div>*/}
+                          <Select value={name} onValueChange={setName}>
+                              <SelectTrigger className="w-[180px]">
+                                  <SelectValue placeholder="Select Tank" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                  <SelectGroup>
+                                      <SelectLabel>Tanks</SelectLabel>
+                                      <SelectItem value="T1">T1</SelectItem>
+                                      <SelectItem value="T2">T2</SelectItem>
+                                      <SelectItem value="T3">T3</SelectItem>
+                                      <SelectItem value="T4">T4</SelectItem>
+                                      <SelectItem value="T5">T5</SelectItem>
+                                      <SelectItem value="T6">T6</SelectItem>
+                                  </SelectGroup>
+                              </SelectContent>
+                          </Select>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="levelMm" className="text-right">
-              Level mm
-            </Label>
-            <Input
-              id="levelMm"
-              type="number"
-              value={levelMm}
-              onChange={(e) => setLevelMm(Number(e.target.value))}
-              className="col-span-3"
-            />
-          </div>
+                          <div className="space-y-2">
+                              <Label htmlFor="status" className="text-sm font-medium">
+                                  Status
+                              </Label>
+                              <Select value={status} onValueChange={setStatus}>
+                                  <SelectTrigger className="w-full">
+                                      <SelectValue placeholder="Select status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                      <SelectItem value="Active">Active</SelectItem>
+                                      <SelectItem value="Rehabilitation">Rehabilitation</SelectItem>
+                                  </SelectContent>
+                              </Select>
+                          </div>
+                      </div>
+                  </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="volumeM3" className="text-right">
-              Volume m3
-            </Label>
-            <Input
-              id="volumeM3"
-              type="number"
-              value={volumeM3}
-              onChange={(e) => setVolumeM3(Number(e.target.value))}
-              className="col-span-3"
-            />
-          </div>
+                  {/* Physical Measurements Section */}
+                  <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide border-b pb-2">
+                          Physical Measurements
+                      </h3>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="waterCm" className="text-right">
-              Water cm
-            </Label>
-            <Input
-              id="waterCm"
-              type="number"
-              value={waterCm === null ? "" : waterCm}
-              onChange={(e) => setWaterCm(e.target.value === "" ? null : Number(e.target.value))}
-              className="col-span-3"
-              placeholder="NIL"
-            />
-          </div>
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                          <div className="space-y-2">
+                              <Label htmlFor="levelMm" className="text-sm font-medium">
+                                  Level (mm)
+                              </Label>
+                              <Input
+                                  id="levelMm"
+                                  type="number"
+                                  value={levelMm}
+                                  onChange={(e) => setLevelMm(Number(e.target.value))}
+                                  placeholder="0"
+                                  className="w-full"
+                              />
+                          </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="sg" className="text-right">
-              SG
-            </Label>
-            <Input
-              id="sg"
-              type="number"
-              value={sg}
-              onChange={(e) => setSg(Number(e.target.value))}
-              className="col-span-3"
-            />
-          </div>
+                          <div className="space-y-2">
+                              <Label htmlFor="volumeM3" className="text-sm font-medium">
+                                  Volume (m³)
+                              </Label>
+                              <Input
+                                  id="volumeM3"
+                                  type="number"
+                                  value={volumeM3}
+                                  onChange={(e) => setVolumeM3(Number(e.target.value))}
+                                  placeholder="0"
+                                  className="w-full"
+                              />
+                          </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tempC" className="text-right">
-              Temp C
-            </Label>
-            <Input
-              id="tempC"
-              type="number"
-              value={tempC}
-              onChange={(e) => setTempC(Number(e.target.value))}
-              className="col-span-3"
-            />
-          </div>
+                          <div className="space-y-2">
+                              <Label htmlFor="waterCm" className="text-sm font-medium">
+                                  Water (cm)
+                              </Label>
+                              <Input
+                                  id="waterCm"
+                                  type="number"
+                                  value={waterCm === null ? "" : waterCm}
+                                  onChange={(e) => setWaterCm(e.target.value === "" ? null : Number(e.target.value))}
+                                  placeholder="NIL"
+                                  className="w-full"
+                              />
+                          </div>
+                      </div>
+                  </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="volAt20C" className="text-right">
-              Vol m3 @ 20C
-            </Label>
-            <Input
-              id="volAt20C"
-              type="number"
-              value={volAt20C}
-              onChange={(e) => setVolAt20C(Number(e.target.value))}
-              className="col-span-3"
-            />
-          </div>
+                  {/* Technical Properties Section */}
+                  <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide border-b pb-2">
+                          Technical Properties
+                      </h3>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="mts" className="text-right">
-              MTS
-            </Label>
-            <Input
-              id="mts"
-              type="number"
-              value={mts}
-              onChange={(e) => setMts(Number(e.target.value))}
-              className="col-span-3"
-            />
-          </div>
-        </div>
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                          <div className="space-y-2">
+                              <Label htmlFor="sg" className="text-sm font-medium">
+                                  Specific Gravity (SG)
+                              </Label>
+                              <Input
+                                  id="sg"
+                                  type="number"
+                                  value={sg}
+                                  onChange={(e) => setSg(Number(e.target.value))}
+                                  placeholder="0"
+                                  step="0.001"
+                                  className="w-full"
+                              />
+                          </div>
 
-        <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button
-            type="button"
-            onClick={() => {
-              console.log("TankFormDialog save clicked", { name, status, levelMm, volumeM3, waterCm, sg, tempC, volAt20C, mts })
-              onSubmit({ name, status, levelMm, volumeM3, waterCm, sg, tempC, volAt20C, mts })
-            }}
-          >
-            {initial ? "Update" : "Save"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+                          <div className="space-y-2">
+                              <Label htmlFor="tempC" className="text-sm font-medium">
+                                  Temperature (°C)
+                              </Label>
+                              <Input
+                                  id="tempC"
+                                  type="number"
+                                  value={tempC}
+                                  onChange={(e) => setTempC(Number(e.target.value))}
+                                  placeholder="0"
+                                  className="w-full"
+                              />
+                          </div>
+
+                          <div className="space-y-2">
+                              <Label htmlFor="volAt20C" className="text-sm font-medium">
+                                  Vol (m³) @ 20°C
+                              </Label>
+                              <Input
+                                  id="volAt20C"
+                                  type="number"
+                                  value={volAt20C}
+                                  onChange={(e) => setVolAt20C(Number(e.target.value))}
+                                  placeholder="0"
+                                  className="w-full"
+                              />
+                          </div>
+                      </div>
+
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                          <div className="space-y-2">
+                              <Label htmlFor="mts" className="text-sm font-medium">
+                                  MTS
+                              </Label>
+                              <Input
+                                  id="mts"
+                                  type="number"
+                                  value={mts}
+                                  onChange={(e) => setMts(Number(e.target.value))}
+                                  placeholder="0"
+                                  className="w-full"
+                              />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 pt-6 border-t">
+                  <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
+                      Cancel
+                  </Button>
+                  <Button
+                      type="button"
+                      onClick={() => {
+                          console.log("TankFormDialog save clicked", {
+                              name,
+                              status,
+                              levelMm,
+                              volumeM3,
+                              waterCm,
+                              sg,
+                              tempC,
+                              volAt20C,
+                              mts,
+                          })
+                          onSubmit({ name, status, levelMm, volumeM3, waterCm, sg, tempC, volAt20C, mts })
+                      }}
+                      className="w-full sm:w-auto"
+                  >
+                      {initial ? "Update" : "Save"}
+                  </Button>
+              </DialogFooter>
+          </DialogContent>
+      </Dialog>
   )
 }
 

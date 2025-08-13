@@ -25,7 +25,7 @@ export default function BottomNavigation() {
 
     const menuItems = [
         { name: 'FlowRate', icon: LayoutDashboard, path: '/FlowRate' },
-        { name: 'Tankage', icon: Fuel, path: '/Dispatch/tankage' },
+        { name: 'Tankage', icon: Fuel, path: '/Tanks' },
         { name: 'Shipments', icon: Ship, path: '/Dispatch/shipments' },
         { name: 'Flow Meters', icon: Bell, path: '/FlowMeters' },
         //{ name: 'Users', icon: Users, path: '/users' },
@@ -35,8 +35,8 @@ export default function BottomNavigation() {
 
     return (
         <TooltipProvider>
-            <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-800 dark:border-gray-700 shadow-lg">
-                <div className="grid h-full grid-cols-5 mx-auto">
+            <div className="fixed z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-800 dark:border-gray-700 shadow-lg ">
+                <div className="grid h-full grid-cols-5 mx-auto ">
                     {navItems.slice(0, 2).map((item) => (
                         <Tooltip key={item.name}>
                             <TooltipTrigger asChild>

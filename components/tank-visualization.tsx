@@ -23,6 +23,7 @@ interface Tank {
     level: number
     product: string
     capacity: number
+    volAt20C?: number
 }
 
 interface TankVisualizationProps {
@@ -40,6 +41,34 @@ const productColors: { [key: string]: string } = {
 }
 
 export function TankVisualization({ tanks }: TankVisualizationProps) {
+    // Static capacity map (shown without persisting to DB)
+    const CAPACITY_MAP: Record<string, number> = {
+        T1: 36000,
+        T2: 36000,
+        T3: 36000,
+        T4: 43200,
+        T5: 43200,
+        T6: 41000,
+    }
+
+    // Helper to get capacity for a tank (prefer CAPACITY_MAP, then tank.capacity)
+    const getCapacityFor = (tank: Tank): number => {
+        return (CAPACITY_MAP[tank.id] ?? tank.capacity ?? 0) || 0
+    }
+
+    // Derived level percentage based on volAt20C / capacity.
+    // Falls back to provided tank.level% if volAt20C is not available.
+    const getLevelPct = (tank: Tank): number => {
+        const cap = getCapacityFor(tank)
+        const vol = typeof tank.volAt20C === "number" && !isNaN(tank.volAt20C) ? tank.volAt20C : null
+        if (cap > 0 && vol !== null) {
+            const pct = (vol / cap) * 100
+            return Math.max(0, Math.min(100, pct))
+        }
+        // Fallback to existing level field if no volume
+        const fallback = typeof tank.level === "number" ? tank.level : 0
+        return Math.max(0, Math.min(100, fallback))
+    }
     const [loading, setLoading] = useState(true)
     const [rotation, setRotation] = useState(0)
     const [zoom, setZoom] = useState(1)
@@ -87,11 +116,12 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
             if (viewMode === "product") {
                 return productColors[tank.product] || productColors.Default
             }
-            // Default to level-based coloring
-            if (tank.level > 90) return "#ef4444" // red-500
-            if (tank.level > 75) return "#f59e0b" // amber-500
-            if (tank.level > 50) return "#10b981" // green-500
-            if (tank.level > 25) return "#3b82f6" // blue-500
+            // Default to level-based coloring (derived from volAt20C/capacity)
+            const lvl = getLevelPct(tank)
+            if (lvl > 90) return "#ef4444" // red-500
+            if (lvl > 75) return "#f59e0b" // amber-500
+            if (lvl > 50) return "#10b981" // green-500
+            if (lvl > 25) return "#3b82f6" // blue-500
             return "#64748b" // slate-500
         },
         [viewMode],
@@ -99,15 +129,18 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
 
     const filteredTanks = tanks.filter((tank) => {
         if (filterMode === "critical") {
-            return tank.level > 90
+            return getLevelPct(tank) > 90
         }
         return true
     })
 
-    const selectedTankData = selectedTank ? tanks.find((t) => t.id === selectedTank) : null
+    const rawSelected = selectedTank ? tanks.find((t) => t.id === selectedTank) : null
+        const selectedTankData = rawSelected
+            ? { ...rawSelected, capacity: (CAPACITY_MAP[rawSelected.id] ?? rawSelected.capacity ?? 0) }
+            : null
 
     return (
-        <div className="relative w-full h-full bg-slate-100 dark:bg-slate-900 overflow-hidden flex flex-col ">
+        <div className="relative w-full h-full bg-slate-100 dark:bg-slate-900 overflow-hidden flex flex-col pb-20">
             {loading ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 dark:bg-slate-900 z-50 w-full h-full">
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-8 gap-y-16 justify-items-center w-full">
@@ -120,13 +153,13 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
             ) : (
                 <>
                     <div
-                        className="flex-1 w-full h-full transition-transform duration-300 ease-in-out flex items-center justify-center"
+                        className="flex-1 w-full h-full transition-transform duration-300 ease-in-out flex items-center justify-center "
                         style={{
                             transform: `rotateY(${rotation}deg) scale(${zoom})`,
                             transformOrigin: "center center",
                         }}
                     >
-                        <div className="relative w-full h-full overflow-x-auto mt-3">
+                        <div className="relative w-full h-full overflow-x-auto mt-3 ">
                             <div
                                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-x-8 gap-y-16 justify-items-center min-w-[400px]"
                                 style={{ minHeight: "400px" }}
@@ -169,7 +202,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                                         width="100%"
                                                         viewBox="0 0 100 100"
                                                         preserveAspectRatio="none"
-                                                        style={{ height: `${tank.level}%` }}
+                                                        style={{ height: `${getLevelPct(tank)}%` }}
                                                     >
                                                         <defs>
                                                             <linearGradient id={`tankFillGradient${tank.id}`} x1="0" y1="0" x2="0" y2="1">
@@ -208,7 +241,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                                             <div
                                                                 className="w-full rounded-b-full transition-all duration-500 bg-blue-400/70"
                                                                 style={{
-                                                                    height: `${tank.level}%`,
+                                                                    height: `${getLevelPct(tank)}%`,
                                                                     position: "absolute",
                                                                     bottom: 0,
                                                                     left: 0,
@@ -277,9 +310,10 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
 
                                                 {/* Tank label (below) */}
                                                 {showLabels && (
-                                                    <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 text-center w-32">
+                                                    <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center w-32">
                                                         <div className="font-bold text-sm truncate">{tank.name}</div>
-                                                        <div className="text-xs text-muted-foreground">{tank.level}%</div>
+                                                        <div className="text-xs text-muted-foreground">{Math.round(getLevelPct(tank))}%</div>
+                                                        <div className="text-[10px] text-muted-foreground">Cap: {(CAPACITY_MAP[tank.id] ?? tank.capacity)?.toLocaleString()} MT</div>
                                                     </div>
                                                 )}
                                             </div>
@@ -396,23 +430,27 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Current Level:</span>
-                                    <span>{selectedTankData.level}%</span>
+                                    <span>{Math.round(getLevelPct(selectedTankData))}%</span>
                                 </div>
                                 <Progress
-                                    value={selectedTankData.level}
+                                    value={getLevelPct(selectedTankData)}
                                     className="w-full h-2 bg-gray-200 dark:bg-gray-700 [&>*]:bg-primary"
                                 />
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Volume:</span>
                                     <span>
-                                        {((selectedTankData.capacity * selectedTankData.level) / 100).toFixed(0)} /{" "}
-                                        {selectedTankData.capacity} MT
+                                        {(
+                                            typeof selectedTankData.volAt20C === "number" && !isNaN(selectedTankData.volAt20C)
+                                                ? selectedTankData.volAt20C.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })
+                                                : ((getCapacityFor(selectedTankData) * getLevelPct(selectedTankData)) / 100).toLocaleString(undefined, { maximumFractionDigits: 3 })
+                                        )} / {getCapacityFor(selectedTankData).toLocaleString()} MT
                                     </span>
                                 </div>
+
                                 <div className="flex justify-between items-center">
                                     <span className="text-muted-foreground">Status:</span>
-                                    <Badge variant={selectedTankData.level > 90 ? "destructive" : "secondary"}>
-                                        {selectedTankData.level > 90 ? "Critical" : "Normal"}
+                                    <Badge variant={getLevelPct(selectedTankData) > 90 ? "destructive" : "secondary"}>
+                                        {getLevelPct(selectedTankData) > 90 ? "Critical" : "Normal"}
                                     </Badge>
                                 </div>
                             </CardContent>
