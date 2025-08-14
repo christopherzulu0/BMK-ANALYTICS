@@ -25,8 +25,8 @@ function renderContent(activeSection: string) {
   switch (activeSection) {
     case "dashboard":
       return <DashboardOverview />
-    case "tanks":
-      return <TankManagement />
+    // case "tanks":
+    //   return <TankManagement />
     case "pipeline":
       return <PipelineData />
     case "shipments":

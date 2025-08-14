@@ -865,7 +865,7 @@ export default function Page() {
           </TabsContent>
 
           <TabsContent value="remarks">
-            <section className="grid gap-4 lg:grid-cols-2">
+            <section className="grid gap-4 lg:grid-cols-2 mb-10">
               <Card>
                 <CardHeader>
                   <CardTitle>CC: Remarks</CardTitle>

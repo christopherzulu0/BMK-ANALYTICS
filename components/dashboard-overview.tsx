@@ -53,19 +53,12 @@ interface Tank {
   product: string
   location: string
   lastInspection: string
+  volAt20C:number
+  tempC:number
+  mts:number
+  level:number
 }
 
-interface TankageData {
-  id: string
-  date: string
-  T1: number
-  T2: number
-  T3: number
-  T4: number
-  T5: number
-  T6: number
-  notes?: string
-}
 
 interface Alert {
   id: string
@@ -139,12 +132,106 @@ export function DashboardOverview() {
     // Get the latest readings data if available
     const latestReadings = readingsData && readingsData.length > 0 ? readingsData[readingsData.length - 1] : null;
 
+    // Static capacity map (shown without persisting to DB)
+    const CAPACITY_MAP: Record<string, number> = {
+        // Simple IDs
+        T1: 36000,
+        T2: 36000,
+        T3: 36000,
+        T4: 43200,
+        T5: 43200,
+        T6: 41000,
+        // UUID mappings for all tanks
+        "dfab1588-6cd9-4f17-b287-3eaad413e63d": 36000, // T1
+        // Add all other tank UUIDs here with their respective capacities
+        // For any tank that doesn't have an explicit mapping, we'll use a default value
+    }
+
+    // Helper to get capacity for a tank (prefer CAPACITY_MAP, then tank.capacity)
+    const getCapacityFor = (tank: Tank): number => {
+        console.log(`Getting capacity for tank ID: ${tank.id}, name: ${tank.name}`);
+        
+        // First check if the tank ID is directly in the CAPACITY_MAP
+        if (CAPACITY_MAP[tank.id]) {
+            console.log(`Found capacity in CAPACITY_MAP by ID: ${CAPACITY_MAP[tank.id]}`);
+            return CAPACITY_MAP[tank.id];
+        }
+        
+        // Then try to match tank name to CAPACITY_MAP keys (T1, T2, etc.)
+        // Extract tank number from name if possible (e.g., "Tank 1" -> "T1")
+        const tankName = tank.name?.trim() || '';
+        let simpleId = null;
+        
+        if (tankName.startsWith('T')) {
+            // If name already starts with T (e.g., "T1")
+            simpleId = tankName;
+        } else if (tankName.includes('Tank')) {
+            // If name is like "Tank 1", extract the number and create "T1"
+            const match = tankName.match(/Tank\s*(\d+)/i);
+            if (match && match[1]) {
+                simpleId = `T${match[1]}`;
+            }
+        }
+        
+        if (simpleId && CAPACITY_MAP[simpleId]) {
+            console.log(`Found capacity in CAPACITY_MAP by derived name: ${CAPACITY_MAP[simpleId]}`);
+            return CAPACITY_MAP[simpleId];
+        }
+        
+        // Fall back to tank.capacity
+        if (tank.capacity) {
+            console.log(`Using tank.capacity: ${tank.capacity}`);
+            return tank.capacity;
+        }
+        
+        // Default capacity if nothing else is available
+        // Using a standard default capacity for all tanks
+        const defaultCapacity = 36000;
+        console.log(`Using default capacity: ${defaultCapacity}`);
+        return defaultCapacity;
+    }
+
+    // Derived level percentage based on volAt20C / capacity.
+    // Falls back to provided tank.level% if volAt20C is not available.
+    const getLevelPct = (tank: Tank): number => {
+        const cap = getCapacityFor(tank);
+        console.log(`Tank ${tank.name} (${tank.id}): Cap: ${cap}, volAt20C: ${tank.volAt20C}, type: ${typeof tank.volAt20C}`);
+        
+        // Handle case where volAt20C might be a string or other non-number type
+        let vol = null;
+        if (tank.volAt20C !== undefined && tank.volAt20C !== null) {
+            // Convert to number if it's not already
+            const numVol = Number(tank.volAt20C);
+            vol = !isNaN(numVol) ? numVol : null;
+        }
+        
+        console.log(`Tank ${tank.name}: Processed volume: ${vol}`);
+        
+        if (cap > 0 && vol !== null) {
+            const pct = (vol / cap) * 100;
+            // Round to 2 decimal places for display
+            const roundedPct = Math.round(pct * 100) / 100;
+            console.log(`Tank ${tank.name}: Calculated percentage: ${roundedPct}%`);
+            return Math.max(0, Math.min(100, roundedPct));
+        }
+        
+        // Fallback to existing level field if no volume
+        const fallback = typeof tank.level === "number" ? tank.level : 0;
+        console.log(`Tank ${tank.name}: Using fallback level: ${fallback}%`);
+        return Math.max(0, Math.min(100, fallback));
+    }
+    
     // Map tanks to the format expected by the UI
     return tankageData.tanks.map((tank: Tank) => {
       const tankId = tank.id; // e.g., "T1"
       const level = latestTankage[tankId] || 0;
-      const capacity = tank.capacity;
-
+      const capacity = getCapacityFor(tank);
+      const volume = tank.volAt20C;
+      const temperatures = tank.tempC;
+      const Tons = tank.mts;
+      
+      // Calculate the tank level percentage first
+      const calculatedTankLevel = getLevelPct(tank);
       // Determine status based on level
       let status = "normal";
       let trend = "stable";
@@ -159,11 +246,22 @@ export function DashboardOverview() {
       const temperature = latestReadings ? latestReadings.sampleTemp : 22 + Math.random() * 3;
       const flowRate = latestReadings ? (latestReadings.flowRate1 + latestReadings.flowRate2) / 2 : 100 + Math.random() * 100;
 
+      // Get the proper capacity from our helper function
+      const properCapacity = getCapacityFor(tank);
+      
+      // Log for debugging
+      console.log(`Tank ${tankId} - name: ${tank.name}, volAt20C: ${volume}, capacity from DB: ${capacity}, proper capacity: ${properCapacity}, calculated level: ${calculatedTankLevel}%`);
+      console.log('Tank object:', JSON.stringify(tank, null, 2));
+      
       return {
         id: tankId,
         name: tank.name,
         level: level,
-        capacity: capacity,
+        tanklevel: calculatedTankLevel,
+        volume: volume,
+        temperatures: temperatures,
+        Tons: Tons,
+        capacity: properCapacity, // Use the capacity from our helper function
         product: tank.product,
         status: status,
         location: tank.location,
@@ -182,7 +280,7 @@ export function DashboardOverview() {
   }
 
   const isRefreshing = isTankRefetching || isAlertsRefetching || isShipmentRefetching || isReadingsRefetching;
-
+  const TotalTankCapacity = 36000 + 36000 + 36000 + 43200 + 43200 + 41000;
   return (
     <div className="space-y-6 overflow-x-hidden">
       {/* Header with controls */}
@@ -231,9 +329,7 @@ export function DashboardOverview() {
             ) : (
               <>
                 <div className="text-2xl font-bold">
-                  {tankageData?.tanks
-                    ? `${tankageData.tanks.reduce((sum: number, tank: Tank) => sum + tank.capacity, 0).toLocaleString()} L`
-                    : "N/A"}
+                  {TotalTankCapacity} L
                 </div>
                 <div className="flex items-center space-x-2 text-xs text-muted-foreground">
                   <TrendingUp className="h-3 w-3 text-green-500" />
@@ -249,7 +345,7 @@ export function DashboardOverview() {
           <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-3xl" />
         </Card>
 
-        <Card className="relative overflow-hidden">
+        {/* <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Current Stock</CardTitle>
             <Gauge className="h-4 w-4 text-muted-foreground" />
@@ -269,7 +365,7 @@ export function DashboardOverview() {
                         const latestTankage = tankageData.tankageData[tankageData.tankageData.length - 1];
                         const totalStock = tankageData.tanks.reduce((sum: number, tank: Tank) => {
                           const level = latestTankage[tank.id] || 0;
-                          return sum + (tank.capacity * level / 100);
+                          return sum + (TotalTankCapacity * tank.volAt20C / 100);
                         }, 0);
                         return `${Math.round(totalStock).toLocaleString()} L`;
                       })()
@@ -304,7 +400,7 @@ export function DashboardOverview() {
             )}
           </CardContent>
           <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-green-500/10 to-transparent rounded-bl-3xl" />
-        </Card>
+        </Card> */}
 
         <Card className="relative overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -476,23 +572,24 @@ export function DashboardOverview() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">{tank.product}</span>
-                        <span className="font-medium">{tank.level}%</span>
+                        <span className="font-medium">{tank.tanklevel !== undefined ? `${Math.round(tank.tanklevel)}%` : 'N/A'}</span>
                       </div>
-                      <Progress value={tank.level} className="h-2" />
+                      <Progress value={tank.tanklevel || 0} className="h-2" />
                       <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
                         <div>
                           <span className="block">Volume</span>
                           <span className="font-medium text-foreground">
-                            {Math.round((tank.capacity * tank.level) / 100).toLocaleString()}L
+                            {/* Display both volume and capacity */}
+                            {tank.volume ? Math.round(tank.volume).toLocaleString() : 0} / {tank.capacity ? Math.round(tank.capacity).toLocaleString() : 0} L
                           </span>
                         </div>
-                        <div>
+                        <div>{tank.volume ? Math.round(tank.volume).toLocaleString() : 0} / {tank.capacity ? Math.round(tank.capacity).toLocaleString() : 0} L
                           <span className="block">Temp</span>
-                          <span className="font-medium text-foreground">{tank.temperature.toFixed(1)}°C</span>
+                          <span className="font-medium text-foreground">{tank.temperatures}°C</span>
                         </div>
                         <div>
-                          <span className="block">Flow</span>
-                          <span className="font-medium text-foreground">{Math.round(tank.flowRate)}L/min</span>
+                          <span className="block">Metric Tons</span>
+                          <span className="font-medium text-foreground">{tank.Tons} MT</span>
                         </div>
                       </div>
                     </div>

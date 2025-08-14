@@ -53,11 +53,11 @@ const menuItems = [
     icon: LayoutDashboard,
     id: "dashboard",
   },
-  {
-    title: "Tank Management",
-    icon: Fuel,
-    id: "tanks",
-  },
+  // {
+  //   title: "Tank Management",
+  //   icon: Fuel,
+  //   id: "tanks",
+  // },
   {
     title: "Pipeline Data",
     icon: Activity,
