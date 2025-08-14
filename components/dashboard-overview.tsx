@@ -236,9 +236,9 @@ export function DashboardOverview() {
       let status = "normal";
       let trend = "stable";
 
-      if (level < 25) status = "critical";
-      else if (level < 50) status = "low";
-      else if (level > 90) status = "high";
+      if (level < 25) status = "Active";
+      else if (level < 50) status = "Active";
+      else if (level > 90) status = "Active";
 
       // In a real app, you would calculate the trend by comparing with previous readings
 
@@ -555,13 +555,13 @@ export function DashboardOverview() {
                         {tank.trend === "stable" && <div className="h-3 w-3 rounded-full bg-gray-400" />}
                         <Badge
                           variant={
-                            tank.status === "critical"
-                              ? "destructive"
-                              : tank.status === "low"
-                                ? "secondary"
-                                : tank.status === "high"
+                            tank.status === "Active"
+                              ? "secondary"
+                              : tank.status === "Rehabilitation"
+                                ? "outline"
+                                : tank.status === "Active"
                                   ? "default"
-                                  : "outline"
+                                  : "secondary"
                           }
                         >
                           {tank.status}
@@ -578,12 +578,12 @@ export function DashboardOverview() {
                       <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
                         <div>
                           <span className="block">Volume</span>
-                          <span className="font-medium text-foreground">
+                          <span className="font-medium text-foreground -ml-2">
                             {/* Display both volume and capacity */}
                             {tank.volume ? Math.round(tank.volume).toLocaleString() : 0} / {tank.capacity ? Math.round(tank.capacity).toLocaleString() : 0} L
                           </span>
                         </div>
-                        <div>{tank.volume ? Math.round(tank.volume).toLocaleString() : 0} / {tank.capacity ? Math.round(tank.capacity).toLocaleString() : 0} L
+                        <div className="ml-5">
                           <span className="block">Temp</span>
                           <span className="font-medium text-foreground">{tank.temperatures}°C</span>
                         </div>
