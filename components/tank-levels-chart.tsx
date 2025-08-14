@@ -40,16 +40,29 @@ export function TankLevelsChart() {
     retry: 3,
   })
 
+  // Safely parse a date-like value; return null if invalid
+  const safeParseDate = (value: any): Date | null => {
+    if (!value) return null
+    const d = value instanceof Date ? value : new Date(value)
+    return isNaN(d.getTime()) ? null : d
+  }
+
   // Process tankage data to create tank objects
   const processTankageData = () => {
     if (!tankageData || !tankageData.tankageData || tankageData.tankageData.length === 0) {
       return { tanks: [] }
     }
 
-    // Get the most recent tankage record
-    const sortedData = [...tankageData.tankageData].sort((a, b) =>
-      new Date(b.date).getTime() - new Date(a.date).getTime()
-    )
+    // Filter out entries with invalid dates and sort by date desc
+    const validData = [...tankageData.tankageData]
+      .map((item) => ({ ...item, __date: safeParseDate(item.date) }))
+      .filter((item) => item.__date !== null) as Array<any & { __date: Date }>
+
+    if (validData.length === 0) {
+      return { tanks: [] }
+    }
+
+    const sortedData = validData.sort((a, b) => b.__date.getTime() - a.__date.getTime())
 
     const latestRecord = sortedData[0]
     const previousRecord = sortedData.length > 1 ? sortedData[1] : null
@@ -102,7 +115,9 @@ export function TankLevelsChart() {
 
       if (previousRecord) {
         const previousLevel = previousRecord[tankId]
-        const timeDiff = new Date(latestRecord.date).getTime() - new Date(previousRecord.date).getTime()
+        const latestDate = latestRecord.__date as Date
+        const prevDate = previousRecord.__date as Date
+        const timeDiff = latestDate.getTime() - prevDate.getTime()
         const hoursDiff = timeDiff / (1000 * 60 * 60)
 
         if (hoursDiff > 0) {
@@ -130,18 +145,18 @@ export function TankLevelsChart() {
 
   const data = processTankageData()
 
-  // Get the last update time from the most recent tankage record
-  const lastUpdate = tankageData && tankageData.tankageData && tankageData.tankageData.length > 0
-    ? format(
-        new Date(
-          // Sort the data to ensure we get the most recent record
-          [...tankageData.tankageData].sort((a, b) =>
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-          )[0].date
-        ),
-        "MMM d, yyyy h:mm:ss a"
-      )
-    : "Data not available"
+  // Get the last update time from the most recent valid tankage record
+  const lastUpdate = (() => {
+    if (!tankageData || !tankageData.tankageData || tankageData.tankageData.length === 0) {
+      return "Data not available"
+    }
+    const candidates = [...tankageData.tankageData]
+      .map((i) => ({ ...i, __date: safeParseDate(i.date) }))
+      .filter((i) => i.__date) as Array<any & { __date: Date }>
+    if (candidates.length === 0) return "Data not available"
+    const latest = candidates.sort((a, b) => b.__date.getTime() - a.__date.getTime())[0]
+    return format(latest.__date, "MMM d, yyyy h:mm:ss a")
+  })()
 
   // Function to get color based on tank level
   const getLevelColor = (level: number) => {
