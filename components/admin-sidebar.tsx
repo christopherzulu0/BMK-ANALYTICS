@@ -73,11 +73,11 @@ const menuItems = [
     icon: ShieldCheck,
     id: "permissions",
   },
-  {
-    title: "Analytics",
-    icon: LineChartIcon,
-    id: "analytics",
-  },
+  // {
+  //   title: "Analytics",
+  //   icon: LineChartIcon,
+  //   id: "analytics",
+  // },
   {
     title: "Upload Metrics",
     icon: Database,

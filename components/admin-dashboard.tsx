@@ -33,8 +33,8 @@ function renderContent(activeSection: string) {
       return <ShipmentTracking />
     case "alerts":
       return <AlertsManagement />
-    case "analytics":
-      return <AnalyticsDashboard />
+    // case "analytics":
+    //   return <AnalyticsDashboard />
     case "users":
       return <UserManagement />
       case "permissions":
