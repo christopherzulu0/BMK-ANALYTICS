@@ -24,15 +24,17 @@ export default function HeroSection() {
     <section className="relative h-[500px] md:h-[600px] lg:h-[700px] flex items-center justify-center overflow-hidden ">
       {images.map((src, index) => (
         <Image
-          key={src}
-          src={src}
-          alt={`Carousel image ${index + 1}`}
-          fill
-          priority={index === 0} // Prioritize loading the first image
-          className={`absolute inset-0 object-cover transition-opacity duration-1000 ease-in-out ${
-            index === currentImageIndex ? "opacity-100" : "opacity-0"
-          }`}
-        />
+        key={src}
+        src={src}
+        alt={`Carousel image ${index + 1}`}
+        fill
+        priority={index === 0}
+        unoptimized
+        className={`absolute inset-0 object-cover transition-opacity duration-1000 ease-in-out ${
+          index === currentImageIndex ? "opacity-100" : "opacity-0"
+        }`}
+      />
+      
       ))}
       <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
       <div className="relative z-20 text-white text-center max-w-4xl mx-auto px-4">
