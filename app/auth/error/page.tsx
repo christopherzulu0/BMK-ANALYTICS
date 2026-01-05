@@ -30,7 +30,7 @@ export default function ErrorPage() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col md:flex-row items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden bg-gradient-to-br from-red-50 via-white to-red-100">
+    <div className="relative min-h-screen flex flex-col md:flex-row items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden bg-linear-to-br from-red-50 via-white to-red-100">
       {/* Animated blurred background shapes */}
       <div className="absolute -z-10 inset-0 overflow-hidden pointer-events-none">
         <div className="absolute left-1/4 top-0 w-96 h-96 bg-red-200 opacity-30 rounded-full blur-3xl animate-float-slow" />
@@ -46,19 +46,19 @@ export default function ErrorPage() {
             <div className="text-base text-red-700 font-medium mt-1">Something went wrong with your sign in</div>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-6 py-8">
-            <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl text-center font-semibold text-lg shadow-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl text-center font-semibold text-lg shadow-xs">
               {errorMessage}
             </div>
             <div className="flex flex-col gap-3 w-full items-center">
               {/* <Link
                 href="/auth/signin"
-                className="inline-block px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow hover:bg-red-600 transition-colors text-base"
+                className="inline-block px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow-sm hover:bg-red-600 transition-colors text-base"
               >
                 Return to Sign In
               </Link> */}
               <Link
                 href="/"
-                className="inline-block px-6 py-2 bg-white border border-red-300 text-red-600 font-semibold rounded-lg shadow hover:bg-red-50 transition-colors text-base"
+                className="inline-block px-6 py-2 bg-white border border-red-300 text-red-600 font-semibold rounded-lg shadow-sm hover:bg-red-50 transition-colors text-base"
               >
                 Go to Homepage
               </Link>

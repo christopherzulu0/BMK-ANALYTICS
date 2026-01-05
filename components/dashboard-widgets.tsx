@@ -126,14 +126,14 @@ export function DashboardWidgets() {
             <TabsTrigger value="overview" className="relative">
               Overview
               {activeTab === "overview" && (
-                <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full" />
               )}
             </TabsTrigger>
 
             <TabsTrigger value="analytics" className="relative">
               Analytics
               {activeTab === "analytics" && (
-                <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full" />
               )}
             </TabsTrigger>
           </TabsList>
@@ -146,7 +146,7 @@ export function DashboardWidgets() {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-full lg:col-span-4 overflow-hidden border-none shadow-md">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-b">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-b">
                 <div>
                   <CardTitle>Shipment Tracking</CardTitle>
                   <CardDescription>Live tracking of vessels and shipments</CardDescription>
@@ -157,7 +157,7 @@ export function DashboardWidgets() {
               </CardContent>
             </Card>
             <Card className="col-span-full lg:col-span-3 overflow-hidden border-none shadow-md">
-              <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-b">
+              <CardHeader className="bg-linear-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-b">
                 <CardTitle>Current Tank Levels</CardTitle>
                 <CardDescription>Real-time tank capacity utilization</CardDescription>
               </CardHeader>
@@ -169,7 +169,7 @@ export function DashboardWidgets() {
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card className="col-span-full lg:col-span-2 overflow-hidden border-none shadow-md">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 border-b">
+              <CardHeader className="bg-linear-to-r from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 border-b">
                 <CardTitle>Recent Shipments</CardTitle>
                 <CardDescription>Overview of upcoming and recent shipments</CardDescription>
               </CardHeader>
@@ -178,7 +178,7 @@ export function DashboardWidgets() {
               </CardContent>
             </Card>
             <Card className="col-span-full lg:col-span-1 overflow-hidden border-none shadow-md">
-              <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-b">
+              <CardHeader className="bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-b">
                 <CardTitle>Alerts & Notifications</CardTitle>
                 <CardDescription>System alerts and important notifications</CardDescription>
               </CardHeader>
@@ -194,7 +194,7 @@ export function DashboardWidgets() {
         <TabsContent value="analytics" className="space-y-6 mt-0">
           <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2">
             <Card className="overflow-hidden border-none shadow-md">
-              <CardHeader className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 border-b">
+              <CardHeader className="bg-linear-to-r from-purple-50 to-violet-50 dark:from-purple-950/30 dark:to-violet-950/30 border-b">
                 <CardTitle>Inventory Forecast</CardTitle>
                 <CardDescription>Predictive analysis of inventory levels</CardDescription>
               </CardHeader>
@@ -203,7 +203,7 @@ export function DashboardWidgets() {
               </CardContent>
             </Card>
             <Card className="overflow-hidden border-none shadow-md">
-              <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-b">
+              <CardHeader className="bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border-b">
                 <CardTitle>Operational Efficiency</CardTitle>
                 <CardDescription>Key performance indicators and metrics</CardDescription>
               </CardHeader>

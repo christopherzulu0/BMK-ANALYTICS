@@ -70,7 +70,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     }
 
     return (
-        <div className="bg-background/95 backdrop-blur-sm border rounded-lg shadow-lg p-4 min-w-[220px] animate-in fade-in-0 zoom-in-95">
+        <div className="bg-background/95 backdrop-blur-xs border rounded-lg shadow-lg p-4 min-w-[220px] animate-in fade-in-0 zoom-in-95">
             <p className="font-semibold mb-3 text-foreground">{format(new Date(label), "HH:mm 'on' d MMM yyyy")}</p>
             <div className="space-y-2">
                 {payload.map((entry: any, index: number) => (
@@ -483,7 +483,7 @@ export default function FlowMeterReading() {
                                     Refresh
                                 </Button>
                                 <Button
-                                    variant={isFullscreen ? "default" : "outline"}
+                                    variant={isFullscreen ? "default" : "outline-solid"}
                                     size="sm"
                                     onClick={() => setIsFullscreen(!isFullscreen)}
                                     className="whitespace-nowrap hover:bg-primary/10 transition-colors"
@@ -505,7 +505,7 @@ export default function FlowMeterReading() {
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal hover:bg-accent transition-colors">
-                                        <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                                        <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
                                         <span className="truncate">{format(selectedDate, "d MMM yyyy")}</span>
                                     </Button>
                                 </PopoverTrigger>
@@ -538,21 +538,21 @@ export default function FlowMeterReading() {
                                 <PopoverContent className="w-auto p-0" align="start">
                                     <div className="p-2">
                                         <Button
-                                            variant={selectedLine === 'all' ? 'default' : 'outline'}
+                                            variant={selectedLine === 'all' ? 'default' : 'outline-solid'}
                                             className="w-full mb-1"
                                             onClick={() => setSelectedLine('all')}
                                         >
                                             All Lines
                                         </Button>
                                         <Button
-                                            variant={selectedLine === 'line1' ? 'default' : 'outline'}
+                                            variant={selectedLine === 'line1' ? 'default' : 'outline-solid'}
                                             className="w-full mb-1"
                                             onClick={() => setSelectedLine('line1')}
                                         >
                                             Line 1
                                         </Button>
                                         <Button
-                                            variant={selectedLine === 'line2' ? 'default' : 'outline'}
+                                            variant={selectedLine === 'line2' ? 'default' : 'outline-solid'}
                                             className="w-full"
                                             onClick={() => setSelectedLine('line2')}
                                         >
@@ -645,7 +645,7 @@ export default function FlowMeterReading() {
                                         </div>
                                     </div>
                                 ) : showChart ? (
-                                    <Card className="shadow-sm hover:shadow-md transition-shadow">
+                                    <Card className="shadow-xs hover:shadow-md transition-shadow">
                                         <CardHeader className="pb-3">
                                             <div className="flex justify-between items-center">
                                                 <div>
@@ -728,7 +728,7 @@ export default function FlowMeterReading() {
                                         </CardContent>
                                     </Card>
                                 ) : (
-                                    <Card className="shadow-sm">
+                                    <Card className="shadow-xs">
                                         <CardHeader>
                                             <CardTitle className="text-lg">Flow Meter Details</CardTitle>
                                             <CardDescription>

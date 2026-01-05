@@ -315,7 +315,7 @@ export function TankManagement() {
                           ? "secondary"
                           : tank.status === "high"
                             ? "default"
-                            : "outline"
+                            : "outline-solid"
                     }
                   >
                     {tank.status}
@@ -400,7 +400,7 @@ export function TankManagement() {
                         ? "secondary"
                         : selectedTank.status === "high"
                           ? "default"
-                          : "outline"
+                          : "outline-solid"
                   }
                 >
                   {selectedTank.status}

@@ -89,7 +89,7 @@ const CustomTooltip = ({ active, payload, label, viewMode }: any) => {
     }
 
     return (
-        <div className="bg-background/95 backdrop-blur-sm border rounded-lg shadow-lg p-4 min-w-[220px] animate-in fade-in-0 zoom-in-95">
+        <div className="bg-background/95 backdrop-blur-xs border rounded-lg shadow-lg p-4 min-w-[220px] animate-in fade-in-0 zoom-in-95">
             <p className="font-semibold mb-3 text-foreground">{formatTooltipLabel()}</p>
             <div className="space-y-2">
                 {payload.map((entry: any, index: number) => (
@@ -609,7 +609,7 @@ export default function FlowRateGraph() {
                                 Refresh
                             </Button>
                             <Button
-                                variant={isFullscreen ? "default" : "outline"}
+                                variant={isFullscreen ? "default" : "outline-solid"}
                                 size="sm"
                                 onClick={() => setIsFullscreen(!isFullscreen)}
                                 className="whitespace-nowrap hover:bg-primary/10 transition-colors"
@@ -631,7 +631,7 @@ export default function FlowRateGraph() {
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="outline" className="w-full justify-start text-left font-normal hover:bg-accent transition-colors">
-                                    <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                                    <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
                                     <span className="truncate">{format(selectedMonth, "MMMM yyyy")}</span>
                                 </Button>
                             </PopoverTrigger>
@@ -651,7 +651,7 @@ export default function FlowRateGraph() {
 
                         <div className="flex items-center space-x-1 w-full">
                             <Button
-                                variant={viewMode === 'day' ? "default" : "outline"}
+                                variant={viewMode === 'day' ? "default" : "outline-solid"}
                                 size="sm"
                                 className="flex-1 transition-all"
                                 onClick={() => setViewMode('day')}
@@ -659,7 +659,7 @@ export default function FlowRateGraph() {
                                 Daily
                             </Button>
                             <Button
-                                variant={viewMode === 'month' ? "default" : "outline"}
+                                variant={viewMode === 'month' ? "default" : "outline-solid"}
                                 size="sm"
                                 className="flex-1 transition-all"
                                 onClick={() => setViewMode('month')}
@@ -672,7 +672,7 @@ export default function FlowRateGraph() {
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline" className="w-full justify-start text-left font-normal hover:bg-accent transition-colors">
-                                        <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+                                        <CalendarIcon className="mr-2 h-4 w-4 shrink-0" />
                                         <span className="truncate">{format(selectedDate, "d MMM yyyy")}</span>
                                     </Button>
                                 </PopoverTrigger>
@@ -788,7 +788,7 @@ export default function FlowRateGraph() {
                                             <div className="flex flex-col md:flex-row lg:flex-col gap-6">
                                                 {/* Daily Chart */}
                                                 {dailyChartData.length > 0 && (
-                                                    <Card className="flex-1 shadow-sm hover:shadow-md transition-shadow">
+                                                    <Card className="flex-1 shadow-xs hover:shadow-md transition-shadow">
                                                         <CardHeader className="pb-3">
                                                             <div className="flex justify-between items-center">
                                                                 <div>
@@ -871,7 +871,7 @@ export default function FlowRateGraph() {
 
                                                 {/* Monthly Chart */}
                                                 {monthlyChartData.length > 0 && (
-                                                    <Card className="flex-1 shadow-sm hover:shadow-md transition-shadow">
+                                                    <Card className="flex-1 shadow-xs hover:shadow-md transition-shadow">
                                                         <CardHeader className="pb-3">
                                                             <div className="flex justify-between items-center">
                                                                 <div>
@@ -992,7 +992,7 @@ export default function FlowRateGraph() {
                                     )}
 
                                     {/* Enhanced Table Section */}
-                                    <Card className="shadow-sm">
+                                    <Card className="shadow-xs">
                                         <CardHeader>
                                             <CardTitle className="text-lg">
                                                 {viewMode === 'day' ? "Hourly Readings" : "Daily Summary"}
@@ -1135,7 +1135,7 @@ export default function FlowRateGraph() {
                                                     </div>
                                                     <div className="flex items-center space-x-2">
                                                         <select
-                                                            className="h-8 w-[70px] rounded-md border border-input bg-background px-2 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+                                                            className="h-8 w-[70px] rounded-md border border-input bg-background px-2 text-xs focus:outline-hidden focus:ring-2 focus:ring-ring"
                                                             value={itemsPerPage}
                                                             onChange={(e) => {
                                                                 setItemsPerPage(Number(e.target.value))

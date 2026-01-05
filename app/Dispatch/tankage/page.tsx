@@ -343,7 +343,7 @@ export default function TankagePage() {
   //         <AlertDialogFooter>
   //           <a
   //             href="mailto:Czulu@tazama.co.zm?subject=Access%20Request%20-%20Tankage%20Page"
-  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-600 transition-colors"
+  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-sm hover:bg-yellow-500 focus:outline-hidden focus:ring-2 focus:ring-yellow-600 transition-colors"
   //             aria-label="Contact Administrator"
   //           >
   //             <Mail className="w-5 h-5" /> Contact Admin
@@ -432,7 +432,7 @@ export default function TankagePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           <div className="md:col-span-1 space-y-4 md:space-y-6">
-            <Card className="border-none shadow-sm">
+            <Card className="border-none shadow-xs">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Filters</CardTitle>
               </CardHeader>
@@ -519,7 +519,7 @@ export default function TankagePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-sm">
+            <Card className="border-none shadow-xs">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium">Summary</CardTitle>
               </CardHeader>
@@ -588,19 +588,19 @@ export default function TankagePage() {
                   <TabsTrigger value="overview" className="relative text-xs sm:text-sm">
                     Overview
                     {activeTab === "overview" && (
-                      <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                      <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full" />
                     )}
                   </TabsTrigger>
                   <TabsTrigger value="history" className="relative text-xs sm:text-sm">
                     History
                     {activeTab === "history" && (
-                      <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                      <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full" />
                     )}
                   </TabsTrigger>
                   <TabsTrigger value="visualization" className="relative text-xs sm:text-sm">
                     3D View
                     {activeTab === "visualization" && (
-                      <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                      <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full" />
                     )}
                   </TabsTrigger>
                  
@@ -649,7 +649,7 @@ export default function TankagePage() {
                         <Card
                           key={tank.id}
                           className={cn(
-                            "overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow",
+                            "overflow-hidden border-none shadow-xs hover:shadow-md transition-shadow",
                             level > 90 ? "ring-1 ring-red-500 dark:ring-red-800" : "",
                           )}
                         >
@@ -724,7 +724,7 @@ export default function TankagePage() {
               </TabsContent>
 
               <TabsContent value="history" className="space-y-4 md:space-y-6 mt-0">
-                <Card className="border-none shadow-sm">
+                <Card className="border-none shadow-xs">
                   <CardHeader className="pb-2 md:pb-4">
                     <CardTitle>Tank Level History</CardTitle>
                     <CardDescription>Historical tank level data for the past {dateRange} days</CardDescription>
@@ -795,7 +795,7 @@ export default function TankagePage() {
               </TabsContent>
 
               <TabsContent value="visualization" className="space-y-4 md:space-y-6 mt-0">
-                <Card className="border-none shadow-sm">
+                <Card className="border-none shadow-xs">
                   <CardHeader className="pb-2 md:pb-4">
                     <CardTitle>3D Tank Visualization</CardTitle>
                     <CardDescription>Interactive 3D view of tank farm and levels</CardDescription>

@@ -110,7 +110,7 @@ export function LoginForm({
             <div className="text-center space-y-4">
                 <div className="flex items-center justify-center gap-3 mb-6">
                     <div className="relative">
-                        <div className="w-16 h-16 bg-gradient-to-br from-orange-500 via-red-500 to-amber-600 rounded-full flex items-center justify-center shadow-xl">
+                        <div className="w-16 h-16 bg-linear-to-br from-orange-500 via-red-500 to-amber-600 rounded-full flex items-center justify-center shadow-xl">
                             <Fuel className="w-8 h-8 text-white" />
                         </div>
                         <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
@@ -119,7 +119,7 @@ export function LoginForm({
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-800 via-slate-600 to-slate-800 bg-clip-text text-transparent dark:from-slate-100 dark:via-slate-300 dark:to-slate-100">
+                    <h1 className="text-3xl font-bold bg-linear-to-r from-slate-800 via-slate-600 to-slate-800 bg-clip-text text-transparent dark:from-slate-100 dark:via-slate-300 dark:to-slate-100">
                        Tazama Pipelines Limited
                     </h1>
                     <p className="text-sm text-muted-foreground font-medium">
@@ -128,9 +128,9 @@ export function LoginForm({
                 </div>
             </div>
             
-            <Card className="shadow-2xl border-0 bg-gradient-to-br from-background via-background to-slate-50/50 dark:to-slate-900/50 relative overflow-hidden">
+            <Card className="shadow-2xl border-0 bg-linear-to-br from-background via-background to-slate-50/50 dark:to-slate-900/50 relative overflow-hidden">
                 {/* Industrial accent line */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-red-500 to-amber-500"></div>
+                <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-orange-500 via-red-500 to-amber-500"></div>
                 
                 <CardHeader className="space-y-4 pb-8 pt-8">
                     <div className="text-center space-y-3">
@@ -221,7 +221,7 @@ export function LoginForm({
                         {/* Submit button */}
                         <Button 
                             type="submit" 
-                            className="w-full h-12 text-base font-semibold bg-gradient-to-r from-orange-600 via-red-600 to-orange-700 hover:from-orange-700 hover:via-red-700 hover:to-orange-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]" 
+                            className="w-full h-12 text-base font-semibold bg-linear-to-r from-orange-600 via-red-600 to-orange-700 hover:from-orange-700 hover:via-red-700 hover:to-orange-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]" 
                             disabled={loading}
                         >
                             {loading ? (

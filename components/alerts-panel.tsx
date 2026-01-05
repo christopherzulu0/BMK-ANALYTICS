@@ -253,7 +253,7 @@ export function AlertsPanel() {
                   className={`relative p-3 rounded-lg border ${getAlertBackground(alert.type, alert.read)}`}
                 >
                   <div className="flex gap-3">
-                    <div className="flex-shrink-0 mt-0.5">{getAlertIcon(alert.type)}</div>
+                    <div className="shrink-0 mt-0.5">{getAlertIcon(alert.type)}</div>
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between">
                         <h4 className="text-sm font-medium">{alert.title}</h4>

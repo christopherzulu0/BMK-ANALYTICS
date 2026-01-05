@@ -180,7 +180,7 @@ function UserCard({ user, onEdit, onDelete, onToggleStatus }: any) {
           <div className="flex-1 space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <Badge
-                variant={user.status === "active" ? "default" : user.status === "inactive" ? "secondary" : "outline"}
+                variant={user.status === "active" ? "default" : user.status === "inactive" ? "secondary" : "outline-solid"}
               >
                 {user.status}
               </Badge>
@@ -924,7 +924,7 @@ export function UserManagement() {
               </div>
               <div className="flex items-center space-x-2">
                 <Button
-                  variant={viewMode === "cards" ? "default" : "outline"}
+                  variant={viewMode === "cards" ? "default" : "outline-solid"}
                   size="sm"
                   onClick={() => setViewMode("cards")}
                 >
@@ -932,7 +932,7 @@ export function UserManagement() {
                   Cards
                 </Button>
                 <Button
-                  variant={viewMode === "table" ? "default" : "outline"}
+                  variant={viewMode === "table" ? "default" : "outline-solid"}
                   size="sm"
                   onClick={() => setViewMode("table")}
                 >
@@ -1226,7 +1226,7 @@ export function UserManagement() {
                                 ? "default"
                                 : user.status === "inactive"
                                   ? "secondary"
-                                  : "outline"
+                                  : "outline-solid"
                             }
                           >
                             {user.status}

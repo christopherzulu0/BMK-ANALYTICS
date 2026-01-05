@@ -52,11 +52,11 @@ export default function OurValues(){
                 <Card className="h-full flex flex-col">
                   <CardHeader className="pb-2">
                     <CardTitle className="flex items-center text-base sm:text-lg md:text-xl">
-                      <span className="mr-2 flex-shrink-0">{service.icon}</span>
+                      <span className="mr-2 shrink-0">{service.icon}</span>
                       <span>{service.title}</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="flex-grow">
+                  <CardContent className="grow">
                     <p className="text-sm sm:text-base">{service.description}</p>
                   </CardContent>
                 </Card>

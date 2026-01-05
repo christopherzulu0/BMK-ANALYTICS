@@ -39,7 +39,7 @@ export function DashboardHeader() {
     <header
       className={cn(
         "sticky top-0 z-40 w-full transition-all duration-200",
-        scrolled ? "bg-background/95 backdrop-blur-sm shadow-sm" : "bg-background",
+        scrolled ? "bg-background/95 backdrop-blur-xs shadow-xs" : "bg-background",
       )}
     >
       <div className="container flex h-16 items-center justify-between py-4">
@@ -83,7 +83,7 @@ export function DashboardHeader() {
             </SheetContent>
           </Sheet>
           <Link href="/Dispatch" className="flex items-center space-x-2">
-            <div className="h-8 w-8 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-md">
+            <div className="h-8 w-8 bg-linear-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-md">
               <div className="h-3 w-3 bg-primary-foreground rounded-full"></div>
             </div>
             <span className="hidden font-bold sm:inline-block text-lg">Pipeline Ops</span>
@@ -135,7 +135,7 @@ export function DashboardHeader() {
               <div className="max-h-[300px] overflow-auto">
                 <DropdownMenuItem className="flex flex-col items-start cursor-pointer p-3 hover:bg-muted/50">
                   <div className="flex w-full">
-                    <div className="flex-shrink-0 mr-3">
+                    <div className="shrink-0 mr-3">
                       <div className="h-8 w-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400">
                         <Bell className="h-4 w-4" />
                       </div>
@@ -149,7 +149,7 @@ export function DashboardHeader() {
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex flex-col items-start cursor-pointer p-3 hover:bg-muted/50">
                   <div className="flex w-full">
-                    <div className="flex-shrink-0 mr-3">
+                    <div className="shrink-0 mr-3">
                       <div className="h-8 w-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
                         <Bell className="h-4 w-4" />
                       </div>
@@ -163,7 +163,7 @@ export function DashboardHeader() {
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex flex-col items-start cursor-pointer p-3 hover:bg-muted/50">
                   <div className="flex w-full">
-                    <div className="flex-shrink-0 mr-3">
+                    <div className="shrink-0 mr-3">
                       <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
                         <Bell className="h-4 w-4" />
                       </div>

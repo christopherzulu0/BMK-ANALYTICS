@@ -167,7 +167,7 @@ export function AddTankDataModal({ isOpen, onClose, onAdd, tanks }: AddTankDataM
 
             {level > 90 && (
               <div className="flex items-start gap-2 p-2 rounded-md bg-red-50 dark:bg-red-950/20 text-red-800 dark:text-red-300 text-sm">
-                <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
                 <div>Warning: Level exceeds 90% of tank capacity. This will trigger critical alerts.</div>
               </div>
             )}

@@ -253,13 +253,13 @@ export function TankLevelsChart() {
             <TabsTrigger value="levels" className="relative">
               Levels
               {viewMode === "levels" && (
-                <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full" />
               )}
             </TabsTrigger>
             <TabsTrigger value="3d" className="relative">
               3D View
               {viewMode === "3d" && (
-                <div className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full" />
+                <div className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full" />
               )}
             </TabsTrigger>
           </TabsList>

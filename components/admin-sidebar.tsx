@@ -103,12 +103,12 @@ export function AdminSidebar({
 
   return (
     <Sidebar
-      className={`h-full min-h-screen border-r bg-gradient-to-b from-primary/5 to-white shadow-lg flex flex-col sticky top-0 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}
+      className={`h-full min-h-screen border-r bg-linear-to-b from-primary/5 to-white shadow-lg flex flex-col sticky top-0 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}
       aria-label="Admin sidebar navigation"
     >
-      <SidebarHeader className="border-b px-4 py-3 flex items-center gap-3 bg-gradient-to-r from-primary/10 to-white relative">
+      <SidebarHeader className="border-b px-4 py-3 flex items-center gap-3 bg-linear-to-r from-primary/10 to-white relative">
         <div className="flex items-center gap-2">
-          <img src="/favicon.ico" alt="Logo" className="h-8 w-8 rounded-lg shadow" />
+          <img src="/favicon.ico" alt="Logo" className="h-8 w-8 rounded-lg shadow-sm" />
           {!collapsed && (
             <div className="flex flex-col">
               <span className="font-bold text-base tracking-tight text-primary">Tazama Admin</span>
@@ -137,7 +137,7 @@ export function AdminSidebar({
                         <SidebarMenuButton
                           isActive={activeSection === item.id}
                           onClick={() => setActiveSection(item.id)}
-                          className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-150 cursor-pointer ${activeSection === item.id ? 'bg-primary/10 border-l-4 border-primary text-primary font-semibold shadow' : 'hover:bg-muted/50'} ${collapsed ? 'justify-center' : ''}`}
+                          className={`group flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-150 cursor-pointer ${activeSection === item.id ? 'bg-primary/10 border-l-4 border-primary text-primary font-semibold shadow-sm' : 'hover:bg-muted/50'} ${collapsed ? 'justify-center' : ''}`}
                           aria-label={item.title}
                         >
                           <item.icon className={`h-5 w-5 ${activeSection === item.id ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'}`} />
@@ -189,7 +189,7 @@ export function AdminSidebar({
                     <ChevronDown className={`ml-auto h-4 w-4 text-muted-foreground transition-transform ${collapsed ? 'rotate-90' : ''}`} />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                <DropdownMenuContent side="top" className="w-(--radix-popper-anchor-width)">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>

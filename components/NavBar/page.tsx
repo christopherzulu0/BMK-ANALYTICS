@@ -50,18 +50,18 @@ export default function NavBar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100 }}
-      className="sticky top-0 z-30 border-b border-gray-200 shadow-lg backdrop-blur-md bg-gradient-to-r from-white/80 via-primary/10 to-white/80"
+      className="sticky top-0 z-30 border-b border-gray-200 shadow-lg backdrop-blur-md bg-linear-to-r from-white/80 via-primary/10 to-white/80"
     >
       <Disclosure as="nav" className="bg-transparent">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             {/* Mobile menu button */}
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-              <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-primary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary transition">
+              <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-primary focus:outline-hidden focus:ring-2 focus:ring-inset focus:ring-primary transition">
                 <span className="absolute -inset-0.5" />
                 <span className="sr-only">Open main menu</span>
-                <Bars3Icon aria-hidden="true" className="block h-6 w-6 group-data-[open]:hidden transition-transform group-hover:scale-110" />
-                <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-[open]:block transition-transform group-hover:scale-110" />
+                <Bars3Icon aria-hidden="true" className="block h-6 w-6 group-data-open:hidden transition-transform group-hover:scale-110" />
+                <XMarkIcon aria-hidden="true" className="hidden h-6 w-6 group-data-open:block transition-transform group-hover:scale-110" />
               </DisclosureButton>
             </div>
             {/* Branding */}
@@ -72,7 +72,7 @@ export default function NavBar() {
                   src="/Tazama-logo.png"
                   className="h-10 w-10 rounded-full shadow-md border border-gray-200 bg-white object-contain transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6"
                 />
-                <span className="ml-2 text-xl font-bold text-primary hidden sm:inline-block tracking-tight drop-shadow-sm">Tazama Pipelines</span>
+                <span className="ml-2 text-xl font-bold text-primary hidden sm:inline-block tracking-tight drop-shadow-xs">Tazama Pipelines</span>
               </Link>
               {isAuthenticated && (
                 <div className="hidden sm:ml-8 sm:flex sm:items-center">
@@ -86,7 +86,7 @@ export default function NavBar() {
                           item.current
                             ? 'bg-primary text-white shadow-md'
                             : 'text-gray-700 hover:bg-primary/10 hover:text-primary',
-                          'rounded-lg px-4 py-2 text-base font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
+                          'rounded-lg px-4 py-2 text-base font-medium transition-colors duration-200 focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2'
                         )}
                         tabIndex={0}
                       >
@@ -102,7 +102,7 @@ export default function NavBar() {
               {isAuthenticated && (
                 <button
                   type="button"
-                  className="relative rounded-full bg-gray-100 p-2 text-gray-500 hover:text-primary hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition"
+                  className="relative rounded-full bg-gray-100 p-2 text-gray-500 hover:text-primary hover:bg-primary/10 focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2 transition"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
@@ -115,7 +115,7 @@ export default function NavBar() {
               {isAuthenticated ? (
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <MenuButton className="relative flex rounded-full bg-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition">
+                    <MenuButton className="relative flex rounded-full bg-gray-100 text-sm focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2 transition">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       {session?.user?.image ? (
@@ -131,7 +131,7 @@ export default function NavBar() {
                   </div>
                   <MenuItems
                     transition
-                    className="absolute right-0 z-20 mt-2 w-64 origin-top-right rounded-xl bg-white/95 py-2 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none animate-fade-in backdrop-blur-md"
+                    className="absolute right-0 z-20 mt-2 w-64 origin-top-right rounded-xl bg-white/95 py-2 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-hidden animate-fade-in backdrop-blur-md"
                   >
                     <MenuItem>
                       <div className="flex items-center gap-3 px-4 py-3 border-b">
@@ -139,7 +139,7 @@ export default function NavBar() {
                           <img
                             alt={session?.user?.name || "User"}
                             src={session?.user?.image}
-                            className="h-12 w-12 rounded-full border border-gray-200 object-cover shadow"
+                            className="h-12 w-12 rounded-full border border-gray-200 object-cover shadow-sm"
                           />
                         ) : (
                           <UserCircleIcon className="h-12 w-12 text-gray-400" />
@@ -153,7 +153,7 @@ export default function NavBar() {
                     </MenuItem>
                     <div className="my-1 border-t border-gray-100" />
                     <MenuItem>
-                      <Link href="/settings" className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-primary/10 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary">
+                      <Link href="/settings" className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-primary/10 rounded-lg transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary">
                         Settings
                       </Link>
                     </MenuItem>
@@ -161,7 +161,7 @@ export default function NavBar() {
                     <MenuItem>
                       <button
                         onClick={() => signOut()}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary"
                       >
                         Sign out
                       </button>
@@ -171,7 +171,7 @@ export default function NavBar() {
               ) : (
                 <button
                   onClick={() => signIn()}
-                  className="ml-2 bg-primary text-white rounded-lg px-4 py-2 text-base font-semibold shadow-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="ml-2 bg-primary text-white rounded-lg px-4 py-2 text-base font-semibold shadow-md hover:bg-primary/90 transition-colors focus:outline-hidden focus:ring-2 focus:ring-primary"
                 >
                   Sign in
                 </button>
@@ -195,7 +195,7 @@ export default function NavBar() {
                   item.current
                     ? 'bg-primary text-white shadow-md'
                     : 'text-gray-700 hover:bg-primary/10 hover:text-primary',
-                  'block rounded-lg px-4 py-2 text-base font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
+                  'block rounded-lg px-4 py-2 text-base font-medium transition-colors duration-200 focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2'
                 )}
                 tabIndex={0}
               >
@@ -206,7 +206,7 @@ export default function NavBar() {
               <DisclosureButton
                 as="button"
                 onClick={() => signIn()}
-                className="w-full bg-primary text-white rounded-lg px-4 py-2 text-base font-semibold shadow-md hover:bg-primary/90 transition-colors mt-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full bg-primary text-white rounded-lg px-4 py-2 text-base font-semibold shadow-md hover:bg-primary/90 transition-colors mt-2 focus:outline-hidden focus:ring-2 focus:ring-primary"
               >
                 Sign in
               </DisclosureButton>

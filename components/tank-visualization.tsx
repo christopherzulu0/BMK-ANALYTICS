@@ -170,7 +170,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                     return (
                                         <div
                                             key={tank.id}
-                                            className={`relative cursor-pointer transition-all duration-300 w-[20vw] min-w-[100px] max-w-[150px] h-[30vw] min-h-[200px] max-h-[280px] flex-shrink-0 hover:scale-105 ${isSelected ? "ring-4 ring-primary ring-offset-2 z-10" : ""
+                                            className={`relative cursor-pointer transition-all duration-300 w-[20vw] min-w-[100px] max-w-[150px] h-[30vw] min-h-[200px] max-h-[280px] shrink-0 hover:scale-105 ${isSelected ? "ring-4 ring-primary ring-offset-2 z-10" : ""
                                                 }`}
                                             onClick={() => setSelectedTank(isSelected ? null : tank.id)}
                                         >
@@ -193,7 +193,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                                     <div className="absolute left-3/4 top-0 w-0.5 h-full bg-gray-300/60"></div>
 
                                                     {/* Metallic highlight */}
-                                                    <div className="absolute left-6 top-0 w-2 h-full bg-white/30 rounded-full blur-sm pointer-events-none"></div>
+                                                    <div className="absolute left-6 top-0 w-2 h-full bg-white/30 rounded-full blur-xs pointer-events-none"></div>
 
                                                     {/* Animated fill level (gentle wave) */}
                                                     <svg
@@ -252,7 +252,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                                     </div>
 
                                                     {/* Label plaque */}
-                                                    <div className="absolute left-1/2 bottom-4 w-16 h-5 -translate-x-1/2 rounded bg-gray-200 border border-gray-400 flex items-center justify-center text-xs font-semibold text-gray-700 shadow-sm">
+                                                    <div className="absolute left-1/2 bottom-4 w-16 h-5 -translate-x-1/2 rounded bg-gray-200 border border-gray-400 flex items-center justify-center text-xs font-semibold text-gray-700 shadow-xs">
                                                         {tank.id}
                                                     </div>
                                                 </div>
@@ -280,9 +280,9 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
 
                                                 {/* Tank top dome with manhole and bolts */}
                                                 <div className="absolute left-0 right-0 top-0 h-12 flex flex-col items-center z-20">
-                                                    <div className="relative w-24 h-10 mx-auto rounded-t-full bg-gradient-to-b from-gray-200 via-gray-100 to-gray-400 dark:from-gray-700 dark:to-gray-900 border-4 border-b-0 border-gray-300 dark:border-gray-700 shadow-md">
+                                                    <div className="relative w-24 h-10 mx-auto rounded-t-full bg-linear-to-b from-gray-200 via-gray-100 to-gray-400 dark:from-gray-700 dark:to-gray-900 border-4 border-b-0 border-gray-300 dark:border-gray-700 shadow-md">
                                                         {/* Manhole/hatch */}
-                                                        <div className="absolute left-1/2 top-1/2 w-7 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-400 border border-gray-500 shadow-sm"></div>
+                                                        <div className="absolute left-1/2 top-1/2 w-7 h-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-400 border border-gray-500 shadow-xs"></div>
                                                         {/* Bolts/rivets */}
                                                         {[...Array(8)].map((_, i) => (
                                                             <div
@@ -299,7 +299,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
 
                                                 {/* Tank bottom dome and improved base ring with bolts */}
                                                 <div className="absolute left-0 right-0 bottom-0 h-14 flex flex-col items-center z-20">
-                                                    <div className="relative w-24 h-10 mx-auto rounded-b-full bg-gradient-to-t from-gray-400 via-gray-200 to-gray-100 dark:from-gray-900 dark:to-gray-700 border-4 border-t-0 border-gray-300 dark:border-gray-700 shadow-md"></div>
+                                                    <div className="relative w-24 h-10 mx-auto rounded-b-full bg-linear-to-t from-gray-400 via-gray-200 to-gray-100 dark:from-gray-900 dark:to-gray-700 border-4 border-t-0 border-gray-300 dark:border-gray-700 shadow-md"></div>
                                                     {/* Base ring with bolts */}
                                                     <div className="absolute left-1/2 bottom-0 w-28 h-3 -translate-x-1/2 rounded-full bg-gray-400 dark:bg-gray-700 border border-gray-500 flex items-center justify-between px-2">
                                                         {[...Array(6)].map((_, i) => (
@@ -325,7 +325,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                     </div>
 
                     {/* Controls */}
-                    <Card className="absolute top-4 right-4 p-2 bg-background/80 backdrop-blur-sm z-30 shadow-md">
+                    <Card className="absolute top-4 right-4 p-2 bg-background/80 backdrop-blur-xs z-30 shadow-md">
                         <CardContent className="flex flex-col gap-2 p-0">
                             <TooltipProvider>
                                 <Tooltip>
@@ -406,7 +406,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
 
                     {/* Selected tank details */}
                     {selectedTankData && (
-                        <Card className="absolute bottom-4 left-4 p-4 bg-background/90 backdrop-blur-sm rounded-lg border shadow-lg max-w-xs z-30">
+                        <Card className="absolute bottom-4 left-4 p-4 bg-background/90 backdrop-blur-xs rounded-lg border shadow-lg max-w-xs z-30">
                             <CardHeader className="flex flex-row items-center justify-between p-0 pb-2">
                                 <CardTitle className="text-lg font-bold">
                                     {selectedTankData.name} ({selectedTankData.id})
@@ -434,7 +434,7 @@ export function TankVisualization({ tanks }: TankVisualizationProps) {
                                 </div>
                                 <Progress
                                     value={getLevelPct(selectedTankData)}
-                                    className="w-full h-2 bg-gray-200 dark:bg-gray-700 [&>*]:bg-primary"
+                                    className="w-full h-2 bg-gray-200 dark:bg-gray-700 *:bg-primary"
                                 />
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Volume:</span>

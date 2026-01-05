@@ -34,7 +34,7 @@ export default async function PermissionsLayout({ children }: { children: React.
         <Providers>
             <div className="flex min-h-screen">
                 {/* Left Navigation Sidebar */}
-                <div className="w-64 flex-shrink-0 fixed h-full hidden md:block border-r z-30">
+                <div className="w-64 shrink-0 fixed h-full hidden md:block border-r z-30">
                     <AppSidebarPipeline />
                 </div>
 

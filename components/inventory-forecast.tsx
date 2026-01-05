@@ -194,7 +194,7 @@ export function InventoryForecast() {
             {activeTab === "chart" && (
               <motion.div
                 layoutId="activeTabIndicator"
-                className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full"
+                className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full"
               />
             )}
           </TabsTrigger>
@@ -203,7 +203,7 @@ export function InventoryForecast() {
             {activeTab === "table" && (
               <motion.div
                 layoutId="activeTabIndicator"
-                className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full"
+                className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full"
               />
             )}
           </TabsTrigger>
@@ -212,14 +212,14 @@ export function InventoryForecast() {
             {activeTab === "insights" && (
               <motion.div
                 layoutId="activeTabIndicator"
-                className="absolute -bottom-[1px] left-0 right-0 h-[2px] bg-primary rounded-full"
+                className="absolute -bottom-px left-0 right-0 h-[2px] bg-primary rounded-full"
               />
             )}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="chart" className="space-y-4 mt-4">
-          <Card className="overflow-hidden border-none shadow-sm">
+          <Card className="overflow-hidden border-none shadow-xs">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -286,7 +286,7 @@ export function InventoryForecast() {
         </TabsContent>
 
         <TabsContent value="table" className="mt-4">
-          <Card className="overflow-hidden border-none shadow-sm">
+          <Card className="overflow-hidden border-none shadow-xs">
             <CardContent className="p-4">
               <div className="mb-4">
                 <h3 className="text-sm font-medium">Detailed Forecast Data</h3>
@@ -353,7 +353,7 @@ export function InventoryForecast() {
         </TabsContent>
 
         <TabsContent value="insights" className="mt-4">
-          <Card className="overflow-hidden border-none shadow-sm">
+          <Card className="overflow-hidden border-none shadow-xs">
             <CardContent className="p-4 space-y-4">
               <div className="mb-2">
                 <h3 className="text-sm font-medium">AI-Generated Insights</h3>

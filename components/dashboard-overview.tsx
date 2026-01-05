@@ -342,7 +342,7 @@ export function DashboardOverview() {
               </>
             )}
           </CardContent>
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-500/10 to-transparent rounded-bl-3xl" />
+          <div className="absolute top-0 right-0 w-16 h-16 bg-linear-to-br from-blue-500/10 to-transparent rounded-bl-3xl" />
         </Card>
 
         {/* <Card className="relative overflow-hidden">
@@ -399,7 +399,7 @@ export function DashboardOverview() {
               </>
             )}
           </CardContent>
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-green-500/10 to-transparent rounded-bl-3xl" />
+          <div className="absolute top-0 right-0 w-16 h-16 bg-linear-to-br from-green-500/10 to-transparent rounded-bl-3xl" />
         </Card> */}
 
         <Card className="relative overflow-hidden">
@@ -451,7 +451,7 @@ export function DashboardOverview() {
               </>
             )}
           </CardContent>
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-purple-500/10 to-transparent rounded-bl-3xl" />
+          <div className="absolute top-0 right-0 w-16 h-16 bg-linear-to-br from-purple-500/10 to-transparent rounded-bl-3xl" />
         </Card>
 
         <Card className="relative overflow-hidden">
@@ -504,7 +504,7 @@ export function DashboardOverview() {
               </>
             )}
           </CardContent>
-          <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-orange-500/10 to-transparent rounded-bl-3xl" />
+          <div className="absolute top-0 right-0 w-16 h-16 bg-linear-to-br from-orange-500/10 to-transparent rounded-bl-3xl" />
         </Card>
       </div>
 
@@ -558,7 +558,7 @@ export function DashboardOverview() {
                             tank.status === "Active"
                               ? "secondary"
                               : tank.status === "Rehabilitation"
-                                ? "outline"
+                                ? "outline-solid"
                                 : tank.status === "Active"
                                   ? "default"
                                   : "secondary"

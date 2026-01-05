@@ -170,7 +170,7 @@ export function ShipmentMap() {
                       isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100",
                     )}
                   >
-                    <div className="bg-background/95 backdrop-blur-sm shadow-md rounded px-3 py-2 text-xs whitespace-nowrap">
+                    <div className="bg-background/95 backdrop-blur-xs shadow-md rounded px-3 py-2 text-xs whitespace-nowrap">
                       <div className="font-medium">{shipment.name}</div>
                       <div className="text-muted-foreground">ID: {shipment.id}</div>
                       {shipment.speed > 0 && (
@@ -190,16 +190,16 @@ export function ShipmentMap() {
 
       {/* Map controls */}
       <div className="absolute top-2 right-2 flex flex-col gap-2">
-        <Button variant="secondary" size="icon" className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-sm">
+        <Button variant="secondary" size="icon" className="h-8 w-8 bg-background/90 backdrop-blur-xs shadow-xs">
           <ZoomIn className="h-4 w-4" />
         </Button>
-        <Button variant="secondary" size="icon" className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-sm">
+        <Button variant="secondary" size="icon" className="h-8 w-8 bg-background/90 backdrop-blur-xs shadow-xs">
           <ZoomOut className="h-4 w-4" />
         </Button>
         <Button
           variant="secondary"
           size="icon"
-          className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-sm"
+          className="h-8 w-8 bg-background/90 backdrop-blur-xs shadow-xs"
           onClick={handleRefresh}
           disabled={isRefreshing}
         >
@@ -207,7 +207,7 @@ export function ShipmentMap() {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="h-8 w-8 bg-background/90 backdrop-blur-sm shadow-sm">
+            <Button variant="secondary" size="icon" className="h-8 w-8 bg-background/90 backdrop-blur-xs shadow-xs">
               <Layers className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -241,7 +241,7 @@ export function ShipmentMap() {
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-2 left-2 bg-background/90 backdrop-blur-sm rounded-md p-2 text-xs shadow-sm">
+      <div className="absolute bottom-2 left-2 bg-background/90 backdrop-blur-xs rounded-md p-2 text-xs shadow-xs">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
             <div className="h-3 w-3 rounded-full bg-blue-500"></div>

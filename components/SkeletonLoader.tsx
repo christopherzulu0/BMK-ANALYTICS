@@ -3,10 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 export function SkeletonLoader() {
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-white shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <Skeleton className="h-8 w-32" />
             </div>
             <div className="flex items-center space-x-4">
@@ -19,7 +19,7 @@ export function SkeletonLoader() {
 
       <main className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white shadow-sm rounded-lg p-6">
+          <div className="bg-white shadow-xs rounded-lg p-6">
             <div className="pb-5 border-b border-gray-200">
               <Skeleton className="h-8 w-64" />
             </div>

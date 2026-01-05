@@ -512,7 +512,7 @@ export default function ShipmentsPage() {
   //         <AlertDialogFooter>
   //           <a
   //             href="mailto:Czulu@tazama.co.zm?subject=Access%20Request%20-%20Shipment%20Page"
-  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-600 transition-colors"
+  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-sm hover:bg-yellow-500 focus:outline-hidden focus:ring-2 focus:ring-yellow-600 transition-colors"
   //             aria-label="Contact Administrator"
   //           >
   //             <Mail className="w-5 h-5" /> Contact Admin
@@ -579,7 +579,7 @@ export default function ShipmentsPage() {
           </div>
         </div>
 
-        <Card className="border-none shadow-sm flex-1">
+        <Card className="border-none shadow-xs flex-1">
           <CardContent className="p-4 space-y-4 h-full flex flex-col">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-1">

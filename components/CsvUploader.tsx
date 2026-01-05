@@ -61,7 +61,7 @@ export default function CsvUploader() {
 
   return (
       <div className="w-full max-w-2xl mx-auto mt-10">
-        <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-gray-50">
+        <Card className="shadow-lg border-0 bg-linear-to-br from-white to-gray-50">
           <CardHeader className="text-center pb-6">
             <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
               <FileSpreadsheet className="w-8 h-8 text-blue-600" />

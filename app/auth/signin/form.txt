@@ -130,14 +130,14 @@ export function LoginForm({
                             <div className="flex justify-center space-x-4">
                                 <Button
                                     type="button"
-                                    variant={!isEmailSignIn ? "default" : "outline"}
+                                    variant={!isEmailSignIn ? "default" : "outline-solid"}
                                     onClick={() => setIsEmailSignIn(false)}
                                 >
                                     Password
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant={isEmailSignIn ? "default" : "outline"}
+                                    variant={isEmailSignIn ? "default" : "outline-solid"}
                                     onClick={() => setIsEmailSignIn(true)}
                                 >
                                     Magic Link
@@ -255,7 +255,7 @@ export function LoginForm({
                     </div>
                 </CardContent>
             </Card>
-            <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+            <div className="text-muted-foreground hover:[a]:*:text-primary text-center text-xs text-balance [a]:*:underline [a]:*:underline-offset-4">
                 By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
                 and <a href="#">Privacy Policy</a>.
             </div>

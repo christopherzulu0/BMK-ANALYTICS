@@ -777,7 +777,7 @@ export function RolesManagement() {
                   </DropdownMenu>
                 </div>
               </CardHeader>
-              <CardContent className="pb-3 flex-grow">
+              <CardContent className="pb-3 grow">
                 <div className="flex justify-between items-center text-sm mb-2">
                   <div className="flex items-center gap-1">
                     <Users className="h-4 w-4 text-muted-foreground" />
@@ -905,7 +905,7 @@ export function RolesManagement() {
                       {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
                         <Badge
                           key={day}
-                          variant={timeRestrictions.days.includes(day) ? "default" : "outline"}
+                          variant={timeRestrictions.days.includes(day) ? "default" : "outline-solid"}
                           className="cursor-pointer hover:bg-secondary"
                           onClick={() => {
                             setTimeRestrictions(prev => ({

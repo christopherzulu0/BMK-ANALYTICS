@@ -101,7 +101,7 @@ export function ShipmentTracking() {
                           ? "secondary"
                           : shipment.status === "unloading"
                             ? "default"
-                            : "outline"
+                            : "outline-solid"
                     }
                   >
                     {shipment.status}
@@ -187,7 +187,7 @@ export function ShipmentTracking() {
                           ? "secondary"
                           : selectedShipment.status === "unloading"
                             ? "default"
-                            : "outline"
+                            : "outline-solid"
                     }
                   >
                     {selectedShipment.status}

@@ -54,7 +54,7 @@ export function AppSidebarDispatch() {
   //         <AlertDialogFooter>
   //           <a
   //             href="mailto:Czulu@tazama.co.zm?subject=Access%20Request%20-%20Dispatch%20Page"
-  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-600 transition-colors"
+  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-sm hover:bg-yellow-500 focus:outline-hidden focus:ring-2 focus:ring-yellow-600 transition-colors"
   //             aria-label="Contact Administrator"
   //           >
   //             <Mail className="w-5 h-5" /> Contact Admin
@@ -72,7 +72,7 @@ export function AppSidebarDispatch() {
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild className="gap-4">
                 <Link href="/">
-                  <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg">
+                  <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-blue-700 text-white shadow-lg">
                     <Activity className="size-5" />
                   </div>
                   <div className="flex flex-col gap-1">

@@ -258,7 +258,7 @@ export default function AnalyticsChart() {
   //         <AlertDialogFooter>
   //           <a
   //             href="mailto:Czulu@tazama.co.zm?subject=Access%20Request%20-%20DensityAnalysis%20Page"
-  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-600 transition-colors"
+  //             className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-sm hover:bg-yellow-500 focus:outline-hidden focus:ring-2 focus:ring-yellow-600 transition-colors"
   //             aria-label="Contact Administrator"
   //           >
   //             <Mail className="w-5 h-5" /> Contact Admin

@@ -1,6 +1,6 @@
 export function TankSkeleton() {
     return (
-      <div className="relative w-[20vw] min-w-[100px] max-w-[150px] h-[30vw] min-h-[200px] max-h-[280px] flex-shrink-0 animate-pulse">
+      <div className="relative w-[20vw] min-w-[100px] max-w-[150px] h-[30vw] min-h-[200px] max-h-[280px] shrink-0 animate-pulse">
         {/* Tank shadow placeholder */}
         <div className="absolute left-1/2 -bottom-4 w-32 h-8 -translate-x-1/2 rounded-full bg-gray-300/50 dark:bg-gray-700/50 blur-md z-0"></div>
         {/* Tank body placeholder */}

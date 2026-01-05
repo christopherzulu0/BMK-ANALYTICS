@@ -69,7 +69,7 @@ export default function DataTable({ data }: DataTableProps) {
   }
 
   if (data.length === 0) {
-    return <div className="p-8 text-center text-gray-500 bg-gray-50 rounded-lg shadow">No data available for the selected date.</div>
+    return <div className="p-8 text-center text-gray-500 bg-gray-50 rounded-lg shadow-sm">No data available for the selected date.</div>
   }
 
   return (
@@ -161,7 +161,7 @@ export default function DataTable({ data }: DataTableProps) {
               </p>
             </div>
             <div>
-              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <nav className="relative z-0 inline-flex rounded-md shadow-xs -space-x-px" aria-label="Pagination">
                 <Button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
@@ -175,7 +175,7 @@ export default function DataTable({ data }: DataTableProps) {
                   <Button
                     key={i}
                     onClick={() => setCurrentPage(i + 1)}
-                    variant={currentPage === i + 1 ? "default" : "outline"}
+                    variant={currentPage === i + 1 ? "default" : "outline-solid"}
                     className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                       currentPage === i + 1
                         ? 'z-10 bg-primary border-primary text-primary-foreground'

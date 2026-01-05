@@ -20,7 +20,7 @@ export function Toaster() {
         return (
           <Toast key={id} variant={variant} {...props}>
             {variant === "success" && (
-              <CheckCircle2 className="h-5 w-5 text-green-600 mr-2 flex-shrink-0" />
+              <CheckCircle2 className="h-5 w-5 text-green-600 mr-2 shrink-0" />
             )}
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}

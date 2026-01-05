@@ -395,7 +395,7 @@ export function PipelineData() {
     >
       {/* Enhanced Loading overlay with progress indication */}
       {isLoading && (
-        <div className="fixed inset-0 bg-background/50 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-background/50 backdrop-blur-xs z-50 flex items-center justify-center">
           <div className="bg-card p-6 rounded-lg shadow-lg flex flex-col items-center space-y-4">
             <RefreshCw className="h-8 w-8 animate-spin text-primary" />
             <p className="text-lg font-medium">{getLoadingMessage()}</p>
@@ -407,8 +407,8 @@ export function PipelineData() {
       )}
       {/* Responsive Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-lg blur-xl" />
-        <div className="relative bg-white/80 backdrop-blur-sm border border-white/20 rounded-lg p-3 sm:p-6">
+        <div className="absolute inset-0 bg-linear-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-lg blur-xl" />
+        <div className="relative bg-white/80 backdrop-blur-xs border border-white/20 rounded-lg p-3 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             <div className="space-y-2">
               <div className="flex items-center space-x-2 sm:space-x-3">
@@ -788,7 +788,7 @@ export function PipelineData() {
 
       {/* Responsive Tabs */}
       <Tabs value={viewMode} onValueChange={setViewMode} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 bg-muted/50 backdrop-blur-sm h-auto p-1">
+        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-5 bg-muted/50 backdrop-blur-xs h-auto p-1">
           <TabsTrigger
             value="overview"
             className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2 text-xs sm:text-sm py-2 sm:py-1.5"
@@ -927,7 +927,7 @@ export function PipelineData() {
               {/*<Card className="glass-morphism border-2 hover-lift">*/}
               {/*  <CardHeader className="p-3 sm:p-6">*/}
               {/*    <CardTitle className="flex items-center space-x-2 text-sm sm:text-base">*/}
-              {/*      <div className="p-1.5 sm:p-2 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg">*/}
+              {/*      <div className="p-1.5 sm:p-2 bg-linear-to-br from-green-500 to-blue-500 rounded-lg">*/}
               {/*        <Network className="h-3 w-3 sm:h-4 sm:w-4 text-white" />*/}
               {/*      </div>*/}
               {/*      <span>System Status</span>*/}
@@ -955,7 +955,7 @@ export function PipelineData() {
               {/*        <div className="flex items-center space-x-2">*/}
               {/*          <div className="w-12 sm:w-16 h-1.5 sm:h-2 bg-muted rounded-full overflow-hidden">*/}
               {/*            <div*/}
-              {/*              className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full"*/}
+              {/*              className="h-full bg-linear-to-r from-blue-500 to-green-500 rounded-full"*/}
               {/*              style={{ width: `${dataQuality}%` }}*/}
               {/*            />*/}
               {/*          </div>*/}
@@ -970,7 +970,7 @@ export function PipelineData() {
               {/*        <div className="flex items-center space-x-2">*/}
               {/*          <div className="w-12 sm:w-16 h-1.5 sm:h-2 bg-muted rounded-full overflow-hidden">*/}
               {/*            <div*/}
-              {/*              className="h-full bg-gradient-to-r from-green-500 to-orange-500 rounded-full"*/}
+              {/*              className="h-full bg-linear-to-r from-green-500 to-orange-500 rounded-full"*/}
               {/*              style={{ width: `${systemLoad}%` }}*/}
               {/*            />*/}
               {/*          </div>*/}
@@ -982,11 +982,11 @@ export function PipelineData() {
               {/*    <div className="space-y-2">*/}
               {/*      <div className="text-xs sm:text-sm font-medium">AI Insights</div>*/}
               {/*      <div className="grid grid-cols-2 gap-2 text-xs">*/}
-              {/*        <div className="text-center p-2 bg-gradient-to-br from-green-50 to-blue-50 rounded border">*/}
+              {/*        <div className="text-center p-2 bg-linear-to-br from-green-50 to-blue-50 rounded border">*/}
               {/*          <div className="font-medium">Anomaly</div>*/}
               {/*          <div className="text-green-600">{pipelineData ? (pipelineData.anomalyScore * 100).toFixed(1) + '%' : 'No data'}</div>*/}
               {/*        </div>*/}
-              {/*        <div className="text-center p-2 bg-gradient-to-br from-blue-50 to-purple-50 rounded border">*/}
+              {/*        <div className="text-center p-2 bg-linear-to-br from-blue-50 to-purple-50 rounded border">*/}
               {/*          <div className="font-medium">Prediction</div>*/}
               {/*          <div className="text-blue-600">{pipelineData ? pipelineData.predictedFlow.toFixed(0) + 'L' : 'No data'}</div>*/}
               {/*        </div>*/}
@@ -1029,7 +1029,7 @@ export function PipelineData() {
           <Card className="hover-lift">
             <CardHeader className="p-3 sm:p-6">
               <CardTitle className="flex items-center space-x-2 text-sm sm:text-base">
-                <div className="p-1.5 sm:p-2 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg">
+                <div className="p-1.5 sm:p-2 bg-linear-to-br from-purple-500 to-pink-500 rounded-lg">
                   <BarChart4 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                 </div>
                 <span>24-Hour Analytics</span>
@@ -1195,7 +1195,7 @@ export function PipelineData() {
 
                         {/* Responsive metrics grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
-                          <div className="space-y-1 p-2 sm:p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border">
+                          <div className="space-y-1 p-2 sm:p-3 bg-linear-to-br from-blue-50 to-blue-100 rounded-lg border">
                             <div className="text-xs text-muted-foreground flex items-center">
                               <Gauge className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                               <span className="hidden sm:inline">Flow Meter 1</span>
@@ -1204,7 +1204,7 @@ export function PipelineData() {
                             <div className="font-medium text-xs sm:text-sm">{reading.flowMeter1.toLocaleString()}</div>
                             <div className="text-xs text-green-600">{reading.flowRate1} L/min</div>
                           </div>
-                          <div className="space-y-1 p-2 sm:p-3 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border">
+                          <div className="space-y-1 p-2 sm:p-3 bg-linear-to-br from-green-50 to-green-100 rounded-lg border">
                             <div className="text-xs text-muted-foreground flex items-center">
                               <Gauge className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                               <span className="hidden sm:inline">Flow Meter 2</span>
@@ -1213,7 +1213,7 @@ export function PipelineData() {
                             <div className="font-medium text-xs sm:text-sm">{reading.flowMeter2.toLocaleString()}</div>
                             <div className="text-xs text-green-600">{reading.flowRate2} L/min</div>
                           </div>
-                          <div className="space-y-1 p-2 sm:p-3 bg-gradient-to-br from-red-50 to-red-100 rounded-lg border">
+                          <div className="space-y-1 p-2 sm:p-3 bg-linear-to-br from-red-50 to-red-100 rounded-lg border">
                             <div className="text-xs text-muted-foreground flex items-center">
                               <Thermometer className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                               <span className="hidden sm:inline">Temperature</span>
@@ -1222,7 +1222,7 @@ export function PipelineData() {
                             <div className="font-medium text-xs sm:text-sm">{reading.sampleTemp}°C</div>
                             <div className="text-xs text-blue-600">Normal</div>
                           </div>
-                          <div className="space-y-1 p-2 sm:p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border">
+                          <div className="space-y-1 p-2 sm:p-3 bg-linear-to-br from-purple-50 to-purple-100 rounded-lg border">
                             <div className="text-xs text-muted-foreground flex items-center">
                               <Droplets className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                               <span className="hidden sm:inline">Density</span>
@@ -1231,7 +1231,7 @@ export function PipelineData() {
                             <div className="font-medium text-xs sm:text-sm">{reading.obsDensity}</div>
                             <div className="text-xs text-purple-600">{reading.kgInAirPerLitre}</div>
                           </div>
-                          <div className="space-y-1 p-2 sm:p-3 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border">
+                          <div className="space-y-1 p-2 sm:p-3 bg-linear-to-br from-orange-50 to-orange-100 rounded-lg border">
                             <div className="text-xs text-muted-foreground flex items-center">
                               <Wind className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                               <span className="hidden sm:inline">Pressure</span>
@@ -1240,7 +1240,7 @@ export function PipelineData() {
                             <div className="font-medium text-xs sm:text-sm">{reading.pressure} bar</div>
                             <div className="text-xs text-orange-600">V: {reading.viscosity}</div>
                           </div>
-                          <div className="space-y-1 p-2 sm:p-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg border">
+                          <div className="space-y-1 p-2 sm:p-3 bg-linear-to-br from-gray-50 to-gray-100 rounded-lg border">
                             <div className="text-xs text-muted-foreground flex items-center">
                               <Users className="h-2 w-2 sm:h-3 sm:w-3 mr-1" />
                               <span className="hidden sm:inline">Operator</span>
@@ -1341,7 +1341,7 @@ export function PipelineData() {
                       return (
                         <Button
                           key={pageNum}
-                          variant={currentPage === pageNum ? "default" : "outline"}
+                          variant={currentPage === pageNum ? "default" : "outline-solid"}
                           size="sm"
                           onClick={() => setCurrentPage(pageNum)}
                           className="h-8 sm:h-10 w-8 sm:w-10 p-0"

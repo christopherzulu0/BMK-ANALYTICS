@@ -84,7 +84,7 @@ export function TankDetailsModal({ isOpen, onClose, tank, currentLevel }: TankDe
             <h3 className="text-sm font-medium">Tank Information</h3>
             <div className="grid grid-cols-2 gap-2">
               <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
-                <Droplet className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                <Droplet className="h-4 w-4 text-blue-500 shrink-0" />
                 <div className="overflow-hidden">
                   <p className="text-xs font-medium">Product</p>
                   <p className="text-xs text-muted-foreground truncate">{tank.product}</p>
@@ -92,7 +92,7 @@ export function TankDetailsModal({ isOpen, onClose, tank, currentLevel }: TankDe
               </div>
 
               <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
-                <MapPin className="h-4 w-4 text-red-500 flex-shrink-0" />
+                <MapPin className="h-4 w-4 text-red-500 shrink-0" />
                 <div className="overflow-hidden">
                   <p className="text-xs font-medium">Location</p>
                   <p className="text-xs text-muted-foreground truncate">{tank.location}</p>
@@ -100,7 +100,7 @@ export function TankDetailsModal({ isOpen, onClose, tank, currentLevel }: TankDe
               </div>
 
               <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
-                <Wrench className="h-4 w-4 text-green-500 flex-shrink-0" />
+                <Wrench className="h-4 w-4 text-green-500 shrink-0" />
                 <div className="overflow-hidden">
                   <p className="text-xs font-medium">Last Inspection</p>
                   <p className="text-xs text-muted-foreground">{new Date(tank.lastInspection).toLocaleDateString()}</p>
@@ -108,7 +108,7 @@ export function TankDetailsModal({ isOpen, onClose, tank, currentLevel }: TankDe
               </div>
 
               <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 col-span-2">
-                <Calendar className="h-4 w-4 text-purple-500 flex-shrink-0" />
+                <Calendar className="h-4 w-4 text-purple-500 shrink-0" />
                 <div className="overflow-hidden">
                   <p className="text-xs font-medium">Next Maintenance</p>
                   <p className="text-xs text-muted-foreground">

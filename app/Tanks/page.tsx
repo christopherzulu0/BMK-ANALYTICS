@@ -721,7 +721,7 @@ export default function Page() {
           </TabsList>
 
           <TabsContent value="table" className="space-y-6">
-            <section className="rounded-lg border bg-background shadow-sm">
+            <section className="rounded-lg border bg-background shadow-xs">
               <div className="p-4 border-b flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2">
                   <ClipboardList className="h-5 w-5" />
@@ -874,7 +874,7 @@ export default function Page() {
                   <ul className="list-decimal pl-5 space-y-2">
                     {remarks.map((r, idx) => (
                       <li key={idx} className="leading-relaxed flex items-start gap-2">
-                        <span className="flex-1 whitespace-pre-wrap break-words">{r}</span>
+                        <span className="flex-1 whitespace-pre-wrap wrap-break-word">{r}</span>
                         <Button
                           size="icon"
                           variant="ghost"

@@ -378,7 +378,7 @@ export function AnalyticsDashboard() {
                     T4: { label: "Tank 4", color: "hsl(var(--chart-4))" },
                     T5: { label: "Tank 5", color: "hsl(var(--chart-5))" },
                   }}
-                  className="!aspect-auto w-full h-full"
+                  className="aspect-auto! w-full h-full"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={tankLevelHistory}>
@@ -417,7 +417,7 @@ export function AnalyticsDashboard() {
                   jetfuel: { label: "Jet Fuel", color: "#FFBB28" },
                   heatingoil: { label: "Heating Oil", color: "#FF8042" },
                 }}
-                className="!aspect-auto w-full h-full"
+                className="aspect-auto! w-full h-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
