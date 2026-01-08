@@ -8,27 +8,14 @@ import { useSession, signIn, signOut } from "next-auth/react"
 
 // Define navigation items based on user role
 const getNavigationItems = (role: string) => {
-  // const commonItems = [
-  //   { name: 'Dashboard', href: '/dashboard', current: true },
-  // ];
 
   const roleBasedItems: { [key: string]: Array<{ name: string; href: string; current: boolean }> } = {
-    // admin: [
-    //   { name: 'Users', href: '/admin/users', current: false },
-    //   { name: 'Settings', href: '/admin/settings', current: false },
-    // ],
-    // DOE: [
-    //   { name: 'Reports', href: '/reports', current: false },
-    //   { name: 'Shipments', href: '/shipments', current: false },
-    // ],
-    // dispatcher: [
-    //   { name: 'Dispatch', href: '/dispatch', current: false },
-    // ],
+
   };
 
-  // Return common items plus role-specific items
+
   return [
-    // ...commonItems,
+  
     ...(role && roleBasedItems[role] ? roleBasedItems[role] : []),
   ];
 };

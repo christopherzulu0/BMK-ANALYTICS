@@ -5,6 +5,11 @@ import { getToken } from 'next-auth/jwt';
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const staticExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.ico', '.css', '.js', '.woff', '.woff2', '.ttf', '.eot'];
+const isStaticAsset = staticExtensions.some(ext => pathname.toLowerCase().endsWith(ext));
+if (isStaticAsset) {
+  return NextResponse.next();
+}
   // Check if the path is a public path that doesn't require authentication
   const isPublicPath =
       pathname.startsWith('/auth/') ||
@@ -32,6 +37,7 @@ export async function proxy(request: NextRequest) {
 
   return NextResponse.next();
 }
+
 
 // Configure which paths the middleware should run on
 export const config = {

@@ -707,3 +707,8 @@ For issues and questions:
 **Version**: 0.1.0  
 **Last Updated**: 2025  
 **Maintained by**: Tazama Pipeline Limited Development Team
+
+
+#Docker
+1. docker build -t pipeline-data .
+2. docker-compose up -d --build

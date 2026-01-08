@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Providers from './providers'
 import BottomNavigation from "@/components/Navigator/BottomNavigation";
+import Navbar from './LandingPage/NavBar/Navbar';
 
 
 
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         `}</style>
       </Head>
       <body className="text-gray-900 antialiased">
+      <Navbar />
         <Providers>
           <main className="min-h-screen w-full">
             {children}

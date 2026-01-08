@@ -25,11 +25,12 @@ import { Switch } from "@/components/ui/switch"
 import { AlertTriangle, CheckCircle, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import NavBar from "@/components/NavBar/page"
+
 import HeroSection from "./components/HeroSection"
 import OurValues from "./components/OurValues"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import InteractiveMap from "./components/InterativeMap"
+import Navbar from "./NavBar/Navbar"
 
 // NOTE: If you see module not found errors for 'framer-motion', 'recharts', 'lucide-react', or '@tanstack/react-query', install them with npm or yarn.
 // npm install framer-motion recharts lucide-react @tanstack/react-query
@@ -195,7 +196,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen w-full">
-            <NavBar />
+          
 
             {/* Hero Section */}
             <motion.section style={{ opacity, scale }}>
@@ -416,7 +417,8 @@ export default function Home() {
                 >
                     <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-center">Transportation Analytics</h2>
 
-                    <Tabs defaultValue="monthly" onValueChange={setActiveTab}>
+                    <div suppressHydrationWarning>
+                        <Tabs defaultValue="monthly" onValueChange={setActiveTab}>
                         <TabsList className="grid w-full grid-cols-3">
                             <TabsTrigger value="monthly">Monthly View</TabsTrigger>
                             <TabsTrigger value="yearly">Yearly View</TabsTrigger>
@@ -506,8 +508,8 @@ export default function Home() {
                             </Card>
                         </TabsContent>
 
-
                     </Tabs>
+                    </div>
                 </motion.section>
 
                 {/* Services Overview */}

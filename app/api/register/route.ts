@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import {prisma} from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 // Define validation schema for registration data
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
- DepartmentName: z.string().DepartmentName("Invalid email address"),
+  DepartmentName: z.string().min(2, "Department Name must be at least 2 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   roleType: z.enum(["dispatcher", "DOE", "admin"]).default("dispatcher"),
 });
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, email, password, roleType } = validationResult.data;
+    const { name, email, DepartmentName, password, roleType } = validationResult.data;
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
@@ -41,17 +41,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find the role type
-    const userRoleType = await prisma.roleType.findUnique({
-      where: { name: roleType }
-    });
+
 
     // Find the role
     const userRole = await prisma.role.findUnique({
       where: { name: roleType }
     });
 
-    if (!userRoleType || !userRole) {
+    if (!userRole) {
       return NextResponse.json(
         { error: "Role not found. Please contact administrator." },
         { status: 500 }
@@ -68,16 +65,18 @@ export async function POST(request: NextRequest) {
         email,
         DepartmentName,
         password: hashedPassword,
-        roleType, // Legacy field
         roleId: userRole.id, // Connect to Role
-        roleTypeId: userRoleType.id, // Connect to RoleType
+        location: "",
+        phone_number: "",
+        notes: "",
+
       },
       select: {
         id: true,
         name: true,
         email: true,
-        DepartmentName:true,
-        roleType: true,
+        DepartmentName: true,
+        roleId: true,
         createdAt: true,
       },
     });

@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function ErrorPage() {
+function ErrorContent() {
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
@@ -30,6 +31,33 @@ export default function ErrorPage() {
   }
 
   return (
+    <div className="w-full md:w-1/2 flex justify-center items-center z-10">
+      <Card className={cn("w-full max-w-md shadow-2xl border-2 border-red-100 animate-fadeIn backdrop-blur-md bg-white/80")}>
+        <CardHeader className="flex flex-col items-center gap-2 bg-red-100/60 rounded-t-xl animate-fadeIn">
+          <AlertTriangle className="w-14 h-14 text-red-500 animate-bounce-slow mb-2 drop-shadow-lg" />
+          <CardTitle className="text-3xl font-extrabold text-red-800 tracking-tight">Authentication Error</CardTitle>
+          <div className="text-base text-red-700 font-medium mt-1">Something went wrong with your sign in</div>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center gap-6 py-8">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl text-center font-semibold text-lg shadow-xs">
+            {errorMessage}
+          </div>
+          <div className="flex flex-col gap-3 w-full items-center">
+            <Link
+              href="/"
+              className="inline-block px-6 py-2 bg-white border border-red-300 text-red-600 font-semibold rounded-lg shadow-sm hover:bg-red-50 transition-colors text-base"
+            >
+              Go to Homepage
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function ErrorPage() {
+  return (
     <div className="relative min-h-screen flex flex-col md:flex-row items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden bg-linear-to-br from-red-50 via-white to-red-100">
       {/* Animated blurred background shapes */}
       <div className="absolute -z-10 inset-0 overflow-hidden pointer-events-none">
@@ -37,35 +65,12 @@ export default function ErrorPage() {
         <div className="absolute right-1/4 bottom-0 w-80 h-80 bg-pink-100 opacity-20 rounded-full blur-2xl animate-float" />
         <div className="absolute left-1/2 top-1/2 w-72 h-72 bg-yellow-100 opacity-20 rounded-full blur-2xl animate-float-reverse" />
       </div>
-      {/* Left: Error Card */}
-      <div className="w-full md:w-1/2 flex justify-center items-center z-10">
-        <Card className={cn("w-full max-w-md shadow-2xl border-2 border-red-100 animate-fadeIn backdrop-blur-md bg-white/80")}> 
-          <CardHeader className="flex flex-col items-center gap-2 bg-red-100/60 rounded-t-xl animate-fadeIn">
-            <AlertTriangle className="w-14 h-14 text-red-500 animate-bounce-slow mb-2 drop-shadow-lg" />
-            <CardTitle className="text-3xl font-extrabold text-red-800 tracking-tight">Authentication Error</CardTitle>
-            <div className="text-base text-red-700 font-medium mt-1">Something went wrong with your sign in</div>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center gap-6 py-8">
-            <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl text-center font-semibold text-lg shadow-xs">
-              {errorMessage}
-            </div>
-            <div className="flex flex-col gap-3 w-full items-center">
-              {/* <Link
-                href="/auth/signin"
-                className="inline-block px-6 py-2 bg-red-500 text-white font-bold rounded-lg shadow-sm hover:bg-red-600 transition-colors text-base"
-              >
-                Return to Sign In
-              </Link> */}
-              <Link
-                href="/"
-                className="inline-block px-6 py-2 bg-white border border-red-300 text-red-600 font-semibold rounded-lg shadow-sm hover:bg-red-50 transition-colors text-base"
-              >
-                Go to Homepage
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+
+      {/* Left: Error Card (Suspended) */}
+      <Suspense fallback={<div className="w-full md:w-1/2 flex justify-center items-center z-10">Loading error details...</div>}>
+        <ErrorContent />
+      </Suspense>
+
       {/* Right: Illustration */}
       <div className="hidden md:flex w-1/2 justify-center items-center z-10">
         <div className="max-w-lg w-full flex flex-col items-center">

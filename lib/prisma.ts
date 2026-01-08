@@ -120,24 +120,64 @@ function parseDatabaseUrl(url: string) {
   };
 }
 
-let sqlConfig;
-try {
-  sqlConfig = parseDatabaseUrl(process.env.DATABASE_URL || '');
-} catch (error) {
-  console.error('Error parsing DATABASE_URL:', error);
-  throw error;
+let prismaInstance: PrismaClient | null = null;
+
+function getPrismaClient(): PrismaClient {
+  // Return cached instance if already initialized
+  if (prismaInstance) {
+    return prismaInstance;
+  }
+
+  // During build time, DATABASE_URL may not be available
+  // Create a basic client without adapter to allow build to complete
+  // Runtime errors will occur if DATABASE_URL is missing when queries are made
+  if (!process.env.DATABASE_URL) {
+    console.warn('DATABASE_URL not found. Creating Prisma client without adapter (may fail at runtime).');
+    prismaInstance = new PrismaClient();
+    return prismaInstance;
+  }
+
+  // Parse DATABASE_URL and create adapter
+  let sqlConfig;
+  try {
+    sqlConfig = parseDatabaseUrl(process.env.DATABASE_URL);
+  } catch (error) {
+    console.error('Error parsing DATABASE_URL:', error);
+    // During build, allow it to continue with a basic client
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      prismaInstance = new PrismaClient();
+      return prismaInstance;
+    }
+    throw error;
+  }
+
+  let adapter;
+  try {
+    adapter = new PrismaMssql(sqlConfig);
+  } catch (error) {
+    console.error('Error creating PrismaMssql adapter:', error);
+    console.error('Config used:', { ...sqlConfig, password: '***' });
+    // During build, allow it to continue with a basic client
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      prismaInstance = new PrismaClient();
+      return prismaInstance;
+    }
+    throw error;
+  }
+
+  // PrismaClient with adapter
+  prismaInstance = new PrismaClient({ adapter });
+  return prismaInstance;
 }
 
-let adapter;
-try {
-  adapter = new PrismaMssql(sqlConfig);
-} catch (error) {
-  console.error('Error creating PrismaMssql adapter:', error);
-  console.error('Config used:', { ...sqlConfig, password: '***' });
-  throw error;
-}
-
-// PrismaClient with adapter - DATABASE_URL should be available in environment for Prisma's internal use
-const prisma = new PrismaClient({ adapter });
+// Export a proxy that lazily initializes the client
+const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    const client = getPrismaClient();
+    const value = (client as any)[prop];
+    // Bind methods to maintain correct 'this' context
+    return typeof value === 'function' ? value.bind(client) : value;
+  }
+});
 
 export { prisma }

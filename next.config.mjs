@@ -8,10 +8,13 @@ const nextConfig = {
     // your project has type errors.
     // !! WARN !!
     ignoreBuildErrors: true,
-    // Experimental:{
-    //   appDir: true,
-    // },
   },
+  experimental: {
+    // appDir: true,
+    cpus: 2, // Limit to 4 workers to prevent OOM on build
+    workerThreads: false,
+  },
+  productionBrowserSourceMaps: false, // Disable source maps to save memory
   turbopack: {
     resolveAlias: {
       underscore: 'lodash',
@@ -19,7 +22,7 @@ const nextConfig = {
     },
   },
   images: {
-    domains: ["encrypted-tbn0.gstatic.com","tazama.co.zm"], // Only needed for external images
+    domains: ["encrypted-tbn0.gstatic.com", "tazama.co.zm"], // Only needed for external images
   },
   // Extend Webpack configuration
   webpack: (config, { isServer }) => {
@@ -37,6 +40,7 @@ const nextConfig = {
     }
     return config;
   },
+  output: "standalone",
 };
 
 export default nextConfig;

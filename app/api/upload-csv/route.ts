@@ -1,10 +1,9 @@
-
-import { PrismaClient } from '@/lib/generated/prisma';
+import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 import * as XLSX from 'xlsx';
 
-const prisma = new PrismaClient();
+
 
 export async function POST(req: NextRequest) {
   try {

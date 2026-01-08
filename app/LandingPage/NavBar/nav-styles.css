@@ -1,0 +1,23 @@
+/* Navbar-specific component styles */
+.navbar-gradient {
+  background: linear-gradient(to right, hsl(var(--primary)), oklch(0.5 0.25 15));
+}
+
+.navbar-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: -0.25rem;
+  margin-right: -0.25rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  background-color: hsl(var(--secondary));
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: hsl(var(--accent-foreground));
+  font-size: 0.75rem;
+  line-height: 1rem;
+}

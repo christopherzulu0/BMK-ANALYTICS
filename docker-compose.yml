@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: pipeline-data
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    # If you need to access a database on the host machine using 'localhost' in connection string,
+    # you might need to use 'host.docker.internal' instead of 'localhost' in your .env file,
+    # or use network_mode: "host" (Linux only).
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway" 
