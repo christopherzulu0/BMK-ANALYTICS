@@ -1,23 +1,26 @@
-/* Navbar-specific component styles */
-.navbar-gradient {
-  background: linear-gradient(to right, hsl(var(--primary)), oklch(0.5 0.25 15));
+/* Landing Page Navbar-specific component styles - scoped to avoid conflicts */
+/* Using element + class selectors for higher specificity */
+nav.landing-navbar-gradient {
+  background: linear-gradient(to right, hsl(var(--primary)), oklch(0.5 0.25 15)) !important;
 }
 
-.navbar-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin-top: -0.25rem;
-  margin-right: -0.25rem;
-  height: 1.25rem;
-  width: 1.25rem;
-  background-color: hsl(var(--secondary));
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: hsl(var(--accent-foreground));
-  font-size: 0.75rem;
-  line-height: 1rem;
+span.landing-navbar-badge {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  margin-top: -0.25rem !important;
+  margin-right: -0.25rem !important;
+  height: 1.25rem !important;
+  min-width: 1.25rem !important;
+  background-color: hsl(var(--secondary)) !important;
+  border-radius: 9999px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700 !important;
+  color: hsl(var(--accent-foreground)) !important;
+  font-size: 0.75rem !important;
+  line-height: 1rem !important;
+  padding: 0 0.25rem !important;
+  z-index: 10 !important;
 }

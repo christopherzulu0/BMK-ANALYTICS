@@ -2,13 +2,15 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import "./globals.css"
+import { ShipmentProvider } from "@/components/shipments/shipment-context"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "PipelineFlow - Advanced Navbar Design",
-  description: "Enterprise-grade pipeline management navbar with responsive design and premium UI",
+  title: "Shipments Dashboard - Real-time Cargo Tracking",
+  description: "Monitor and track shipments in real-time with advanced logistics analytics",
   generator: "v0.app",
   icons: {
     icon: [
@@ -37,8 +39,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
-        {children}
-        <Analytics />
+        <ShipmentProvider>
+          {children}
+          <Analytics />
+        </ShipmentProvider>
       </body>
     </html>
   )

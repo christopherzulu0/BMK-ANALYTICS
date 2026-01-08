@@ -14,8 +14,8 @@ export default function DOELayout({
 }>) {
   return (
     <>
-      {children}
-      <Analytics />
+        {children}
+        <Analytics />
     </>
   )
 }

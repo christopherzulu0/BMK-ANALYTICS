@@ -44,7 +44,12 @@ export default function Navbar() {
     <>
 
       {/* Desktop Navbar */}
-      <nav className="hidden lg:flex items-center justify-between px-8 py-3 navbar-gradient text-primary-foreground shadow-lg sticky top-0 z-40 backdrop-blur-sm bg-opacity-95">
+      <nav 
+        className="hidden lg:flex items-center justify-between px-8 py-3 text-white shadow-lg sticky top-0 z-40"
+        style={{
+          background: 'linear-gradient(to right, #1e293b, #dc2626)'
+        }}
+      >
         {/* Logo & Brand */}
         <Link
           href="/"
@@ -160,7 +165,33 @@ export default function Navbar() {
           {/* Notifications */}
           <button className="relative p-2.5 hover:bg-white/15 rounded-lg transition-colors">
             <Bell className="w-5 h-5" />
-            {notificationCount > 0 && <span className="navbar-badge text-xs">{notificationCount}</span>}
+            {notificationCount > 0 && (
+              <span 
+                className="text-xs"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  marginTop: '-0.25rem',
+                  marginRight: '-0.25rem',
+                  height: '1.25rem',
+                  minWidth: '1.25rem',
+                  backgroundColor: '#fbbf24',
+                  borderRadius: '9999px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  color: '#1e293b',
+                  fontSize: '0.75rem',
+                  lineHeight: '1rem',
+                  padding: '0 0.25rem',
+                  zIndex: 10
+                }}
+              >
+                {notificationCount}
+              </span>
+            )}
           </button>
 
           {/* User Menu */}
@@ -170,14 +201,25 @@ export default function Navbar() {
             </div>
           </button>
 
-          <button className="bg-secondary text-accent-foreground hover:bg-secondary/90 font-semibold px-6 py-2 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95">
+          <button 
+            className="font-semibold px-6 py-2 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95"
+            style={{
+              backgroundColor: '#fbbf24',
+              color: '#1e293b'
+            }}
+          >
             Get Started
           </button>
         </div>
       </nav>
 
       {/* Tablet Navbar (md to lg) */}
-      <nav className="hidden md:flex lg:hidden items-center justify-between px-6 py-3 navbar-gradient text-primary-foreground shadow-lg sticky top-0 z-40 backdrop-blur-sm bg-opacity-95">
+      <nav 
+        className="hidden md:flex lg:hidden items-center justify-between px-6 py-3 text-white shadow-lg sticky top-0 z-40"
+        style={{
+          background: 'linear-gradient(to right, #1e293b, #dc2626)'
+        }}
+      >
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-lg hover:opacity-90 transition-opacity flex-shrink-0"
@@ -201,7 +243,33 @@ export default function Navbar() {
           </button>
           <button className="relative p-2 hover:bg-white/15 rounded-lg transition-colors">
             <Bell className="w-5 h-5" />
-            {notificationCount > 0 && <span className="navbar-badge text-xs">{notificationCount}</span>}
+            {notificationCount > 0 && (
+              <span 
+                className="text-xs"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  marginTop: '-0.25rem',
+                  marginRight: '-0.25rem',
+                  height: '1.25rem',
+                  minWidth: '1.25rem',
+                  backgroundColor: '#fbbf24',
+                  borderRadius: '9999px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  color: '#1e293b',
+                  fontSize: '0.75rem',
+                  lineHeight: '1rem',
+                  padding: '0 0.25rem',
+                  zIndex: 10
+                }}
+              >
+                {notificationCount}
+              </span>
+            )}
           </button>
           <button className="p-2 hover:bg-white/15 rounded-lg transition-colors">
             <User className="w-5 h-5" />
@@ -216,7 +284,12 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Navbar */}
-      <nav className="md:hidden flex items-center justify-between px-4 py-3 navbar-gradient text-primary-foreground shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
+      <nav 
+        className="md:hidden flex items-center justify-between px-4 py-3 text-white shadow-lg sticky top-0 z-50"
+        style={{
+          background: 'linear-gradient(to right, #1e293b, #dc2626)'
+        }}
+      >
         <Link
           href="/"
           className="flex items-center gap-2 font-bold text-base hover:opacity-90 transition-opacity flex-shrink-0"
@@ -240,7 +313,33 @@ export default function Navbar() {
           </button>
           <button className="relative p-2 hover:bg-white/15 rounded transition-colors">
             <Bell className="w-5 h-5" />
-            {notificationCount > 0 && <span className="navbar-badge text-xs">{notificationCount}</span>}
+            {notificationCount > 0 && (
+              <span 
+                className="text-xs"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  marginTop: '-0.25rem',
+                  marginRight: '-0.25rem',
+                  height: '1.25rem',
+                  minWidth: '1.25rem',
+                  backgroundColor: '#fbbf24',
+                  borderRadius: '9999px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  color: '#1e293b',
+                  fontSize: '0.75rem',
+                  lineHeight: '1rem',
+                  padding: '0 0.25rem',
+                  zIndex: 10
+                }}
+              >
+                {notificationCount}
+              </span>
+            )}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -313,7 +412,13 @@ export default function Navbar() {
               <button className="w-full text-primary border-2 border-primary hover:bg-primary hover:text-primary-foreground bg-transparent py-2.5 rounded-lg font-bold transition-all duration-200">
                 Sign In
               </button>
-              <button className="w-full bg-secondary text-accent-foreground hover:bg-secondary/90 font-bold py-2.5 rounded-lg transition-all duration-200">
+              <button 
+                className="w-full font-bold py-2.5 rounded-lg transition-all duration-200"
+                style={{
+                  backgroundColor: '#fbbf24',
+                  color: '#1e293b'
+                }}
+              >
                 Get Started
               </button>
             </div>
