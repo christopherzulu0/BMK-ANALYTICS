@@ -1,12 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import "./globals.css"
 import { ShipmentProvider } from "@/components/shipments/shipment-context"
 
-const _geist = Geist({ subsets: ["latin"] })
-const _geistMono = Geist_Mono({ subsets: ["latin"] })
+
 
 export const metadata: Metadata = {
   title: "Shipments Dashboard - Real-time Cargo Tracking",
@@ -31,19 +28,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default function ShippersLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
-        <ShipmentProvider>
-          {children}
-          <Analytics />
-        </ShipmentProvider>
-      </body>
-    </html>
+    <ShipmentProvider>
+      <div className="font-sans antialiased">
+        {children}
+        <Analytics />
+      </div>
+    </ShipmentProvider>
   )
 }

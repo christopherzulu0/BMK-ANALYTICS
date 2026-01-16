@@ -1,11 +1,9 @@
-import Head from 'next/head';
+import type { Metadata } from 'next';
 import localFont from "next/font/local";
 import "./globals.css";
 import Providers from './providers'
 import BottomNavigation from "@/components/Navigator/BottomNavigation";
 import Navbar from './LandingPage/NavBar/Navbar';
-
-
 
 export const metadata: Metadata = {
   title: 'Tazama Pipeline Limited',
@@ -29,20 +27,7 @@ const geistMono = localFont({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-
-    <html lang="en" suppressHydrationWarning>
-      <Head>
-        <title>{String(metadata.title) || ''}</title>
-        <meta name="description" content={String(metadata.description) || ''} />
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <style>{`
-          :root {
-            ${geistSans.variable};
-            ${geistMono.variable};
-          }
-        `}</style>
-      </Head>
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="text-gray-900 antialiased">
       <Navbar />
         <Providers>
