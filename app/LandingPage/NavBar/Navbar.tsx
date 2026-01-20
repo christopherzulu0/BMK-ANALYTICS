@@ -27,17 +27,20 @@ export default function Navbar() {
   const [companyOpen, setCompanyOpen] = useState(false)
 
   const solutions = [
-    { name: "Infrastructure Management", desc: "Monitor and control pipeline systems", icon: "⚙️", href: "#" },
-    { name: "Real-Time Monitoring", desc: "Live tracking and alerts", icon: "📊", href: "#" },
-    { name: "Safety Systems", desc: "Advanced safety protocols", icon: "🛡️", href: "#" },
-    { name: "Analytics & Reporting", desc: "Comprehensive data insights", icon: "📈", href: "#" },
+    { name: "Tankage", desc: "Monitor and manage tank inventory levels", icon: "🛢️", href: "/Tanks" },
+    { name: "Volume Metrics", desc: "Track volume data and metrics in real-time", icon: "📏", href: "/Pipeline" },
+    { name: "Flow Rate Tracking", desc: "Monitor flow rates across pipelines", icon: "💧", href: "/FlowRate" },
+    { name: "Readings", desc: "Input and manage daily operational readings", icon: "📝", href: "/ReadingsInput" },
+    { name: "Tank Analysis", desc: "Analyze tank performance and trends", icon: "🔍", href: "/Tanks/Analysis" },
+    { name: "Split Screens", desc: "View multiple data streams simultaneously", icon: "📑", href: "/split" },
+    { name: "Ruler Track", desc: "Track measurements and ruler data", icon: "📐", href: "/RulerTracker" },
+    { name: "Shippers", desc: "Manage and track shipment operations", icon: "📦", href: "/Shippers" },
   ]
 
   const company = [
-    { name: "About Us", href: "#" },
-    { name: "Case Studies", href: "#" },
-    { name: "Careers", href: "#" },
-    { name: "News & Updates", href: "#" },
+    { name: "Dispatch", href: "/Dispatch" },
+    { name: "Permissions", href: "/Permissions" },
+    { name: "Admin", href: "/admin" },
   ]
 
   return (
@@ -87,7 +90,7 @@ export default function Navbar() {
                       <div className="flex items-start gap-3">
                         <span className="text-2xl flex-shrink-0">{item.icon}</span>
                         <div className="flex-1">
-                          <p className="font-semibold text-foreground hover:text-primary transition-colors">
+                          <p className="font-semibold text-slate-900 hover:text-primary transition-colors">
                             {item.name}
                           </p>
                           <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
@@ -135,17 +138,17 @@ export default function Navbar() {
           </div>
 
           <Link
-            href="#"
+            href="/ReadingsInput"
             className="hover:opacity-90 transition-opacity font-medium px-4 py-2 rounded-md hover:bg-white/15"
           >
-            Pricing
+            Readings
           </Link>
-          <Link
-            href="#"
+          {/* <Link
+            href="/Density"
             className="hover:opacity-90 transition-opacity font-medium px-4 py-2 rounded-md hover:bg-white/15"
           >
-            Resources
-          </Link>
+            Density
+          </Link> */}
         </div>
 
         {/* Right Actions */}
@@ -399,11 +402,11 @@ export default function Navbar() {
 
             {/* Other Links */}
             <div className="space-y-2">
-              <Link href="#" className="block text-sm py-2 hover:text-primary transition-colors font-medium">
-                Pricing
+              <Link href="/ReadingsInput" className="block text-sm py-2 hover:text-primary transition-colors font-medium">
+                Readings
               </Link>
-              <Link href="#" className="block text-sm py-2 hover:text-primary transition-colors font-medium">
-                Resources
+              <Link href="/Density" className="block text-sm py-2 hover:text-primary transition-colors font-medium">
+                Density
               </Link>
             </div>
 

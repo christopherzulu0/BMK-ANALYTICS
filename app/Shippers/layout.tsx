@@ -2,13 +2,13 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { ShipmentProvider } from "@/components/shipments/shipment-context"
-
+import "./globals.css"
 
 
 export const metadata: Metadata = {
   title: "Shipments Dashboard - Real-time Cargo Tracking",
   description: "Monitor and track shipments in real-time with advanced logistics analytics",
-  generator: "v0.app",
+ 
   icons: {
     icon: [
       {

@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="min-h-screen w-full">
             {children}
                   </main>
-                  <BottomNavigation />
+                  {/* <BottomNavigation /> */}
         </Providers>
       </body>
     </html>
