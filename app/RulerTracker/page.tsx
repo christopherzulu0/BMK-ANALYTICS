@@ -4,7 +4,7 @@ import PipelineNetwork from '@/components/RulerComponents/pipeline-network'
 import PipelineFlowVisualization from '@/components/RulerComponents/pipeline-flow-visualization'
 import StationGrid from '@/components/RulerComponents/station-grid'
 import Header from '@/components/RulerComponents/header'
-// import Sidebar from '@/components/RulerComponents/sidebar'
+import Sidebar from '@/components/RulerComponents/sidebar'
 import AlertsPanel from '@/components/RulerComponents/alerts-panel'
 import SystemHealth from '@/components/RulerComponents/system-health'
 import AnalyticsDashboard from '@/components/RulerComponents/analytics-dashboard'
@@ -13,6 +13,14 @@ import KPIDashboard from '@/components/RulerComponents/kpi-dashboard'
 import TankOperations from '@/components/RulerComponents/tank-operations'
 import ActivityFeed from '@/components/RulerComponents/activity-feed'
 import QuickActions from '@/components/RulerComponents/quick-actions'
+import DailyFuelInput from '@/components/RulerComponents/daily-fuel-input'
+import InventoryReconciliation from '@/components/RulerComponents/inventory-reconciliation'
+import MaintenanceManagement from '@/components/RulerComponents/maintenance-management'
+import ShiftHandover from '@/components/RulerComponents/shift-handover'
+import ReportingCenter from '@/components/RulerComponents/reporting-center'
+import IncidentSafety from '@/components/RulerComponents/incident-safety'
+import PigScheduling from '@/components/RulerComponents/pig-scheduling'
+import LeakDetection from '@/components/RulerComponents/leak-detection'
 import type { Alert } from '@/components/RulerComponents/alerts-panel'
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -135,8 +143,16 @@ export default function Home() {
         <main className="flex-1 overflow-auto">
           <div className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="bg-secondary">
+              <TabsList className="bg-secondary flex-wrap h-auto gap-1 p-1">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="fuel-input">Fuel Input</TabsTrigger>
+                <TabsTrigger value="inventory">Inventory</TabsTrigger>
+                <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+                <TabsTrigger value="shift">Shift Handover</TabsTrigger>
+                <TabsTrigger value="reports">Reports</TabsTrigger>
+                <TabsTrigger value="incidents">Safety</TabsTrigger>
+                <TabsTrigger value="pig">PIG Tracking</TabsTrigger>
+                <TabsTrigger value="leak">Leak Detection</TabsTrigger>
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 <TabsTrigger value="flow">Flow Diagram</TabsTrigger>
               </TabsList>
@@ -183,6 +199,46 @@ export default function Home() {
 
                 {/* Activity Feed - Full Width */}
                 <ActivityFeed />
+              </TabsContent>
+
+              {/* Fuel Input Tab */}
+              <TabsContent value="fuel-input" className="space-y-6 mt-0">
+                <DailyFuelInput />
+              </TabsContent>
+
+              {/* Inventory Tab */}
+              <TabsContent value="inventory" className="space-y-6 mt-0">
+                <InventoryReconciliation />
+              </TabsContent>
+
+              {/* Maintenance Tab */}
+              <TabsContent value="maintenance" className="space-y-6 mt-0">
+                <MaintenanceManagement />
+              </TabsContent>
+
+              {/* Shift Handover Tab */}
+              <TabsContent value="shift" className="space-y-6 mt-0">
+                <ShiftHandover />
+              </TabsContent>
+
+              {/* Reports Tab */}
+              <TabsContent value="reports" className="space-y-6 mt-0">
+                <ReportingCenter />
+              </TabsContent>
+
+              {/* Safety & Incidents Tab */}
+              <TabsContent value="incidents" className="space-y-6 mt-0">
+                <IncidentSafety />
+              </TabsContent>
+
+              {/* PIG Tracking Tab */}
+              <TabsContent value="pig" className="space-y-6 mt-0">
+                <PigScheduling />
+              </TabsContent>
+
+              {/* Leak Detection Tab */}
+              <TabsContent value="leak" className="space-y-6 mt-0">
+                <LeakDetection />
               </TabsContent>
 
               {/* Analytics Tab */}
