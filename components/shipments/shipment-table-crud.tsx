@@ -1,23 +1,47 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Trash2, Edit2, Plus, ChevronLeft, ChevronRight } from "lucide-react"
-import { useShipments, type Shipment } from "./shipment-context"
+import { useShipmentsList, useCreateShipment, useUpdateShipment, useDeleteShipment, type Shipment } from "@/hooks/useShipmentsList"
 import { ShipmentFormModal } from "./shipment-form-modal"
+import { DeleteShipmentDialog } from "./delete-shipment-dialog"
+import { ShipmentSkeletonLoader } from "./shipment-skeleton-loader"
+import { toast } from "sonner"
 
 const ITEMS_PER_PAGE = 10
 
-export function ShipmentTableCRUD() {
-  const { shipments, addShipment, updateShipment, deleteShipment } = useShipments()
+const formatDateDisplay = (date: Date | string): string => {
+  const d = new Date(date)
+  const day = String(d.getDate()).padStart(2, "0")
+  const month = String(d.getMonth() + 1).padStart(2, "0")
+  const year = d.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
+function ShipmentTableContent() {
+  const { data: shipments = [], error } = useShipmentsList()
+  const createShipment = useCreateShipment()
+  const updateShipment = useUpdateShipment()
+  const deleteShipment = useDeleteShipment()
   const [formOpen, setFormOpen] = useState(false)
   const [editingShipment, setEditingShipment] = useState<Shipment | undefined>()
   const [currentPage, setCurrentPage] = useState(1)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [shipmentToDelete, setShipmentToDelete] = useState<Shipment | undefined>(undefined)
 
   const handleCreate = (data: Omit<Shipment, "id">) => {
-    addShipment(data)
+    createShipment.mutate(data, {
+      onSuccess: () => {
+        toast.success("Shipment created successfully")
+        setFormOpen(false)
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to create shipment")
+      },
+    })
   }
 
   const handleEdit = (shipment: Shipment) => {
@@ -27,15 +51,39 @@ export function ShipmentTableCRUD() {
 
   const handleUpdate = (data: Omit<Shipment, "id">) => {
     if (editingShipment) {
-      updateShipment(editingShipment.id, data)
-      setEditingShipment(undefined)
+      updateShipment.mutate(
+        { id: editingShipment.id, data },
+        {
+          onSuccess: () => {
+            toast.success("Shipment updated successfully")
+            setEditingShipment(undefined)
+            setFormOpen(false)
+          },
+          onError: (error: any) => {
+            toast.error(error.message || "Failed to update shipment")
+          },
+        }
+      )
     }
   }
 
-  const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this shipment?")) {
-      deleteShipment(id)
-    }
+  const handleDeleteClick = (shipment: Shipment) => {
+    setShipmentToDelete(shipment)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (!shipmentToDelete) return
+    deleteShipment.mutate(shipmentToDelete.id, {
+      onSuccess: () => {
+        toast.success(`Shipment for ${shipmentToDelete.supplier} deleted successfully`)
+        setDeleteDialogOpen(false)
+        setShipmentToDelete(undefined)
+      },
+      onError: (error: any) => {
+        toast.error(error.message || "Failed to delete shipment")
+      },
+    })
   }
 
   const getStatusColor = (status: string) => {
@@ -46,6 +94,34 @@ export function ShipmentTableCRUD() {
       DELAYED: "bg-red-100 text-red-800",
     }
     return colors[status] || "bg-gray-100 text-gray-800"
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <div>
+            <CardTitle className="text-lg">Shipment Management</CardTitle>
+            <p className="text-sm text-gray-600 mt-1">Create, edit, and delete shipments</p>
+          </div>
+          <Button
+            onClick={() => {
+              setEditingShipment(undefined)
+              setFormOpen(true)
+            }}
+            className="gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            New Shipment
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-12">
+            <p className="text-destructive">Error loading shipments. Please try again.</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   const totalPages = Math.ceil(shipments.length / ITEMS_PER_PAGE)
@@ -77,35 +153,32 @@ export function ShipmentTableCRUD() {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-semibold text-sm">Vessel</th>
+                  <th className="text-left py-3 px-4 font-semibold text-sm">Vessel ID</th>
                   <th className="text-left py-3 px-4 font-semibold text-sm">Supplier</th>
                   <th className="text-left py-3 px-4 font-semibold text-sm">Destination</th>
                   <th className="text-left py-3 px-4 font-semibold text-sm">Cargo (MT)</th>
+                  <th className="text-left py-3 px-4 font-semibold text-sm">Date</th>
+                  <th className="text-left py-3 px-4 font-semibold text-sm">ETA</th>
                   <th className="text-left py-3 px-4 font-semibold text-sm">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold text-sm">Progress</th>
                   <th className="text-left py-3 px-4 font-semibold text-sm">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedShipments.map((shipment) => (
                   <tr key={shipment.id} className="border-b hover:bg-secondary/30 transition-colors">
-                    <td className="py-3 px-4 text-sm font-medium">{shipment.vessel}</td>
+                    <td className="py-3 px-4 text-sm font-medium">{shipment.vessel_id || "-"}</td>
                     <td className="py-3 px-4 text-sm">{shipment.supplier}</td>
                     <td className="py-3 px-4 text-sm">{shipment.destination}</td>
-                    <td className="py-3 px-4 text-sm">{shipment.cargo}</td>
+                    <td className="py-3 px-4 text-sm">
+                      {Number(shipment.cargo_metric_tons).toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </td>
+                    <td className="py-3 px-4 text-sm">{formatDateDisplay(shipment.date)}</td>
+                    <td className="py-3 px-4 text-sm">{formatDateDisplay(shipment.estimated_day_of_arrival)}</td>
                     <td className="py-3 px-4 text-sm">
                       <Badge className={getStatusColor(shipment.status)}>{shipment.status}</Badge>
-                    </td>
-                    <td className="py-3 px-4 text-sm">
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary transition-all"
-                            style={{ width: `${shipment.progress}%` }}
-                          />
-                        </div>
-                        <span className="text-xs font-semibold">{shipment.progress}%</span>
-                      </div>
                     </td>
                     <td className="py-3 px-4 text-sm">
                       <div className="flex gap-2">
@@ -116,8 +189,9 @@ export function ShipmentTableCRUD() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDelete(shipment.id)}
+                          onClick={() => handleDeleteClick(shipment)}
                           className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                          disabled={deleteShipment.isPending}
                         >
                           <Trash2 className="w-4 h-4" />
                           Delete
@@ -175,11 +249,33 @@ export function ShipmentTableCRUD() {
 
       <ShipmentFormModal
         open={formOpen}
-        onOpenChange={setFormOpen}
+        onOpenChange={(open) => {
+          setFormOpen(open)
+          if (!open) {
+            setEditingShipment(undefined)
+          }
+        }}
         shipment={editingShipment}
         onSubmit={editingShipment ? handleUpdate : handleCreate}
         mode={editingShipment ? "edit" : "create"}
+        isPending={createShipment.isPending || updateShipment.isPending}
+      />
+
+      <DeleteShipmentDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        vesselName={shipmentToDelete?.vessel_id || shipmentToDelete?.supplier || ""}
+        isLoading={deleteShipment.isPending}
+        onConfirm={handleDeleteConfirm}
       />
     </>
+  )
+}
+
+export function ShipmentTableCRUD() {
+  return (
+    <Suspense fallback={<ShipmentSkeletonLoader />}>
+      <ShipmentTableContent />
+    </Suspense>
   )
 }

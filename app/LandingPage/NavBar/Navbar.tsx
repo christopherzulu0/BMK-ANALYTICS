@@ -25,6 +25,7 @@ export default function Navbar() {
   const [searchFocus, setSearchFocus] = useState(false)
   const [solutionOpen, setSolutionOpen] = useState(false)
   const [companyOpen, setCompanyOpen] = useState(false)
+    const [uploadOpen, setUploadOpen] = useState(false)
 
   const solutions = [
     { name: "Tankage", desc: "Monitor and manage tank inventory levels", icon: "🛢️", href: "/Tanks" },
@@ -41,6 +42,12 @@ export default function Navbar() {
     { name: "Dispatch", href: "/Dispatch" },
     { name: "Permissions", href: "/Permissions" },
     { name: "Admin", href: "/admin" },
+  ]
+
+    const uploads = [
+    { name: "Metric Tons", href: "/ManualUpload/MetricTons" },
+    { name: "Readings", href: "/ManualUpload/Readings" },
+ 
   ]
 
   return (
@@ -103,6 +110,9 @@ export default function Navbar() {
             )}
           </div>
 
+
+         
+
           {/* Company Dropdown */}
           <div className="relative">
             <button
@@ -137,6 +147,48 @@ export default function Navbar() {
             )}
           </div>
 
+
+
+ {/**Uploads Dropdown */}
+           
+          <div className="relative">
+            <button
+              onClick={() => setUploadOpen(!uploadOpen)}
+              className="flex items-center gap-1 hover:opacity-90 transition-opacity font-medium px-4 py-2 rounded-md hover:bg-white/15"
+            >
+             Uploads
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${uploadOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            {uploadOpen && (
+              <div className="absolute top-full left-0 mt-3 w-96 bg-white text-foreground rounded-xl shadow-2xl p-5 z-50 border border-secondary/20">
+                <div className="grid grid-cols-2 gap-4">
+                  {uploads.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setSolutionOpen(false)}
+                      className="p-4 rounded-lg hover:bg-secondary/15 transition-all duration-200 hover:shadow-md cursor-pointer"
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl flex-shrink-0">{item.icon}</span>
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-900 hover:text-primary transition-colors">
+                            {item.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+
+
           <Link
             href="/ReadingsInput"
             className="hover:opacity-90 transition-opacity font-medium px-4 py-2 rounded-md hover:bg-white/15"
@@ -166,7 +218,7 @@ export default function Navbar() {
           </div> */}
 
           {/* Notifications */}
-          <button className="relative p-2.5 hover:bg-white/15 rounded-lg transition-colors">
+          {/* <button className="relative p-2.5 hover:bg-white/15 rounded-lg transition-colors">
             <Bell className="w-5 h-5" />
             {notificationCount > 0 && (
               <span 
@@ -195,7 +247,7 @@ export default function Navbar() {
                 {notificationCount}
               </span>
             )}
-          </button>
+          </button> */}
 
           {/* User Menu */}
           <button className="p-2.5 hover:bg-white/15 rounded-lg transition-colors">

@@ -29,12 +29,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="text-gray-900 antialiased">
-      <Navbar />
         <Providers>
+        
           <main className="min-h-screen w-full">
+              <Navbar />
             {children}
-                  </main>
-                  {/* <BottomNavigation /> */}
+          </main>
+          {/* <BottomNavigation /> */}
         </Providers>
       </body>
     </html>

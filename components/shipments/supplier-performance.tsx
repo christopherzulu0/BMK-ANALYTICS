@@ -1,50 +1,14 @@
+"use client"
+
+import { Suspense } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { TrendingUp } from "lucide-react"
+import { useSupplierPerformance } from "@/hooks/useSupplierPerformance"
+import { SupplierPerformanceSkeletonLoader } from "./supplier-performance-skeleton"
 
-export function SupplierPerformance() {
-  const suppliers = [
-    {
-      name: "Global Logistics Inc",
-      shipments: 145,
-      onTimePercent: 96.2,
-      avgDelay: 2.4,
-      cargoDelivered: 28450,
-      incidents: 1,
-      reliabilityScore: 9.6,
-      trend: "+2.1%",
-    },
-    {
-      name: "Trans-Ocean Shipping",
-      shipments: 98,
-      onTimePercent: 91.8,
-      avgDelay: 8.5,
-      cargoDelivered: 19230,
-      incidents: 4,
-      reliabilityScore: 8.9,
-      trend: "-0.5%",
-    },
-    {
-      name: "Asia Cargo Partners",
-      shipments: 156,
-      onTimePercent: 88.4,
-      avgDelay: 14.2,
-      cargoDelivered: 32100,
-      incidents: 8,
-      reliabilityScore: 8.2,
-      trend: "+1.2%",
-    },
-    {
-      name: "Nordic Express",
-      shipments: 67,
-      onTimePercent: 94.0,
-      avgDelay: 5.1,
-      cargoDelivered: 12580,
-      incidents: 2,
-      reliabilityScore: 9.1,
-      trend: "+3.5%",
-    },
-  ]
+function SupplierPerformanceContent() {
+  const { data: suppliers = [] } = useSupplierPerformance()
 
   return (
     <Card>
@@ -69,7 +33,7 @@ export function SupplierPerformance() {
             </thead>
             <tbody>
               {suppliers.map((supplier) => (
-                <tr key={supplier.name} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr key={supplier.id} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="py-4 px-2 font-medium text-gray-900">{supplier.name}</td>
                   <td className="text-right py-4 px-2 text-gray-600">{supplier.shipments}</td>
                   <td className="text-right py-4 px-2">
@@ -99,5 +63,13 @@ export function SupplierPerformance() {
         </div>
       </CardContent>
     </Card>
+  )
+}
+
+export function SupplierPerformance() {
+  return (
+    <Suspense fallback={<SupplierPerformanceSkeletonLoader />}>
+      <SupplierPerformanceContent />
+    </Suspense>
   )
 }

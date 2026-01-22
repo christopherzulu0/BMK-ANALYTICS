@@ -1,56 +1,65 @@
+"use client"
+
+import { Suspense } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Package, AlertCircle, Truck, BarChart3, Clock } from "lucide-react"
+import { useKPITiles } from "@/hooks/useKPITiles"
+import { KPITilesSkeleton } from "./kpi-tiles-skeleton"
 
-export function KPITiles() {
+function KPITilesContent() {
+  const { data: kpiData } = useKPITiles()
+
+  if (!kpiData) return null
+
   // Mock data - replace with real computed values from Shipment, InventoryTransaction, DailyEntry
   const kpis = [
     {
       title: "Total Shipments",
-      value: "847",
-      subtext: "This Month: 312 | YTD: 847",
+      value: kpiData.totalShipments,
+      subtext: `This Month: ${kpiData.monthShipments} | YTD: ${kpiData.ytdShipments}`,
       icon: Package,
       color: "bg-blue-50",
-      trend: "+12%",
+      trend: kpiData.trends.shipmentsTrend,
     },
     {
       title: "Total Cargo",
-      value: "24,580 MT",
+      value: `${kpiData.totalCargo} MT`,
       subtext: "Current month volume",
       icon: Truck,
       color: "bg-emerald-50",
-      trend: "+8%",
+      trend: kpiData.trends.cargoTrend,
     },
     {
       title: "On-Time Arrival",
-      value: "94.2%",
+      value: kpiData.onTimeArrival,
       subtext: "vs estimated arrival dates",
       icon: Clock,
       color: "bg-green-50",
-      trend: "+2.1%",
+      trend: kpiData.trends.onTimeTrend,
     },
     {
       title: "Delayed Shipments",
-      value: "23",
+      value: kpiData.delayedShipments.toString(),
       subtext: "Currently delayed",
       icon: AlertCircle,
       color: "bg-red-50",
-      trend: "-5",
+      trend: kpiData.trends.delayedTrend,
     },
     {
       title: "Avg Offloading",
-      value: "78.5%",
+      value: kpiData.avgOffloading,
       subtext: "Current progress average",
       icon: BarChart3,
       color: "bg-purple-50",
-      trend: "+3.2%",
+      trend: kpiData.trends.offloadingTrend,
     },
     {
       title: "By Status",
-      value: "3 / 15 / 42 / 8",
+      value: `${kpiData.statusBreakdown.pending} / ${kpiData.statusBreakdown.inTransit} / ${kpiData.statusBreakdown.discharged} / ${kpiData.statusBreakdown.delayed}`,
       subtext: "Pending | In Transit | Discharged | Delayed",
       icon: TrendingUp,
       color: "bg-amber-50",
-      trend: "Live",
+      trend: kpiData.trends.statusTrend,
     },
   ]
 
@@ -87,5 +96,13 @@ export function KPITiles() {
         )
       })}
     </div>
+  )
+}
+
+export function KPITiles() {
+  return (
+    <Suspense fallback={<KPITilesSkeleton />}>
+      <KPITilesContent />
+    </Suspense>
   )
 }

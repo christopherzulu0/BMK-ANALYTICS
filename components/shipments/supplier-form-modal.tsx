@@ -1,34 +1,67 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import type { Supplier } from "./shipment-context"
+import type { Supplier } from "@/hooks/useSuppliers"
 
 interface SupplierFormModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   supplier?: Supplier
-  onSubmit: (data: Omit<Supplier, "id">) => void
+  onSubmit: (data: Omit<Supplier, "id">) => Promise<void>
   mode: "create" | "edit"
+  isPending?: boolean
 }
 
-export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode }: SupplierFormModalProps) {
+export function SupplierFormModal({ 
+  open, 
+  onOpenChange, 
+  supplier, 
+  onSubmit, 
+  mode,
+  isPending = false 
+}: SupplierFormModalProps) {
   const [formData, setFormData] = useState<Omit<Supplier, "id">>({
-    name: supplier?.name || "",
-    email: supplier?.email || "",
-    phone: supplier?.phone || "",
-    location: supplier?.location || "",
-    rating: supplier?.rating || 0,
-    activeShipments: supplier?.activeShipments || 0,
-    reliability: supplier?.reliability || 0,
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    rating: 0,
+    activeShipments: 0,
+    reliability: 0,
   })
 
-  const handleSubmit = () => {
-    onSubmit(formData)
-    onOpenChange(false)
+  // Update form data when supplier changes
+  useEffect(() => {
+    if (supplier) {
+      setFormData({
+        name: supplier.name || "",
+        email: supplier.email || "",
+        phone: supplier.phone || "",
+        location: supplier.location || "",
+        rating: supplier.rating || 0,
+        activeShipments: supplier.activeShipments || 0,
+        reliability: supplier.reliability || 0,
+      })
+    } else {
+      // Reset form when creating new supplier
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        location: "",
+        rating: 0,
+        activeShipments: 0,
+        reliability: 0,
+      })
+    }
+  }, [supplier, open])
+
+  const handleSubmit = async () => {
+    await onSubmit(formData)
   }
 
   return (
@@ -45,6 +78,7 @@ export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="e.g., Global Logistics Inc"
+              disabled={isPending}
             />
           </div>
 
@@ -56,6 +90,7 @@ export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="e.g., contact@supplier.com"
+              disabled={isPending}
             />
           </div>
 
@@ -66,6 +101,7 @@ export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               placeholder="e.g., +1-555-0101"
+              disabled={isPending}
             />
           </div>
 
@@ -76,6 +112,7 @@ export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode
               value={formData.location}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
               placeholder="e.g., New York, USA"
+              disabled={isPending}
             />
           </div>
 
@@ -90,6 +127,7 @@ export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode
                 step="0.1"
                 value={formData.rating}
                 onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) })}
+                disabled={isPending}
               />
             </div>
             <div className="grid gap-2">
@@ -101,6 +139,7 @@ export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode
                 max="100"
                 value={formData.reliability}
                 onChange={(e) => setFormData({ ...formData, reliability: Number(e.target.value) })}
+                disabled={isPending}
               />
             </div>
             <div className="grid gap-2">
@@ -111,16 +150,17 @@ export function SupplierFormModal({ open, onOpenChange, supplier, onSubmit, mode
                 min="0"
                 value={formData.activeShipments}
                 onChange={(e) => setFormData({ ...formData, activeShipments: Number(e.target.value) })}
+                disabled={isPending}
               />
             </div>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} className="bg-primary">
-            {mode === "create" ? "Create" : "Update"}
+          <Button onClick={handleSubmit} className="bg-primary" disabled={isPending}>
+            {isPending ? "Processing..." : mode === "create" ? "Create" : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>

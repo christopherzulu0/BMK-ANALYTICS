@@ -1,18 +1,17 @@
-'use client'
-import React,{ useEffect } from "react";
+import React from "react";
 import Providers from "@/app/providers";
 import ReadingUploader from "@/components/ReadingUploader";
 import { requireAuth } from "@/lib/auth";
 
 
-export default  function ReadingsUpload(){
-    
+export default async function ReadingsUpload(){
+  await requireAuth("admin")
  
-    return(
-        <>
-        <Providers>
+  return(
+    <>
+      <Providers>
         <ReadingUploader/>
-        </Providers>
-        </>
-    )
+      </Providers>
+    </>
+  )
 }

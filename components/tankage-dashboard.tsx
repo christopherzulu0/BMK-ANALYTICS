@@ -48,6 +48,7 @@ export default function TankageDashboard() {
 
   const getVisibleTabs = () => {
     switch (userRole) {
+      
       case "DOE":
         return ["overview", "trends", "quality", "comparison", "tanks"]
       case "SHIPPER":

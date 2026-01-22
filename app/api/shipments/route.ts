@@ -32,15 +32,14 @@ export async function PUT(request: Request) {
     // Prepare update data
     const updateData: any = {};
 
-    // Only update fields that are provided
-    if (body.vessel_id !== undefined) updateData.vessel_id = parseInt(body.vessel_id);
+    // Only update fields that are provided and not empty strings
+    if (body.vessel_id !== undefined && body.vessel_id !== "") updateData.vessel_id = body.vessel_id;
     if (body.supplier !== undefined) updateData.supplier = body.supplier;
     if (body.cargo_metric_tons !== undefined) updateData.cargo_metric_tons = parseFloat(body.cargo_metric_tons);
     if (body.status !== undefined) updateData.status = body.status;
     if (body.estimated_day_of_arrival !== undefined) updateData.estimated_day_of_arrival = new Date(body.estimated_day_of_arrival);
     if (body.notes !== undefined) updateData.notes = body.notes;
     if (body.destination !== undefined) updateData.destination = body.destination;
-    if (body.progress !== undefined) updateData.progress = body.progress;
 
     // Update the shipment in the database
     const updatedShipment = await prisma.shipment.update({
@@ -72,7 +71,7 @@ export async function GET(request: Request) {
       }
     });
 
-    return NextResponse.json({ shipments }, { status: 200 });
+    return NextResponse.json(shipments, { status: 200 });
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json(
@@ -96,17 +95,15 @@ export async function POST(request: Request) {
     }
 
     // Create new shipment in the database
-    // Ensure vessel_id is stored as a number
     const newShipment = await prisma.shipment.create({
       data: {
-        vessel_id: body.vessel_id,
+        vessel_id: body.vessel_id || null,
         supplier: body.supplier,
         cargo_metric_tons: parseFloat(body.cargo_metric_tons),
         status: body.status,
         estimated_day_of_arrival: new Date(body.estimated_day_of_arrival),
         notes: body.notes || null,
         destination: body.destination || null,
-        progress: body.progress || 0
       }
     });
 
@@ -125,11 +122,10 @@ export async function POST(request: Request) {
 // DELETE handler to remove a shipment
 export async function DELETE(request: Request) {
   try {
-    // Get the URL from the request
-    const url = new URL(request.url);
+    const body = await request.json();
 
-    // Get the id from the query parameters
-    const id = url.searchParams.get('id');
+    // Get the id from the request body
+    const { id } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -139,37 +135,22 @@ export async function DELETE(request: Request) {
     }
 
     try {
-      // First try to delete directly by ID (assuming it's the primary key)
+      // Delete the shipment by ID
       await prisma.shipment.delete({
         where: { id }
       });
 
       console.log('API: Deleted shipment with ID:', id);
       return NextResponse.json({ success: true }, { status: 200 });
-    } catch (deleteError) {
-      // If direct deletion fails, try to find by vessel_id as a fallback
-      console.log('Direct deletion failed, trying to find by vessel_id');
-
-      const shipmentId = parseInt(id);
-      const shipments = await prisma.shipment.findMany({
-        where: { vessel_id: shipmentId }
-      });
-
-      if (shipments.length === 0) {
+    } catch (deleteError: any) {
+      console.error('Delete error:', deleteError);
+      if (deleteError.code === 'P2025') {
         return NextResponse.json(
           { error: 'Shipment not found' },
           { status: 404 }
         );
       }
-
-      // Remove from database
-      // Delete the first matching shipment
-      await prisma.shipment.delete({
-        where: { id: shipments[0].id }
-      });
-
-      console.log('API: Deleted shipment with vessel_id:', id);
-      return NextResponse.json({ success: true }, { status: 200 });
+      throw deleteError;
     }
   } catch (error) {
     console.error('API Error:', error);

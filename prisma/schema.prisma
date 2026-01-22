@@ -96,7 +96,6 @@ model Shipment {
   supplier                 String
   cargo_metric_tons        Float
   status                   String
-  progress                 Int      @default(0)
   notes                    String?  @db.Text
   createdAt                DateTime @default(now())
   updatedAt                DateTime @updatedAt
@@ -315,4 +314,21 @@ model Remark {
 
   @@index([entryId, position])
   @@map("Remarks")
+}
+
+/// Supplier model for managing shipping suppliers
+model Supplier {
+  id              String   @id @default(cuid())
+  name            String   @unique
+  email           String   @unique
+  phone           String
+  location        String
+  rating          Float    @default(0)
+  activeShipments Int      @default(0)
+  reliability     Float    @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([name])
+  @@index([email])
 }

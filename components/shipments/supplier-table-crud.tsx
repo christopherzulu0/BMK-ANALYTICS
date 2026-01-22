@@ -1,20 +1,28 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useShipments } from "./shipment-context"
 import { SupplierFormModal } from "./supplier-form-modal"
+import { DeleteSupplierDialog } from "./delete-supplier-dialog"
 import { Star, Mail, Phone, MapPin, Trash2, Edit2, Plus, ChevronLeft, ChevronRight } from "lucide-react"
+import { useSuppliers, useCreateSupplier, useUpdateSupplier, useDeleteSupplier, type Supplier } from "@/hooks/useSuppliers"
+import { SupplierSkeletonLoader } from "./supplier-skeleton-loader"
+import { toast } from "sonner"
 
 const ITEMS_PER_PAGE = 6
 
-export function SupplierTableCRUD() {
-  const { suppliers, addSupplier, updateSupplier, deleteSupplier } = useShipments()
+function SupplierTableContent() {
+  const { data: suppliers = [], isLoading, error } = useSuppliers()
+  const createSupplier = useCreateSupplier()
+  const updateSupplier = useUpdateSupplier()
+  const deleteSupplier = useDeleteSupplier()
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState<"create" | "edit">("create")
-  const [selectedSupplier, setSelectedSupplier] = useState<any>(undefined)
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | undefined>(undefined)
   const [currentPage, setCurrentPage] = useState(1)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [supplierToDelete, setSupplierToDelete] = useState<Supplier | undefined>(undefined)
 
   const handleCreate = () => {
     setMode("create")
@@ -22,18 +30,68 @@ export function SupplierTableCRUD() {
     setOpen(true)
   }
 
-  const handleEdit = (supplier: any) => {
+  const handleEdit = (supplier: Supplier) => {
     setMode("edit")
     setSelectedSupplier(supplier)
     setOpen(true)
   }
 
-  const handleSubmit = (data: any) => {
-    if (mode === "create") {
-      addSupplier(data)
-    } else if (selectedSupplier) {
-      updateSupplier(selectedSupplier.id, data)
+  const handleSubmit = async (data: any) => {
+    try {
+      if (mode === "create") {
+        await createSupplier.mutateAsync(data)
+        toast.success("Supplier created successfully")
+      } else if (selectedSupplier) {
+        await updateSupplier.mutateAsync({ id: selectedSupplier.id, data })
+        toast.success("Supplier updated successfully")
+      }
+      setOpen(false)
+    } catch (error: any) {
+      toast.error(error.message || "Failed to save supplier")
+      console.error("Error submitting supplier:", error)
     }
+  }
+
+  const handleDeleteClick = (supplier: Supplier) => {
+    setSupplierToDelete(supplier)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!supplierToDelete) return
+    try {
+      await deleteSupplier.mutateAsync(supplierToDelete.id)
+      toast.success(`${supplierToDelete.name} deleted successfully`)
+      setDeleteDialogOpen(false)
+      setSupplierToDelete(undefined)
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete supplier")
+      console.error("Error deleting supplier:", error)
+    }
+  }
+
+  if (error) {
+    return (
+      <Card className="border-border/40 shadow-md">
+        <CardHeader className="border-b border-border/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl">Supplier Management</CardTitle>
+              <CardDescription>Create, edit, and manage your suppliers</CardDescription>
+            </div>
+            <Button onClick={handleCreate} className="gap-2">
+              <Plus className="w-4 h-4" />
+              Add Supplier
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="text-center py-12">
+            <p className="text-destructive">Error loading suppliers. Please try again.</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   const totalPages = Math.ceil(suppliers.length / ITEMS_PER_PAGE)
@@ -50,7 +108,7 @@ export function SupplierTableCRUD() {
               <CardTitle className="text-2xl">Supplier Management</CardTitle>
               <CardDescription>Create, edit, and manage your suppliers</CardDescription>
             </div>
-            <Button onClick={handleCreate} className="gap-2">
+            <Button onClick={handleCreate} className="gap-2" disabled={createSupplier.isPending}>
               <Plus className="w-4 h-4" />
               Add Supplier
             </Button>
@@ -79,8 +137,9 @@ export function SupplierTableCRUD() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => deleteSupplier(supplier.id)}
+                      onClick={() => handleDeleteClick(supplier)}
                       className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      disabled={deleteSupplier.isPending}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -167,7 +226,24 @@ export function SupplierTableCRUD() {
         supplier={selectedSupplier}
         onSubmit={handleSubmit}
         mode={mode}
+        isPending={createSupplier.isPending || updateSupplier.isPending}
+      />
+
+      <DeleteSupplierDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        supplierName={supplierToDelete?.name || ""}
+        isLoading={deleteSupplier.isPending}
+        onConfirm={handleDeleteConfirm}
       />
     </>
+  )
+}
+
+export function SupplierTableCRUD() {
+  return (
+    <Suspense fallback={<SupplierSkeletonLoader />}>
+      <SupplierTableContent />
+    </Suspense>
   )
 }
