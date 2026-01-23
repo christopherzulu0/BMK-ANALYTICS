@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Menu, X, ChevronDown, Search, Bell, User } from "lucide-react"
 import "./nav-styles.css"
+import { useRouter } from "next/navigation"
 
 function PipelineLogo() {
   return (
@@ -26,6 +27,7 @@ export default function Navbar() {
   const [solutionOpen, setSolutionOpen] = useState(false)
   const [companyOpen, setCompanyOpen] = useState(false)
     const [uploadOpen, setUploadOpen] = useState(false)
+    const router = useRouter()
 
   const solutions = [
     { name: "Tankage", desc: "Monitor and manage tank inventory levels", icon: "🛢️", href: "/Tanks" },
@@ -114,7 +116,7 @@ export default function Navbar() {
          
 
           {/* Company Dropdown */}
-          <div className="relative">
+          {/* <div className="relative">
             <button
               onClick={() => setCompanyOpen(!companyOpen)}
               className="flex items-center gap-1 hover:opacity-90 transition-opacity font-medium px-4 py-2 rounded-md hover:bg-white/15"
@@ -145,7 +147,7 @@ export default function Navbar() {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
 
 
 
@@ -262,6 +264,8 @@ export default function Navbar() {
               backgroundColor: '#fbbf24',
               color: '#1e293b'
             }}
+
+            onClick={()=>router.push("/auth/register")}
           >
             Get Started
           </button>
@@ -437,7 +441,7 @@ export default function Navbar() {
             </div>
 
             {/* Company Section */}
-            <div>
+            {/* <div>
               <p className="font-bold text-sm mb-4 text-primary uppercase tracking-wide">Company</p>
               <div className="space-y-2 ml-2">
                 {company.map((item) => (
@@ -450,7 +454,7 @@ export default function Navbar() {
                   </Link>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Other Links */}
             <div className="space-y-2">
