@@ -1,6 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   LineChart,
   Line,
@@ -9,37 +10,98 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts"
-
-// Mock trend data
-const VOLUME_DATA = [
-  { date: "Jan 1", volume: 1200, volAt20C: 1220, mts: 1005 },
-  { date: "Jan 4", volume: 1285, volAt20C: 1308, mts: 1078 },
-  { date: "Jan 7", volume: 1150, volAt20C: 1170, mts: 965 },
-  { date: "Jan 10", volume: 1320, volAt20C: 1342, mts: 1105 },
-  { date: "Jan 13", volume: 1296, volAt20C: 1317, mts: 1084 },
-]
-
-const DISCHARGE_DATA = [
-  { date: "Jan 1", tfarm: 45.2, kigamboni: 32.5, total: 77.7 },
-  { date: "Jan 4", tfarm: 52.1, kigamboni: 38.4, total: 90.5 },
-  { date: "Jan 7", tfarm: 48.3, kigamboni: 35.2, total: 83.5 },
-  { date: "Jan 10", tfarm: 61.5, kigamboni: 42.8, total: 104.3 },
-  { date: "Jan 13", tfarm: 58.9, kigamboni: 40.2, total: 99.1 },
-]
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent
+} from "@/components/ui/chart"
+import { useInventoryTrend } from "@/hooks/use-inventory-trend"
+import { Suspense } from "react"
 
 interface InventoryTrendViewProps {
   stationId: string
   dateRange: string
-  userRole: "DOE" | "SHIPPER" | "DISPATCHER"
+  userRole: "DOE" | "SHIPPER" | "DISPATCHER" | "admin"
 }
 
-export default function InventoryTrendView({ stationId, dateRange, userRole }: InventoryTrendViewProps) {
+export function InventoryTrendSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Card className="bg-card border-border">
+        <CardHeader>
+          <Skeleton className="h-6 w-1/4 mb-2" />
+          <Skeleton className="h-4 w-1/3" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-80 w-full" />
+        </CardContent>
+      </Card>
+      <Card className="bg-card border-border">
+        <CardHeader>
+          <Skeleton className="h-6 w-1/4 mb-2" />
+          <Skeleton className="h-4 w-1/3" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-80 w-full" />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+const volumeChartConfig: ChartConfig = {
+  volume: {
+    label: "Current Volume",
+    color: "hsl(var(--chart-1))",
+  },
+  volAt20C: {
+    label: "Volume @ 20°C",
+    color: "hsl(var(--chart-2))",
+  },
+}
+
+const dischargeChartConfig: ChartConfig = {
+  tfarm: {
+    label: "TFARM Discharge",
+    color: "hsl(var(--chart-1))",
+  },
+  kigamboni: {
+    label: "Kigamboni Discharge",
+    color: "hsl(var(--chart-2))",
+  },
+  totalDischarge: {
+    label: "Total Discharge",
+    color: "hsl(var(--chart-3))",
+  },
+}
+
+const mtsChartConfig: ChartConfig = {
+  mts: {
+    label: "Metric Tons",
+    color: "hsl(var(--chart-4))",
+  },
+}
+
+function InventoryTrendContent({ stationId, userRole, date }: { stationId: string, userRole: string, date: string }) {
+  const { data: trendData = [], isLoading } = useInventoryTrend(stationId, date)
+
   const showDischargeAnalysis = userRole !== "DISPATCHER"
-  const showMetricTons = userRole === "DOE" || userRole === "SHIPPER"
+  const showMetricTons = userRole === "DOE" || userRole === "SHIPPER" || userRole === "admin"
+
+  if (isLoading) return <InventoryTrendSkeleton />
+
+  if (trendData.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <p className="text-muted-foreground">No inventory trend data available for this station.</p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -47,53 +109,56 @@ export default function InventoryTrendView({ stationId, dateRange, userRole }: I
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle>Inventory Volume Trend</CardTitle>
-          <CardDescription>Volume measurements over time, normalized to 20°C</CardDescription>
+          <CardDescription>Volume measurements over time, normalized to 20°C (m³)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={VOLUME_DATA}>
-                <defs>
-                  <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--color-chart-1))" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(var(--color-chart-1))" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="colorVol20" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--color-chart-2))" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(var(--color-chart-2))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--color-border))" />
-                <XAxis dataKey="date" stroke="hsl(var(--color-muted-foreground))" />
-                <YAxis stroke="hsl(var(--color-muted-foreground))" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--color-background))",
-                    border: "1px solid hsl(var(--color-border))",
-                    borderRadius: "6px",
-                  }}
-                  labelStyle={{ color: "hsl(var(--color-foreground))" }}
-                />
-                <Legend />
-                <Area
-                  type="monotone"
-                  dataKey="volAt20C"
-                  stroke="hsl(var(--color-chart-2))"
-                  fillOpacity={1}
-                  fill="url(#colorVol20)"
-                  name="Volume @ 20°C (m³)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="volume"
-                  stroke="hsl(var(--color-chart-1))"
-                  fillOpacity={1}
-                  fill="url(#colorVolume)"
-                  name="Current Volume (m³)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+          <ChartContainer config={volumeChartConfig} className="h-[400px] w-full">
+            <AreaChart data={trendData}>
+              <defs>
+                <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-volume)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--color-volume)" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="colorVol20" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--color-volAt20C)" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="var(--color-volAt20C)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                domain={['auto', 'auto']}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              <Area
+                type="monotone"
+                dataKey="volAt20C"
+                stroke="var(--color-volAt20C)"
+                fillOpacity={1}
+                fill="url(#colorVol20)"
+                name="Volume @ 20°C"
+                strokeWidth={2}
+              />
+              <Area
+                type="monotone"
+                dataKey="volume"
+                stroke="var(--color-volume)"
+                fillOpacity={1}
+                fill="url(#colorVolume)"
+                name="Current Volume"
+                strokeWidth={2}
+              />
+            </AreaChart>
+          </ChartContainer>
         </CardContent>
       </Card>
 
@@ -101,52 +166,52 @@ export default function InventoryTrendView({ stationId, dateRange, userRole }: I
         <Card className="bg-card border-border">
           <CardHeader>
             <CardTitle>Daily Discharge Analysis</CardTitle>
-            <CardDescription>Discharge volumes by location over time</CardDescription>
+            <CardDescription>Discharge volumes by location over time (m³)</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={DISCHARGE_DATA}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--color-border))" />
-                  <XAxis dataKey="date" stroke="hsl(var(--color-muted-foreground))" />
-                  <YAxis stroke="hsl(var(--color-muted-foreground))" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--color-background))",
-                      border: "1px solid hsl(var(--color-border))",
-                      borderRadius: "6px",
-                    }}
-                    labelStyle={{ color: "hsl(var(--color-foreground))" }}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="tfarm"
-                    stroke="hsl(var(--color-chart-1))"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    name="TFARM Discharge (m³)"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="kigamboni"
-                    stroke="hsl(var(--color-chart-2))"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    name="Kigamboni Discharge (m³)"
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="total"
-                    stroke="hsl(var(--color-chart-3))"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    dot={{ r: 4 }}
-                    name="Total Discharge (m³)"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <ChartContainer config={dischargeChartConfig} className="h-[400px] w-full">
+              <LineChart data={trendData}>
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Line
+                  type="monotone"
+                  dataKey="tfarm"
+                  stroke="var(--color-tfarm)"
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "var(--color-tfarm)" }}
+                  name="TFARM"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="kigamboni"
+                  stroke="var(--color-kigamboni)"
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "var(--color-kigamboni)" }}
+                  name="Kigamboni"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="totalDischarge"
+                  stroke="var(--color-totalDischarge)"
+                  strokeWidth={2}
+                  strokeDasharray="5 5"
+                  dot={{ r: 4, fill: "var(--color-totalDischarge)" }}
+                  name="Total"
+                />
+              </LineChart>
+            </ChartContainer>
           </CardContent>
         </Card>
       )}
@@ -155,38 +220,46 @@ export default function InventoryTrendView({ stationId, dateRange, userRole }: I
         <Card className="bg-card border-border">
           <CardHeader>
             <CardTitle>Metric Tons Over Time</CardTitle>
-            <CardDescription>Weight equivalent tracking for inventory valuation</CardDescription>
+            <CardDescription>Weight equivalent tracking for inventory valuation (MT)</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={VOLUME_DATA}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--color-border))" />
-                  <XAxis dataKey="date" stroke="hsl(var(--color-muted-foreground))" />
-                  <YAxis stroke="hsl(var(--color-muted-foreground))" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "hsl(var(--color-background))",
-                      border: "1px solid hsl(var(--color-border))",
-                      borderRadius: "6px",
-                    }}
-                    labelStyle={{ color: "hsl(var(--color-foreground))" }}
-                  />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="mts"
-                    stroke="hsl(var(--color-chart-4))"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    name="Total MT"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <ChartContainer config={mtsChartConfig} className="h-[300px] w-full">
+              <LineChart data={trendData}>
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <ChartLegend content={<ChartLegendContent />} />
+                <Line
+                  type="monotone"
+                  dataKey="mts"
+                  stroke="var(--color-mts)"
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "var(--color-mts)" }}
+                  name="Total MT"
+                />
+              </LineChart>
+            </ChartContainer>
           </CardContent>
         </Card>
       )}
     </div>
+  )
+}
+
+export default function InventoryTrendView({ stationId, dateRange, userRole }: InventoryTrendViewProps) {
+  return (
+    <Suspense fallback={<InventoryTrendSkeleton />}>
+      <InventoryTrendContent stationId={stationId} userRole={userRole} date={dateRange} />
+    </Suspense>
   )
 }

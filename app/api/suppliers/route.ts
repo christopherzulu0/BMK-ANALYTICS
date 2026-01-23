@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 
 
@@ -44,6 +46,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Get current user for audit logging
+    const session = await getServerSession(authOptions)
+    const userId = session?.user?.email 
+        ? (await prisma.user.findUnique({ where: { email: session.user.email }, select: { id: true } }))?.id 
+        : null
+
     const supplier = await prisma.supplier.create({
       data: {
         name,
@@ -55,6 +63,21 @@ export async function POST(request: NextRequest) {
         reliability: parseFloat(reliability),
       },
     })
+
+    // Create audit log entry
+    try {
+      await prisma.auditLog.create({
+        data: {
+          userId: userId || null,
+          action: "created",
+          resource: `Supplier:${supplier.id}`,
+          details: `Created supplier "${name}" (ID: ${supplier.id}). Email: ${email}, Phone: ${phone}, Location: ${location}, Rating: ${rating}`,
+          status: "success",
+        }
+      })
+    } catch (auditError: any) {
+      console.error("Failed to create audit log:", auditError)
+    }
 
     return NextResponse.json(supplier, { status: 201 })
   } catch (error: any) {

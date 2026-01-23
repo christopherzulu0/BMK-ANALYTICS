@@ -3,10 +3,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { LogIn, Edit, Trash2, CheckCircle, AlertCircle } from "lucide-react"
+import { useAuditLogs, type AuditLogEntry } from "@/hooks/use-audit-logs"
+import { AuditLogSkeleton } from "./audit-log-skeleton"
 
-interface AuditEntry {
+// Map API AuditLogEntry to component display format
+interface DisplayEntry {
   id: string
   timestamp: string
   user: string
@@ -16,50 +19,55 @@ interface AuditEntry {
   changes?: string
 }
 
-const MOCK_AUDIT: AuditEntry[] = [
-  {
-    id: "1",
-    timestamp: "2024-01-13 15:45:32",
-    user: "John Smith",
-    action: "updated",
-    entity: "Tank A1 Reading",
-    details: "Volume updated from 485.32 to 488.50 m³",
-    changes: "water_content: 5.2cm → 3.1cm",
-  },
-  {
-    id: "2",
-    timestamp: "2024-01-13 14:32:15",
-    user: "Jane Doe",
-    action: "created",
-    entity: "Shipment #SH-2024-0142",
-    details: "New shipment recorded - 250 MT to Port Authority",
-  },
-  {
-    id: "3",
-    timestamp: "2024-01-13 12:10:00",
-    user: "Admin",
-    action: "approved",
-    entity: "Daily Summary",
-    details: "Daily inventory summary approved for Station TFARM",
-  },
-  {
-    id: "4",
-    timestamp: "2024-01-13 10:05:22",
-    user: "System",
-    action: "created",
-    entity: "Alert #ALT-2024-0089",
-    details: "Threshold alert triggered - High water content in Tank A1",
-  },
-]
+// Map API action to component action type
+const mapAction = (action: string): "created" | "updated" | "deleted" | "approved" => {
+  const lowerAction = action.toLowerCase()
+  if (lowerAction === "created" || lowerAction === "create") return "created"
+  if (lowerAction === "updated" || lowerAction === "update") return "updated"
+  if (lowerAction === "deleted" || lowerAction === "delete") return "deleted"
+  if (lowerAction === "approved" || lowerAction === "approve") return "approved"
+  return "created" // default
+}
+
+// Map API entry to display format
+const mapEntryToDisplay = (entry: AuditLogEntry): DisplayEntry => {
+  return {
+    id: entry.id,
+    timestamp: new Date(entry.timestamp).toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).replace(',', ''),
+    user: entry.user?.name || entry.user?.email || "System",
+    action: mapAction(entry.action),
+    entity: entry.resource,
+    details: entry.details,
+    changes: undefined, // Changes not in API model
+  }
+}
 
 interface AuditLogProps {
   userRole: "DOE" | "SHIPPER" | "DISPATCHER"
 }
 
-export default function AuditLog({ userRole }: AuditLogProps) {
+function AuditLogContent({ userRole }: AuditLogProps) {
   const [searchTerm, setSearchTerm] = useState("")
-  const [auditLog] = useState<AuditEntry[]>(MOCK_AUDIT)
 
+  // Fetch audit logs from API
+  const { data: auditLogsData, isLoading } = useAuditLogs({
+    page: 1,
+    pageSize: 100,
+    search: searchTerm || undefined,
+  })
+
+  // Map API entries to display format
+  const auditLog: DisplayEntry[] = (auditLogsData?.logs || []).map(mapEntryToDisplay)
+
+  // Client-side filtering (in case API doesn't handle search)
   const filteredLog = auditLog.filter(
     (entry) =>
       entry.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -67,7 +75,11 @@ export default function AuditLog({ userRole }: AuditLogProps) {
       entry.details.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  const getActionIcon = (action: AuditEntry["action"]) => {
+  if (isLoading) {
+    return <AuditLogSkeleton />
+  }
+
+  const getActionIcon = (action: DisplayEntry["action"]) => {
     switch (action) {
       case "created":
         return <LogIn className="h-4 w-4" />
@@ -82,7 +94,7 @@ export default function AuditLog({ userRole }: AuditLogProps) {
     }
   }
 
-  const getActionColor = (action: AuditEntry["action"]) => {
+  const getActionColor = (action: DisplayEntry["action"]) => {
     switch (action) {
       case "created":
         return "bg-blue-100 text-blue-800"
@@ -150,5 +162,13 @@ export default function AuditLog({ userRole }: AuditLogProps) {
         </div>
       </CardContent>
     </Card>
+  )
+}
+
+export default function AuditLog({ userRole }: AuditLogProps) {
+  return (
+    <Suspense fallback={<AuditLogSkeleton />}>
+      <AuditLogContent userRole={userRole} />
+    </Suspense>
   )
 }

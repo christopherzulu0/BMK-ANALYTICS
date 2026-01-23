@@ -38,11 +38,14 @@ export async function GET(request: Request) {
     const where: any = {}
 
     if (search) {
+      // For SQL Server, search in action, resource, details, and user relation
+      // Note: SQL Server case-insensitive search is handled at database level
       where.OR = [
-        { user: { contains: search } },
         { action: { contains: search } },
         { resource: { contains: search } },
-        { details: { contains: search } }
+        { details: { contains: search } },
+        { user: { name: { contains: search } } },
+        { user: { email: { contains: search } } }
       ]
     }
 
@@ -62,10 +65,19 @@ export async function GET(request: Request) {
       where.timestamp = { ...(where.timestamp || {}), lte: toDate }
     }
 
-    // Fetch logs with pagination
+    // Fetch logs with pagination and include user relation
     const [logs, total] = await Promise.all([
       prisma.auditLog.findMany({
         where,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        },
         orderBy: { timestamp: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize

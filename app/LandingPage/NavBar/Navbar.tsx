@@ -85,8 +85,8 @@ export default function Navbar() {
               />
             </button>
             {solutionOpen && (
-              <div className="absolute top-full left-0 mt-3 w-96 bg-white text-foreground rounded-xl shadow-2xl p-5 z-50 border border-secondary/20">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="absolute top-full left-0 mt-3 w-150 bg-white text-foreground rounded-xl shadow-2xl p-5 z-50 border border-secondary/20">
+                <div className="grid grid-cols-3 gap-6">
                   {solutions.map((item) => (
                     <Link
                       key={item.name}

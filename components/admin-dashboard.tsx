@@ -16,8 +16,8 @@ import { ShipmentTracking } from "./shipment-tracking"
 import { AlertsManagement } from "./alerts-management"
 import { AnalyticsDashboard } from "./analytics-dashboard"
 import PermissionsPage from "@/app/Permissions/page"
-import MetricsUpload from "@/app/ManualUpload/MetricTons/page"
-import ReadingsUpload from "@/app/ManualUpload/Readings/page"
+import CsvUploader from "@/components/CsvUploader"
+import ReadingUploader from "@/components/ReadingUploader"
 
 
 
@@ -40,9 +40,9 @@ function renderContent(activeSection: string) {
       case "permissions":
         return <PermissionsPage />
         case "metrics":
-          return <MetricsUpload />
+          return <CsvUploader />
           case "readings":
-            return <ReadingsUpload/>
+            return <ReadingUploader />
     default:
       return (
         <div className="flex items-center justify-center h-96">

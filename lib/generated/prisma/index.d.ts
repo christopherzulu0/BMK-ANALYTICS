@@ -483,8 +483,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.2.0
-   * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+   * Prisma Client JS version: 7.3.0
+   * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
    */
   export type PrismaVersion = {
     client: string
@@ -7665,12 +7665,10 @@ export namespace Prisma {
 
   export type ShipmentAvgAggregateOutputType = {
     cargo_metric_tons: number | null
-    progress: number | null
   }
 
   export type ShipmentSumAggregateOutputType = {
     cargo_metric_tons: number | null
-    progress: number | null
   }
 
   export type ShipmentMinAggregateOutputType = {
@@ -7681,7 +7679,6 @@ export namespace Prisma {
     supplier: string | null
     cargo_metric_tons: number | null
     status: string | null
-    progress: number | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7696,7 +7693,6 @@ export namespace Prisma {
     supplier: string | null
     cargo_metric_tons: number | null
     status: string | null
-    progress: number | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7711,7 +7707,6 @@ export namespace Prisma {
     supplier: number
     cargo_metric_tons: number
     status: number
-    progress: number
     notes: number
     createdAt: number
     updatedAt: number
@@ -7722,12 +7717,10 @@ export namespace Prisma {
 
   export type ShipmentAvgAggregateInputType = {
     cargo_metric_tons?: true
-    progress?: true
   }
 
   export type ShipmentSumAggregateInputType = {
     cargo_metric_tons?: true
-    progress?: true
   }
 
   export type ShipmentMinAggregateInputType = {
@@ -7738,7 +7731,6 @@ export namespace Prisma {
     supplier?: true
     cargo_metric_tons?: true
     status?: true
-    progress?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -7753,7 +7745,6 @@ export namespace Prisma {
     supplier?: true
     cargo_metric_tons?: true
     status?: true
-    progress?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -7768,7 +7759,6 @@ export namespace Prisma {
     supplier?: true
     cargo_metric_tons?: true
     status?: true
-    progress?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -7870,7 +7860,6 @@ export namespace Prisma {
     supplier: string
     cargo_metric_tons: number
     status: string
-    progress: number
     notes: string | null
     createdAt: Date
     updatedAt: Date
@@ -7904,7 +7893,6 @@ export namespace Prisma {
     supplier?: boolean
     cargo_metric_tons?: boolean
     status?: boolean
-    progress?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7921,14 +7909,13 @@ export namespace Prisma {
     supplier?: boolean
     cargo_metric_tons?: boolean
     status?: boolean
-    progress?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     destination?: boolean
   }
 
-  export type ShipmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "vessel_id" | "estimated_day_of_arrival" | "supplier" | "cargo_metric_tons" | "status" | "progress" | "notes" | "createdAt" | "updatedAt" | "destination", ExtArgs["result"]["shipment"]>
+  export type ShipmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "vessel_id" | "estimated_day_of_arrival" | "supplier" | "cargo_metric_tons" | "status" | "notes" | "createdAt" | "updatedAt" | "destination", ExtArgs["result"]["shipment"]>
 
   export type $ShipmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Shipment"
@@ -7941,7 +7928,6 @@ export namespace Prisma {
       supplier: string
       cargo_metric_tons: number
       status: string
-      progress: number
       notes: string | null
       createdAt: Date
       updatedAt: Date
@@ -8322,7 +8308,6 @@ export namespace Prisma {
     readonly supplier: FieldRef<"Shipment", 'String'>
     readonly cargo_metric_tons: FieldRef<"Shipment", 'Float'>
     readonly status: FieldRef<"Shipment", 'String'>
-    readonly progress: FieldRef<"Shipment", 'Int'>
     readonly notes: FieldRef<"Shipment", 'String'>
     readonly createdAt: FieldRef<"Shipment", 'DateTime'>
     readonly updatedAt: FieldRef<"Shipment", 'DateTime'>
@@ -22623,7 +22608,6 @@ export namespace Prisma {
     supplier: 'supplier',
     cargo_metric_tons: 'cargo_metric_tons',
     status: 'status',
-    progress: 'progress',
     notes: 'notes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -23302,7 +23286,6 @@ export namespace Prisma {
     supplier?: StringFilter<"Shipment"> | string
     cargo_metric_tons?: FloatFilter<"Shipment"> | number
     status?: StringFilter<"Shipment"> | string
-    progress?: IntFilter<"Shipment"> | number
     notes?: StringNullableFilter<"Shipment"> | string | null
     createdAt?: DateTimeFilter<"Shipment"> | Date | string
     updatedAt?: DateTimeFilter<"Shipment"> | Date | string
@@ -23317,7 +23300,6 @@ export namespace Prisma {
     supplier?: SortOrder
     cargo_metric_tons?: SortOrder
     status?: SortOrder
-    progress?: SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23335,7 +23317,6 @@ export namespace Prisma {
     supplier?: StringFilter<"Shipment"> | string
     cargo_metric_tons?: FloatFilter<"Shipment"> | number
     status?: StringFilter<"Shipment"> | string
-    progress?: IntFilter<"Shipment"> | number
     notes?: StringNullableFilter<"Shipment"> | string | null
     createdAt?: DateTimeFilter<"Shipment"> | Date | string
     updatedAt?: DateTimeFilter<"Shipment"> | Date | string
@@ -23350,7 +23331,6 @@ export namespace Prisma {
     supplier?: SortOrder
     cargo_metric_tons?: SortOrder
     status?: SortOrder
-    progress?: SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -23373,7 +23353,6 @@ export namespace Prisma {
     supplier?: StringWithAggregatesFilter<"Shipment"> | string
     cargo_metric_tons?: FloatWithAggregatesFilter<"Shipment"> | number
     status?: StringWithAggregatesFilter<"Shipment"> | string
-    progress?: IntWithAggregatesFilter<"Shipment"> | number
     notes?: StringNullableWithAggregatesFilter<"Shipment"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Shipment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Shipment"> | Date | string
@@ -24832,7 +24811,6 @@ export namespace Prisma {
     supplier: string
     cargo_metric_tons: number
     status: string
-    progress?: number
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24847,7 +24825,6 @@ export namespace Prisma {
     supplier: string
     cargo_metric_tons: number
     status: string
-    progress?: number
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24862,7 +24839,6 @@ export namespace Prisma {
     supplier?: StringFieldUpdateOperationsInput | string
     cargo_metric_tons?: FloatFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
-    progress?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24877,7 +24853,6 @@ export namespace Prisma {
     supplier?: StringFieldUpdateOperationsInput | string
     cargo_metric_tons?: FloatFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
-    progress?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24892,7 +24867,6 @@ export namespace Prisma {
     supplier: string
     cargo_metric_tons: number
     status: string
-    progress?: number
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24907,7 +24881,6 @@ export namespace Prisma {
     supplier?: StringFieldUpdateOperationsInput | string
     cargo_metric_tons?: FloatFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
-    progress?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24922,7 +24895,6 @@ export namespace Prisma {
     supplier?: StringFieldUpdateOperationsInput | string
     cargo_metric_tons?: FloatFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
-    progress?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26498,7 +26470,6 @@ export namespace Prisma {
     supplier?: SortOrder
     cargo_metric_tons?: SortOrder
     status?: SortOrder
-    progress?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26507,7 +26478,6 @@ export namespace Prisma {
 
   export type ShipmentAvgOrderByAggregateInput = {
     cargo_metric_tons?: SortOrder
-    progress?: SortOrder
   }
 
   export type ShipmentMaxOrderByAggregateInput = {
@@ -26518,7 +26488,6 @@ export namespace Prisma {
     supplier?: SortOrder
     cargo_metric_tons?: SortOrder
     status?: SortOrder
-    progress?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26533,7 +26502,6 @@ export namespace Prisma {
     supplier?: SortOrder
     cargo_metric_tons?: SortOrder
     status?: SortOrder
-    progress?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26542,7 +26510,6 @@ export namespace Prisma {
 
   export type ShipmentSumOrderByAggregateInput = {
     cargo_metric_tons?: SortOrder
-    progress?: SortOrder
   }
 
   export type BoolFilter<$PrismaModel = never> = {

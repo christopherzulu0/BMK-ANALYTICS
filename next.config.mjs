@@ -20,10 +20,20 @@ const nextConfig = {
       underscore: 'lodash',
       mocha: { browser: 'mocha/browser-entry.js' },
     },
+    resolveExtensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   images: {
     domains: ["encrypted-tbn0.gstatic.com", "tazama.co.zm"], // Only needed for external images
   },
+  // Mark server-only packages to prevent client bundling
+  serverComponentsExternalPackages: [
+    'tedious',
+    'mssql',
+    '@prisma/adapter-mssql',
+    '@prisma/client',
+    'bcryptjs',
+    'bcrypt',
+  ],
   // Extend Webpack configuration
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -32,6 +42,7 @@ const nextConfig = {
         tls: false,
         net: false,
         dns: false,
+        dgram: false,
         fs: false,
         request: false,
         child_process: false,

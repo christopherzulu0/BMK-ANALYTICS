@@ -1,170 +1,229 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
-
-// Mock quality data
-const TEMP_DATA = [
-  { time: "08:00", tankA1: 26.2, tankA2: 26.5, tankB1: 25.8 },
-  { time: "10:00", tankA1: 27.1, tankA2: 27.3, tankB1: 26.5 },
-  { time: "12:00", tankA1: 28.5, tankA2: 29.1, tankB1: 27.8 },
-  { time: "14:00", tankA1: 28.3, tankA2: 28.9, tankB1: 27.6 },
-  { time: "16:00", tankA1: 28.5, tankA2: 29.1, tankB1: 27.8 },
-]
-
-const SG_DATA = [
-  { tank: "Tank A1", sg: 0.8234, density: 820.5, quality: "Good" },
-  { tank: "Tank A2", sg: 0.8241, density: 821.2, quality: "Good" },
-  { tank: "Tank B1", sg: 0.8229, density: 819.8, quality: "Good" },
-]
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer
+} from "recharts"
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent
+} from "@/components/ui/chart"
+import { useQualityData } from "@/hooks/use-quality-data"
+import { Suspense, useMemo } from "react"
+import { Badge } from "@/components/ui/badge"
 
 interface QualityAnalysisViewProps {
   stationId: string
   dateRange: string
-  userRole: "DOE" | "SHIPPER" | "DISPATCHER"
+  userRole: "DOE" | "SHIPPER" | "DISPATCHER" | "admin"
 }
 
-export default function QualityAnalysisView({ stationId, dateRange, userRole }: QualityAnalysisViewProps) {
+export function QualityAnalysisSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Card className="bg-card border-border">
+        <CardHeader>
+          <Skeleton className="h-6 w-1/4 mb-2" />
+          <Skeleton className="h-4 w-1/3" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-80 w-full" />
+        </CardContent>
+      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <Skeleton className="h-6 w-1/4 mb-2" />
+            <Skeleton className="h-4 w-1/3" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+          </CardContent>
+        </Card>
+        <Card className="bg-card border-border">
+          <CardHeader>
+            <Skeleton className="h-6 w-1/4 mb-2" />
+            <Skeleton className="h-4 w-1/3" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+function QualityAnalysisContent({ stationId, date }: { stationId: string, date: string }) {
+  const { data, isLoading } = useQualityData(stationId, date)
+
+  const chartConfig = useMemo(() => {
+    const config: ChartConfig = {}
+    if (data?.tanks) {
+      data.tanks.forEach((tankName, idx) => {
+        config[`temp_${tankName}`] = {
+          label: tankName,
+          color: `hsl(var(--chart-${(idx % 5) + 1}))`,
+        }
+      })
+    }
+    return config
+  }, [data])
+
+  if (isLoading) return <QualityAnalysisSkeleton />
+
+  if (!data || data.trends.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <p className="text-muted-foreground">No quality analysis data available for this station.</p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* Temperature Monitoring */}
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle>Temperature Monitoring</CardTitle>
-          <CardDescription>Hourly temperature readings across active tanks</CardDescription>
+          <CardDescription>Recent temperature readings across active tanks (°C)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={TEMP_DATA}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--color-border))" />
-                <XAxis dataKey="time" stroke="hsl(var(--color-muted-foreground))" />
-                <YAxis stroke="hsl(var(--color-muted-foreground))" domain={[24, 30]} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--color-background))",
-                    border: "1px solid hsl(var(--color-border))",
-                    borderRadius: "6px",
-                  }}
-                  labelStyle={{ color: "hsl(var(--color-foreground))" }}
-                />
-                <Legend />
+          <ChartContainer config={chartConfig} className="h-[400px] w-full">
+            <LineChart data={data.trends}>
+              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <XAxis
+                dataKey="time"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                domain={['auto', 'auto']}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              {data.tanks.map((tankName) => (
                 <Line
+                  key={tankName}
                   type="monotone"
-                  dataKey="tankA1"
-                  stroke="hsl(var(--color-chart-1))"
+                  dataKey={`temp_${tankName}`}
+                  stroke={`var(--color-temp_${tankName})`}
                   strokeWidth={2}
-                  dot={{ r: 4 }}
-                  name="Tank A1"
+                  dot={{ r: 4, fill: `var(--color-temp_${tankName})` }}
+                  activeDot={{ r: 6 }}
+                  name={tankName}
                 />
-                <Line
-                  type="monotone"
-                  dataKey="tankA2"
-                  stroke="hsl(var(--color-chart-2))"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  name="Tank A2"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="tankB1"
-                  stroke="hsl(var(--color-chart-3))"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  name="Tank B1"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+              ))}
+            </LineChart>
+          </ChartContainer>
         </CardContent>
       </Card>
 
-      {/* Specific Gravity Analysis */}
-      <Card className="bg-card border-border">
-        <CardHeader>
-          <CardTitle>Specific Gravity & Quality</CardTitle>
-          <CardDescription>Current readings for active tanks</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {SG_DATA.map((item, idx) => (
-              <div
-                key={idx}
-                className="p-4 rounded-lg border border-border bg-background hover:bg-secondary transition-colors"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-foreground">{item.tank}</span>
-                  <span className="text-xs px-2 py-1 rounded-full bg-chart-3 bg-opacity-20 text-chart-3">
-                    {item.quality}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <div className="text-xs text-muted-foreground">Specific Gravity</div>
-                    <div className="font-mono font-semibold text-foreground text-lg">{item.sg.toFixed(4)}</div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Specific Gravity & Quality */}
+        <Card className="bg-card border-border h-full">
+          <CardHeader>
+            <CardTitle>Specific Gravity & Quality</CardTitle>
+            <CardDescription>Latest readings for active tanks</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {data.current.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-lg border border-border bg-background hover:bg-secondary transition-colors"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-semibold text-foreground">{item.tankName}</span>
+                    <Badge variant="outline" className="text-chart-3 border-chart-3/30 bg-chart-3/10">
+                      Good Quality
+                    </Badge>
                   </div>
 
-                  <div>
-                    <div className="text-xs text-muted-foreground">Density</div>
-                    <div className="font-mono font-semibold text-foreground text-lg">
-                      {item.density.toFixed(1)} kg/m³
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="text-xs text-muted-foreground">Status</div>
-                    <div className="h-8 rounded-full border border-border flex items-center justify-center bg-chart-3 bg-opacity-10">
-                      <span className="text-xs font-medium text-chart-3">✓ OK</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Water Content Analysis */}
-      <Card className="bg-card border-border">
-        <CardHeader>
-          <CardTitle>Water Content Trend</CardTitle>
-          <CardDescription>Daily water readings with alert thresholds</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { name: "Tank A1", water: 5.2, threshold: 10, status: "warning" },
-                { name: "Tank A2", water: 3.8, threshold: 10, status: "normal" },
-                { name: "Tank B1", water: 2.1, threshold: 10, status: "normal" },
-              ].map((item, idx) => (
-                <div key={idx} className="p-4 rounded-lg border border-border bg-background">
-                  <div className="text-sm font-semibold text-foreground mb-3">{item.name}</div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Current:</span>
-                      <span className="font-mono font-semibold text-foreground">{item.water} cm</span>
+                  <div className="grid grid-cols-2 gap-4 text-sm mt-3">
+                    <div>
+                      <div className="text-xs text-muted-foreground">Specific Gravity</div>
+                      <div className="font-mono font-semibold text-foreground text-lg">
+                        {item.sg ? item.sg.toFixed(4) : "N/A"}
+                      </div>
                     </div>
 
-                    <div className="w-full h-2 rounded-full bg-secondary overflow-hidden">
-                      <div
-                        className={`h-full ${item.status === "warning" ? "bg-chart-1" : "bg-chart-3"}`}
-                        style={{
-                          width: `${(item.water / item.threshold) * 100}%`,
-                        }}
-                      />
+                    <div>
+                      <div className="text-xs text-muted-foreground">Density (kg/m³)</div>
+                      <div className="font-mono font-semibold text-foreground text-lg">
+                        {item.density ? item.density.toFixed(1) : "N/A"}
+                      </div>
                     </div>
-
-                    <div className="text-xs text-muted-foreground">Threshold: {item.threshold} cm</div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {/* Water Content Analysis */}
+        <Card className="bg-card border-border h-full">
+          <CardHeader>
+            <CardTitle>Water Content Analysis</CardTitle>
+            <CardDescription>Latest water readings and levels</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {data.current.map((item, idx) => {
+                const threshold = 10 // Mock threshold
+                const percentage = Math.min((item.waterCm / threshold) * 100, 100)
+                const isWarning = item.waterCm > 5
+
+                return (
+                  <div key={idx} className="p-4 rounded-lg border border-border bg-background">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="text-sm font-semibold text-foreground">{item.tankName}</div>
+                      <div className="text-sm font-mono font-semibold text-foreground">{item.waterCm.toFixed(1)} cm</div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="w-full h-2 rounded-full bg-secondary overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-1000 ${isWarning ? "bg-chart-1" : "bg-chart-3"}`}
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                      <div className="flex justify-between text-[10px] text-muted-foreground">
+                        <span>0 cm</span>
+                        <span>Threshold: {threshold} cm</span>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
+  )
+}
+
+export default function QualityAnalysisView({ stationId, dateRange, userRole }: QualityAnalysisViewProps) {
+  return (
+    <Suspense fallback={<QualityAnalysisSkeleton />}>
+      <QualityAnalysisContent stationId={stationId} date={dateRange} />
+    </Suspense>
   )
 }

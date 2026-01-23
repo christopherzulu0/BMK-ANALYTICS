@@ -2,6 +2,8 @@
 import { NextResponse } from "next/server"
 import type { ApiEntry, SaveEntryRequest } from "@/lib/api-types"
 import {prisma} from '@/lib/prisma';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 
 // GET /api/entries?stationId=...&date=YYYY-MM-DD
@@ -71,7 +73,20 @@ export async function POST(req: Request) {
     const station = await prisma.station.findUnique({ where: { id: stationId } })
     if (!station) return new NextResponse("Station not found", { status: 404 })
 
+    // Get current user for audit logging
+    const session = await getServerSession(authOptions)
+    const userId = session?.user?.email 
+        ? (await prisma.user.findUnique({ where: { email: session.user.email }, select: { id: true } }))?.id 
+        : null
+
     const when = new Date(date)
+
+    // Check if entry already exists to determine if it's create or update
+    const existingEntry = await prisma.dailyEntry.findUnique({
+        where: { stationId_date: { stationId, date: when } },
+        select: { id: true }
+    })
+    const isUpdate = !!existingEntry
 
     try {
         await prisma.$transaction(async (tx) => {
@@ -166,6 +181,29 @@ export async function POST(req: Request) {
                 }
             }
         })
+
+        // Create audit log entry after successful transaction
+        try {
+            const tankCount = entry.tanks?.length || 0
+            const remarkCount = entry.remarks?.filter(r => r?.trim()).length || 0
+            const action = isUpdate ? "updated" : "created"
+            const details = isUpdate
+                ? `Updated daily entry for ${station.name} on ${date}. Summary: ${tankCount} tanks, ${remarkCount} remarks. Net Delivery: ${entry.summary.netDeliveryMT.toFixed(2)} MT`
+                : `Created daily entry for ${station.name} on ${date}. Summary: ${tankCount} tanks, ${remarkCount} remarks. Net Delivery: ${entry.summary.netDeliveryMT.toFixed(2)} MT`
+
+            await prisma.auditLog.create({
+                data: {
+                    userId: userId || null,
+                    action: action,
+                    resource: `DailyEntry:${station.name}:${date}`,
+                    details: details,
+                    status: "success",
+                }
+            })
+        } catch (auditError: any) {
+            // Log audit error but don't fail the request
+            console.error("Failed to create audit log:", auditError)
+        }
 
         return NextResponse.json({ ok: true })
     } catch (error: any) {

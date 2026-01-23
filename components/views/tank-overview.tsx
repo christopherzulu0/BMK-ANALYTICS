@@ -5,8 +5,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AlertTriangle, Droplets, Thermometer } from "lucide-react"
+import type { Tank } from "@/hooks/use-tankage-data"
 
-// Mock data for tanks
+// Mock data for tanks (fallback)
 const MOCK_TANKS = [
   {
     id: "1",
@@ -20,6 +21,8 @@ const MOCK_TANKS = [
     volAt20C: 492.18,
     mts: 405.2,
     lastUpdate: "2024-01-13 14:32",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "2",
@@ -33,6 +36,8 @@ const MOCK_TANKS = [
     volAt20C: 520.85,
     mts: 428.5,
     lastUpdate: "2024-01-13 14:32",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "3",
@@ -46,6 +51,8 @@ const MOCK_TANKS = [
     volAt20C: 304.23,
     mts: 250.5,
     lastUpdate: "2024-01-13 14:32",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "4",
@@ -59,8 +66,10 @@ const MOCK_TANKS = [
     volAt20C: 0,
     mts: 0,
     lastUpdate: "2024-01-10 10:15",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
-]
+] as Tank[]
 
 const ALERTS = [
   {
@@ -82,13 +91,126 @@ const ALERTS = [
 interface TankOverviewViewProps {
   stationId: string
   dateRange: string
-  userRole: "DOE" | "SHIPPER" | "DISPATCHER"
+  userRole: "DOE" | "SHIPPER" | "DISPATCHER" | "admin"
+  tankageData?: Tank[]
+  tanks?: Tank[]
+  hasFetchedOnce?: boolean
 }
 
-export default function TankOverviewView({ stationId, dateRange, userRole }: TankOverviewViewProps) {
+export default function TankOverviewView({
+  stationId,
+  dateRange,
+  userRole,
+  tankageData = [],
+  tanks = [],
+  hasFetchedOnce = false,
+}: TankOverviewViewProps) {
+  // Deduplicate tanks by name, keeping the most recent version
+  const deduplicateTanks = (tankList: Tank[]): Tank[] => {
+    const tankMap = new Map<string, Tank>()
+
+    // Sort by updatedAt descending to get most recent first
+    const sortedTanks = [...tankList].sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt).getTime()
+      const dateB = new Date(b.updatedAt || b.createdAt).getTime()
+      return dateB - dateA
+    })
+
+    // Keep only the first (most recent) occurrence of each tank name
+    for (const tank of sortedTanks) {
+      const tankName = tank.name?.trim().toUpperCase() || ""
+      if (tankName && !tankMap.has(tankName)) {
+        tankMap.set(tankName, tank)
+      }
+    }
+
+    return Array.from(tankMap.values())
+  }
+
+  // Use real data if available, otherwise fallback to mock data (only if not fetched with stationId)
+  const allTanks = tanks.length > 0 ? tanks : (hasFetchedOnce ? [] : MOCK_TANKS)
+  const displayTanks = deduplicateTanks(allTanks)
+
+  // Calculate KPIs from real data
+  const calculateKPIs = () => {
+    const activeTanks = displayTanks.filter((t) => t.status === "Active")
+
+    // Helper function to safely convert to number
+    const toNumber = (value: any): number => {
+      if (value === null || value === undefined) return 0
+      const num = typeof value === "string" ? parseFloat(value) : Number(value)
+      return isNaN(num) ? 0 : num
+    }
+
+    const totalVolume = activeTanks.reduce((sum, t) => sum + toNumber(t.volumeM3), 0)
+    const totalVolAt20C = activeTanks.reduce((sum, t) => sum + toNumber(t.volAt20C), 0)
+    const totalMts = activeTanks.reduce((sum, t) => sum + toNumber(t.mts), 0)
+
+    const tempValues = activeTanks
+      .map((t) => toNumber(t.tempC))
+      .filter((temp) => temp > 0)
+    const avgTemp = tempValues.length > 0
+      ? tempValues.reduce((sum, temp) => sum + temp, 0) / tempValues.length
+      : 0
+
+    return {
+      totalVolume: Number(totalVolume).toFixed(1),
+      totalVolAt20C: Number(totalVolAt20C).toFixed(1),
+      totalMts: Number(totalMts).toFixed(1),
+      avgTemp: Number(avgTemp).toFixed(1),
+    }
+  }
+
+  const kpis = calculateKPIs()
+
+  // Helper function to safely convert to number and format
+  const formatNumber = (value: any, decimals: number = 1): string => {
+    // Handle null, undefined, empty string, or other falsy values
+    if (value === null || value === undefined || value === "" || value === false) {
+      return "N/A"
+    }
+
+    // Convert to number - handle both string and number types
+    let num: number
+    if (typeof value === "string") {
+      num = parseFloat(value.trim())
+    } else if (typeof value === "number") {
+      num = value
+    } else {
+      // Try to convert other types
+      num = Number(value)
+    }
+
+    // Check if conversion resulted in a valid number
+    if (isNaN(num) || !isFinite(num)) {
+      return "N/A"
+    }
+
+    // Format the number
+    return num.toFixed(decimals)
+  }
+
+  // Format date for display
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "N/A"
+    try {
+      const date = new Date(dateString)
+      return date.toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    } catch {
+      return dateString
+    }
+  }
+
   const getVisibleKPIs = () => {
     switch (userRole) {
       case "DOE":
+      case "admin":
         return ["total_volume", "vol_20c", "metric_tons", "avg_temp"] // All KPIs
       case "SHIPPER":
         return ["total_volume", "vol_20c", "metric_tons"] // Volume focused
@@ -103,6 +225,14 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
 
   return (
     <div className="space-y-6">
+      {displayTanks.length === 0 && hasFetchedOnce && (
+        <Alert className="bg-destructive/10 border-destructive/20">
+          <AlertTriangle className="h-4 w-4 text-destructive" />
+          <AlertDescription className="text-destructive font-medium">
+            No tank data found for the selected station on this date.
+          </AlertDescription>
+        </Alert>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {visibleKPIs.includes("total_volume") && (
           <Card className="bg-card border-border">
@@ -110,7 +240,7 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Volume</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">1,296.5</div>
+              <div className="text-2xl font-bold text-foreground">{kpis.totalVolume}</div>
               <p className="text-xs text-muted-foreground mt-1">m³ @ current temp</p>
             </CardContent>
           </Card>
@@ -122,7 +252,7 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
               <CardTitle className="text-sm font-medium text-muted-foreground">Volume @ 20°C</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">1,317.3</div>
+              <div className="text-2xl font-bold text-foreground">{kpis.totalVolAt20C}</div>
               <p className="text-xs text-muted-foreground mt-1">m³ normalized</p>
             </CardContent>
           </Card>
@@ -134,7 +264,7 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Metric Tons</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">1,084.2</div>
+              <div className="text-2xl font-bold text-foreground">{kpis.totalMts}</div>
               <p className="text-xs text-muted-foreground mt-1">MT equivalent</p>
             </CardContent>
           </Card>
@@ -146,7 +276,7 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
               <CardTitle className="text-sm font-medium text-muted-foreground">Avg Temperature</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">28.4°C</div>
+              <div className="text-2xl font-bold text-foreground">{kpis.avgTemp}°C</div>
               <p className="text-xs text-muted-foreground mt-1">across all tanks</p>
             </CardContent>
           </Card>
@@ -185,7 +315,7 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
               <CardTitle>Tank Inventory</CardTitle>
               <CardDescription>Current readings for all tanks</CardDescription>
             </div>
-            <Badge variant="outline">{MOCK_TANKS.filter((t) => t.status === "Active").length} Active</Badge>
+            <Badge variant="outline">{displayTanks.filter((t) => t.status === "Active").length} Active</Badge>
           </div>
         </CardHeader>
         <CardContent>
@@ -193,11 +323,11 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
             <TabsList className="bg-secondary">
               <TabsTrigger value="all">All Tanks</TabsTrigger>
               <TabsTrigger value="active">Active</TabsTrigger>
-              {userRole === "DOE" && <TabsTrigger value="details">Details</TabsTrigger>}
+              {(userRole === "DOE" || userRole === "admin") && <TabsTrigger value="details">Details</TabsTrigger>}
             </TabsList>
 
             <TabsContent value="all" className="space-y-3">
-              {MOCK_TANKS.map((tank) => (
+              {displayTanks.map((tank) => (
                 <div
                   key={tank.id}
                   className="flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-secondary transition-colors"
@@ -209,13 +339,17 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
                         {tank.status}
                       </Badge>
                     </div>
-                    <div className="text-xs text-muted-foreground">Updated: {tank.lastUpdate}</div>
+                    <div className="text-xs text-muted-foreground">
+                      Updated: {tank.lastUpdate || formatDate(tank.updatedAt)}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-4 gap-4 text-right">
                     <div>
                       <div className="text-xs text-muted-foreground">Volume</div>
-                      <div className="font-mono font-semibold text-foreground">{tank.volumeM3.toFixed(1)}</div>
+                      <div className="font-mono font-semibold text-foreground">
+                        {formatNumber(tank.volumeM3, 1)}
+                      </div>
                       <div className="text-xs text-muted-foreground">m³</div>
                     </div>
 
@@ -226,12 +360,16 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
                             <Thermometer className="h-3 w-3" />
                             Temp
                           </div>
-                          <div className="font-mono font-semibold text-foreground">{tank.tempC?.toFixed(1)}°C</div>
+                          <div className="font-mono font-semibold text-foreground">
+                            {formatNumber(tank.tempC, 1)}°C
+                          </div>
                         </div>
 
                         <div>
                           <div className="text-xs text-muted-foreground">SG</div>
-                          <div className="font-mono font-semibold text-foreground">{tank.sg?.toFixed(4)}</div>
+                          <div className="font-mono font-semibold text-foreground">
+                            {formatNumber(tank.sg, 4)}
+                          </div>
                         </div>
 
                         <div>
@@ -239,7 +377,9 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
                             <Droplets className="h-3 w-3" />
                             Water
                           </div>
-                          <div className="font-mono font-semibold text-foreground">{tank.waterCm?.toFixed(1)} cm</div>
+                          <div className="font-mono font-semibold text-foreground">
+                            {formatNumber(tank.waterCm, 1)} cm
+                          </div>
                         </div>
                       </>
                     )}
@@ -249,7 +389,7 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
             </TabsContent>
 
             <TabsContent value="active" className="space-y-3">
-              {MOCK_TANKS.filter((t) => t.status === "Active").map((tank) => (
+              {displayTanks.filter((t) => t.status === "Active").map((tank) => (
                 <div
                   key={tank.id}
                   className="flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-secondary transition-colors"
@@ -261,17 +401,21 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
                   <div className="grid grid-cols-4 gap-4 text-right">
                     <div>
                       <div className="text-xs text-muted-foreground">@20°C</div>
-                      <div className="font-mono font-semibold text-foreground">{tank.volAt20C.toFixed(1)} m³</div>
+                      <div className="font-mono font-semibold text-foreground">
+                        {formatNumber(tank.volAt20C, 1)} m³
+                      </div>
                     </div>
 
                     <div>
                       <div className="text-xs text-muted-foreground">Metric Tons</div>
-                      <div className="font-mono font-semibold text-foreground">{tank.mts.toFixed(1)} MT</div>
+                      <div className="font-mono font-semibold text-foreground">
+                        {formatNumber(tank.mts, 1)} MT
+                      </div>
                     </div>
 
                     <div>
                       <div className="text-xs text-muted-foreground">Level</div>
-                      <div className="font-mono font-semibold text-foreground">{tank.levelMm} mm</div>
+                      <div className="font-mono font-semibold text-foreground">{tank.levelMm || 0} mm</div>
                     </div>
 
                     <div>
@@ -285,7 +429,7 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
               ))}
             </TabsContent>
 
-            {userRole === "DOE" && (
+            {(userRole === "DOE" || userRole === "admin") && (
               <TabsContent value="details" className="space-y-3">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -301,15 +445,27 @@ export default function TankOverviewView({ stationId, dateRange, userRole }: Tan
                       </tr>
                     </thead>
                     <tbody>
-                      {MOCK_TANKS.filter((t) => t.status === "Active").map((tank) => (
+                      {displayTanks.filter((t) => t.status === "Active").map((tank) => (
                         <tr key={tank.id} className="border-b border-border hover:bg-secondary transition-colors">
                           <td className="p-2 font-medium text-foreground">{tank.name}</td>
-                          <td className="text-right p-2 font-mono text-foreground">{tank.volumeM3.toFixed(2)}</td>
-                          <td className="text-right p-2 font-mono text-foreground">{tank.volAt20C.toFixed(2)}</td>
-                          <td className="text-right p-2 font-mono text-foreground">{tank.tempC?.toFixed(1)}</td>
-                          <td className="text-right p-2 font-mono text-foreground">{tank.sg?.toFixed(4)}</td>
-                          <td className="text-right p-2 font-mono text-foreground">{tank.waterCm?.toFixed(1)}</td>
-                          <td className="text-right p-2 font-mono text-foreground">{tank.mts.toFixed(2)}</td>
+                          <td className="text-right p-2 font-mono text-foreground">
+                            {formatNumber(tank.volumeM3, 2)}
+                          </td>
+                          <td className="text-right p-2 font-mono text-foreground">
+                            {formatNumber(tank.volAt20C, 2)}
+                          </td>
+                          <td className="text-right p-2 font-mono text-foreground">
+                            {formatNumber(tank.tempC, 1)}
+                          </td>
+                          <td className="text-right p-2 font-mono text-foreground">
+                            {formatNumber(tank.sg, 4)}
+                          </td>
+                          <td className="text-right p-2 font-mono text-foreground">
+                            {formatNumber(tank.waterCm, 1)}
+                          </td>
+                          <td className="text-right p-2 font-mono text-foreground">
+                            {formatNumber(tank.mts, 2)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>

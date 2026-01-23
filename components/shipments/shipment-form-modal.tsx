@@ -64,7 +64,7 @@ export function ShipmentFormModal({
         estimated_day_of_arrival: shipmentEta,
         supplier: shipment.supplier ? String(shipment.supplier) : "",
         cargo_metric_tons: shipment.cargo_metric_tons ? Number(shipment.cargo_metric_tons) : 0,
-        status: shipment.status ? String(shipment.status) : "PENDING",
+        status: shipment.status || "PENDING",
         destination: shipment.destination ? String(shipment.destination) : "",
         notes: shipment.notes ? String(shipment.notes) : "",
       })
@@ -108,49 +108,51 @@ export function ShipmentFormModal({
           <DialogTitle>{mode === "create" ? "Create New Shipment" : "Edit Shipment"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="vessel_id">Vessel ID</Label>
-            <Input
-              id="vessel_id"
-              value={formData.vessel_id}
-              onChange={(e) => setFormData({ ...formData, vessel_id: e.target.value })}
-              placeholder="e.g., MV-12345"
-              disabled={isPending}
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="vessel_id">Vessel ID</Label>
+              <Input
+                id="vessel_id"
+                value={formData.vessel_id}
+                onChange={(e) => setFormData({ ...formData, vessel_id: e.target.value })}
+                placeholder="e.g., MV-12345"
+                disabled={isPending}
+              />
+            </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="supplier">Supplier</Label>
-            <Select 
-              value={formData.supplier} 
-              onValueChange={(value) => setFormData({ ...formData, supplier: value })}
-              disabled={isPending || suppliersLoading}
-            >
-              <SelectTrigger disabled={isPending || suppliersLoading}>
-                <SelectValue placeholder="Select a supplier" />
-              </SelectTrigger>
-              <SelectContent>
-                {suppliers.map((supplier) => (
-                  <SelectItem key={supplier.id} value={supplier.name}>
-                    {supplier.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="destination">Destination</Label>
-            <Input
-              id="destination"
-              value={formData.destination}
-              onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-              placeholder="e.g., Singapore Port"
-              disabled={isPending}
-            />
+            <div className="grid gap-2">
+              <Label htmlFor="supplier">Supplier</Label>
+              <Select 
+                value={formData.supplier} 
+                onValueChange={(value) => setFormData({ ...formData, supplier: value })}
+                disabled={isPending || suppliersLoading}
+              >
+                <SelectTrigger disabled={isPending || suppliersLoading}>
+                  <SelectValue placeholder="Select a supplier" />
+                </SelectTrigger>
+                <SelectContent>
+                  {suppliers.map((supplier) => (
+                    <SelectItem key={supplier.id} value={supplier.name}>
+                      {supplier.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="destination">Destination</Label>
+              <Input
+                id="destination"
+                value={formData.destination}
+                onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
+                placeholder="e.g., Singapore Port"
+                disabled={isPending}
+              />
+            </div>
+
             <div className="grid gap-2">
               <Label htmlFor="cargo">Cargo (MT)</Label>
               <Input
@@ -164,23 +166,51 @@ export function ShipmentFormModal({
             </div>
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="status">Status</Label>
-            <Select 
-              value={formData.status} 
-              onValueChange={(value: any) => setFormData({ ...formData, status: value })}
-              disabled={isPending}
-            >
-              <SelectTrigger disabled={isPending}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PENDING">Pending</SelectItem>
-                <SelectItem value="IN_TRANSIT">In Transit</SelectItem>
-                <SelectItem value="DISCHARGED">Discharged</SelectItem>
-                <SelectItem value="DELAYED">Delayed</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="status">Status</Label>
+              <Select 
+                value={formData.status} 
+                onValueChange={(value: any) => setFormData({ ...formData, status: value })}
+                disabled={isPending}
+              >
+                <SelectTrigger disabled={isPending}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="IN_TRANSIT">In Transit</SelectItem>
+                  <SelectItem value="DISCHARGED">Discharged</SelectItem>
+                  <SelectItem value="DELAYED">Delayed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="date">Shipment Date</Label>
+              <Input
+                id="date"
+                type="date"
+                value={formData.date.toISOString().split("T")[0]}
+                onChange={(e) => setFormData({ ...formData, date: new Date(e.target.value) })}
+                disabled={isPending}
+                lang="en-GB"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="eta">Estimated Arrival</Label>
+              <Input
+                id="eta"
+                type="date"
+                value={formData.estimated_day_of_arrival.toISOString().split("T")[0]}
+                onChange={(e) => setFormData({ ...formData, estimated_day_of_arrival: new Date(e.target.value) })}
+                disabled={isPending}
+                lang="en-GB"
+              />
+            </div>
           </div>
 
           <div className="grid gap-2">
@@ -192,31 +222,6 @@ export function ShipmentFormModal({
               placeholder="Add any additional notes"
               disabled={isPending}
             />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="date">Shipment Date (DD/MM/YYYY)</Label>
-              <Input
-                id="date"
-                type="date"
-                value={formData.date.toISOString().split("T")[0]}
-                onChange={(e) => setFormData({ ...formData, date: new Date(e.target.value) })}
-                disabled={isPending}
-                lang="en-GB"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="eta">Estimated Arrival (DD/MM/YYYY)</Label>
-              <Input
-                id="eta"
-                type="date"
-                value={formData.estimated_day_of_arrival.toISOString().split("T")[0]}
-                onChange={(e) => setFormData({ ...formData, estimated_day_of_arrival: new Date(e.target.value) })}
-                disabled={isPending}
-                lang="en-GB"
-              />
-            </div>
           </div>
         </div>
         <DialogFooter>
