@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link"
 import Image from "next/image"
 import { Menu, X, ChevronDown, Search, Bell, User } from "lucide-react"
@@ -26,8 +27,19 @@ export default function Navbar() {
   const [searchFocus, setSearchFocus] = useState(false)
   const [solutionOpen, setSolutionOpen] = useState(false)
   const [companyOpen, setCompanyOpen] = useState(false)
-    const [uploadOpen, setUploadOpen] = useState(false)
-    const router = useRouter()
+  const [uploadOpen, setUploadOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const router = useRouter(1)
+
+  const { data: session } = useSession()
+  const user = session?.user
+
+  const handleLogout = async () => {
+    const useLocalIP = typeof window !== "undefined" && (window.location.hostname === "192.168.0.223" || process.env.NEXT_PUBLIC_USE_LOCAL_REDIRECT === "1")
+    const callbackUrl = useLocalIP ? "http://192.168.0.223/auth/sign/" : "/auth/sign"
+    await signOut({ callbackUrl })
+    setUserMenuOpen(false)
+  }
 
   const solutions = [
     { name: "Tankage", desc: "Monitor and manage tank inventory levels", icon: "🛢️", href: "/Tanks" },
@@ -252,11 +264,57 @@ export default function Navbar() {
           </button> */}
 
           {/* User Menu */}
-          <button className="p-2.5 hover:bg-white/15 rounded-lg transition-colors">
-            <div className="w-9 h-9 bg-secondary/20 border border-secondary/40 rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-primary-foreground" />
-            </div>
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              className="p-2.5 hover:bg-white/15 rounded-lg transition-colors flex items-center gap-2"
+            >
+              <div className="w-9 h-9 bg-secondary/20 border border-secondary/40 rounded-full flex items-center justify-center">
+                {user?.avatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
+                ) : user?.name ? (
+                  <span className="text-sm font-semibold text-primary-foreground">
+                    {user.name
+                      .split(" ")
+                      .map((n: string) => n[0])
+                      .slice(0, 2)
+                      .join("")}
+                  </span>
+                ) : (
+                  <User className="w-5 h-5 text-primary-foreground" />
+                )}
+              </div>
+            </button>
+
+            {userMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white text-foreground rounded-lg shadow-xl z-50 border border-secondary/20 py-2">
+                {user ? (
+                  <>
+                    <div className="px-4 py-2 border-b border-secondary/10">
+                      <p className="font-semibold text-sm">{user.name}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        handleLogout()
+                        setUserMenuOpen(false)
+                      }}
+                      className="w-full text-left px-4 py-2 hover:bg-secondary/10 text-sm"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <div className="px-4 py-2">
+                    <Link href="/auth/signin" className="text-sm">
+                      Sign in
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
           <button 
             className="font-semibold px-6 py-2 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95"
