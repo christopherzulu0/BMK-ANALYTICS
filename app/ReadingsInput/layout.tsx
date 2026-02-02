@@ -27,7 +27,7 @@ const geistMono = localFont({
 
 export default async function ReadingsInputLayout({ children }: { children: React.ReactNode }) {
   // Require authentication for this layout
-  await requireAuth("DOE");
+  await requireAuth("dispatcher");
   return (
  
           <div className="flex-1 p-4 ">

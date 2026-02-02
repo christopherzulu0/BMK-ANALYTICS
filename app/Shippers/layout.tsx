@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { ShipmentProvider } from "@/components/shipments/shipment-context"
 import "./globals.css"
+import { requireAuth } from "@/lib/auth"
 
 
 export const metadata: Metadata = {
@@ -28,11 +29,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default function ShippersLayout({
+export default async function ShippersLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+   await requireAuth("dispatcher");
   return (
     <ShipmentProvider>
       <div className="font-sans antialiased">

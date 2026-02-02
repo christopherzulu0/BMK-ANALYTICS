@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import SplitWindowFrame from "@/components/split-window-frame"
+import { requireAuth } from "@/lib/auth"
 
-export default function SplitPage() {
+export default async function SplitPage() {
   const [windows, setWindows] = useState([
     { id: 1, title: "Shippers", route: "/Shippers" },
     { id: 2, title: "Tank Analysis", route: "/Tanks/Analysis" },
@@ -15,6 +16,7 @@ export default function SplitPage() {
     setWindows(windows.map((w) => (w.id === id ? { ...w, route, title } : w)))
   }
 
+   await requireAuth("dispatcher");
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
       {/* Header */}

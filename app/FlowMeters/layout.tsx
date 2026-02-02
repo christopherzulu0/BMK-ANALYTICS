@@ -27,7 +27,7 @@ const geistMono = localFont({
 
 export default async function FlowMetersLayout({ children }: { children: React.ReactNode }) {
   // Require authentication for this layout
-  await requireAuth("DOE");
+  await requireAuth("dispatcher");
   return (
   
     

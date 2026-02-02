@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './ruler.css'
+import { requireAuth } from "@/lib/auth"
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -10,7 +11,6 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: 'TAZAMA Pipeline Management System',
   description: 'Real-time monitoring and management of the TAZAMA pipeline infrastructure across Tanzania and Zambia',
-  generator: 'v0.app',
   icons: {
     icon: [
       {
@@ -30,11 +30,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  await requireAuth("dispatcher");
   return (
     
         <>

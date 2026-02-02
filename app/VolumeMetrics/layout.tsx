@@ -28,7 +28,7 @@ const geistMono = localFont({
 
 export default async function VolumeMetricsLayout({ children }: { children: React.ReactNode }) {
   // Require authentication for this layout
-  await requireAuth();
+  await requireAuth("dispatcher");
   return (
     <Providers>
             <div className="flex-1 p-4">
