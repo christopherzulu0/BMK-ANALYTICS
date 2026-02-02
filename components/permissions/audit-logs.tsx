@@ -14,7 +14,11 @@ import { Skeleton } from "@/components/ui/skeleton"
 type AuditLogType = {
   id: string
   timestamp: Date
-  user: string
+  user: {
+    id: number
+    name: string
+    email: string
+  } | string
   action: string
   resource: string
   details: string
@@ -51,7 +55,7 @@ export function AuditLogs({ limit }: { limit?: number }) {
   const params = new URLSearchParams()
   params.append("page", page.toString())
   params.append("pageSize", pageSize.toString())
-  
+
   if (searchQuery) params.append("search", searchQuery)
   if (actionFilter !== "all") params.append("action", actionFilter)
   if (statusFilter !== "all") params.append("status", statusFilter)
@@ -85,7 +89,7 @@ export function AuditLogs({ limit }: { limit?: number }) {
     try {
       const response = await fetch(`/api/audit-logs/export?${params}`)
       if (!response.ok) throw new Error("Export failed")
-      
+
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
@@ -108,8 +112,8 @@ export function AuditLogs({ limit }: { limit?: number }) {
         <p className="text-sm text-muted-foreground mt-2">
           {error instanceof Error ? error.message : "An unknown error occurred"}
         </p>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="mt-4"
           onClick={() => window.location.reload()}
         >
@@ -135,21 +139,21 @@ export function AuditLogs({ limit }: { limit?: number }) {
           ))
         ) : (
           logs.map((log) => (
-          <div key={log.id} className="flex items-start gap-4 pb-4 border-b last:border-0 last:pb-0">
-            <div className="mt-0.5">{statusIcons[log.status]}</div>
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">{log.action}</p>
+            <div key={log.id} className="flex items-start gap-4 pb-4 border-b last:border-0 last:pb-0">
+              <div className="mt-0.5">{statusIcons[log.status]}</div>
+              <div className="flex-1 space-y-1">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">{log.action}</p>
                   <span className="text-xs text-muted-foreground">
                     {format(new Date(log.timestamp), "MMM d, h:mm a")}
                   </span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium">{typeof log.user === 'string' ? log.user : log.user.name}</span> on <span className="font-medium">{log.resource}</span>
+                </p>
+                <p className="text-xs text-muted-foreground">{log.details}</p>
               </div>
-              <p className="text-sm text-muted-foreground">
-                <span className="font-medium">{log.user}</span> on <span className="font-medium">{log.resource}</span>
-              </p>
-              <p className="text-xs text-muted-foreground">{log.details}</p>
             </div>
-          </div>
           ))
         )}
       </div>
@@ -173,8 +177,8 @@ export function AuditLogs({ limit }: { limit?: number }) {
           />
         </div>
         <div className="flex flex-wrap gap-2">
-          <Select 
-            value={actionFilter} 
+          <Select
+            value={actionFilter}
             onValueChange={(value) => {
               setActionFilter(value)
               setPage(1) // Reset to first page when filter changes
@@ -193,8 +197,8 @@ export function AuditLogs({ limit }: { limit?: number }) {
             </SelectContent>
           </Select>
 
-          <Select 
-            value={statusFilter} 
+          <Select
+            value={statusFilter}
             onValueChange={(value) => {
               setStatusFilter(value)
               setPage(1) // Reset to first page when filter changes
@@ -212,9 +216,9 @@ export function AuditLogs({ limit }: { limit?: number }) {
             </SelectContent>
           </Select>
 
-          <DateRangePicker 
-            from={dateRange.from || undefined} 
-            to={dateRange.to || undefined} 
+          <DateRangePicker
+            from={dateRange.from || undefined}
+            to={dateRange.to || undefined}
             onSelect={(range) => {
               if (range) {
                 handleDateRangeChange({
@@ -222,7 +226,7 @@ export function AuditLogs({ limit }: { limit?: number }) {
                   to: range.to
                 })
               }
-            }} 
+            }}
           />
         </div>
       </div>
@@ -258,30 +262,32 @@ export function AuditLogs({ limit }: { limit?: number }) {
                 </tr>
               ) : (
                 logs.map((log) => (
-                <tr key={log.id} className="border-b transition-colors hover:bg-muted/50">
-                  <td className="p-4">{statusIcons[log.status]}</td>
+                  <tr key={log.id} className="border-b transition-colors hover:bg-muted/50">
+                    <td className="p-4">{statusIcons[log.status]}</td>
                     <td className="p-4 font-mono text-xs">
                       {format(new Date(log.timestamp), "yyyy-MM-dd HH:mm:ss")}
                     </td>
-                  <td className="p-4">{log.user}</td>
-                  <td className="p-4">
-                    <Badge
-                      variant={
-                        log.status === "success"
-                          ? "success"
-                          : log.status === "warning"
+                    <td className="p-4">
+                      {typeof log.user === 'string' ? log.user : log.user.name}
+                    </td>
+                    <td className="p-4">
+                      <Badge
+                        variant={
+                          log.status === "success"
+                            ? "default"
+                            : log.status === "warning"
                               ? "secondary"
-                            : log.status === "error"
-                              ? "destructive"
-                              : "secondary"
-                      }
-                    >
-                      {log.action}
-                    </Badge>
-                  </td>
-                  <td className="p-4">{log.resource}</td>
-                  <td className="p-4 text-muted-foreground">{log.details}</td>
-                </tr>
+                              : log.status === "error"
+                                ? "destructive"
+                                : "secondary"
+                        }
+                      >
+                        {log.action}
+                      </Badge>
+                    </td>
+                    <td className="p-4">{log.resource}</td>
+                    <td className="p-4 text-muted-foreground">{log.details}</td>
+                  </tr>
                 ))
               )}
             </tbody>
@@ -291,8 +297,8 @@ export function AuditLogs({ limit }: { limit?: number }) {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={page === 1 || isLoading}
             onClick={() => setPage(page - 1)}
@@ -302,8 +308,8 @@ export function AuditLogs({ limit }: { limit?: number }) {
           <span className="text-sm text-muted-foreground">
             Page {page} of {totalPages}
           </span>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             disabled={page === totalPages || isLoading}
             onClick={() => setPage(page + 1)}
@@ -312,19 +318,19 @@ export function AuditLogs({ limit }: { limit?: number }) {
           </Button>
         </div>
         <div className="flex gap-2">
-        <Button variant="outline" size="sm">
-          <Filter className="mr-2 h-4 w-4" />
-          Advanced Filters
-        </Button>
-          <Button 
-            variant="outline" 
+          <Button variant="outline" size="sm">
+            <Filter className="mr-2 h-4 w-4" />
+            Advanced Filters
+          </Button>
+          <Button
+            variant="outline"
             size="sm"
             onClick={handleExport}
             disabled={isLoading || logs.length === 0}
           >
-          <DownloadCloud className="mr-2 h-4 w-4" />
-          Export Logs
-        </Button>
+            <DownloadCloud className="mr-2 h-4 w-4" />
+            Export Logs
+          </Button>
         </div>
       </div>
     </div>

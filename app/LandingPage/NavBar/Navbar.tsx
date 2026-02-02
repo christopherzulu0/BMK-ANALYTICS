@@ -58,17 +58,17 @@ export default function Navbar() {
     { name: "Admin", href: "/admin" },
   ]
 
-    const uploads = [
+  const uploads = [
     { name: "Metric Tons", href: "/ManualUpload/MetricTons" },
     { name: "Readings", href: "/ManualUpload/Readings" },
- 
+
   ]
 
   return (
     <>
 
       {/* Desktop Navbar */}
-      <nav 
+      <nav
         className="hidden lg:flex items-center justify-between px-8 py-3 text-white shadow-lg sticky top-0 z-40"
         style={{
           background: 'linear-gradient(to right, #1e293b, #dc2626)'
@@ -101,31 +101,41 @@ export default function Navbar() {
             {solutionOpen && (
               <div className="absolute top-full left-0 mt-3 w-150 bg-white text-foreground rounded-xl shadow-2xl p-5 z-50 border border-secondary/20">
                 <div className="grid grid-cols-3 gap-6">
-                  {solutions.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setSolutionOpen(false)}
-                      className="p-4 rounded-lg hover:bg-secondary/15 transition-all duration-200 hover:shadow-md cursor-pointer"
-                    >
-                      <div className="flex items-start gap-3">
-                        <span className="text-2xl flex-shrink-0">{item.icon}</span>
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-900 hover:text-primary transition-colors">
-                            {item.name}
-                          </p>
-                          <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
+                  {solutions.map((item) => {
+                    const isDisabled = item.name === "Ruler Track";
+                    return (
+                      <Link
+                        key={item.name}
+                        href={isDisabled ? "#" : item.href}
+                        onClick={(e) => {
+                          if (isDisabled) e.preventDefault();
+                          setSolutionOpen(false);
+                        }}
+                        aria-disabled={isDisabled}
+                        className={`p-4 rounded-lg transition-all duration-200 ${isDisabled
+                          ? "opacity-50 cursor-not-allowed grayscale"
+                          : "hover:bg-secondary/15 hover:shadow-md cursor-pointer"
+                          }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <span className="text-2xl flex-shrink-0">{item.icon}</span>
+                          <div className="flex-1">
+                            <p className="font-semibold text-slate-900 transition-colors">
+                              {item.name}
+                            </p>
+                            <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             )}
           </div>
 
 
-         
+
 
           {/* Company Dropdown */}
           {/* <div className="relative">
@@ -163,14 +173,14 @@ export default function Navbar() {
 
 
 
- {/**Uploads Dropdown */}
-           
+          {/**Uploads Dropdown */}
+
           <div className="relative">
             <button
               onClick={() => setUploadOpen(!uploadOpen)}
               className="flex items-center gap-1 hover:opacity-90 transition-opacity font-medium px-4 py-2 rounded-md hover:bg-white/15"
             >
-             Uploads
+              Uploads
               <ChevronDown
                 className={`w-4 h-4 transition-transform duration-200 ${uploadOpen ? "rotate-180" : ""}`}
               />
@@ -316,14 +326,14 @@ export default function Navbar() {
             )}
           </div>
 
-          <button 
+          <button
             className="font-semibold px-6 py-2 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95"
             style={{
               backgroundColor: '#fbbf24',
               color: '#1e293b'
             }}
 
-            onClick={()=>router.push("/auth/register")}
+            onClick={() => router.push("/auth/register")}
           >
             Get Started
           </button>
@@ -331,7 +341,7 @@ export default function Navbar() {
       </nav>
 
       {/* Tablet Navbar (md to lg) */}
-      <nav 
+      <nav
         className="hidden md:flex lg:hidden items-center justify-between px-6 py-3 text-white shadow-lg sticky top-0 z-40"
         style={{
           background: 'linear-gradient(to right, #1e293b, #dc2626)'
@@ -361,7 +371,7 @@ export default function Navbar() {
           <button className="relative p-2 hover:bg-white/15 rounded-lg transition-colors">
             <Bell className="w-5 h-5" />
             {notificationCount > 0 && (
-              <span 
+              <span
                 className="text-xs"
                 style={{
                   position: 'absolute',
@@ -401,7 +411,7 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile Navbar */}
-      <nav 
+      <nav
         className="md:hidden flex items-center justify-between px-4 py-3 text-white shadow-lg sticky top-0 z-50"
         style={{
           background: 'linear-gradient(to right, #1e293b, #dc2626)'
@@ -431,7 +441,7 @@ export default function Navbar() {
           <button className="relative p-2 hover:bg-white/15 rounded transition-colors">
             <Bell className="w-5 h-5" />
             {notificationCount > 0 && (
-              <span 
+              <span
                 className="text-xs"
                 style={{
                   position: 'absolute',
@@ -485,16 +495,26 @@ export default function Navbar() {
             <div>
               <p className="font-bold text-sm mb-4 text-primary uppercase tracking-wide">Solutions</p>
               <div className="space-y-3 ml-2">
-                {solutions.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="block p-3 rounded-lg hover:bg-secondary/10 transition-colors"
-                  >
-                    <p className="font-semibold text-sm text-foreground">{item.name}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
-                  </Link>
-                ))}
+                {solutions.map((item) => {
+                  const isDisabled = item.name === "Ruler Track";
+                  return (
+                    <Link
+                      key={item.name}
+                      href={isDisabled ? "#" : item.href}
+                      aria-disabled={isDisabled}
+                      onClick={(e) => {
+                        if (isDisabled) e.preventDefault();
+                      }}
+                      className={`block p-3 rounded-lg transition-colors ${isDisabled
+                          ? "opacity-50 cursor-not-allowed grayscale bg-secondary/5"
+                          : "hover:bg-secondary/10"
+                        }`}
+                    >
+                      <p className="font-semibold text-sm text-foreground">{item.name}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
@@ -529,7 +549,7 @@ export default function Navbar() {
               <button className="w-full text-primary border-2 border-primary hover:bg-primary hover:text-primary-foreground bg-transparent py-2.5 rounded-lg font-bold transition-all duration-200">
                 Sign In
               </button>
-              <button 
+              <button
                 className="w-full font-bold py-2.5 rounded-lg transition-all duration-200"
                 style={{
                   backgroundColor: '#fbbf24',

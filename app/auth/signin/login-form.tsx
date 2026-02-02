@@ -79,9 +79,9 @@ export function LoginForm({
             if (session.user.role === "admin") {
                 router.push("/Root");
             } else if (session.user.role === "DOE") {
-                router.push("/Pipeline");
+                router.push("/Tanks");
             } else if (session.user.role === "dispatcher") {
-                router.push("/Dispatch");
+                router.push("/Tanks/Analysis");
             } else {
                 router.push("/");
             }
