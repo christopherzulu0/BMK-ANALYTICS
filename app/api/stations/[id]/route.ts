@@ -2,8 +2,9 @@
 import { NextResponse } from "next/server"
 import {prisma} from '@/lib/prisma';
 
-export async function PATCH(_req: Request, { params }: { params: { id: string } }) {
-    const id = params.id
+export async function PATCH(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
+    if (!id) return new NextResponse("Missing id", { status: 400 })
     const body = await _req.json().catch(() => ({}))
     const name = String(body?.name ?? "").trim()
     if (!name) return new NextResponse("Name is required", { status: 400 })
@@ -12,8 +13,9 @@ export async function PATCH(_req: Request, { params }: { params: { id: string } 
     return NextResponse.json(updated)
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-    const id = params.id
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params
+    if (!id) return new NextResponse("Missing id", { status: 400 })
     // Delete station and cascade entries by hand to be explicit
     await prisma.$transaction(async (tx) => {
         const entries = await tx.dailyEntry.findMany({ where: { stationId: id }, select: { id: true } })

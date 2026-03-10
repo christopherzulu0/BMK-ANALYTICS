@@ -305,7 +305,7 @@ export default function StationGrid({ onStationSelect, selectedStation, stations
       </div>
 
       {/* Quick Stats */}
-      <Card className="p-4 border-primary/20 bg-primary/5 sticky bottom-0">
+      {/* <Card className="p-4 border-primary/20 bg-primary/5 sticky bottom-0">
         <h3 className="font-semibold text-sm mb-3">Network Status</h3>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
@@ -325,7 +325,7 @@ export default function StationGrid({ onStationSelect, selectedStation, stations
             <span className="font-bold">Tanzania & Zambia</span>
           </div>
         </div>
-      </Card>
+      </Card> */}
 
       {/* Edit Dialog */}
       {editingStation && (

@@ -1,12 +1,6 @@
-import React from "react"
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
-import './ruler.css'
-import { requireAuth } from "@/lib/auth"
-
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+import { ThemeProvider } from '@/components/theme-provider'
+import { requireAuth } from '@/lib/auth';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'TAZAMA Pipeline Management System',
@@ -37,11 +31,8 @@ export default async function RootLayout({
 }>) {
   await requireAuth("dispatcher");
   return (
-    
-        <>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem forcedTheme="light">
         {children}
-        <Analytics />
-        </>
-   
+    </ThemeProvider>
   )
 }

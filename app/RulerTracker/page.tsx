@@ -256,7 +256,7 @@ export default function Home() {
               </TabsContent>
 
               {/* Flow Diagram Tab */}
-              <TabsContent value="flow" className="space-y-6 mt-0">
+              <TabsContent value="flow" className="space-y-6 mt-0 light">
                 <PipelineFlowVisualization selectedStation={selectedStation} />
                 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

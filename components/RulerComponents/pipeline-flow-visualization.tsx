@@ -46,6 +46,7 @@ interface PipelineStation {
   flow: number
   temp: number
   country: 'Zambia' | 'Tanzania'
+  tanks?: { id: string; status: 'in-use' | 'available' }[]
 }
 
 interface PigTracker {
@@ -69,7 +70,16 @@ interface ProductBatch {
 // Pipeline flows from Tanzania (KM 0 = Single Point Mooring) to Zambia (KM 1710 = Ndola)
 const pipelineStations: PipelineStation[] = [
   // Tanzania Section (Start - Source)
-  { id: 'spm', name: 'Single Point Mooring', shortName: 'SPM', type: 'Marine Terminal', km: 0, status: 'discharging', pressure: 58, flow: 2500, temp: 28, country: 'Tanzania' },
+  { id: 'spm', name: 'Single Point Mooring', shortName: 'SPM', type: 'Marine Terminal', km: 0, status: 'discharging', pressure: 58, flow: 2500, temp: 28, country: 'Tanzania',
+    tanks: [
+      { id: 'tank-1', status: 'in-use' },
+      { id: 'tank-2', status: 'in-use' },
+      { id: 'tank-3', status: 'available' },
+      { id: 'tank-4', status: 'available' },
+      { id: 'tank-5', status: 'available' },
+      { id: 'tank-6', status: 'available' },
+    ]
+  },
   { id: 'kigamboni-pump', name: 'Kigamboni Pump Station', shortName: 'Kigamboni PS', type: 'Pump Station', km: 25, status: 'active', pressure: 55, flow: 2450, temp: 27, country: 'Tanzania' },
   { id: 'chamakweza', name: 'Chamakweza Pig Trap', shortName: 'Chamakweza', type: 'Pig Trap', km: 85, status: 'idle', pressure: 52, flow: 2380, temp: 26, country: 'Tanzania' },
   { id: 'morogoro', name: 'Morogoro Pump Station', shortName: 'Morogoro PS', type: 'Pump Station', km: 195, status: 'active', pressure: 50, flow: 2300, temp: 29, country: 'Tanzania' },
@@ -161,6 +171,8 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
   const [showControls, setShowControls] = useState(false)
   const [animationOffset, setAnimationOffset] = useState(0)
   const [selectedYear, setSelectedYear] = useState(2024)
+  const [currentKm, setCurrentKm] = useState(0)
+  const [highlightedStationName, setHighlightedStationName] = useState<string | null>(null)
   const [pigs, setPigs] = useState<PigTracker[]>([
     { id: 'pig-1', name: 'Cleaning Pig #1', position: 300, speed: 8, type: 'cleaning', launched: new Date(Date.now() - 1000 * 60 * 60 * 8) },
     { id: 'pig-2', name: 'Inspection Pig #2', position: 950, speed: 5, type: 'inspection', launched: new Date(Date.now() - 1000 * 60 * 60 * 4) },
@@ -171,7 +183,22 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
     if (!isPlaying) return
     
     const interval = setInterval(() => {
-      setAnimationOffset(prev => (prev + flowSpeed[0] / 25) % 100)
+      setAnimationOffset(prev => {
+        const newOffset = (prev + flowSpeed[0] / 25) % 100
+        const newCurrentKm = (newOffset / 100) * TOTAL_LENGTH
+        setCurrentKm(newCurrentKm)
+
+        // Determine highlighted station
+        const reachedStation = pipelineStations.slice().reverse().find(station => station.km <= newCurrentKm)
+        if (reachedStation && reachedStation.name !== highlightedStationName) {
+          setHighlightedStationName(reachedStation.name)
+          onStationSelect?.(reachedStation.name)
+        } else if (!reachedStation && highlightedStationName !== null) {
+          setHighlightedStationName(null)
+          onStationSelect?.('')
+        }
+        return newOffset
+      })
       
       setPigs(prev => prev.map(pig => ({
         ...pig,
@@ -180,7 +207,7 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
     }, 50)
     
     return () => clearInterval(interval)
-  }, [isPlaying, flowSpeed])
+  }, [isPlaying, flowSpeed, highlightedStationName, onStationSelect])
 
   const launchPig = (type: 'cleaning' | 'inspection') => {
     setPigs(prev => [...prev, {
@@ -381,7 +408,7 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
         )}
 
         {/* Flow Direction Header */}
-        <div className="flex items-center justify-center gap-3 mb-4 py-2 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4 py-2 px-4 bg-muted/30 rounded-lg">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-orange-500" />
             <span className="text-sm font-medium">Single Point Mooring</span>
@@ -396,6 +423,12 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
             <Badge variant="outline" className="text-[10px] h-5">Zambia</Badge>
             <span className="text-sm font-medium">Ndola Terminal</span>
             <div className="w-3 h-3 rounded-full bg-cyan-500" />
+          </div>
+          <div className="flex items-center gap-2 ml-4">
+            <span className="text-sm font-medium text-muted-foreground">Progress:</span>
+            <Badge variant="secondary" className="text-sm font-bold">
+              {currentKm.toFixed(0)} KM / {TOTAL_LENGTH} KM ({((currentKm / TOTAL_LENGTH) * 100).toFixed(1)}%)
+            </Badge>
           </div>
         </div>
 
@@ -608,6 +641,25 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
                       </div>
                       <Badge variant="secondary" className="text-[10px] shrink-0 capitalize">{activeStation.status}</Badge>
                     </div>
+                    
+                    {activeStation.id === 'spm' && activeStation.tanks && (
+                      <div className="flex flex-col items-center mt-2">
+                        <span className="text-[9px] text-muted-foreground mb-1">Tanks:</span>
+                        <div className="flex gap-1">
+                          {activeStation.tanks.map((tank, index) => (
+                            <Badge
+                              key={tank.id}
+                              className={cn(
+                                "h-4 px-1 text-[9px]",
+                                tank.status === 'in-use' ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+                              )}
+                            >
+                              {index + 1}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     
                     <div className="grid grid-cols-3 gap-2">
                       <div className="bg-muted rounded p-2 text-center">

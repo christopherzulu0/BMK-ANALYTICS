@@ -56,7 +56,9 @@ import {
     Droplet,
     Factory,
     Thermometer,
-    Package, ViewIcon,
+    Package, 
+    ViewIcon,
+    Calendar as CalendarIcon
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
@@ -77,11 +79,11 @@ import {
   saveEntry as apiSaveEntry,
   listStations as apiListStations,
   createStation as apiCreateStation,
-  renameStation as apiRenameStation,
   deleteStation as apiDeleteStation,
   listEntryHistory as apiListEntryHistory,
 } from "@/lib/api"
 import {TankVisualization} from "@/components/tank-visualization";
+import { ChangeDateDialog } from "@/components/change-date-dialog"
 
 type TankStatus = "Active" | "Rehabilitation"
 
@@ -157,9 +159,9 @@ export default function Page() {
   const [openForm, setOpenForm] = useState(false)
   const [editing, setEditing] = useState<Tank | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<Tank | null>(null)
-  const [showRefs, setShowRefs] = useState(false)
   const [manageStationsOpen, setManageStationsOpen] = useState(false)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [changeDateOpen, setChangeDateOpen] = useState(false)
 
   const [query, setQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<TankStatus | "All">("All")
@@ -380,20 +382,20 @@ export default function Page() {
     }
   }
 
-  function copyFromPrevious() {
-    const entries = Object.entries(dataMap[stationId] || {})
-      .filter(([d]) => d < date)
-      .sort((a, b) => (a[0] > b[0] ? -1 : 1))
-    if (entries.length) {
-      const prevData = entries[0][1]
-      setTanks(prevData.tanks.map((t) => ({ ...t, id: uid() })))
-      setSummary({ ...prevData.summary })
-      setRemarks([...prevData.remarks])
-      toast({ title: "Copied from previous day", description: entries[0][0] })
-    } else {
-      toast({ title: "No previous day found", variant: "destructive" as any })
-    }
-  }
+  // function copyFromPrevious() {
+  //   const entries = Object.entries(dataMap[stationId] || {})
+  //     .filter(([d]) => d < date)
+  //     .sort((a, b) => (a[0] > b[0] ? -1 : 1))
+  //   if (entries.length) {
+  //     const prevData = entries[0][1]
+  //     setTanks(prevData.tanks.map((t) => ({ ...t, id: uid() })))
+  //     setSummary({ ...prevData.summary })
+  //     setRemarks([...prevData.remarks])
+  //     toast({ title: "Copied from previous day", description: entries[0][0] })
+  //   } else {
+  //     toast({ title: "No previous day found", variant: "destructive" as any })
+  //   }
+  // }
 
   function exportCSV() {
     const header = ["name", "status", "levelMm", "volumeM3", "waterCm", "sg", "tempC", "volAt20C", "mts"].join(",")
@@ -577,6 +579,10 @@ export default function Page() {
                       {/*</div>*/}
 
                       <div className="flex gap-2">
+                        <Button className="flex-1 bg-transparent" variant="outline" onClick={() => setChangeDateOpen(true)}>
+                          <CalendarIcon className="h-4 w-4 mr-2" />
+                          Change Date
+                        </Button>
                         <Button className="flex-1 bg-transparent" variant="outline" onClick={exportCSV}>
                           <Download className="mr-2 h-4 w-4" />
                           Export
@@ -640,6 +646,10 @@ export default function Page() {
                   {/*  {showRefs ? "Hide references" : "Show references"}*/}
                   {/*</DropdownMenuItem>*/}
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setChangeDateOpen(true)}>
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    Change Date
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={exportCSV}>
                     <Download className="mr-2 h-4 w-4" />
                     Export CSV
@@ -916,16 +926,17 @@ export default function Page() {
                   <CardTitle>Update Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
+                    <FieldNumber
+                    label="Kigamboni Discharge (m3)"
+                    value={summary.kigamboniDischargeM3}
+                    onChange={(v) => setSummary({ ...summary, kigamboniDischargeM3: v })}
+                  />
                   <FieldNumber
                     label="T/Farm Discharge (m3)"
                     value={summary.tfarmDischargeM3}
                     onChange={(v) => setSummary({ ...summary, tfarmDischargeM3: v })}
                   />
-                  <FieldNumber
-                    label="Kigamboni Discharge (m3)"
-                    value={summary.kigamboniDischargeM3}
-                    onChange={(v) => setSummary({ ...summary, kigamboniDischargeM3: v })}
-                  />
+                
                   <FieldNumber
                     label="Net Delivery @ 20C (m3)"
                     value={summary.netDeliveryM3At20C}
@@ -1048,16 +1059,6 @@ export default function Page() {
             </TabsContent>
         </Tabs>
 
-
-        {showRefs && (
-          <section className="mt-6 space-y-4">
-            <h3 className="font-semibold text-lg">Reference Screenshots</h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              <ReferenceImage src="/images/tank-d1.png" alt="Tankfarm Data page 1 reference" />
-              <ReferenceImage src="/images/tank-d2.png" alt="Tankfarm Data page 2 reference" />
-            </div>
-          </section>
-        )}
 
         <TankFormDialog
           key={editing ? editing.id : "new"}
@@ -1190,6 +1191,19 @@ export default function Page() {
         >
           <Plus className="h-6 w-6" />
         </Button>
+
+        <ChangeDateDialog 
+          open={changeDateOpen} 
+          onOpenChange={setChangeDateOpen} 
+          stationId={stationId}
+          currentDate={date}
+          onSuccess={(newDate) => {
+            // Because we only have a date string state in this component, we update the state.
+            const dateStr = newDate.toISOString().slice(0, 10)
+            setDate(dateStr)
+            // Changing `date` will trigger the useEffect inside this component to fetch new data
+          }}
+        />
       </div>
     </main>
   )
