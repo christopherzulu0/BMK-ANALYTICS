@@ -1,0 +1,565 @@
+
+> pipeline-data@0.1.0 build
+> next build
+
+ΓÜá `images.domains` is deprecated in favor of `images.remotePatterns`. Please update next.config.mjs to protect your application from malicious users.
+ΓÜá Invalid next.config.mjs options detected: 
+ΓÜá     Unrecognized key(s) in object: 'serverComponentsExternalPackages'
+ΓÜá See more info here: https://nextjs.org/docs/messages/invalid-next-config
+Γû▓ Next.js 16.1.4 (Turbopack)
+- Environments: .env
+- Experiments (use with caution):
+  ┬╖ cpus: 2
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 8 errors:
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js:8:37
+Module not found: Can't resolve 'dgram'
+   6 | exports.sendInParallel = sendInParallel;
+   7 | exports.sendMessage = sendMessage;
+>  8 | var _dgram = _interopRequireDefault(require("dgram"));
+     |                                     ^^^^^^^^^^^^^^^^
+   9 | var _net = _interopRequireDefault(require("net"));
+  10 | var _nodeUrl = _interopRequireDefault(require("node:url"));
+  11 | function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js:11:35
+Module not found: Can't resolve 'dns'
+   9 | var tls = _interopRequireWildcard(require("tls"));
+  10 | var net = _interopRequireWildcard(require("net"));
+> 11 | var _dns = _interopRequireDefault(require("dns"));
+     |                                   ^^^^^^^^^^^^^^
+  12 | var _constants = _interopRequireDefault(require("constants"));
+  13 | var _stream = require("stream");
+  14 | var _identity = require("@azure/identity");
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js:8:35
+Module not found: Can't resolve 'dns'
+   6 | exports.instanceLookup = instanceLookup;
+   7 | exports.parseBrowserResponse = parseBrowserResponse;
+>  8 | var _dns = _interopRequireDefault(require("dns"));
+     |                                   ^^^^^^^^^^^^^^
+   9 | var _sender = require("./sender");
+  10 | function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+  11 | const SQL_SERVER_BROWSER_PORT = 1434;
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js:10:35
+Module not found: Can't resolve 'net'
+   8 | var _os = _interopRequireDefault(require("os"));
+   9 | var tls = _interopRequireWildcard(require("tls"));
+> 10 | var net = _interopRequireWildcard(require("net"));
+     |                                   ^^^^^^^^^^^^^^
+  11 | var _dns = _interopRequireDefault(require("dns"));
+  12 | var _constants = _interopRequireDefault(require("constants"));
+  13 | var _stream = require("stream");
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connector.js:9:35
+Module not found: Can't resolve 'net'
+   7 | exports.connectInSequence = connectInSequence;
+   8 | exports.lookupAllAddresses = lookupAllAddresses;
+>  9 | var _net = _interopRequireDefault(require("net"));
+     |                                   ^^^^^^^^^^^^^^
+  10 | var _nodeUrl = _interopRequireDefault(require("node:url"));
+  11 | function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+  12 | async function connectInParallel(options, lookup, signal) {
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connector.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connector.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connector.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connector.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js:9:35
+Module not found: Can't resolve 'net'
+   7 | exports.sendMessage = sendMessage;
+   8 | var _dgram = _interopRequireDefault(require("dgram"));
+>  9 | var _net = _interopRequireDefault(require("net"));
+     |                                   ^^^^^^^^^^^^^^
+  10 | var _nodeUrl = _interopRequireDefault(require("node:url"));
+  11 | function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+  12 | async function sendInParallel(addresses, port, request, signal) {
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/sender.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/instance-lookup.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js:9:35
+Module not found: Can't resolve 'tls'
+   7 | var _crypto = _interopRequireDefault(require("crypto"));
+   8 | var _os = _interopRequireDefault(require("os"));
+>  9 | var tls = _interopRequireWildcard(require("tls"));
+     |                                   ^^^^^^^^^^^^^^
+  10 | var net = _interopRequireWildcard(require("net"));
+  11 | var _dns = _interopRequireDefault(require("dns"));
+  12 | var _constants = _interopRequireDefault(require("constants"));
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/message-io.js:8:35
+Module not found: Can't resolve 'tls'
+   6 | exports.default = void 0;
+   7 | var _nativeDuplexpair = _interopRequireDefault(require("native-duplexpair"));
+>  8 | var tls = _interopRequireWildcard(require("tls"));
+     |                                   ^^^^^^^^^^^^^^
+   9 | var _events = require("events");
+  10 | var _message = _interopRequireDefault(require("./message"));
+  11 | var _packet = require("./packet");
+
+
+
+Import traces:
+  App Route:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/message-io.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/Root/Pipeline/route.ts
+
+  Server Component:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/message-io.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs
+    ./lib/prisma.ts
+    ./app/api/auth/[...nextauth]/route.ts
+    ./lib/auth.ts
+    ./app/Density/layout.tsx
+
+  Client Component Browser:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/message-io.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component Browser]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component Browser]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component Browser]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component Browser]
+    ./lib/prisma.ts [Client Component Browser]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component Browser]
+    ./lib/auth.ts [Client Component Browser]
+    ./app/split/page.tsx [Client Component Browser]
+    ./app/split/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/message-io.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/connection.js [Client Component SSR]
+    ./node_modules/.pnpm/tedious@19.2.0/node_modules/tedious/lib/tedious.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/request.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/lib/tedious/index.js [Client Component SSR]
+    ./node_modules/.pnpm/mssql@12.2.0/node_modules/mssql/index.js [Client Component SSR]
+    ./node_modules/.pnpm/@prisma+adapter-mssql@7.3.0/node_modules/@prisma/adapter-mssql/dist/index.mjs [Client Component SSR]
+    ./lib/prisma.ts [Client Component SSR]
+    ./app/api/auth/[...nextauth]/route.ts [Client Component SSR]
+    ./lib/auth.ts [Client Component SSR]
+    ./app/split/page.tsx [Client Component SSR]
+    ./app/split/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

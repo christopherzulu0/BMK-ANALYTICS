@@ -2,53 +2,61 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
+import { format, differenceInDays } from "date-fns"
 
 export function ShipmentGanttView() {
-  // Mock shipment data with timeline info
-  const shipments = [
-    {
-      id: 1,
-      vessel: "MV Pacific Explorer",
-      supplier: "Global Logistics Inc",
-      cargo: 2400,
-      status: "IN_TRANSIT",
-      progress: 65,
-      startDate: new Date(2025, 0, 5),
-      estimatedArrival: new Date(2025, 0, 20),
-      destination: "Singapore Port",
-    },
-    {
-      id: 2,
-      vessel: "MV Nordic Star",
-      supplier: "Trans-Ocean Shipping",
-      cargo: 1800,
-      status: "IN_TRANSIT",
-      progress: 42,
-      startDate: new Date(2025, 0, 8),
-      estimatedArrival: new Date(2025, 0, 25),
-      destination: "Rotterdam Port",
-    },
-    {
-      id: 3,
-      vessel: "MV Ocean Dawn",
-      supplier: "Asia Cargo Partners",
-      cargo: 3200,
-      status: "PENDING",
-      progress: 0,
-      startDate: new Date(2025, 0, 12),
-      estimatedArrival: new Date(2025, 1, 5),
-      destination: "Dubai Port",
-    },
-  ]
+  const { data: shipments = [], isLoading, isError } = useQuery({
+    queryKey: ['shipments'],
+    queryFn: async () => {
+      const { data } = await axios.get('/api/shipments')
+      return data
+    }
+  })
 
-  const getStatusColor = (status) => {
-    const colors = {
-      PENDING: "bg-gray-200",
+  // Normalize mapping to match the UI values defined in the mock data, if different from the DB
+  const getStatusColor = (status: string) => {
+    // API returns values like 'Completed', 'In Transit', 'Pending'
+    // Map them to what the UI is expecting if needed, or update DB values
+    const normalizedStatus = status?.toUpperCase().replace(' ', '_')
+    
+    const colors: Record<string, string> = {
+      PENDING: "bg-gray-400",
       IN_TRANSIT: "bg-blue-500",
+      COMPLETED: "bg-green-500", // In DB it seems to be Completed, not Discharged
       DISCHARGED: "bg-green-500",
       DELAYED: "bg-red-500",
     }
-    return colors[status] || "bg-gray-300"
+    return colors[normalizedStatus] || "bg-gray-300"
+  }
+
+  const getProgress = (startDateStr: string, endDateStr: string, status: string) => {
+    if (status?.toUpperCase() === 'COMPLETED' || status?.toUpperCase() === 'DISCHARGED') return 100
+    if (status?.toUpperCase() === 'PENDING') return 0
+
+    const startDate = new Date(startDateStr)
+    const endDate = new Date(endDateStr)
+    const today = new Date()
+
+    const totalDays = differenceInDays(endDate, startDate)
+    if (totalDays <= 0) return 100 // Avoid division by zero, assume done
+    
+    const daysPassed = differenceInDays(today, startDate)
+    
+    if (daysPassed <= 0) return 0
+    if (daysPassed >= totalDays) return 100
+    
+    const percentage = Math.round((daysPassed / totalDays) * 100)
+    return Math.min(Math.max(percentage, 0), 100)
+  }
+
+  const getBadgeVariant = (status: string) => {
+    const normalizedStatus = status?.toUpperCase().replace(' ', '_')
+    if (normalizedStatus === "DELAYED") return "destructive"
+    if (normalizedStatus === "COMPLETED" || normalizedStatus === "DISCHARGED") return "default" // or success if you have it
+    if (normalizedStatus === "IN_TRANSIT") return "default"
+    return "secondary"
   }
 
   return (
@@ -58,35 +66,48 @@ export function ShipmentGanttView() {
         <p className="text-sm text-gray-600 mt-1">Real-time vessel and cargo progress</p>
       </CardHeader>
       <CardContent className="space-y-6">
-        {shipments.map((shipment) => (
-          <div key={shipment.id} className="space-y-2" onMouseEnter={() => console.log(shipment)}>
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-semibold text-sm text-gray-900">{shipment.vessel}</p>
-                <p className="text-xs text-gray-500">
-                  {shipment.supplier} → {shipment.destination}
-                </p>
+        {isLoading && <p className="text-sm text-gray-500">Loading shipments...</p>}
+        {isError && <p className="text-sm text-red-500">Failed to load shipments.</p>}
+        
+        {!isLoading && !isError && shipments.length === 0 && (
+          <p className="text-sm text-gray-500">No active shipments found.</p>
+        )}
+
+        {shipments.map((shipment: any) => {
+          const progress = getProgress(shipment.date, shipment.estimated_day_of_arrival, shipment.status)
+          
+          return (
+            <div key={shipment.id} className="space-y-2">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-semibold text-sm text-gray-900">{shipment.vessel_id || 'Unknown Vessel'}</p>
+                  <p className="text-xs text-gray-500">
+                    {shipment.supplier} &rarr; {shipment.destination || 'Unspecified'}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <Badge variant={getBadgeVariant(shipment.status)}>
+                    {shipment.status}
+                  </Badge>
+                  <p className="text-xs text-gray-600 mt-1">{shipment.cargo_metric_tons} MT</p>
+                </div>
               </div>
-              <div className="text-right">
-                <Badge variant={shipment.status === "DELAYED" ? "destructive" : "secondary"}>{shipment.status}</Badge>
-                <p className="text-xs text-gray-600 mt-1">{shipment.cargo} MT</p>
+              {/* Gantt Bar */}
+              <div className="relative h-6 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className={`${getStatusColor(shipment.status)} h-full flex items-center justify-center text-white text-xs font-semibold transition-all duration-500`}
+                  style={{ width: `${progress}%` }}
+                >
+                  {progress > 15 && `${progress}%`}
+                </div>
+              </div>
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>Start: {shipment.date ? format(new Date(shipment.date), 'MMM dd, yyyy') : 'N/A'}</span>
+                <span>ETA: {shipment.estimated_day_of_arrival ? format(new Date(shipment.estimated_day_of_arrival), 'MMM dd, yyyy') : 'N/A'}</span>
               </div>
             </div>
-            {/* Gantt Bar */}
-            <div className="relative h-6 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className={`${getStatusColor(shipment.status)} h-full flex items-center justify-center text-white text-xs font-semibold transition-all`}
-                style={{ width: `${shipment.progress}%` }}
-              >
-                {shipment.progress > 15 && `${shipment.progress}%`}
-              </div>
-            </div>
-            <div className="flex justify-between text-xs text-gray-500">
-              <span>Start: {shipment.startDate.toLocaleDateString()}</span>
-              <span>ETA: {shipment.estimatedArrival.toLocaleDateString()}</span>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </CardContent>
     </Card>
   )
