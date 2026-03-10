@@ -31,6 +31,7 @@ import OurValues from "./components/OurValues"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import InteractiveMap from "./components/InterativeMap"
 import Navbar from "./NavBar/Navbar"
+import TabsWithBadge from "./components/MapsTab"
 
 // NOTE: If you see module not found errors for 'framer-motion', 'recharts', 'lucide-react', or '@tanstack/react-query', install them with npm or yarn.
 // npm install framer-motion recharts lucide-react @tanstack/react-query
@@ -524,7 +525,10 @@ export default function Home() {
                 </motion.section>
 
                 {/* Interactive Pipeline Map */}
-                <InteractiveMap/>
+                {/* <InteractiveMap/> */}
+
+                {/**MAPS TAB */}
+                <TabsWithBadge/>
             </main>
         </div>
     )

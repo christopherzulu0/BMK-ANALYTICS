@@ -10,7 +10,7 @@ export default function InteractiveMap() {
                 transition={{ delay: 1.4 }}
                 className="mb-12"
             >
-                <h2 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-center">Interactive Pipeline Map</h2>
+              
                 <Card className="p-2 sm:p-4">
                     <div className="relative w-full" style={{ paddingBottom: "64%" }}>
                         <iframe
