@@ -690,17 +690,18 @@ export default function Page() {
         </header>
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6 ">
-          <SummaryCard
-            title="T/Farm Discharge"
-            value={`${formatNumber(summary.tfarmDischargeM3)} m3`}
-            icon={<Droplet className="h-4 w-4" />}
-            color="from-emerald-500/15 to-emerald-500/0"
-          />
+        
           <SummaryCard
             title="Kigamboni Discharge"
             value={`${formatNumber(summary.kigamboniDischargeM3)} m3`}
             icon={<Factory className="h-4 w-4" />}
             color="from-amber-500/20 to-amber-500/0"
+          />
+            <SummaryCard
+            title="T/Farm Discharge"
+            value={`${formatNumber(summary.tfarmDischargeM3)} m3`}
+            icon={<Droplet className="h-4 w-4" />}
+            color="from-emerald-500/15 to-emerald-500/0"
           />
           <SummaryCard
             title="Net Delivery @ 20C"
