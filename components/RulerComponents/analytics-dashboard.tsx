@@ -4,24 +4,24 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { TrendingUp, TrendingDown, BarChart3, PieChartIcon } from 'lucide-react'
-import type { Station } from '@/app/page'
+import { Facility } from './station-grid'
 
 interface AnalyticsDashboardProps {
-  stations: Station[]
+  stations: Facility[]
 }
 
 export default function AnalyticsDashboard({ stations }: AnalyticsDashboardProps) {
   // Calculate stats by type
   const typeStats = stations.reduce((acc, station) => {
-    const type = station.type
+    const type = station.type || 'Unknown'
     if (!acc[type]) {
       acc[type] = { count: 0, avgPressure: 0, avgFlow: 0, avgTemp: 0, online: 0 }
     }
     acc[type].count++
-    acc[type].avgPressure += station.pressure
-    acc[type].avgFlow += station.flow
-    acc[type].avgTemp += station.temp
-    if (station.status === 'online') acc[type].online++
+    acc[type].avgPressure += (station.pressure || 0)
+    acc[type].avgFlow += (station.flow || 0)
+    acc[type].avgTemp += (station.temp || 0)
+    if (station.status === 'active' || station.status === 'idle') acc[type].online++
     return acc
   }, {} as Record<string, { count: number; avgPressure: number; avgFlow: number; avgTemp: number; online: number }>)
 
@@ -55,21 +55,21 @@ export default function AnalyticsDashboard({ stations }: AnalyticsDashboardProps
     {
       country: 'Zambia',
       stations: zambiaStations.length,
-      avgFlow: Math.round(zambiaStations.reduce((acc, s) => acc + s.flow, 0) / zambiaStations.length),
-      online: zambiaStations.filter(s => s.status === 'online').length,
+      avgFlow: zambiaStations.length > 0 ? Math.round(zambiaStations.reduce((acc, s) => acc + (s.flow || 0), 0) / zambiaStations.length) : 0,
+      online: zambiaStations.filter(s => s.status === 'active' || s.status === 'idle').length,
     },
     {
       country: 'Tanzania',
       stations: tanzaniaStations.length,
-      avgFlow: Math.round(tanzaniaStations.reduce((acc, s) => acc + s.flow, 0) / tanzaniaStations.length),
-      online: tanzaniaStations.filter(s => s.status === 'online').length,
+      avgFlow: tanzaniaStations.length > 0 ? Math.round(tanzaniaStations.reduce((acc, s) => acc + (s.flow || 0), 0) / tanzaniaStations.length) : 0,
+      online: tanzaniaStations.filter(s => s.status === 'active' || s.status === 'idle').length,
     },
   ]
 
   // Performance metrics
-  const totalFlow = stations.reduce((acc, s) => acc + s.flow, 0)
-  const avgPressure = stations.reduce((acc, s) => acc + s.pressure, 0) / stations.length
-  const efficiency = (stations.filter(s => s.status === 'online').length / stations.length) * 100
+  const totalFlow = stations.reduce((acc, s) => acc + (s.flow || 0), 0)
+  const avgPressure = stations.length > 0 ? stations.reduce((acc, s) => acc + (s.pressure || 0), 0) / stations.length : 0
+  const efficiency = stations.length > 0 ? (stations.filter(s => s.status === 'active' || s.status === 'idle').length / stations.length) * 100 : 0
 
   return (
     <Card className="p-6">

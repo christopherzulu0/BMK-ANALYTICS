@@ -29,7 +29,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  await requireAuth("dispatcher");
+  // await requireAuth("dispatcher");
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem forcedTheme="light">
         {children}

@@ -5,25 +5,21 @@ import { Progress } from '@/components/ui/progress'
 import { Activity, Cpu, Database, Wifi, Gauge, Thermometer, Droplets, TrendingUp, TrendingDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+import { Facility } from './station-grid'
+
 interface SystemHealthProps {
-  stations: {
-    id: number
-    status: 'online' | 'warning'
-    pressure: number
-    flow: number
-    temp: number
-  }[]
+  stations: Facility[]
 }
 
 export default function SystemHealth({ stations }: SystemHealthProps) {
-  const onlineCount = stations.filter(s => s.status === 'online').length
+  const onlineCount = stations.filter(s => s.status === 'active' || s.status === 'idle').length
   const warningCount = stations.filter(s => s.status === 'warning').length
-  const uptime = ((onlineCount / stations.length) * 100).toFixed(1)
+  const uptime = stations.length > 0 ? ((onlineCount / stations.length) * 100).toFixed(1) : "0.0"
 
-  const avgPressure = stations.reduce((acc, s) => acc + s.pressure, 0) / stations.length
-  const avgFlow = stations.reduce((acc, s) => acc + s.flow, 0) / stations.length
-  const avgTemp = stations.reduce((acc, s) => acc + s.temp, 0) / stations.length
-  const totalFlow = stations.reduce((acc, s) => acc + s.flow, 0)
+  const avgPressure = stations.length > 0 ? stations.reduce((acc, s) => acc + (s.pressure || 0), 0) / stations.length : 0
+  const avgFlow = stations.length > 0 ? stations.reduce((acc, s) => acc + (s.flow || 0), 0) / stations.length : 0
+  const avgTemp = stations.length > 0 ? stations.reduce((acc, s) => acc + (s.temp || 0), 0) / stations.length : 0
+  const totalFlow = stations.reduce((acc, s) => acc + (s.flow || 0), 0)
 
   const metrics = [
     {

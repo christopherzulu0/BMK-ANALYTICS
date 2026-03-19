@@ -1,8 +1,9 @@
 'use client'
 
+import React from "react"
 import PipelineNetwork from '@/components/RulerComponents/pipeline-network'
 import PipelineFlowVisualization from '@/components/RulerComponents/pipeline-flow-visualization'
-import StationGrid from '@/components/RulerComponents/station-grid'
+import StationGrid, { Facility } from '@/components/RulerComponents/station-grid'
 import Header from '@/components/RulerComponents/header'
 import Sidebar from '@/components/RulerComponents/sidebar'
 import AlertsPanel from '@/components/RulerComponents/alerts-panel'
@@ -24,43 +25,10 @@ import LeakDetection from '@/components/RulerComponents/leak-detection'
 import type { Alert } from '@/components/RulerComponents/alerts-panel'
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
-export interface Station {
-  id: number
-  name: string
-  country: string
-  type: string
-  status: 'online' | 'warning'
-  pressure: number
-  flow: number
-  temp: number
-  km: number
-}
-
-const initialStations: Station[] = [
-  // Zambia Stations
-  { id: 1, name: 'Bwana Mkubwa Terminal', country: 'Zambia', type: 'Terminal', status: 'online', pressure: 52, flow: 2400, temp: 28, km: 0 },
-  { id: 2, name: 'Chinsali Pump Station', country: 'Zambia', type: 'Pump Station', status: 'online', pressure: 48, flow: 2210, temp: 26, km: 92 },
-  { id: 3, name: 'Kalonje Pump Station', country: 'Zambia', type: 'Pump Station', status: 'online', pressure: 51, flow: 2290, temp: 27, km: 176 },
-  { id: 4, name: 'Melela', country: 'Zambia', type: 'Sub-Station', status: 'online', pressure: 49, flow: 2100, temp: 26, km: 250 },
-  { id: 5, name: 'Chamakweza', country: 'Zambia', type: 'Sub-Station', status: 'online', pressure: 50, flow: 2150, temp: 25, km: 92 },
-  
-  // Tanzania Stations
-  { id: 6, name: 'Chilolwa Pig Station', country: 'Tanzania', type: 'Pig Station', status: 'online', pressure: 46, flow: 1950, temp: 28, km: 959 },
-  { id: 7, name: 'Kigamboni Pump Station', country: 'Tanzania', type: 'Pump Station', status: 'online', pressure: 50, flow: 2181, temp: 25, km: 1104 },
-  { id: 8, name: 'Mbeya Pump Station', country: 'Tanzania', type: 'Pump Station', status: 'online', pressure: 48, flow: 2100, temp: 24, km: 799 },
-  { id: 9, name: 'Ruaha', country: 'Tanzania', type: 'Sub-Station', status: 'online', pressure: 47, flow: 2050, temp: 27, km: 381 },
-  { id: 10, name: 'Mtandika', country: 'Tanzania', type: 'Sub-Station', status: 'online', pressure: 49, flow: 2080, temp: 26, km: 399 },
-  { id: 11, name: 'Ilula', country: 'Tanzania', type: 'Sub-Station', status: 'warning', pressure: 44, flow: 2000, temp: 29, km: 445 },
-  { id: 12, name: 'Malangali', country: 'Tanzania', type: 'Sub-Station', status: 'online', pressure: 50, flow: 2120, temp: 27, km: 623 },
-  { id: 13, name: 'Mbalamaziwa Pig Station', country: 'Tanzania', type: 'Pig Station', status: 'online', pressure: 45, flow: 1920, temp: 28, km: 623 },
-  { id: 14, name: 'Danger Hill Pig Station', country: 'Tanzania', type: 'Pig Station', status: 'online', pressure: 47, flow: 1980, temp: 26, km: 1220 },
-  { id: 15, name: 'Mulilima Pig Station', country: 'Tanzania', type: 'Pig Station', status: 'online', pressure: 48, flow: 2050, temp: 25, km: 1522 },
-  { id: 16, name: 'Morogoro Pump Station', country: 'Tanzania', type: 'Pump Station', status: 'warning', pressure: 45, flow: 2050, temp: 29, km: 929 },
-  { id: 17, name: 'Elphon\'s Pass Pump Station', country: 'Tanzania', type: 'Pump Station', status: 'online', pressure: 49, flow: 2221, temp: 26, km: 1360 },
-  { id: 18, name: 'Iringa Pump Station', country: 'Tanzania', type: 'Pump Station', status: 'online', pressure: 50, flow: 2350, temp: 27, km: 1220 },
-  { id: 19, name: 'Kigamboni Tank Farm', country: 'Tanzania', type: 'Tank Farm', status: 'online', pressure: 0, flow: 0, temp: 24, km: 1104 },
-]
+import PipelineProgressInput from '@/components/RulerComponents/pipeline-progress-input'
+import { useQuery } from '@tanstack/react-query'
+import { getPipelineProgress } from '@/lib/actions/pipeline'
+import { getFacilities } from '@/lib/actions/facilities'
 
 const initialAlerts: Alert[] = [
   {
@@ -113,14 +81,15 @@ const initialAlerts: Alert[] = [
 export default function Home() {
   const [selectedStation, setSelectedStation] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [stations, setStations] = useState<Station[]>(initialStations)
   const [alerts, setAlerts] = useState<Alert[]>(initialAlerts)
-  const [detailStation, setDetailStation] = useState<Station | null>(null)
+  const [detailStation, setDetailStation] = useState<Facility | null>(null)
   const [activeTab, setActiveTab] = useState('overview')
 
-  const updateStation = (id: number, updatedData: Partial<Station>) => {
-    setStations(stations.map(s => s.id === id ? { ...s, ...updatedData } : s))
-  }
+  // Data Fetching for Facilities
+  const { data: stations = [], isLoading: isLoadingFacilities } = useQuery<Facility[]>({
+    queryKey: ['pipeline-facilities'],
+    queryFn: () => getFacilities(),
+  })
 
   const acknowledgeAlert = (id: number) => {
     setAlerts(alerts.map(a => a.id === id ? { ...a, acknowledged: true } : a))
@@ -132,8 +101,6 @@ export default function Home() {
 
   return (
     <div className="flex h-screen bg-background text-foreground">
-      {/* <Sidebar isOpen={sidebarOpen} /> */}
-      
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
           onMenuClick={() => setSidebarOpen(!sidebarOpen)} 
@@ -172,8 +139,6 @@ export default function Home() {
                     <StationGrid 
                       onStationSelect={setSelectedStation}
                       selectedStation={selectedStation}
-                      stations={stations}
-                      onUpdateStation={updateStation}
                       onStationDetail={setDetailStation}
                     />
                   </div>
@@ -201,50 +166,41 @@ export default function Home() {
                 <ActivityFeed />
               </TabsContent>
 
-              {/* Fuel Input Tab */}
+              {/* Other Tabs content remain as components */}
               <TabsContent value="fuel-input" className="space-y-6 mt-0">
                 <DailyFuelInput />
               </TabsContent>
 
-              {/* Inventory Tab */}
               <TabsContent value="inventory" className="space-y-6 mt-0">
                 <InventoryReconciliation />
               </TabsContent>
 
-              {/* Maintenance Tab */}
               <TabsContent value="maintenance" className="space-y-6 mt-0">
                 <MaintenanceManagement />
               </TabsContent>
 
-              {/* Shift Handover Tab */}
               <TabsContent value="shift" className="space-y-6 mt-0">
                 <ShiftHandover />
               </TabsContent>
 
-              {/* Reports Tab */}
               <TabsContent value="reports" className="space-y-6 mt-0">
                 <ReportingCenter />
               </TabsContent>
 
-              {/* Safety & Incidents Tab */}
               <TabsContent value="incidents" className="space-y-6 mt-0">
                 <IncidentSafety />
               </TabsContent>
 
-              {/* PIG Tracking Tab */}
               <TabsContent value="pig" className="space-y-6 mt-0">
                 <PigScheduling />
               </TabsContent>
 
-              {/* Leak Detection Tab */}
               <TabsContent value="leak" className="space-y-6 mt-0">
                 <LeakDetection />
               </TabsContent>
 
-              {/* Analytics Tab */}
               <TabsContent value="analytics" className="space-y-6 mt-0">
                 <AnalyticsDashboard stations={stations} />
-                
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
                     <PipelineNetwork selectedStation={selectedStation} />
@@ -255,9 +211,15 @@ export default function Home() {
                 </div>
               </TabsContent>
 
-              {/* Flow Diagram Tab */}
               <TabsContent value="flow" className="space-y-6 mt-0 light">
-                <PipelineFlowVisualization selectedStation={selectedStation} />
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                  <div className="lg:col-span-3">
+                    <PipelineFlowVisualization selectedStation={selectedStation} />
+                  </div>
+                  <div className="lg:col-span-1">
+                    <PipelineProgressDataWrapper />
+                  </div>
+                </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
@@ -271,8 +233,6 @@ export default function Home() {
                     <StationGrid 
                       onStationSelect={setSelectedStation}
                       selectedStation={selectedStation}
-                      stations={stations}
-                      onUpdateStation={updateStation}
                       onStationDetail={setDetailStation}
                     />
                   </div>
@@ -291,5 +251,39 @@ export default function Home() {
         />
       )}
     </div>
+  )
+}
+
+function PipelineProgressDataWrapper() {
+  const { data: progress, isLoading: isLoadingProgress } = useQuery({
+    queryKey: ['pipeline-progress'],
+    queryFn: () => getPipelineProgress(),
+    refetchInterval: 10000,
+  })
+
+  const { data: facilities, isLoading: isLoadingFacilities } = useQuery<Facility[]>({
+    queryKey: ['pipeline-facilities'],
+    queryFn: () => getFacilities(),
+  })
+
+  if (isLoadingProgress || isLoadingFacilities || !progress || !facilities) {
+    return (
+      <div className="h-48 flex items-center justify-center bg-card border border-border rounded-lg animate-pulse">
+        <p className="text-muted-foreground text-xs italic">Loading progress data...</p>
+      </div>
+    )
+  }
+
+  const stationsForInput = facilities.map((f: Facility) => ({
+    name: f.name,
+    km: f.km || 0
+  }))
+
+  return (
+    <PipelineProgressInput 
+      initialDistance={progress.distanceKm}
+      totalDistance={progress.totalDistance}
+      stations={stationsForInput}
+    />
   )
 }

@@ -23,43 +23,39 @@ import {
   Activity,
   Truck,
   MapPin,
-  Fuel
+  Fuel,
+  Loader2,
+  Calendar as CalendarIcon
 } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { cn } from '@/lib/utils'
+import { useQuery } from '@tanstack/react-query'
+import { getPipelineProgress } from '@/lib/actions/pipeline'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { format } from 'date-fns'
 
 interface FlowVisualizationProps {
   selectedStation?: string | null
   onStationSelect?: (stationName: string) => void
 }
 
-type StationStatus = 'discharging' | 'receiving' | 'active' | 'idle' | 'warning' | 'maintenance'
-
-interface PipelineStation {
+interface Facility {
   id: string
   name: string
-  shortName: string
-  type: string
-  km: number
-  status: StationStatus
-  pressure: number
-  flow: number
-  temp: number
-  country: 'Zambia' | 'Tanzania'
-  tanks?: { id: string; status: 'in-use' | 'available' }[]
+  shortName: string | null
+  type: string | null
+  km: number | null
+  country: string | null
+  status: string | null
+  pressure: number | null
+  flow: number | null
+  temp: number | null
 }
 
-interface PigTracker {
+interface PipelineBatch {
   id: string
-  name: string
-  position: number
-  speed: number
-  type: 'cleaning' | 'inspection'
-  launched: Date
-}
-
-interface ProductBatch {
-  id: string
+  year: number
   product: string
   volume: number
   startKm: number
@@ -67,161 +63,128 @@ interface ProductBatch {
   color: string
 }
 
-// Pipeline flows from Tanzania (KM 0 = Single Point Mooring) to Zambia (KM 1710 = Ndola)
-const pipelineStations: PipelineStation[] = [
-  // Tanzania Section (Start - Source)
-  { id: 'spm', name: 'Single Point Mooring', shortName: 'SPM', type: 'Marine Terminal', km: 0, status: 'discharging', pressure: 58, flow: 2500, temp: 28, country: 'Tanzania',
-    tanks: [
-      { id: 'tank-1', status: 'in-use' },
-      { id: 'tank-2', status: 'in-use' },
-      { id: 'tank-3', status: 'available' },
-      { id: 'tank-4', status: 'available' },
-      { id: 'tank-5', status: 'available' },
-      { id: 'tank-6', status: 'available' },
-    ]
-  },
-  { id: 'kigamboni-pump', name: 'Kigamboni Pump Station', shortName: 'Kigamboni PS', type: 'Pump Station', km: 25, status: 'active', pressure: 55, flow: 2450, temp: 27, country: 'Tanzania' },
-  { id: 'chamakweza', name: 'Chamakweza Pig Trap', shortName: 'Chamakweza', type: 'Pig Trap', km: 85, status: 'idle', pressure: 52, flow: 2380, temp: 26, country: 'Tanzania' },
-  { id: 'morogoro', name: 'Morogoro Pump Station', shortName: 'Morogoro PS', type: 'Pump Station', km: 195, status: 'active', pressure: 50, flow: 2300, temp: 29, country: 'Tanzania' },
-  { id: 'melela', name: 'Melela Sub-Station', shortName: 'Melela', type: 'Sub-Station', km: 280, status: 'idle', pressure: 48, flow: 2250, temp: 27, country: 'Tanzania' },
-  { id: 'elphons', name: "Elphon's Pass Pump Station", shortName: "Elphon's Pass", type: 'Pump Station', km: 380, status: 'active', pressure: 51, flow: 2320, temp: 25, country: 'Tanzania' },
-  { id: 'ruaha', name: 'Ruaha Sub-Station', shortName: 'Ruaha', type: 'Sub-Station', km: 460, status: 'idle', pressure: 47, flow: 2180, temp: 26, country: 'Tanzania' },
-  { id: 'mtandika', name: 'Mtandika Sub-Station', shortName: 'Mtandika', type: 'Sub-Station', km: 530, status: 'idle', pressure: 46, flow: 2150, temp: 27, country: 'Tanzania' },
-  { id: 'ilula', name: 'Ilula Sub-Station', shortName: 'Ilula', type: 'Sub-Station', km: 610, status: 'warning', pressure: 43, flow: 2050, temp: 30, country: 'Tanzania' },
-  { id: 'iringa', name: 'Iringa Pump Station', shortName: 'Iringa PS', type: 'Pump Station', km: 700, status: 'active', pressure: 52, flow: 2350, temp: 24, country: 'Tanzania' },
-  { id: 'malangali', name: 'Malangali Sub-Station', shortName: 'Malangali', type: 'Sub-Station', km: 810, status: 'idle', pressure: 49, flow: 2220, temp: 23, country: 'Tanzania' },
-  { id: 'mbalamaziwa', name: 'Mbalamaziwa Pig Station', shortName: 'Mbalamaziwa', type: 'Pig Station', km: 920, status: 'idle', pressure: 47, flow: 2150, temp: 24, country: 'Tanzania' },
-  { id: 'mbeya', name: 'Mbeya Pump Station', shortName: 'Mbeya PS', type: 'Pump Station', km: 1050, status: 'active', pressure: 53, flow: 2380, temp: 22, country: 'Tanzania' },
-  { id: 'chilolwa', name: 'Chilolwa Pig Station', shortName: 'Chilolwa', type: 'Pig Station', km: 1180, status: 'idle', pressure: 48, flow: 2200, temp: 23, country: 'Tanzania' },
-  
-  // Border crossing around KM 1330
-  
-  // Zambia Section (End - Destination)
-  { id: 'chinsali', name: 'Chinsali Pump Station', shortName: 'Chinsali PS', type: 'Pump Station', km: 1380, status: 'active', pressure: 51, flow: 2300, temp: 24, country: 'Zambia' },
-  { id: 'danger-hill', name: 'Danger Hill Station', shortName: 'Danger Hill', type: 'Sub-Station', km: 1450, status: 'idle', pressure: 49, flow: 2220, temp: 25, country: 'Zambia' },
-  { id: 'kalonje', name: 'Kalonje Pump Station', shortName: 'Kalonje PS', type: 'Pump Station', km: 1520, status: 'active', pressure: 52, flow: 2350, temp: 26, country: 'Zambia' },
-  { id: 'ulilima', name: 'Ulilima Pig Station', shortName: 'Ulilima', type: 'Pig Station', km: 1590, status: 'idle', pressure: 48, flow: 2180, temp: 25, country: 'Zambia' },
-  { id: 'bwana', name: 'Bwana Mkubwa Terminal', shortName: 'Bwana Mkubwa', type: 'Terminal', km: 1660, status: 'receiving', pressure: 15, flow: 2400, temp: 24, country: 'Zambia' },
-  { id: 'ndola', name: 'Ndola Fuel Terminal', shortName: 'Ndola Terminal', type: 'Terminal', km: 1710, status: 'receiving', pressure: 12, flow: 2350, temp: 25, country: 'Zambia' },
-]
+interface YearlyStats {
+  year: number
+  throughput: number
+  delivered: number
+}
 
-// Yearly throughput data (in million liters)
-const yearlyData: Record<number, { batches: ProductBatch[], throughput: number, delivered: number }> = {
-  2024: {
-    throughput: 892.5,
-    delivered: 845.2,
-    batches: [
-      { id: 'batch-2024-1', product: 'LSG', volume: 285000, startKm: 0, endKm: 570, color: 'bg-emerald-500' },
-      { id: 'batch-2024-2', product: 'LSG', volume: 320000, startKm: 570, endKm: 1140, color: 'bg-emerald-500' },
-      { id: 'batch-2024-3', product: 'LSG', volume: 287500, startKm: 1140, endKm: 1710, color: 'bg-emerald-500' },
-    ]
-  },
-  2023: {
-    throughput: 856.3,
-    delivered: 812.8,
-    batches: [
-      { id: 'batch-2023-1', product: 'LSG', volume: 275000, startKm: 0, endKm: 550, color: 'bg-emerald-500' },
-      { id: 'batch-2023-2', product: 'LSG', volume: 310000, startKm: 550, endKm: 1100, color: 'bg-emerald-500' },
-      { id: 'batch-2023-3', product: 'LSG', volume: 271300, startKm: 1100, endKm: 1710, color: 'bg-emerald-500' },
-    ]
-  },
-  2022: {
-    throughput: 798.1,
-    delivered: 756.4,
-    batches: [
-      { id: 'batch-2022-1', product: 'LSG', volume: 258000, startKm: 0, endKm: 520, color: 'bg-emerald-500' },
-      { id: 'batch-2022-2', product: 'LSG', volume: 295000, startKm: 520, endKm: 1080, color: 'bg-emerald-500' },
-      { id: 'batch-2022-3', product: 'LSG', volume: 245100, startKm: 1080, endKm: 1710, color: 'bg-emerald-500' },
-    ]
-  },
-  2021: {
-    throughput: 742.6,
-    delivered: 705.5,
-    batches: [
-      { id: 'batch-2021-1', product: 'LSG', volume: 240000, startKm: 0, endKm: 500, color: 'bg-emerald-500' },
-      { id: 'batch-2021-2', product: 'LSG', volume: 280000, startKm: 500, endKm: 1050, color: 'bg-emerald-500' },
-      { id: 'batch-2021-3', product: 'LSG', volume: 222600, startKm: 1050, endKm: 1710, color: 'bg-emerald-500' },
-    ]
-  },
-  2020: {
-    throughput: 685.2,
-    delivered: 648.9,
-    batches: [
-      { id: 'batch-2020-1', product: 'LSG', volume: 220000, startKm: 0, endKm: 480, color: 'bg-emerald-500' },
-      { id: 'batch-2020-2', product: 'LSG', volume: 260000, startKm: 480, endKm: 1020, color: 'bg-emerald-500' },
-      { id: 'batch-2020-3', product: 'LSG', volume: 205200, startKm: 1020, endKm: 1710, color: 'bg-emerald-500' },
-    ]
-  },
+interface PigTracker {
+  id: string
+  name: string
+  position: number
+  speed: number
+  type: string
+  launched: Date
+  isActive: boolean
 }
 
 const TOTAL_LENGTH = 1710
 const BORDER_KM = 1330
 
-const initialBatches = yearlyData[2024].batches;
-
-const availableYears = [2024, 2023, 2022, 2021, 2020]
-
 export default function PipelineFlowVisualization({ selectedStation, onStationSelect }: FlowVisualizationProps) {
   const [zoom, setZoom] = useState(1)
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
   const [flowSpeed, setFlowSpeed] = useState([50])
   const [showBatches, setShowBatches] = useState(true)
   const [showPressureGradient, setShowPressureGradient] = useState(false)
-  const [activeStation, setActiveStation] = useState<PipelineStation | null>(null)
+  const [activeFacility, setActiveFacility] = useState<Facility | null>(null)
   const [showControls, setShowControls] = useState(false)
   const [animationOffset, setAnimationOffset] = useState(0)
-  const [selectedYear, setSelectedYear] = useState(2024)
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 0, 1))
   const [currentKm, setCurrentKm] = useState(0)
   const [highlightedStationName, setHighlightedStationName] = useState<string | null>(null)
-  const [pigs, setPigs] = useState<PigTracker[]>([
-    { id: 'pig-1', name: 'Cleaning Pig #1', position: 300, speed: 8, type: 'cleaning', launched: new Date(Date.now() - 1000 * 60 * 60 * 8) },
-    { id: 'pig-2', name: 'Inspection Pig #2', position: 950, speed: 5, type: 'inspection', launched: new Date(Date.now() - 1000 * 60 * 60 * 4) },
-  ])
 
-  // Animate flow and pigs
+  const selectedYear = selectedDate.getFullYear()
+
+  // API Data Fetching
+  const { data: facilities, isLoading: isLoadingFacilities } = useQuery<Facility[]>({
+    queryKey: ['pipeline-facilities'],
+    queryFn: () => fetch('/api/pipeline/facilities').then(res => res.json()),
+  })
+
+  const { data: batches, isLoading: isLoadingBatches } = useQuery<PipelineBatch[]>({
+    queryKey: ['pipeline-batches', selectedYear],
+    queryFn: () => fetch(`/api/pipeline/batches?year=${selectedYear}`).then(res => res.json()),
+  })
+
+  const { data: yearlyStats, isLoading: isLoadingStats } = useQuery<YearlyStats>({
+    queryKey: ['pipeline-stats', selectedYear],
+    queryFn: () => fetch(`/api/pipeline/stats?year=${selectedYear}`).then(res => res.json()),
+  })
+
+  const { data: pigs, isLoading: isLoadingPigs } = useQuery<PigTracker[]>({
+    queryKey: ['pipeline-pigs'],
+    queryFn: () => fetch('/api/pipeline/pigs').then(res => res.json()),
+    refetchInterval: 5000,
+  })
+
+  // Fetch real-time progress from DB
+  const { data: dbProgress, isLoading: isLoadingProgress } = useQuery({
+    queryKey: ['pipeline-progress'],
+    queryFn: () => getPipelineProgress(),
+    refetchInterval: 10000,
+  })
+
+  // Helper to get visual position based on index-based station spacing
+  const getVisualPosition = (km: number) => {
+    if (!facilities || facilities.length === 0) return 0
+    const stationCount = facilities.length
+    if (km <= 0) return 0
+    
+    // Find the segment
+    let startIndex = facilities.length - 2 
+    for (let i = 0; i < stationCount - 1; i++) {
+      const stationKm = facilities[i].km || 0
+      const nextStationKm = facilities[i+1].km || 0
+      if (km >= stationKm && km < nextStationKm) {
+        startIndex = i
+        break
+      }
+    }
+
+    const startStation = facilities[startIndex]
+    const endStation = facilities[startIndex + 1]
+    
+    const startKmValue = startStation.km || 0
+    const endKmValue = endStation.km || 0
+    
+    const segmentWidth = endKmValue - startKmValue
+    const segmentProgress = segmentWidth > 0 ? (km - startKmValue) / segmentWidth : 0
+    const visualProgress = (startIndex + segmentProgress) / (stationCount - 1)
+    
+    return Math.min(Math.max(visualProgress * 100, 0), 100)
+  }
+
+  // Sync currentKm with DB progress when not playing animation
+  useEffect(() => {
+    if (!isPlaying && dbProgress) {
+      setCurrentKm(dbProgress.distanceKm)
+      
+      if (facilities) {
+        // Highlight the station reached
+        const reachedStation = facilities.slice().reverse().find(f => (f.km || 0) <= dbProgress.distanceKm)
+        if (reachedStation) {
+          setHighlightedStationName(reachedStation.name)
+          onStationSelect?.(reachedStation.name)
+        }
+      }
+    }
+  }, [isPlaying, dbProgress, facilities, onStationSelect])
+
+  // Animate flow (Mock local animation for smoother UI)
   useEffect(() => {
     if (!isPlaying) return
     
     const interval = setInterval(() => {
-      setAnimationOffset(prev => {
-        const newOffset = (prev + flowSpeed[0] / 25) % 100
-        const newCurrentKm = (newOffset / 100) * TOTAL_LENGTH
-        setCurrentKm(newCurrentKm)
-
-        // Determine highlighted station
-        const reachedStation = pipelineStations.slice().reverse().find(station => station.km <= newCurrentKm)
-        if (reachedStation && reachedStation.name !== highlightedStationName) {
-          setHighlightedStationName(reachedStation.name)
-          onStationSelect?.(reachedStation.name)
-        } else if (!reachedStation && highlightedStationName !== null) {
-          setHighlightedStationName(null)
-          onStationSelect?.('')
-        }
-        return newOffset
-      })
-      
-      setPigs(prev => prev.map(pig => ({
-        ...pig,
-        position: Math.min(pig.position + pig.speed * (flowSpeed[0] / 50), TOTAL_LENGTH)
-      })).filter(pig => pig.position < TOTAL_LENGTH))
+      setAnimationOffset(prev => (prev + flowSpeed[0] / 25) % 100)
     }, 50)
     
     return () => clearInterval(interval)
-  }, [isPlaying, flowSpeed, highlightedStationName, onStationSelect])
+  }, [isPlaying, flowSpeed])
 
-  const launchPig = (type: 'cleaning' | 'inspection') => {
-    setPigs(prev => [...prev, {
-      id: `pig-${Date.now()}`,
-      name: `${type.charAt(0).toUpperCase() + type.slice(1)} Pig #${prev.length + 1}`,
-      position: 0,
-      speed: type === 'inspection' ? 5 : 8,
-      type,
-      launched: new Date()
-    }])
-  }
-
-  const getStationIcon = (station: PipelineStation) => {
-    switch (station.status) {
+  const getStationIcon = (facility: Facility) => {
+    switch (facility.status) {
       case 'discharging': return <Fuel className="h-2.5 w-2.5 text-white" />
       case 'receiving': return <MapPin className="h-2.5 w-2.5 text-white" />
       case 'warning': return <AlertTriangle className="h-2.5 w-2.5 text-white" />
@@ -230,8 +193,8 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
     }
   }
 
-  const getStationColor = (station: PipelineStation) => {
-    switch (station.status) {
+  const getStationColor = (facility: Facility) => {
+    switch (facility.status) {
       case 'discharging': return 'bg-orange-500 border-orange-300 shadow-orange-500/50'
       case 'receiving': return 'bg-cyan-500 border-cyan-300 shadow-cyan-500/50'
       case 'active': return 'bg-green-500 border-green-300 shadow-green-500/50'
@@ -242,11 +205,23 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
   }
 
   // Calculate metrics
-  const avgPressure = pipelineStations.reduce((acc, s) => acc + s.pressure, 0) / pipelineStations.length
-  const avgFlow = pipelineStations.reduce((acc, s) => acc + s.flow, 0) / pipelineStations.length
-  const avgTemp = pipelineStations.reduce((acc, s) => acc + s.temp, 0) / pipelineStations.length
-  const activeCount = pipelineStations.filter(s => ['active', 'discharging', 'receiving'].includes(s.status)).length
-  const warningCount = pipelineStations.filter(s => s.status === 'warning').length
+  const avgPressure = facilities && facilities.length > 0 ? facilities.reduce((acc, f) => acc + (f.pressure || 0), 0) / facilities.length : 0
+  const avgFlow = facilities && facilities.length > 0 ? facilities.reduce((acc, f) => acc + (f.flow || 0), 0) / facilities.length : 0
+  const avgTemp = facilities && facilities.length > 0 ? facilities.reduce((acc, f) => acc + (f.temp || 0), 0) / facilities.length : 0
+  const activeCount = facilities ? facilities.filter(f => ['active', 'discharging', 'receiving'].includes(f.status || '')).length : 0
+  const warningCount = facilities ? facilities.filter(f => f.status === 'warning').length : 0
+
+  // Get unique products from batches for the legend
+  const uniqueProducts = useMemo(() => {
+    if (!batches) return []
+    const products = new Map()
+    batches.forEach(b => {
+      if (!products.has(b.product)) {
+        products.set(b.product, b.color)
+      }
+    })
+    return Array.from(products.entries()).map(([name, color]) => ({ name, color }))
+  }, [batches])
 
   return (
     <div className="space-y-4">
@@ -294,7 +269,7 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
       </div>
 
       {/* Main Visualization Card */}
-      <Card className="p-4 md:p-6">
+      <Card className="p-4 md:p-6 text-foreground">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
@@ -303,20 +278,33 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Year Selector */}
-            <div className="flex items-center border border-border rounded-md h-8 bg-secondary">
-              <span className="text-xs px-2 text-muted-foreground">Year:</span>
-              <select 
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="h-8 bg-secondary text-foreground text-sm font-medium border-0 focus:outline-none cursor-pointer pr-2 appearance-none"
-                style={{ colorScheme: 'dark' }}
-              >
-                {availableYears.map(year => (
-                  <option key={year} value={year} className="bg-secondary text-foreground">{year}</option>
-                ))}
-              </select>
-            </div>
+            {/* Date Selection instead of Year Selector */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={cn(
+                    "h-8 justify-start text-left font-normal border-border bg-secondary hover:bg-secondary/80",
+                    !selectedDate && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                  {selectedDate ? format(selectedDate, "PPP") : <span className="text-xs">Pick a date</span>}
+                  <ChevronDown className="ml-2 h-3 w-3 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 border-border" align="end">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => date && setSelectedDate(date)}
+                  initialFocus
+                  className="bg-card"
+                />
+              </PopoverContent>
+            </Popover>
+
             <Button
               variant="outline"
               size="sm"
@@ -380,21 +368,9 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
               </div>
               
               <div className="space-y-2">
-                <label className="text-xs font-medium">Launch Pig</label>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="outline" className="text-xs flex-1 h-8 bg-transparent" onClick={() => launchPig('cleaning')}>
-                    Cleaning
-                  </Button>
-                  <Button size="sm" variant="outline" className="text-xs flex-1 h-8 bg-transparent" onClick={() => launchPig('inspection')}>
-                    Inspection
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-xs font-medium">Active Pigs ({pigs.length})</label>
+                <label className="text-xs font-medium">Active Pigs ({pigs?.length || 0})</label>
                 <div className="flex flex-wrap gap-1">
-                  {pigs.length === 0 ? (
+                  {!pigs || pigs.length === 0 ? (
                     <span className="text-xs text-muted-foreground">No active pigs</span>
                   ) : pigs.map(pig => (
                     <Badge key={pig.id} variant="secondary" className="text-xs">
@@ -426,42 +402,55 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
           </div>
           <div className="flex items-center gap-2 ml-4">
             <span className="text-sm font-medium text-muted-foreground">Progress:</span>
-            <Badge variant="secondary" className="text-sm font-bold">
-              {currentKm.toFixed(0)} KM / {TOTAL_LENGTH} KM ({((currentKm / TOTAL_LENGTH) * 100).toFixed(1)}%)
+            <Badge variant="secondary" className={cn(
+              "text-sm font-bold",
+              isLoadingProgress && "animate-pulse opacity-50"
+            )}>
+              {currentKm.toFixed(1)} KM / {TOTAL_LENGTH} KM ({((currentKm / TOTAL_LENGTH) * 100).toFixed(1)}%)
             </Badge>
+            {(isLoadingProgress || isLoadingFacilities) && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
           </div>
         </div>
 
-        {/* Product Info and Yearly Stats */}
-        {showBatches && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-3 bg-muted/30 rounded-lg">
-            <div className="flex items-center gap-3">
+        {/* Yearly Stats & Legend */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-3 bg-muted/30 rounded-lg border border-border/50">
+          <div className="flex flex-wrap items-center gap-4">
+            {uniqueProducts.length > 0 ? (
+              uniqueProducts.map(product => (
+                <div key={product.name} className="flex items-center gap-1.5">
+                  <div className={cn("w-4 h-4 rounded", product.color)} />
+                  <span className="text-sm font-medium">{product.name}</span>
+                </div>
+              ))
+            ) : (
               <div className="flex items-center gap-1.5">
-                <div className="w-4 h-4 rounded bg-emerald-500" />
-                <span className="text-sm font-medium">Low Sulphur Gas (LSG)</span>
+                <div className="w-4 h-4 rounded bg-slate-500 opacity-20" />
+                <span className="text-sm font-medium text-muted-foreground italic">No products in pipeline</span>
               </div>
-              <Badge variant="outline" className="text-[10px]">Single Product Pipeline</Badge>
+            )}
+            <Badge variant="outline" className="text-[10px]">
+              {uniqueProducts.length > 1 ? "Multi-Product Pipeline" : "Single Product Pipeline"}
+            </Badge>
+          </div>
+          <div className="flex items-center gap-4 text-xs">
+            <div className="text-center">
+              <p className="text-muted-foreground">Throughput ({selectedYear})</p>
+              <p className="font-bold text-base">{yearlyStats?.throughput?.toFixed(1) || '0.0'} <span className="text-muted-foreground font-normal">ML</span></p>
             </div>
-            <div className="flex items-center gap-4 text-xs">
-              <div className="text-center">
-                <p className="text-muted-foreground">Throughput ({selectedYear})</p>
-                <p className="font-bold text-base">{yearlyData[selectedYear]?.throughput.toFixed(1)} <span className="text-muted-foreground font-normal">ML</span></p>
-              </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="text-center">
-                <p className="text-muted-foreground">Delivered</p>
-                <p className="font-bold text-base">{yearlyData[selectedYear]?.delivered.toFixed(1)} <span className="text-muted-foreground font-normal">ML</span></p>
-              </div>
-              <div className="w-px h-8 bg-border" />
-              <div className="text-center">
-                <p className="text-muted-foreground">Efficiency</p>
-                <p className="font-bold text-base text-green-500">
-                  {((yearlyData[selectedYear]?.delivered / yearlyData[selectedYear]?.throughput) * 100).toFixed(1)}%
-                </p>
-              </div>
+            <div className="w-px h-8 bg-border" />
+            <div className="text-center">
+              <p className="text-muted-foreground">Delivered</p>
+              <p className="font-bold text-base">{yearlyStats?.delivered?.toFixed(1) || '0.0'} <span className="text-muted-foreground font-normal">ML</span></p>
+            </div>
+            <div className="w-px h-8 bg-border" />
+            <div className="text-center">
+              <p className="text-muted-foreground">Efficiency</p>
+              <p className="font-bold text-base text-green-500">
+                {yearlyStats && yearlyStats.throughput > 0 ? ((yearlyStats.delivered / yearlyStats.throughput) * 100).toFixed(1) : '0.0'}%
+              </p>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Pipeline Visualization - Fixed width, horizontally scrollable */}
         <div className="overflow-x-auto overflow-y-visible pb-4 border border-border rounded-lg bg-muted/20">
@@ -473,21 +462,21 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
               padding: '80px 80px 100px 80px'
             }}
           >
-            {/* KM Scale - show actual station positions */}
+            {/* KM Scale */}
             <div className="relative h-6 mb-4">
-              {pipelineStations.map((station, index) => {
+              {facilities?.map((facility, index) => {
                 const pipelineWidth = 2200 * zoom - 160
-                const leftPx = (index / (pipelineStations.length - 1)) * pipelineWidth
+                const leftPx = (index / (facilities.length - 1)) * pipelineWidth
                 return (
                   <span 
-                    key={station.id} 
+                    key={facility.id} 
                     className={cn(
                       "absolute text-[9px] tabular-nums -translate-x-1/2",
-                      station.country === 'Zambia' ? "text-cyan-500" : "text-orange-500"
+                      facility.country === 'Zambia' ? "text-cyan-500" : "text-orange-500"
                     )}
                     style={{ left: `${leftPx}px` }}
                   >
-                    {station.km}
+                    {facility.km}
                   </span>
                 )
               })}
@@ -502,11 +491,25 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 via-yellow-500/15 to-green-500/20" />
               )}
 
+              {/* Progress Fill */}
+              <div 
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-600/40 to-emerald-400/40 rounded-full transition-all duration-1000 ease-out z-10"
+                style={{ width: `${getVisualPosition(currentKm)}%` }}
+              />
+
+              {/* Progress Head */}
+              <div 
+                className="absolute top-1/2 -translate-y-1/2 w-1 h-full bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.8)] z-15 transition-all duration-1000 ease-out"
+                style={{ left: `${getVisualPosition(currentKm)}%` }}
+              />
+
               {/* Product Batches */}
-              {showBatches && yearlyData[selectedYear]?.batches.map(batch => {
+              {showBatches && batches?.map(batch => {
                 const pipelineWidth = 2200 * zoom - 160
-                const startPx = (batch.startKm / TOTAL_LENGTH) * pipelineWidth
-                const widthPx = ((batch.endKm - batch.startKm) / TOTAL_LENGTH) * pipelineWidth
+                const startPercent = getVisualPosition(batch.startKm)
+                const endPercent = getVisualPosition(batch.endKm)
+                const startPx = (startPercent / 100) * pipelineWidth
+                const widthPx = ((endPercent - startPercent) / 100) * pipelineWidth
                 return (
                   <div
                     key={batch.id}
@@ -533,11 +536,13 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
                 </div>
               )}
 
-              {/* Border Line - positioned between last TZ station and first ZM station */}
+              {/* Border Line */}
               {(() => {
+                if (!facilities) return null
                 const pipelineWidth = 2200 * zoom - 160
-                const firstZambiaIndex = pipelineStations.findIndex(s => s.country === 'Zambia')
-                const borderLeftPx = ((firstZambiaIndex - 0.5) / (pipelineStations.length - 1)) * pipelineWidth
+                const firstZambiaIndex = facilities.findIndex(s => s.country === 'Zambia')
+                if (firstZambiaIndex === -1) return null
+                const borderLeftPx = ((firstZambiaIndex - 0.5) / (facilities.length - 1)) * pipelineWidth
                 return (
                   <div
                     className="absolute top-0 bottom-0 w-0.5 bg-primary z-10"
@@ -550,52 +555,51 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
                 )
               })()}
 
-              {/* Station Markers - use index-based positioning for even spacing */}
-              {pipelineStations.map((station, index) => {
+              {/* Facility Markers */}
+              {facilities?.map((facility, index) => {
                 const pipelineWidth = 2200 * zoom - 160
-                // Use index-based positioning to ensure minimum spacing between stations
-                const stationCount = pipelineStations.length
+                const stationCount = facilities.length
                 const leftPx = (index / (stationCount - 1)) * pipelineWidth
-                const isActive = activeStation?.id === station.id
-                const isSelected = selectedStation === station.name
+                const isActive = activeFacility?.id === facility.id
+                const isSelected = selectedStation === facility.name
                 
                 return (
                   <div
-                    key={station.id}
+                    key={facility.id}
                     className="absolute top-1/2 z-20"
                     style={{ left: `${leftPx}px`, transform: 'translate(-50%, -50%)' }}
                   >
                     <button
                       type="button"
                       onClick={() => {
-                        setActiveStation(isActive ? null : station)
-                        onStationSelect?.(station.name)
+                        setActiveFacility(isActive ? null : facility)
+                        onStationSelect?.(facility.name)
                       }}
                       className={cn(
                         "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all shadow-md hover:scale-110",
-                        getStationColor(station),
+                        getStationColor(facility),
                         (isActive || isSelected) && "ring-2 ring-primary ring-offset-2 ring-offset-background scale-110"
                       )}
                     >
-                      {getStationIcon(station)}
+                      {getStationIcon(facility)}
                     </button>
                     
-                    {/* Station Label */}
+                    {/* Facility Label */}
                     <div className={cn(
                       "absolute top-full mt-3 left-1/2 -translate-x-1/2 text-center transition-opacity whitespace-nowrap",
                       zoom < 0.6 ? "opacity-0" : "opacity-100"
                     )}>
-                      <span className="text-[10px] font-medium leading-tight block text-foreground/90">{station.shortName}</span>
-                      <span className="text-[9px] text-muted-foreground">KM {station.km}</span>
+                      <span className="text-[10px] font-medium leading-tight block text-foreground/90">{facility.shortName}</span>
+                      <span className="text-[9px] text-muted-foreground">KM {facility.km}</span>
                     </div>
                   </div>
                 )
               })}
 
               {/* Pig Markers */}
-              {pigs.map(pig => {
+              {pigs?.map(pig => {
                 const pipelineWidth = 2200 * zoom - 160
-                const leftPx = (pig.position / TOTAL_LENGTH) * pipelineWidth
+                const leftPx = (getVisualPosition(pig.position) / 100) * pipelineWidth
                 return (
                   <div
                     key={pig.id}
@@ -618,11 +622,12 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
               })}
             </div>
 
-            {/* Station Popover - rendered outside pipeline for no clipping */}
-            {activeStation && (() => {
-              const activeIndex = pipelineStations.findIndex(s => s.id === activeStation.id)
+            {/* Facility Popover */}
+            {activeFacility && (() => {
+              const activeIndex = facilities?.findIndex(f => f.id === activeFacility.id) ?? -1
+              if (activeIndex === -1) return null
               const pipelineWidth = 2200 * zoom - 160
-              const leftPx = (activeIndex / (pipelineStations.length - 1)) * pipelineWidth
+              const leftPx = (activeIndex / (facilities!.length - 1)) * pipelineWidth
               
               return (
                 <div 
@@ -633,48 +638,29 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
                     transform: 'translateX(-50%)'
                   }}
                 >
-                  <Card className="p-3 shadow-xl border-2 w-60">
+                  <Card className="p-3 shadow-xl border-2 w-60 bg-card border-border">
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="min-w-0 flex-1">
-                        <h4 className="font-semibold text-sm">{activeStation.name}</h4>
-                        <p className="text-[10px] text-muted-foreground">{activeStation.type} - KM {activeStation.km}</p>
+                        <h4 className="font-semibold text-sm">{activeFacility.name}</h4>
+                        <p className="text-[10px] text-muted-foreground">{activeFacility.type} - KM {activeFacility.km}</p>
                       </div>
-                      <Badge variant="secondary" className="text-[10px] shrink-0 capitalize">{activeStation.status}</Badge>
+                      <Badge variant="secondary" className="text-[10px] shrink-0 capitalize">{activeFacility.status}</Badge>
                     </div>
                     
-                    {activeStation.id === 'spm' && activeStation.tanks && (
-                      <div className="flex flex-col items-center mt-2">
-                        <span className="text-[9px] text-muted-foreground mb-1">Tanks:</span>
-                        <div className="flex gap-1">
-                          {activeStation.tanks.map((tank, index) => (
-                            <Badge
-                              key={tank.id}
-                              className={cn(
-                                "h-4 px-1 text-[9px]",
-                                tank.status === 'in-use' ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
-                              )}
-                            >
-                              {index + 1}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    
                     <div className="grid grid-cols-3 gap-2">
-                      <div className="bg-muted rounded p-2 text-center">
+                      <div className="bg-muted rounded p-2 text-center text-foreground">
                         <Gauge className="h-3.5 w-3.5 mx-auto mb-1 text-primary" />
-                        <p className="text-sm font-bold">{activeStation.pressure}</p>
+                        <p className="text-sm font-bold">{activeFacility.pressure || 0}</p>
                         <p className="text-[9px] text-muted-foreground">bar</p>
                       </div>
-                      <div className="bg-muted rounded p-2 text-center">
+                      <div className="bg-muted rounded p-2 text-center text-foreground">
                         <Droplets className="h-3.5 w-3.5 mx-auto mb-1 text-cyan-500" />
-                        <p className="text-sm font-bold">{(activeStation.flow / 1000).toFixed(1)}k</p>
+                        <p className="text-sm font-bold">{((activeFacility.flow || 0) / 1000).toFixed(1)}k</p>
                         <p className="text-[9px] text-muted-foreground">L/h</p>
                       </div>
-                      <div className="bg-muted rounded p-2 text-center">
+                      <div className="bg-muted rounded p-2 text-center text-foreground">
                         <Thermometer className="h-3.5 w-3.5 mx-auto mb-1 text-orange-500" />
-                        <p className="text-sm font-bold">{activeStation.temp}</p>
+                        <p className="text-sm font-bold">{activeFacility.temp || 0}</p>
                         <p className="text-[9px] text-muted-foreground">C</p>
                       </div>
                     </div>

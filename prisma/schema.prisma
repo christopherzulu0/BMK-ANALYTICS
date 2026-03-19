@@ -251,9 +251,61 @@ model Station {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
-  entries   DailyEntry[]
+  entries    DailyEntry[]
+  facility   Facility?    @relation(fields: [facilityId], references: [id])
+  facilityId String?      @unique
 
   @@map("Stations")
+}
+
+model Facility {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  shortName String?  @db.NVarChar(50)
+  type      String?  @db.NVarChar(50)
+  km        Float?
+  country   String?  @db.NVarChar(50) // "Zambia" | "Tanzania"
+  status    String?  @default("idle") @db.NVarChar(20)
+  pressure  Float?
+  flow      Float?
+  temp      Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  station   Station?
+}
+
+model PipelineBatch {
+  id        String   @id @default(cuid())
+  year      Int
+  product   String
+  volume    Float
+  startKm   Float
+  endKm     Float
+  color     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PipelinePig {
+  id        String   @id @default(cuid())
+  name      String
+  position  Float
+  speed     Float
+  type      String   // "cleaning" | "inspection"
+  launched  DateTime @default(now())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PipelineYearlyStats {
+  id         String   @id @default(cuid())
+  year       Int      @unique
+  throughput Float
+  delivered  Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 /// One saved report per station per day with summary fields.
@@ -348,4 +400,12 @@ model Supplier {
 
   @@index([name])
   @@index([email])
+}
+
+model PipelineProgress {
+  id            String   @id @default(cuid())
+  distanceKm    Float    @default(0)
+  totalDistance Float    @default(1710)
+  lastStation   String?
+  updatedAt     DateTime @updatedAt
 }

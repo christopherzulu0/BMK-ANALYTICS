@@ -100,6 +100,26 @@ export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
  */
 export type Station = $Result.DefaultSelection<Prisma.$StationPayload>
 /**
+ * Model Facility
+ * 
+ */
+export type Facility = $Result.DefaultSelection<Prisma.$FacilityPayload>
+/**
+ * Model PipelineBatch
+ * 
+ */
+export type PipelineBatch = $Result.DefaultSelection<Prisma.$PipelineBatchPayload>
+/**
+ * Model PipelinePig
+ * 
+ */
+export type PipelinePig = $Result.DefaultSelection<Prisma.$PipelinePigPayload>
+/**
+ * Model PipelineYearlyStats
+ * 
+ */
+export type PipelineYearlyStats = $Result.DefaultSelection<Prisma.$PipelineYearlyStatsPayload>
+/**
  * Model DailyEntry
  * One saved report per station per day with summary fields.
  * Holds many tanks and ordered remarks.
@@ -121,6 +141,11 @@ export type Remark = $Result.DefaultSelection<Prisma.$RemarkPayload>
  * Supplier model for managing shipping suppliers
  */
 export type Supplier = $Result.DefaultSelection<Prisma.$SupplierPayload>
+/**
+ * Model PipelineProgress
+ * 
+ */
+export type PipelineProgress = $Result.DefaultSelection<Prisma.$PipelineProgressPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -128,7 +153,9 @@ export type Supplier = $Result.DefaultSelection<Prisma.$SupplierPayload>
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Accounts
  * const accounts = await prisma.account.findMany()
  * ```
@@ -149,7 +176,9 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more Accounts
    * const accounts = await prisma.account.findMany()
    * ```
@@ -229,7 +258,7 @@ export class PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
@@ -410,6 +439,46 @@ export class PrismaClient<
   get station(): Prisma.StationDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.facility`: Exposes CRUD operations for the **Facility** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Facilities
+    * const facilities = await prisma.facility.findMany()
+    * ```
+    */
+  get facility(): Prisma.FacilityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pipelineBatch`: Exposes CRUD operations for the **PipelineBatch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PipelineBatches
+    * const pipelineBatches = await prisma.pipelineBatch.findMany()
+    * ```
+    */
+  get pipelineBatch(): Prisma.PipelineBatchDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pipelinePig`: Exposes CRUD operations for the **PipelinePig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PipelinePigs
+    * const pipelinePigs = await prisma.pipelinePig.findMany()
+    * ```
+    */
+  get pipelinePig(): Prisma.PipelinePigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pipelineYearlyStats`: Exposes CRUD operations for the **PipelineYearlyStats** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PipelineYearlyStats
+    * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findMany()
+    * ```
+    */
+  get pipelineYearlyStats(): Prisma.PipelineYearlyStatsDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.dailyEntry`: Exposes CRUD operations for the **DailyEntry** model.
     * Example usage:
     * ```ts
@@ -448,6 +517,16 @@ export class PrismaClient<
     * ```
     */
   get supplier(): Prisma.SupplierDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pipelineProgress`: Exposes CRUD operations for the **PipelineProgress** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PipelineProgresses
+    * const pipelineProgresses = await prisma.pipelineProgress.findMany()
+    * ```
+    */
+  get pipelineProgress(): Prisma.PipelineProgressDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -498,8 +577,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.3.0
-   * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+   * Prisma Client JS version: 7.5.0
+   * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
    */
   export type PrismaVersion = {
     client: string
@@ -899,10 +978,15 @@ export namespace Prisma {
     Permission: 'Permission',
     AuditLog: 'AuditLog',
     Station: 'Station',
+    Facility: 'Facility',
+    PipelineBatch: 'PipelineBatch',
+    PipelinePig: 'PipelinePig',
+    PipelineYearlyStats: 'PipelineYearlyStats',
     DailyEntry: 'DailyEntry',
     Tank: 'Tank',
     Remark: 'Remark',
-    Supplier: 'Supplier'
+    Supplier: 'Supplier',
+    PipelineProgress: 'PipelineProgress'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -918,7 +1002,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "dailyEntry" | "tank" | "remark" | "supplier"
+      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "facility" | "pipelineBatch" | "pipelinePig" | "pipelineYearlyStats" | "dailyEntry" | "tank" | "remark" | "supplier" | "pipelineProgress"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2044,6 +2128,270 @@ export namespace Prisma {
           }
         }
       }
+      Facility: {
+        payload: Prisma.$FacilityPayload<ExtArgs>
+        fields: Prisma.FacilityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FacilityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FacilityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload>
+          }
+          findFirst: {
+            args: Prisma.FacilityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FacilityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload>
+          }
+          findMany: {
+            args: Prisma.FacilityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload>[]
+          }
+          create: {
+            args: Prisma.FacilityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload>
+          }
+          createMany: {
+            args: Prisma.FacilityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FacilityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload>
+          }
+          update: {
+            args: Prisma.FacilityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload>
+          }
+          deleteMany: {
+            args: Prisma.FacilityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FacilityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FacilityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FacilityPayload>
+          }
+          aggregate: {
+            args: Prisma.FacilityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFacility>
+          }
+          groupBy: {
+            args: Prisma.FacilityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FacilityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FacilityCountArgs<ExtArgs>
+            result: $Utils.Optional<FacilityCountAggregateOutputType> | number
+          }
+        }
+      }
+      PipelineBatch: {
+        payload: Prisma.$PipelineBatchPayload<ExtArgs>
+        fields: Prisma.PipelineBatchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PipelineBatchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PipelineBatchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload>
+          }
+          findFirst: {
+            args: Prisma.PipelineBatchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PipelineBatchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload>
+          }
+          findMany: {
+            args: Prisma.PipelineBatchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload>[]
+          }
+          create: {
+            args: Prisma.PipelineBatchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload>
+          }
+          createMany: {
+            args: Prisma.PipelineBatchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PipelineBatchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload>
+          }
+          update: {
+            args: Prisma.PipelineBatchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload>
+          }
+          deleteMany: {
+            args: Prisma.PipelineBatchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PipelineBatchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PipelineBatchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineBatchPayload>
+          }
+          aggregate: {
+            args: Prisma.PipelineBatchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipelineBatch>
+          }
+          groupBy: {
+            args: Prisma.PipelineBatchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipelineBatchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PipelineBatchCountArgs<ExtArgs>
+            result: $Utils.Optional<PipelineBatchCountAggregateOutputType> | number
+          }
+        }
+      }
+      PipelinePig: {
+        payload: Prisma.$PipelinePigPayload<ExtArgs>
+        fields: Prisma.PipelinePigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PipelinePigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PipelinePigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload>
+          }
+          findFirst: {
+            args: Prisma.PipelinePigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PipelinePigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload>
+          }
+          findMany: {
+            args: Prisma.PipelinePigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload>[]
+          }
+          create: {
+            args: Prisma.PipelinePigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload>
+          }
+          createMany: {
+            args: Prisma.PipelinePigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PipelinePigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload>
+          }
+          update: {
+            args: Prisma.PipelinePigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload>
+          }
+          deleteMany: {
+            args: Prisma.PipelinePigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PipelinePigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PipelinePigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelinePigPayload>
+          }
+          aggregate: {
+            args: Prisma.PipelinePigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipelinePig>
+          }
+          groupBy: {
+            args: Prisma.PipelinePigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipelinePigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PipelinePigCountArgs<ExtArgs>
+            result: $Utils.Optional<PipelinePigCountAggregateOutputType> | number
+          }
+        }
+      }
+      PipelineYearlyStats: {
+        payload: Prisma.$PipelineYearlyStatsPayload<ExtArgs>
+        fields: Prisma.PipelineYearlyStatsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PipelineYearlyStatsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PipelineYearlyStatsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+          }
+          findFirst: {
+            args: Prisma.PipelineYearlyStatsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PipelineYearlyStatsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+          }
+          findMany: {
+            args: Prisma.PipelineYearlyStatsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>[]
+          }
+          create: {
+            args: Prisma.PipelineYearlyStatsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+          }
+          createMany: {
+            args: Prisma.PipelineYearlyStatsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PipelineYearlyStatsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+          }
+          update: {
+            args: Prisma.PipelineYearlyStatsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+          }
+          deleteMany: {
+            args: Prisma.PipelineYearlyStatsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PipelineYearlyStatsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PipelineYearlyStatsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+          }
+          aggregate: {
+            args: Prisma.PipelineYearlyStatsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipelineYearlyStats>
+          }
+          groupBy: {
+            args: Prisma.PipelineYearlyStatsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipelineYearlyStatsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PipelineYearlyStatsCountArgs<ExtArgs>
+            result: $Utils.Optional<PipelineYearlyStatsCountAggregateOutputType> | number
+          }
+        }
+      }
       DailyEntry: {
         payload: Prisma.$DailyEntryPayload<ExtArgs>
         fields: Prisma.DailyEntryFieldRefs
@@ -2308,6 +2656,72 @@ export namespace Prisma {
           }
         }
       }
+      PipelineProgress: {
+        payload: Prisma.$PipelineProgressPayload<ExtArgs>
+        fields: Prisma.PipelineProgressFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PipelineProgressFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PipelineProgressFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload>
+          }
+          findFirst: {
+            args: Prisma.PipelineProgressFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PipelineProgressFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload>
+          }
+          findMany: {
+            args: Prisma.PipelineProgressFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload>[]
+          }
+          create: {
+            args: Prisma.PipelineProgressCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload>
+          }
+          createMany: {
+            args: Prisma.PipelineProgressCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PipelineProgressDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload>
+          }
+          update: {
+            args: Prisma.PipelineProgressUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload>
+          }
+          deleteMany: {
+            args: Prisma.PipelineProgressDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PipelineProgressUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PipelineProgressUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineProgressPayload>
+          }
+          aggregate: {
+            args: Prisma.PipelineProgressAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipelineProgress>
+          }
+          groupBy: {
+            args: Prisma.PipelineProgressGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipelineProgressGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PipelineProgressCountArgs<ExtArgs>
+            result: $Utils.Optional<PipelineProgressCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2433,10 +2847,15 @@ export namespace Prisma {
     permission?: PermissionOmit
     auditLog?: AuditLogOmit
     station?: StationOmit
+    facility?: FacilityOmit
+    pipelineBatch?: PipelineBatchOmit
+    pipelinePig?: PipelinePigOmit
+    pipelineYearlyStats?: PipelineYearlyStatsOmit
     dailyEntry?: DailyEntryOmit
     tank?: TankOmit
     remark?: RemarkOmit
     supplier?: SupplierOmit
+    pipelineProgress?: PipelineProgressOmit
   }
 
   /* Types for Logging */
@@ -3628,6 +4047,11 @@ export namespace Prisma {
      * Skip the first `n` Accounts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Accounts.
+     */
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
   }
 
@@ -4569,6 +4993,11 @@ export namespace Prisma {
      * Skip the first `n` Sessions.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sessions.
+     */
     distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
   }
 
@@ -5448,6 +5877,11 @@ export namespace Prisma {
      * Skip the first `n` VerificationTokens.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VerificationTokens.
+     */
     distinct?: VerificationTokenScalarFieldEnum | VerificationTokenScalarFieldEnum[]
   }
 
@@ -6449,6 +6883,11 @@ export namespace Prisma {
      * Skip the first `n` FuelInputEntries.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FuelInputEntries.
+     */
     distinct?: FuelInputEntryScalarFieldEnum | FuelInputEntryScalarFieldEnum[]
   }
 
@@ -7526,6 +7965,11 @@ export namespace Prisma {
      * Skip the first `n` PipelineData.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineData.
+     */
     distinct?: PipelineDataScalarFieldEnum | PipelineDataScalarFieldEnum[]
   }
 
@@ -8591,6 +9035,11 @@ export namespace Prisma {
      * Skip the first `n` ReadingLines.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ReadingLines.
+     */
     distinct?: ReadingLinesScalarFieldEnum | ReadingLinesScalarFieldEnum[]
   }
 
@@ -9572,6 +10021,11 @@ export namespace Prisma {
      * Skip the first `n` Shipments.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Shipments.
+     */
     distinct?: ShipmentScalarFieldEnum | ShipmentScalarFieldEnum[]
   }
 
@@ -10486,6 +10940,11 @@ export namespace Prisma {
      * Skip the first `n` Alerts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Alerts.
+     */
     distinct?: AlertScalarFieldEnum | AlertScalarFieldEnum[]
   }
 
@@ -11512,6 +11971,11 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
@@ -12561,6 +13025,11 @@ export namespace Prisma {
      * Skip the first `n` PasswordResets.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PasswordResets.
+     */
     distinct?: PasswordResetScalarFieldEnum | PasswordResetScalarFieldEnum[]
   }
 
@@ -13462,6 +13931,11 @@ export namespace Prisma {
      * Skip the first `n` Settings.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Settings.
+     */
     distinct?: SettingScalarFieldEnum | SettingScalarFieldEnum[]
   }
 
@@ -14376,6 +14850,11 @@ export namespace Prisma {
      * Skip the first `n` Maintenances.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Maintenances.
+     */
     distinct?: MaintenanceScalarFieldEnum | MaintenanceScalarFieldEnum[]
   }
 
@@ -15335,6 +15814,11 @@ export namespace Prisma {
      * Skip the first `n` InventoryTransactions.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryTransactions.
+     */
     distinct?: InventoryTransactionScalarFieldEnum | InventoryTransactionScalarFieldEnum[]
   }
 
@@ -16309,6 +16793,11 @@ export namespace Prisma {
      * Skip the first `n` Roles.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Roles.
+     */
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
   }
 
@@ -17345,6 +17834,11 @@ export namespace Prisma {
      * Skip the first `n` Permissions.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Permissions.
+     */
     distinct?: PermissionScalarFieldEnum | PermissionScalarFieldEnum[]
   }
 
@@ -18341,6 +18835,11 @@ export namespace Prisma {
      * Skip the first `n` AuditLogs.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuditLogs.
+     */
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
   }
 
@@ -18539,6 +19038,7 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    facilityId: string | null
   }
 
   export type StationMaxAggregateOutputType = {
@@ -18546,6 +19046,7 @@ export namespace Prisma {
     name: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    facilityId: string | null
   }
 
   export type StationCountAggregateOutputType = {
@@ -18553,6 +19054,7 @@ export namespace Prisma {
     name: number
     createdAt: number
     updatedAt: number
+    facilityId: number
     _all: number
   }
 
@@ -18562,6 +19064,7 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
+    facilityId?: true
   }
 
   export type StationMaxAggregateInputType = {
@@ -18569,6 +19072,7 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
+    facilityId?: true
   }
 
   export type StationCountAggregateInputType = {
@@ -18576,6 +19080,7 @@ export namespace Prisma {
     name?: true
     createdAt?: true
     updatedAt?: true
+    facilityId?: true
     _all?: true
   }
 
@@ -18656,6 +19161,7 @@ export namespace Prisma {
     name: string
     createdAt: Date
     updatedAt: Date
+    facilityId: string | null
     _count: StationCountAggregateOutputType | null
     _min: StationMinAggregateOutputType | null
     _max: StationMaxAggregateOutputType | null
@@ -18680,7 +19186,9 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    facilityId?: boolean
     entries?: boolean | Station$entriesArgs<ExtArgs>
+    facility?: boolean | Station$facilityArgs<ExtArgs>
     _count?: boolean | StationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["station"]>
 
@@ -18691,11 +19199,13 @@ export namespace Prisma {
     name?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    facilityId?: boolean
   }
 
-  export type StationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["station"]>
+  export type StationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "facilityId", ExtArgs["result"]["station"]>
   export type StationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     entries?: boolean | Station$entriesArgs<ExtArgs>
+    facility?: boolean | Station$facilityArgs<ExtArgs>
     _count?: boolean | StationCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -18703,12 +19213,14 @@ export namespace Prisma {
     name: "Station"
     objects: {
       entries: Prisma.$DailyEntryPayload<ExtArgs>[]
+      facility: Prisma.$FacilityPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       createdAt: Date
       updatedAt: Date
+      facilityId: string | null
     }, ExtArgs["result"]["station"]>
     composites: {}
   }
@@ -19050,6 +19562,7 @@ export namespace Prisma {
   export interface Prisma__StationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     entries<T extends Station$entriesArgs<ExtArgs> = {}>(args?: Subset<T, Station$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    facility<T extends Station$facilityArgs<ExtArgs> = {}>(args?: Subset<T, Station$facilityArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19083,6 +19596,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Station", 'String'>
     readonly createdAt: FieldRef<"Station", 'DateTime'>
     readonly updatedAt: FieldRef<"Station", 'DateTime'>
+    readonly facilityId: FieldRef<"Station", 'String'>
   }
     
 
@@ -19279,6 +19793,11 @@ export namespace Prisma {
      * Skip the first `n` Stations.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Stations.
+     */
     distinct?: StationScalarFieldEnum | StationScalarFieldEnum[]
   }
 
@@ -19449,6 +19968,25 @@ export namespace Prisma {
   }
 
   /**
+   * Station.facility
+   */
+  export type Station$facilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    where?: FacilityWhereInput
+  }
+
+  /**
    * Station without action
    */
   export type StationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19464,6 +20002,3964 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: StationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Facility
+   */
+
+  export type AggregateFacility = {
+    _count: FacilityCountAggregateOutputType | null
+    _avg: FacilityAvgAggregateOutputType | null
+    _sum: FacilitySumAggregateOutputType | null
+    _min: FacilityMinAggregateOutputType | null
+    _max: FacilityMaxAggregateOutputType | null
+  }
+
+  export type FacilityAvgAggregateOutputType = {
+    km: number | null
+    pressure: number | null
+    flow: number | null
+    temp: number | null
+  }
+
+  export type FacilitySumAggregateOutputType = {
+    km: number | null
+    pressure: number | null
+    flow: number | null
+    temp: number | null
+  }
+
+  export type FacilityMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    shortName: string | null
+    type: string | null
+    km: number | null
+    country: string | null
+    status: string | null
+    pressure: number | null
+    flow: number | null
+    temp: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FacilityMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    shortName: string | null
+    type: string | null
+    km: number | null
+    country: string | null
+    status: string | null
+    pressure: number | null
+    flow: number | null
+    temp: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FacilityCountAggregateOutputType = {
+    id: number
+    name: number
+    shortName: number
+    type: number
+    km: number
+    country: number
+    status: number
+    pressure: number
+    flow: number
+    temp: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FacilityAvgAggregateInputType = {
+    km?: true
+    pressure?: true
+    flow?: true
+    temp?: true
+  }
+
+  export type FacilitySumAggregateInputType = {
+    km?: true
+    pressure?: true
+    flow?: true
+    temp?: true
+  }
+
+  export type FacilityMinAggregateInputType = {
+    id?: true
+    name?: true
+    shortName?: true
+    type?: true
+    km?: true
+    country?: true
+    status?: true
+    pressure?: true
+    flow?: true
+    temp?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FacilityMaxAggregateInputType = {
+    id?: true
+    name?: true
+    shortName?: true
+    type?: true
+    km?: true
+    country?: true
+    status?: true
+    pressure?: true
+    flow?: true
+    temp?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FacilityCountAggregateInputType = {
+    id?: true
+    name?: true
+    shortName?: true
+    type?: true
+    km?: true
+    country?: true
+    status?: true
+    pressure?: true
+    flow?: true
+    temp?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FacilityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Facility to aggregate.
+     */
+    where?: FacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Facilities to fetch.
+     */
+    orderBy?: FacilityOrderByWithRelationInput | FacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Facilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Facilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Facilities
+    **/
+    _count?: true | FacilityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FacilityAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FacilitySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FacilityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FacilityMaxAggregateInputType
+  }
+
+  export type GetFacilityAggregateType<T extends FacilityAggregateArgs> = {
+        [P in keyof T & keyof AggregateFacility]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFacility[P]>
+      : GetScalarType<T[P], AggregateFacility[P]>
+  }
+
+
+
+
+  export type FacilityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FacilityWhereInput
+    orderBy?: FacilityOrderByWithAggregationInput | FacilityOrderByWithAggregationInput[]
+    by: FacilityScalarFieldEnum[] | FacilityScalarFieldEnum
+    having?: FacilityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FacilityCountAggregateInputType | true
+    _avg?: FacilityAvgAggregateInputType
+    _sum?: FacilitySumAggregateInputType
+    _min?: FacilityMinAggregateInputType
+    _max?: FacilityMaxAggregateInputType
+  }
+
+  export type FacilityGroupByOutputType = {
+    id: string
+    name: string
+    shortName: string | null
+    type: string | null
+    km: number | null
+    country: string | null
+    status: string | null
+    pressure: number | null
+    flow: number | null
+    temp: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FacilityCountAggregateOutputType | null
+    _avg: FacilityAvgAggregateOutputType | null
+    _sum: FacilitySumAggregateOutputType | null
+    _min: FacilityMinAggregateOutputType | null
+    _max: FacilityMaxAggregateOutputType | null
+  }
+
+  type GetFacilityGroupByPayload<T extends FacilityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FacilityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FacilityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FacilityGroupByOutputType[P]>
+            : GetScalarType<T[P], FacilityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FacilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    shortName?: boolean
+    type?: boolean
+    km?: boolean
+    country?: boolean
+    status?: boolean
+    pressure?: boolean
+    flow?: boolean
+    temp?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    station?: boolean | Facility$stationArgs<ExtArgs>
+  }, ExtArgs["result"]["facility"]>
+
+
+
+  export type FacilitySelectScalar = {
+    id?: boolean
+    name?: boolean
+    shortName?: boolean
+    type?: boolean
+    km?: boolean
+    country?: boolean
+    status?: boolean
+    pressure?: boolean
+    flow?: boolean
+    temp?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "shortName" | "type" | "km" | "country" | "status" | "pressure" | "flow" | "temp" | "createdAt" | "updatedAt", ExtArgs["result"]["facility"]>
+  export type FacilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    station?: boolean | Facility$stationArgs<ExtArgs>
+  }
+
+  export type $FacilityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Facility"
+    objects: {
+      station: Prisma.$StationPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      shortName: string | null
+      type: string | null
+      km: number | null
+      country: string | null
+      status: string | null
+      pressure: number | null
+      flow: number | null
+      temp: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["facility"]>
+    composites: {}
+  }
+
+  type FacilityGetPayload<S extends boolean | null | undefined | FacilityDefaultArgs> = $Result.GetResult<Prisma.$FacilityPayload, S>
+
+  type FacilityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FacilityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FacilityCountAggregateInputType | true
+    }
+
+  export interface FacilityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Facility'], meta: { name: 'Facility' } }
+    /**
+     * Find zero or one Facility that matches the filter.
+     * @param {FacilityFindUniqueArgs} args - Arguments to find a Facility
+     * @example
+     * // Get one Facility
+     * const facility = await prisma.facility.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FacilityFindUniqueArgs>(args: SelectSubset<T, FacilityFindUniqueArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Facility that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FacilityFindUniqueOrThrowArgs} args - Arguments to find a Facility
+     * @example
+     * // Get one Facility
+     * const facility = await prisma.facility.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FacilityFindUniqueOrThrowArgs>(args: SelectSubset<T, FacilityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Facility that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacilityFindFirstArgs} args - Arguments to find a Facility
+     * @example
+     * // Get one Facility
+     * const facility = await prisma.facility.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FacilityFindFirstArgs>(args?: SelectSubset<T, FacilityFindFirstArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Facility that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacilityFindFirstOrThrowArgs} args - Arguments to find a Facility
+     * @example
+     * // Get one Facility
+     * const facility = await prisma.facility.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FacilityFindFirstOrThrowArgs>(args?: SelectSubset<T, FacilityFindFirstOrThrowArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Facilities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacilityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Facilities
+     * const facilities = await prisma.facility.findMany()
+     * 
+     * // Get first 10 Facilities
+     * const facilities = await prisma.facility.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const facilityWithIdOnly = await prisma.facility.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FacilityFindManyArgs>(args?: SelectSubset<T, FacilityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Facility.
+     * @param {FacilityCreateArgs} args - Arguments to create a Facility.
+     * @example
+     * // Create one Facility
+     * const Facility = await prisma.facility.create({
+     *   data: {
+     *     // ... data to create a Facility
+     *   }
+     * })
+     * 
+     */
+    create<T extends FacilityCreateArgs>(args: SelectSubset<T, FacilityCreateArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Facilities.
+     * @param {FacilityCreateManyArgs} args - Arguments to create many Facilities.
+     * @example
+     * // Create many Facilities
+     * const facility = await prisma.facility.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FacilityCreateManyArgs>(args?: SelectSubset<T, FacilityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Facility.
+     * @param {FacilityDeleteArgs} args - Arguments to delete one Facility.
+     * @example
+     * // Delete one Facility
+     * const Facility = await prisma.facility.delete({
+     *   where: {
+     *     // ... filter to delete one Facility
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FacilityDeleteArgs>(args: SelectSubset<T, FacilityDeleteArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Facility.
+     * @param {FacilityUpdateArgs} args - Arguments to update one Facility.
+     * @example
+     * // Update one Facility
+     * const facility = await prisma.facility.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FacilityUpdateArgs>(args: SelectSubset<T, FacilityUpdateArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Facilities.
+     * @param {FacilityDeleteManyArgs} args - Arguments to filter Facilities to delete.
+     * @example
+     * // Delete a few Facilities
+     * const { count } = await prisma.facility.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FacilityDeleteManyArgs>(args?: SelectSubset<T, FacilityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Facilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacilityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Facilities
+     * const facility = await prisma.facility.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FacilityUpdateManyArgs>(args: SelectSubset<T, FacilityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Facility.
+     * @param {FacilityUpsertArgs} args - Arguments to update or create a Facility.
+     * @example
+     * // Update or create a Facility
+     * const facility = await prisma.facility.upsert({
+     *   create: {
+     *     // ... data to create a Facility
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Facility we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FacilityUpsertArgs>(args: SelectSubset<T, FacilityUpsertArgs<ExtArgs>>): Prisma__FacilityClient<$Result.GetResult<Prisma.$FacilityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Facilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacilityCountArgs} args - Arguments to filter Facilities to count.
+     * @example
+     * // Count the number of Facilities
+     * const count = await prisma.facility.count({
+     *   where: {
+     *     // ... the filter for the Facilities we want to count
+     *   }
+     * })
+    **/
+    count<T extends FacilityCountArgs>(
+      args?: Subset<T, FacilityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FacilityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Facility.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacilityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FacilityAggregateArgs>(args: Subset<T, FacilityAggregateArgs>): Prisma.PrismaPromise<GetFacilityAggregateType<T>>
+
+    /**
+     * Group by Facility.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FacilityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FacilityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FacilityGroupByArgs['orderBy'] }
+        : { orderBy?: FacilityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FacilityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFacilityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Facility model
+   */
+  readonly fields: FacilityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Facility.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FacilityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    station<T extends Facility$stationArgs<ExtArgs> = {}>(args?: Subset<T, Facility$stationArgs<ExtArgs>>): Prisma__StationClient<$Result.GetResult<Prisma.$StationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Facility model
+   */
+  interface FacilityFieldRefs {
+    readonly id: FieldRef<"Facility", 'String'>
+    readonly name: FieldRef<"Facility", 'String'>
+    readonly shortName: FieldRef<"Facility", 'String'>
+    readonly type: FieldRef<"Facility", 'String'>
+    readonly km: FieldRef<"Facility", 'Float'>
+    readonly country: FieldRef<"Facility", 'String'>
+    readonly status: FieldRef<"Facility", 'String'>
+    readonly pressure: FieldRef<"Facility", 'Float'>
+    readonly flow: FieldRef<"Facility", 'Float'>
+    readonly temp: FieldRef<"Facility", 'Float'>
+    readonly createdAt: FieldRef<"Facility", 'DateTime'>
+    readonly updatedAt: FieldRef<"Facility", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Facility findUnique
+   */
+  export type FacilityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Facility to fetch.
+     */
+    where: FacilityWhereUniqueInput
+  }
+
+  /**
+   * Facility findUniqueOrThrow
+   */
+  export type FacilityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Facility to fetch.
+     */
+    where: FacilityWhereUniqueInput
+  }
+
+  /**
+   * Facility findFirst
+   */
+  export type FacilityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Facility to fetch.
+     */
+    where?: FacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Facilities to fetch.
+     */
+    orderBy?: FacilityOrderByWithRelationInput | FacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Facilities.
+     */
+    cursor?: FacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Facilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Facilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Facilities.
+     */
+    distinct?: FacilityScalarFieldEnum | FacilityScalarFieldEnum[]
+  }
+
+  /**
+   * Facility findFirstOrThrow
+   */
+  export type FacilityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Facility to fetch.
+     */
+    where?: FacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Facilities to fetch.
+     */
+    orderBy?: FacilityOrderByWithRelationInput | FacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Facilities.
+     */
+    cursor?: FacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Facilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Facilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Facilities.
+     */
+    distinct?: FacilityScalarFieldEnum | FacilityScalarFieldEnum[]
+  }
+
+  /**
+   * Facility findMany
+   */
+  export type FacilityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which Facilities to fetch.
+     */
+    where?: FacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Facilities to fetch.
+     */
+    orderBy?: FacilityOrderByWithRelationInput | FacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Facilities.
+     */
+    cursor?: FacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Facilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Facilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Facilities.
+     */
+    distinct?: FacilityScalarFieldEnum | FacilityScalarFieldEnum[]
+  }
+
+  /**
+   * Facility create
+   */
+  export type FacilityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Facility.
+     */
+    data: XOR<FacilityCreateInput, FacilityUncheckedCreateInput>
+  }
+
+  /**
+   * Facility createMany
+   */
+  export type FacilityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Facilities.
+     */
+    data: FacilityCreateManyInput | FacilityCreateManyInput[]
+  }
+
+  /**
+   * Facility update
+   */
+  export type FacilityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Facility.
+     */
+    data: XOR<FacilityUpdateInput, FacilityUncheckedUpdateInput>
+    /**
+     * Choose, which Facility to update.
+     */
+    where: FacilityWhereUniqueInput
+  }
+
+  /**
+   * Facility updateMany
+   */
+  export type FacilityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Facilities.
+     */
+    data: XOR<FacilityUpdateManyMutationInput, FacilityUncheckedUpdateManyInput>
+    /**
+     * Filter which Facilities to update
+     */
+    where?: FacilityWhereInput
+    /**
+     * Limit how many Facilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Facility upsert
+   */
+  export type FacilityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Facility to update in case it exists.
+     */
+    where: FacilityWhereUniqueInput
+    /**
+     * In case the Facility found by the `where` argument doesn't exist, create a new Facility with this data.
+     */
+    create: XOR<FacilityCreateInput, FacilityUncheckedCreateInput>
+    /**
+     * In case the Facility was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FacilityUpdateInput, FacilityUncheckedUpdateInput>
+  }
+
+  /**
+   * Facility delete
+   */
+  export type FacilityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+    /**
+     * Filter which Facility to delete.
+     */
+    where: FacilityWhereUniqueInput
+  }
+
+  /**
+   * Facility deleteMany
+   */
+  export type FacilityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Facilities to delete
+     */
+    where?: FacilityWhereInput
+    /**
+     * Limit how many Facilities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Facility.station
+   */
+  export type Facility$stationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Station
+     */
+    select?: StationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Station
+     */
+    omit?: StationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StationInclude<ExtArgs> | null
+    where?: StationWhereInput
+  }
+
+  /**
+   * Facility without action
+   */
+  export type FacilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Facility
+     */
+    select?: FacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Facility
+     */
+    omit?: FacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FacilityInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PipelineBatch
+   */
+
+  export type AggregatePipelineBatch = {
+    _count: PipelineBatchCountAggregateOutputType | null
+    _avg: PipelineBatchAvgAggregateOutputType | null
+    _sum: PipelineBatchSumAggregateOutputType | null
+    _min: PipelineBatchMinAggregateOutputType | null
+    _max: PipelineBatchMaxAggregateOutputType | null
+  }
+
+  export type PipelineBatchAvgAggregateOutputType = {
+    year: number | null
+    volume: number | null
+    startKm: number | null
+    endKm: number | null
+  }
+
+  export type PipelineBatchSumAggregateOutputType = {
+    year: number | null
+    volume: number | null
+    startKm: number | null
+    endKm: number | null
+  }
+
+  export type PipelineBatchMinAggregateOutputType = {
+    id: string | null
+    year: number | null
+    product: string | null
+    volume: number | null
+    startKm: number | null
+    endKm: number | null
+    color: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PipelineBatchMaxAggregateOutputType = {
+    id: string | null
+    year: number | null
+    product: string | null
+    volume: number | null
+    startKm: number | null
+    endKm: number | null
+    color: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PipelineBatchCountAggregateOutputType = {
+    id: number
+    year: number
+    product: number
+    volume: number
+    startKm: number
+    endKm: number
+    color: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PipelineBatchAvgAggregateInputType = {
+    year?: true
+    volume?: true
+    startKm?: true
+    endKm?: true
+  }
+
+  export type PipelineBatchSumAggregateInputType = {
+    year?: true
+    volume?: true
+    startKm?: true
+    endKm?: true
+  }
+
+  export type PipelineBatchMinAggregateInputType = {
+    id?: true
+    year?: true
+    product?: true
+    volume?: true
+    startKm?: true
+    endKm?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PipelineBatchMaxAggregateInputType = {
+    id?: true
+    year?: true
+    product?: true
+    volume?: true
+    startKm?: true
+    endKm?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PipelineBatchCountAggregateInputType = {
+    id?: true
+    year?: true
+    product?: true
+    volume?: true
+    startKm?: true
+    endKm?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PipelineBatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineBatch to aggregate.
+     */
+    where?: PipelineBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineBatches to fetch.
+     */
+    orderBy?: PipelineBatchOrderByWithRelationInput | PipelineBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PipelineBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PipelineBatches
+    **/
+    _count?: true | PipelineBatchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PipelineBatchAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PipelineBatchSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PipelineBatchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PipelineBatchMaxAggregateInputType
+  }
+
+  export type GetPipelineBatchAggregateType<T extends PipelineBatchAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipelineBatch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipelineBatch[P]>
+      : GetScalarType<T[P], AggregatePipelineBatch[P]>
+  }
+
+
+
+
+  export type PipelineBatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelineBatchWhereInput
+    orderBy?: PipelineBatchOrderByWithAggregationInput | PipelineBatchOrderByWithAggregationInput[]
+    by: PipelineBatchScalarFieldEnum[] | PipelineBatchScalarFieldEnum
+    having?: PipelineBatchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PipelineBatchCountAggregateInputType | true
+    _avg?: PipelineBatchAvgAggregateInputType
+    _sum?: PipelineBatchSumAggregateInputType
+    _min?: PipelineBatchMinAggregateInputType
+    _max?: PipelineBatchMaxAggregateInputType
+  }
+
+  export type PipelineBatchGroupByOutputType = {
+    id: string
+    year: number
+    product: string
+    volume: number
+    startKm: number
+    endKm: number
+    color: string
+    createdAt: Date
+    updatedAt: Date
+    _count: PipelineBatchCountAggregateOutputType | null
+    _avg: PipelineBatchAvgAggregateOutputType | null
+    _sum: PipelineBatchSumAggregateOutputType | null
+    _min: PipelineBatchMinAggregateOutputType | null
+    _max: PipelineBatchMaxAggregateOutputType | null
+  }
+
+  type GetPipelineBatchGroupByPayload<T extends PipelineBatchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PipelineBatchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PipelineBatchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PipelineBatchGroupByOutputType[P]>
+            : GetScalarType<T[P], PipelineBatchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PipelineBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    year?: boolean
+    product?: boolean
+    volume?: boolean
+    startKm?: boolean
+    endKm?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pipelineBatch"]>
+
+
+
+  export type PipelineBatchSelectScalar = {
+    id?: boolean
+    year?: boolean
+    product?: boolean
+    volume?: boolean
+    startKm?: boolean
+    endKm?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PipelineBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "year" | "product" | "volume" | "startKm" | "endKm" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelineBatch"]>
+
+  export type $PipelineBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PipelineBatch"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      year: number
+      product: string
+      volume: number
+      startKm: number
+      endKm: number
+      color: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["pipelineBatch"]>
+    composites: {}
+  }
+
+  type PipelineBatchGetPayload<S extends boolean | null | undefined | PipelineBatchDefaultArgs> = $Result.GetResult<Prisma.$PipelineBatchPayload, S>
+
+  type PipelineBatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PipelineBatchFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PipelineBatchCountAggregateInputType | true
+    }
+
+  export interface PipelineBatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipelineBatch'], meta: { name: 'PipelineBatch' } }
+    /**
+     * Find zero or one PipelineBatch that matches the filter.
+     * @param {PipelineBatchFindUniqueArgs} args - Arguments to find a PipelineBatch
+     * @example
+     * // Get one PipelineBatch
+     * const pipelineBatch = await prisma.pipelineBatch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PipelineBatchFindUniqueArgs>(args: SelectSubset<T, PipelineBatchFindUniqueArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PipelineBatch that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PipelineBatchFindUniqueOrThrowArgs} args - Arguments to find a PipelineBatch
+     * @example
+     * // Get one PipelineBatch
+     * const pipelineBatch = await prisma.pipelineBatch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PipelineBatchFindUniqueOrThrowArgs>(args: SelectSubset<T, PipelineBatchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineBatch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineBatchFindFirstArgs} args - Arguments to find a PipelineBatch
+     * @example
+     * // Get one PipelineBatch
+     * const pipelineBatch = await prisma.pipelineBatch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PipelineBatchFindFirstArgs>(args?: SelectSubset<T, PipelineBatchFindFirstArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineBatch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineBatchFindFirstOrThrowArgs} args - Arguments to find a PipelineBatch
+     * @example
+     * // Get one PipelineBatch
+     * const pipelineBatch = await prisma.pipelineBatch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PipelineBatchFindFirstOrThrowArgs>(args?: SelectSubset<T, PipelineBatchFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PipelineBatches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineBatchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PipelineBatches
+     * const pipelineBatches = await prisma.pipelineBatch.findMany()
+     * 
+     * // Get first 10 PipelineBatches
+     * const pipelineBatches = await prisma.pipelineBatch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pipelineBatchWithIdOnly = await prisma.pipelineBatch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PipelineBatchFindManyArgs>(args?: SelectSubset<T, PipelineBatchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PipelineBatch.
+     * @param {PipelineBatchCreateArgs} args - Arguments to create a PipelineBatch.
+     * @example
+     * // Create one PipelineBatch
+     * const PipelineBatch = await prisma.pipelineBatch.create({
+     *   data: {
+     *     // ... data to create a PipelineBatch
+     *   }
+     * })
+     * 
+     */
+    create<T extends PipelineBatchCreateArgs>(args: SelectSubset<T, PipelineBatchCreateArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PipelineBatches.
+     * @param {PipelineBatchCreateManyArgs} args - Arguments to create many PipelineBatches.
+     * @example
+     * // Create many PipelineBatches
+     * const pipelineBatch = await prisma.pipelineBatch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PipelineBatchCreateManyArgs>(args?: SelectSubset<T, PipelineBatchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PipelineBatch.
+     * @param {PipelineBatchDeleteArgs} args - Arguments to delete one PipelineBatch.
+     * @example
+     * // Delete one PipelineBatch
+     * const PipelineBatch = await prisma.pipelineBatch.delete({
+     *   where: {
+     *     // ... filter to delete one PipelineBatch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PipelineBatchDeleteArgs>(args: SelectSubset<T, PipelineBatchDeleteArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PipelineBatch.
+     * @param {PipelineBatchUpdateArgs} args - Arguments to update one PipelineBatch.
+     * @example
+     * // Update one PipelineBatch
+     * const pipelineBatch = await prisma.pipelineBatch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PipelineBatchUpdateArgs>(args: SelectSubset<T, PipelineBatchUpdateArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PipelineBatches.
+     * @param {PipelineBatchDeleteManyArgs} args - Arguments to filter PipelineBatches to delete.
+     * @example
+     * // Delete a few PipelineBatches
+     * const { count } = await prisma.pipelineBatch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PipelineBatchDeleteManyArgs>(args?: SelectSubset<T, PipelineBatchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PipelineBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineBatchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PipelineBatches
+     * const pipelineBatch = await prisma.pipelineBatch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PipelineBatchUpdateManyArgs>(args: SelectSubset<T, PipelineBatchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PipelineBatch.
+     * @param {PipelineBatchUpsertArgs} args - Arguments to update or create a PipelineBatch.
+     * @example
+     * // Update or create a PipelineBatch
+     * const pipelineBatch = await prisma.pipelineBatch.upsert({
+     *   create: {
+     *     // ... data to create a PipelineBatch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PipelineBatch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PipelineBatchUpsertArgs>(args: SelectSubset<T, PipelineBatchUpsertArgs<ExtArgs>>): Prisma__PipelineBatchClient<$Result.GetResult<Prisma.$PipelineBatchPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PipelineBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineBatchCountArgs} args - Arguments to filter PipelineBatches to count.
+     * @example
+     * // Count the number of PipelineBatches
+     * const count = await prisma.pipelineBatch.count({
+     *   where: {
+     *     // ... the filter for the PipelineBatches we want to count
+     *   }
+     * })
+    **/
+    count<T extends PipelineBatchCountArgs>(
+      args?: Subset<T, PipelineBatchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PipelineBatchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PipelineBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineBatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PipelineBatchAggregateArgs>(args: Subset<T, PipelineBatchAggregateArgs>): Prisma.PrismaPromise<GetPipelineBatchAggregateType<T>>
+
+    /**
+     * Group by PipelineBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineBatchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PipelineBatchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PipelineBatchGroupByArgs['orderBy'] }
+        : { orderBy?: PipelineBatchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PipelineBatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelineBatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PipelineBatch model
+   */
+  readonly fields: PipelineBatchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PipelineBatch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PipelineBatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PipelineBatch model
+   */
+  interface PipelineBatchFieldRefs {
+    readonly id: FieldRef<"PipelineBatch", 'String'>
+    readonly year: FieldRef<"PipelineBatch", 'Int'>
+    readonly product: FieldRef<"PipelineBatch", 'String'>
+    readonly volume: FieldRef<"PipelineBatch", 'Float'>
+    readonly startKm: FieldRef<"PipelineBatch", 'Float'>
+    readonly endKm: FieldRef<"PipelineBatch", 'Float'>
+    readonly color: FieldRef<"PipelineBatch", 'String'>
+    readonly createdAt: FieldRef<"PipelineBatch", 'DateTime'>
+    readonly updatedAt: FieldRef<"PipelineBatch", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PipelineBatch findUnique
+   */
+  export type PipelineBatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineBatch to fetch.
+     */
+    where: PipelineBatchWhereUniqueInput
+  }
+
+  /**
+   * PipelineBatch findUniqueOrThrow
+   */
+  export type PipelineBatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineBatch to fetch.
+     */
+    where: PipelineBatchWhereUniqueInput
+  }
+
+  /**
+   * PipelineBatch findFirst
+   */
+  export type PipelineBatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineBatch to fetch.
+     */
+    where?: PipelineBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineBatches to fetch.
+     */
+    orderBy?: PipelineBatchOrderByWithRelationInput | PipelineBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineBatches.
+     */
+    cursor?: PipelineBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineBatches.
+     */
+    distinct?: PipelineBatchScalarFieldEnum | PipelineBatchScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineBatch findFirstOrThrow
+   */
+  export type PipelineBatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineBatch to fetch.
+     */
+    where?: PipelineBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineBatches to fetch.
+     */
+    orderBy?: PipelineBatchOrderByWithRelationInput | PipelineBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineBatches.
+     */
+    cursor?: PipelineBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineBatches.
+     */
+    distinct?: PipelineBatchScalarFieldEnum | PipelineBatchScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineBatch findMany
+   */
+  export type PipelineBatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineBatches to fetch.
+     */
+    where?: PipelineBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineBatches to fetch.
+     */
+    orderBy?: PipelineBatchOrderByWithRelationInput | PipelineBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PipelineBatches.
+     */
+    cursor?: PipelineBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineBatches.
+     */
+    distinct?: PipelineBatchScalarFieldEnum | PipelineBatchScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineBatch create
+   */
+  export type PipelineBatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PipelineBatch.
+     */
+    data: XOR<PipelineBatchCreateInput, PipelineBatchUncheckedCreateInput>
+  }
+
+  /**
+   * PipelineBatch createMany
+   */
+  export type PipelineBatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PipelineBatches.
+     */
+    data: PipelineBatchCreateManyInput | PipelineBatchCreateManyInput[]
+  }
+
+  /**
+   * PipelineBatch update
+   */
+  export type PipelineBatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PipelineBatch.
+     */
+    data: XOR<PipelineBatchUpdateInput, PipelineBatchUncheckedUpdateInput>
+    /**
+     * Choose, which PipelineBatch to update.
+     */
+    where: PipelineBatchWhereUniqueInput
+  }
+
+  /**
+   * PipelineBatch updateMany
+   */
+  export type PipelineBatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PipelineBatches.
+     */
+    data: XOR<PipelineBatchUpdateManyMutationInput, PipelineBatchUncheckedUpdateManyInput>
+    /**
+     * Filter which PipelineBatches to update
+     */
+    where?: PipelineBatchWhereInput
+    /**
+     * Limit how many PipelineBatches to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineBatch upsert
+   */
+  export type PipelineBatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PipelineBatch to update in case it exists.
+     */
+    where: PipelineBatchWhereUniqueInput
+    /**
+     * In case the PipelineBatch found by the `where` argument doesn't exist, create a new PipelineBatch with this data.
+     */
+    create: XOR<PipelineBatchCreateInput, PipelineBatchUncheckedCreateInput>
+    /**
+     * In case the PipelineBatch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PipelineBatchUpdateInput, PipelineBatchUncheckedUpdateInput>
+  }
+
+  /**
+   * PipelineBatch delete
+   */
+  export type PipelineBatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+    /**
+     * Filter which PipelineBatch to delete.
+     */
+    where: PipelineBatchWhereUniqueInput
+  }
+
+  /**
+   * PipelineBatch deleteMany
+   */
+  export type PipelineBatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineBatches to delete
+     */
+    where?: PipelineBatchWhereInput
+    /**
+     * Limit how many PipelineBatches to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineBatch without action
+   */
+  export type PipelineBatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineBatch
+     */
+    select?: PipelineBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineBatch
+     */
+    omit?: PipelineBatchOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PipelinePig
+   */
+
+  export type AggregatePipelinePig = {
+    _count: PipelinePigCountAggregateOutputType | null
+    _avg: PipelinePigAvgAggregateOutputType | null
+    _sum: PipelinePigSumAggregateOutputType | null
+    _min: PipelinePigMinAggregateOutputType | null
+    _max: PipelinePigMaxAggregateOutputType | null
+  }
+
+  export type PipelinePigAvgAggregateOutputType = {
+    position: number | null
+    speed: number | null
+  }
+
+  export type PipelinePigSumAggregateOutputType = {
+    position: number | null
+    speed: number | null
+  }
+
+  export type PipelinePigMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    position: number | null
+    speed: number | null
+    type: string | null
+    launched: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PipelinePigMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    position: number | null
+    speed: number | null
+    type: string | null
+    launched: Date | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PipelinePigCountAggregateOutputType = {
+    id: number
+    name: number
+    position: number
+    speed: number
+    type: number
+    launched: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PipelinePigAvgAggregateInputType = {
+    position?: true
+    speed?: true
+  }
+
+  export type PipelinePigSumAggregateInputType = {
+    position?: true
+    speed?: true
+  }
+
+  export type PipelinePigMinAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    speed?: true
+    type?: true
+    launched?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PipelinePigMaxAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    speed?: true
+    type?: true
+    launched?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PipelinePigCountAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    speed?: true
+    type?: true
+    launched?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PipelinePigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelinePig to aggregate.
+     */
+    where?: PipelinePigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelinePigs to fetch.
+     */
+    orderBy?: PipelinePigOrderByWithRelationInput | PipelinePigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PipelinePigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelinePigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelinePigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PipelinePigs
+    **/
+    _count?: true | PipelinePigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PipelinePigAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PipelinePigSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PipelinePigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PipelinePigMaxAggregateInputType
+  }
+
+  export type GetPipelinePigAggregateType<T extends PipelinePigAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipelinePig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipelinePig[P]>
+      : GetScalarType<T[P], AggregatePipelinePig[P]>
+  }
+
+
+
+
+  export type PipelinePigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelinePigWhereInput
+    orderBy?: PipelinePigOrderByWithAggregationInput | PipelinePigOrderByWithAggregationInput[]
+    by: PipelinePigScalarFieldEnum[] | PipelinePigScalarFieldEnum
+    having?: PipelinePigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PipelinePigCountAggregateInputType | true
+    _avg?: PipelinePigAvgAggregateInputType
+    _sum?: PipelinePigSumAggregateInputType
+    _min?: PipelinePigMinAggregateInputType
+    _max?: PipelinePigMaxAggregateInputType
+  }
+
+  export type PipelinePigGroupByOutputType = {
+    id: string
+    name: string
+    position: number
+    speed: number
+    type: string
+    launched: Date
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: PipelinePigCountAggregateOutputType | null
+    _avg: PipelinePigAvgAggregateOutputType | null
+    _sum: PipelinePigSumAggregateOutputType | null
+    _min: PipelinePigMinAggregateOutputType | null
+    _max: PipelinePigMaxAggregateOutputType | null
+  }
+
+  type GetPipelinePigGroupByPayload<T extends PipelinePigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PipelinePigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PipelinePigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PipelinePigGroupByOutputType[P]>
+            : GetScalarType<T[P], PipelinePigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PipelinePigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    position?: boolean
+    speed?: boolean
+    type?: boolean
+    launched?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pipelinePig"]>
+
+
+
+  export type PipelinePigSelectScalar = {
+    id?: boolean
+    name?: boolean
+    position?: boolean
+    speed?: boolean
+    type?: boolean
+    launched?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PipelinePigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "position" | "speed" | "type" | "launched" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelinePig"]>
+
+  export type $PipelinePigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PipelinePig"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      position: number
+      speed: number
+      type: string
+      launched: Date
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["pipelinePig"]>
+    composites: {}
+  }
+
+  type PipelinePigGetPayload<S extends boolean | null | undefined | PipelinePigDefaultArgs> = $Result.GetResult<Prisma.$PipelinePigPayload, S>
+
+  type PipelinePigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PipelinePigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PipelinePigCountAggregateInputType | true
+    }
+
+  export interface PipelinePigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipelinePig'], meta: { name: 'PipelinePig' } }
+    /**
+     * Find zero or one PipelinePig that matches the filter.
+     * @param {PipelinePigFindUniqueArgs} args - Arguments to find a PipelinePig
+     * @example
+     * // Get one PipelinePig
+     * const pipelinePig = await prisma.pipelinePig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PipelinePigFindUniqueArgs>(args: SelectSubset<T, PipelinePigFindUniqueArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PipelinePig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PipelinePigFindUniqueOrThrowArgs} args - Arguments to find a PipelinePig
+     * @example
+     * // Get one PipelinePig
+     * const pipelinePig = await prisma.pipelinePig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PipelinePigFindUniqueOrThrowArgs>(args: SelectSubset<T, PipelinePigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelinePig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinePigFindFirstArgs} args - Arguments to find a PipelinePig
+     * @example
+     * // Get one PipelinePig
+     * const pipelinePig = await prisma.pipelinePig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PipelinePigFindFirstArgs>(args?: SelectSubset<T, PipelinePigFindFirstArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelinePig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinePigFindFirstOrThrowArgs} args - Arguments to find a PipelinePig
+     * @example
+     * // Get one PipelinePig
+     * const pipelinePig = await prisma.pipelinePig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PipelinePigFindFirstOrThrowArgs>(args?: SelectSubset<T, PipelinePigFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PipelinePigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinePigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PipelinePigs
+     * const pipelinePigs = await prisma.pipelinePig.findMany()
+     * 
+     * // Get first 10 PipelinePigs
+     * const pipelinePigs = await prisma.pipelinePig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pipelinePigWithIdOnly = await prisma.pipelinePig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PipelinePigFindManyArgs>(args?: SelectSubset<T, PipelinePigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PipelinePig.
+     * @param {PipelinePigCreateArgs} args - Arguments to create a PipelinePig.
+     * @example
+     * // Create one PipelinePig
+     * const PipelinePig = await prisma.pipelinePig.create({
+     *   data: {
+     *     // ... data to create a PipelinePig
+     *   }
+     * })
+     * 
+     */
+    create<T extends PipelinePigCreateArgs>(args: SelectSubset<T, PipelinePigCreateArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PipelinePigs.
+     * @param {PipelinePigCreateManyArgs} args - Arguments to create many PipelinePigs.
+     * @example
+     * // Create many PipelinePigs
+     * const pipelinePig = await prisma.pipelinePig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PipelinePigCreateManyArgs>(args?: SelectSubset<T, PipelinePigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PipelinePig.
+     * @param {PipelinePigDeleteArgs} args - Arguments to delete one PipelinePig.
+     * @example
+     * // Delete one PipelinePig
+     * const PipelinePig = await prisma.pipelinePig.delete({
+     *   where: {
+     *     // ... filter to delete one PipelinePig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PipelinePigDeleteArgs>(args: SelectSubset<T, PipelinePigDeleteArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PipelinePig.
+     * @param {PipelinePigUpdateArgs} args - Arguments to update one PipelinePig.
+     * @example
+     * // Update one PipelinePig
+     * const pipelinePig = await prisma.pipelinePig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PipelinePigUpdateArgs>(args: SelectSubset<T, PipelinePigUpdateArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PipelinePigs.
+     * @param {PipelinePigDeleteManyArgs} args - Arguments to filter PipelinePigs to delete.
+     * @example
+     * // Delete a few PipelinePigs
+     * const { count } = await prisma.pipelinePig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PipelinePigDeleteManyArgs>(args?: SelectSubset<T, PipelinePigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PipelinePigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinePigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PipelinePigs
+     * const pipelinePig = await prisma.pipelinePig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PipelinePigUpdateManyArgs>(args: SelectSubset<T, PipelinePigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PipelinePig.
+     * @param {PipelinePigUpsertArgs} args - Arguments to update or create a PipelinePig.
+     * @example
+     * // Update or create a PipelinePig
+     * const pipelinePig = await prisma.pipelinePig.upsert({
+     *   create: {
+     *     // ... data to create a PipelinePig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PipelinePig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PipelinePigUpsertArgs>(args: SelectSubset<T, PipelinePigUpsertArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PipelinePigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinePigCountArgs} args - Arguments to filter PipelinePigs to count.
+     * @example
+     * // Count the number of PipelinePigs
+     * const count = await prisma.pipelinePig.count({
+     *   where: {
+     *     // ... the filter for the PipelinePigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends PipelinePigCountArgs>(
+      args?: Subset<T, PipelinePigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PipelinePigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PipelinePig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinePigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PipelinePigAggregateArgs>(args: Subset<T, PipelinePigAggregateArgs>): Prisma.PrismaPromise<GetPipelinePigAggregateType<T>>
+
+    /**
+     * Group by PipelinePig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinePigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PipelinePigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PipelinePigGroupByArgs['orderBy'] }
+        : { orderBy?: PipelinePigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PipelinePigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelinePigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PipelinePig model
+   */
+  readonly fields: PipelinePigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PipelinePig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PipelinePigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PipelinePig model
+   */
+  interface PipelinePigFieldRefs {
+    readonly id: FieldRef<"PipelinePig", 'String'>
+    readonly name: FieldRef<"PipelinePig", 'String'>
+    readonly position: FieldRef<"PipelinePig", 'Float'>
+    readonly speed: FieldRef<"PipelinePig", 'Float'>
+    readonly type: FieldRef<"PipelinePig", 'String'>
+    readonly launched: FieldRef<"PipelinePig", 'DateTime'>
+    readonly isActive: FieldRef<"PipelinePig", 'Boolean'>
+    readonly createdAt: FieldRef<"PipelinePig", 'DateTime'>
+    readonly updatedAt: FieldRef<"PipelinePig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PipelinePig findUnique
+   */
+  export type PipelinePigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelinePig to fetch.
+     */
+    where: PipelinePigWhereUniqueInput
+  }
+
+  /**
+   * PipelinePig findUniqueOrThrow
+   */
+  export type PipelinePigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelinePig to fetch.
+     */
+    where: PipelinePigWhereUniqueInput
+  }
+
+  /**
+   * PipelinePig findFirst
+   */
+  export type PipelinePigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelinePig to fetch.
+     */
+    where?: PipelinePigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelinePigs to fetch.
+     */
+    orderBy?: PipelinePigOrderByWithRelationInput | PipelinePigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelinePigs.
+     */
+    cursor?: PipelinePigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelinePigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelinePigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelinePigs.
+     */
+    distinct?: PipelinePigScalarFieldEnum | PipelinePigScalarFieldEnum[]
+  }
+
+  /**
+   * PipelinePig findFirstOrThrow
+   */
+  export type PipelinePigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelinePig to fetch.
+     */
+    where?: PipelinePigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelinePigs to fetch.
+     */
+    orderBy?: PipelinePigOrderByWithRelationInput | PipelinePigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelinePigs.
+     */
+    cursor?: PipelinePigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelinePigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelinePigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelinePigs.
+     */
+    distinct?: PipelinePigScalarFieldEnum | PipelinePigScalarFieldEnum[]
+  }
+
+  /**
+   * PipelinePig findMany
+   */
+  export type PipelinePigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelinePigs to fetch.
+     */
+    where?: PipelinePigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelinePigs to fetch.
+     */
+    orderBy?: PipelinePigOrderByWithRelationInput | PipelinePigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PipelinePigs.
+     */
+    cursor?: PipelinePigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelinePigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelinePigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelinePigs.
+     */
+    distinct?: PipelinePigScalarFieldEnum | PipelinePigScalarFieldEnum[]
+  }
+
+  /**
+   * PipelinePig create
+   */
+  export type PipelinePigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PipelinePig.
+     */
+    data: XOR<PipelinePigCreateInput, PipelinePigUncheckedCreateInput>
+  }
+
+  /**
+   * PipelinePig createMany
+   */
+  export type PipelinePigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PipelinePigs.
+     */
+    data: PipelinePigCreateManyInput | PipelinePigCreateManyInput[]
+  }
+
+  /**
+   * PipelinePig update
+   */
+  export type PipelinePigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PipelinePig.
+     */
+    data: XOR<PipelinePigUpdateInput, PipelinePigUncheckedUpdateInput>
+    /**
+     * Choose, which PipelinePig to update.
+     */
+    where: PipelinePigWhereUniqueInput
+  }
+
+  /**
+   * PipelinePig updateMany
+   */
+  export type PipelinePigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PipelinePigs.
+     */
+    data: XOR<PipelinePigUpdateManyMutationInput, PipelinePigUncheckedUpdateManyInput>
+    /**
+     * Filter which PipelinePigs to update
+     */
+    where?: PipelinePigWhereInput
+    /**
+     * Limit how many PipelinePigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelinePig upsert
+   */
+  export type PipelinePigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PipelinePig to update in case it exists.
+     */
+    where: PipelinePigWhereUniqueInput
+    /**
+     * In case the PipelinePig found by the `where` argument doesn't exist, create a new PipelinePig with this data.
+     */
+    create: XOR<PipelinePigCreateInput, PipelinePigUncheckedCreateInput>
+    /**
+     * In case the PipelinePig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PipelinePigUpdateInput, PipelinePigUncheckedUpdateInput>
+  }
+
+  /**
+   * PipelinePig delete
+   */
+  export type PipelinePigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Filter which PipelinePig to delete.
+     */
+    where: PipelinePigWhereUniqueInput
+  }
+
+  /**
+   * PipelinePig deleteMany
+   */
+  export type PipelinePigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelinePigs to delete
+     */
+    where?: PipelinePigWhereInput
+    /**
+     * Limit how many PipelinePigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelinePig without action
+   */
+  export type PipelinePigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PipelineYearlyStats
+   */
+
+  export type AggregatePipelineYearlyStats = {
+    _count: PipelineYearlyStatsCountAggregateOutputType | null
+    _avg: PipelineYearlyStatsAvgAggregateOutputType | null
+    _sum: PipelineYearlyStatsSumAggregateOutputType | null
+    _min: PipelineYearlyStatsMinAggregateOutputType | null
+    _max: PipelineYearlyStatsMaxAggregateOutputType | null
+  }
+
+  export type PipelineYearlyStatsAvgAggregateOutputType = {
+    year: number | null
+    throughput: number | null
+    delivered: number | null
+  }
+
+  export type PipelineYearlyStatsSumAggregateOutputType = {
+    year: number | null
+    throughput: number | null
+    delivered: number | null
+  }
+
+  export type PipelineYearlyStatsMinAggregateOutputType = {
+    id: string | null
+    year: number | null
+    throughput: number | null
+    delivered: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PipelineYearlyStatsMaxAggregateOutputType = {
+    id: string | null
+    year: number | null
+    throughput: number | null
+    delivered: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PipelineYearlyStatsCountAggregateOutputType = {
+    id: number
+    year: number
+    throughput: number
+    delivered: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PipelineYearlyStatsAvgAggregateInputType = {
+    year?: true
+    throughput?: true
+    delivered?: true
+  }
+
+  export type PipelineYearlyStatsSumAggregateInputType = {
+    year?: true
+    throughput?: true
+    delivered?: true
+  }
+
+  export type PipelineYearlyStatsMinAggregateInputType = {
+    id?: true
+    year?: true
+    throughput?: true
+    delivered?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PipelineYearlyStatsMaxAggregateInputType = {
+    id?: true
+    year?: true
+    throughput?: true
+    delivered?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PipelineYearlyStatsCountAggregateInputType = {
+    id?: true
+    year?: true
+    throughput?: true
+    delivered?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PipelineYearlyStatsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineYearlyStats to aggregate.
+     */
+    where?: PipelineYearlyStatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineYearlyStats to fetch.
+     */
+    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PipelineYearlyStatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineYearlyStats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PipelineYearlyStats
+    **/
+    _count?: true | PipelineYearlyStatsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PipelineYearlyStatsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PipelineYearlyStatsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PipelineYearlyStatsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PipelineYearlyStatsMaxAggregateInputType
+  }
+
+  export type GetPipelineYearlyStatsAggregateType<T extends PipelineYearlyStatsAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipelineYearlyStats]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipelineYearlyStats[P]>
+      : GetScalarType<T[P], AggregatePipelineYearlyStats[P]>
+  }
+
+
+
+
+  export type PipelineYearlyStatsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelineYearlyStatsWhereInput
+    orderBy?: PipelineYearlyStatsOrderByWithAggregationInput | PipelineYearlyStatsOrderByWithAggregationInput[]
+    by: PipelineYearlyStatsScalarFieldEnum[] | PipelineYearlyStatsScalarFieldEnum
+    having?: PipelineYearlyStatsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PipelineYearlyStatsCountAggregateInputType | true
+    _avg?: PipelineYearlyStatsAvgAggregateInputType
+    _sum?: PipelineYearlyStatsSumAggregateInputType
+    _min?: PipelineYearlyStatsMinAggregateInputType
+    _max?: PipelineYearlyStatsMaxAggregateInputType
+  }
+
+  export type PipelineYearlyStatsGroupByOutputType = {
+    id: string
+    year: number
+    throughput: number
+    delivered: number
+    createdAt: Date
+    updatedAt: Date
+    _count: PipelineYearlyStatsCountAggregateOutputType | null
+    _avg: PipelineYearlyStatsAvgAggregateOutputType | null
+    _sum: PipelineYearlyStatsSumAggregateOutputType | null
+    _min: PipelineYearlyStatsMinAggregateOutputType | null
+    _max: PipelineYearlyStatsMaxAggregateOutputType | null
+  }
+
+  type GetPipelineYearlyStatsGroupByPayload<T extends PipelineYearlyStatsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PipelineYearlyStatsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PipelineYearlyStatsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PipelineYearlyStatsGroupByOutputType[P]>
+            : GetScalarType<T[P], PipelineYearlyStatsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PipelineYearlyStatsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    year?: boolean
+    throughput?: boolean
+    delivered?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pipelineYearlyStats"]>
+
+
+
+  export type PipelineYearlyStatsSelectScalar = {
+    id?: boolean
+    year?: boolean
+    throughput?: boolean
+    delivered?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PipelineYearlyStatsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "year" | "throughput" | "delivered" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelineYearlyStats"]>
+
+  export type $PipelineYearlyStatsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PipelineYearlyStats"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      year: number
+      throughput: number
+      delivered: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["pipelineYearlyStats"]>
+    composites: {}
+  }
+
+  type PipelineYearlyStatsGetPayload<S extends boolean | null | undefined | PipelineYearlyStatsDefaultArgs> = $Result.GetResult<Prisma.$PipelineYearlyStatsPayload, S>
+
+  type PipelineYearlyStatsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PipelineYearlyStatsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PipelineYearlyStatsCountAggregateInputType | true
+    }
+
+  export interface PipelineYearlyStatsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipelineYearlyStats'], meta: { name: 'PipelineYearlyStats' } }
+    /**
+     * Find zero or one PipelineYearlyStats that matches the filter.
+     * @param {PipelineYearlyStatsFindUniqueArgs} args - Arguments to find a PipelineYearlyStats
+     * @example
+     * // Get one PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PipelineYearlyStatsFindUniqueArgs>(args: SelectSubset<T, PipelineYearlyStatsFindUniqueArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PipelineYearlyStats that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PipelineYearlyStatsFindUniqueOrThrowArgs} args - Arguments to find a PipelineYearlyStats
+     * @example
+     * // Get one PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PipelineYearlyStatsFindUniqueOrThrowArgs>(args: SelectSubset<T, PipelineYearlyStatsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineYearlyStats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineYearlyStatsFindFirstArgs} args - Arguments to find a PipelineYearlyStats
+     * @example
+     * // Get one PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PipelineYearlyStatsFindFirstArgs>(args?: SelectSubset<T, PipelineYearlyStatsFindFirstArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineYearlyStats that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineYearlyStatsFindFirstOrThrowArgs} args - Arguments to find a PipelineYearlyStats
+     * @example
+     * // Get one PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PipelineYearlyStatsFindFirstOrThrowArgs>(args?: SelectSubset<T, PipelineYearlyStatsFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PipelineYearlyStats that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineYearlyStatsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findMany()
+     * 
+     * // Get first 10 PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pipelineYearlyStatsWithIdOnly = await prisma.pipelineYearlyStats.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PipelineYearlyStatsFindManyArgs>(args?: SelectSubset<T, PipelineYearlyStatsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PipelineYearlyStats.
+     * @param {PipelineYearlyStatsCreateArgs} args - Arguments to create a PipelineYearlyStats.
+     * @example
+     * // Create one PipelineYearlyStats
+     * const PipelineYearlyStats = await prisma.pipelineYearlyStats.create({
+     *   data: {
+     *     // ... data to create a PipelineYearlyStats
+     *   }
+     * })
+     * 
+     */
+    create<T extends PipelineYearlyStatsCreateArgs>(args: SelectSubset<T, PipelineYearlyStatsCreateArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PipelineYearlyStats.
+     * @param {PipelineYearlyStatsCreateManyArgs} args - Arguments to create many PipelineYearlyStats.
+     * @example
+     * // Create many PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PipelineYearlyStatsCreateManyArgs>(args?: SelectSubset<T, PipelineYearlyStatsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PipelineYearlyStats.
+     * @param {PipelineYearlyStatsDeleteArgs} args - Arguments to delete one PipelineYearlyStats.
+     * @example
+     * // Delete one PipelineYearlyStats
+     * const PipelineYearlyStats = await prisma.pipelineYearlyStats.delete({
+     *   where: {
+     *     // ... filter to delete one PipelineYearlyStats
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PipelineYearlyStatsDeleteArgs>(args: SelectSubset<T, PipelineYearlyStatsDeleteArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PipelineYearlyStats.
+     * @param {PipelineYearlyStatsUpdateArgs} args - Arguments to update one PipelineYearlyStats.
+     * @example
+     * // Update one PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PipelineYearlyStatsUpdateArgs>(args: SelectSubset<T, PipelineYearlyStatsUpdateArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PipelineYearlyStats.
+     * @param {PipelineYearlyStatsDeleteManyArgs} args - Arguments to filter PipelineYearlyStats to delete.
+     * @example
+     * // Delete a few PipelineYearlyStats
+     * const { count } = await prisma.pipelineYearlyStats.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PipelineYearlyStatsDeleteManyArgs>(args?: SelectSubset<T, PipelineYearlyStatsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PipelineYearlyStats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineYearlyStatsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PipelineYearlyStatsUpdateManyArgs>(args: SelectSubset<T, PipelineYearlyStatsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PipelineYearlyStats.
+     * @param {PipelineYearlyStatsUpsertArgs} args - Arguments to update or create a PipelineYearlyStats.
+     * @example
+     * // Update or create a PipelineYearlyStats
+     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.upsert({
+     *   create: {
+     *     // ... data to create a PipelineYearlyStats
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PipelineYearlyStats we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PipelineYearlyStatsUpsertArgs>(args: SelectSubset<T, PipelineYearlyStatsUpsertArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PipelineYearlyStats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineYearlyStatsCountArgs} args - Arguments to filter PipelineYearlyStats to count.
+     * @example
+     * // Count the number of PipelineYearlyStats
+     * const count = await prisma.pipelineYearlyStats.count({
+     *   where: {
+     *     // ... the filter for the PipelineYearlyStats we want to count
+     *   }
+     * })
+    **/
+    count<T extends PipelineYearlyStatsCountArgs>(
+      args?: Subset<T, PipelineYearlyStatsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PipelineYearlyStatsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PipelineYearlyStats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineYearlyStatsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PipelineYearlyStatsAggregateArgs>(args: Subset<T, PipelineYearlyStatsAggregateArgs>): Prisma.PrismaPromise<GetPipelineYearlyStatsAggregateType<T>>
+
+    /**
+     * Group by PipelineYearlyStats.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineYearlyStatsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PipelineYearlyStatsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PipelineYearlyStatsGroupByArgs['orderBy'] }
+        : { orderBy?: PipelineYearlyStatsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PipelineYearlyStatsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelineYearlyStatsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PipelineYearlyStats model
+   */
+  readonly fields: PipelineYearlyStatsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PipelineYearlyStats.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PipelineYearlyStatsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PipelineYearlyStats model
+   */
+  interface PipelineYearlyStatsFieldRefs {
+    readonly id: FieldRef<"PipelineYearlyStats", 'String'>
+    readonly year: FieldRef<"PipelineYearlyStats", 'Int'>
+    readonly throughput: FieldRef<"PipelineYearlyStats", 'Float'>
+    readonly delivered: FieldRef<"PipelineYearlyStats", 'Float'>
+    readonly createdAt: FieldRef<"PipelineYearlyStats", 'DateTime'>
+    readonly updatedAt: FieldRef<"PipelineYearlyStats", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PipelineYearlyStats findUnique
+   */
+  export type PipelineYearlyStatsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineYearlyStats to fetch.
+     */
+    where: PipelineYearlyStatsWhereUniqueInput
+  }
+
+  /**
+   * PipelineYearlyStats findUniqueOrThrow
+   */
+  export type PipelineYearlyStatsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineYearlyStats to fetch.
+     */
+    where: PipelineYearlyStatsWhereUniqueInput
+  }
+
+  /**
+   * PipelineYearlyStats findFirst
+   */
+  export type PipelineYearlyStatsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineYearlyStats to fetch.
+     */
+    where?: PipelineYearlyStatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineYearlyStats to fetch.
+     */
+    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineYearlyStats.
+     */
+    cursor?: PipelineYearlyStatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineYearlyStats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineYearlyStats.
+     */
+    distinct?: PipelineYearlyStatsScalarFieldEnum | PipelineYearlyStatsScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineYearlyStats findFirstOrThrow
+   */
+  export type PipelineYearlyStatsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineYearlyStats to fetch.
+     */
+    where?: PipelineYearlyStatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineYearlyStats to fetch.
+     */
+    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineYearlyStats.
+     */
+    cursor?: PipelineYearlyStatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineYearlyStats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineYearlyStats.
+     */
+    distinct?: PipelineYearlyStatsScalarFieldEnum | PipelineYearlyStatsScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineYearlyStats findMany
+   */
+  export type PipelineYearlyStatsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineYearlyStats to fetch.
+     */
+    where?: PipelineYearlyStatsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineYearlyStats to fetch.
+     */
+    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PipelineYearlyStats.
+     */
+    cursor?: PipelineYearlyStatsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineYearlyStats.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineYearlyStats.
+     */
+    distinct?: PipelineYearlyStatsScalarFieldEnum | PipelineYearlyStatsScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineYearlyStats create
+   */
+  export type PipelineYearlyStatsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PipelineYearlyStats.
+     */
+    data: XOR<PipelineYearlyStatsCreateInput, PipelineYearlyStatsUncheckedCreateInput>
+  }
+
+  /**
+   * PipelineYearlyStats createMany
+   */
+  export type PipelineYearlyStatsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PipelineYearlyStats.
+     */
+    data: PipelineYearlyStatsCreateManyInput | PipelineYearlyStatsCreateManyInput[]
+  }
+
+  /**
+   * PipelineYearlyStats update
+   */
+  export type PipelineYearlyStatsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PipelineYearlyStats.
+     */
+    data: XOR<PipelineYearlyStatsUpdateInput, PipelineYearlyStatsUncheckedUpdateInput>
+    /**
+     * Choose, which PipelineYearlyStats to update.
+     */
+    where: PipelineYearlyStatsWhereUniqueInput
+  }
+
+  /**
+   * PipelineYearlyStats updateMany
+   */
+  export type PipelineYearlyStatsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PipelineYearlyStats.
+     */
+    data: XOR<PipelineYearlyStatsUpdateManyMutationInput, PipelineYearlyStatsUncheckedUpdateManyInput>
+    /**
+     * Filter which PipelineYearlyStats to update
+     */
+    where?: PipelineYearlyStatsWhereInput
+    /**
+     * Limit how many PipelineYearlyStats to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineYearlyStats upsert
+   */
+  export type PipelineYearlyStatsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PipelineYearlyStats to update in case it exists.
+     */
+    where: PipelineYearlyStatsWhereUniqueInput
+    /**
+     * In case the PipelineYearlyStats found by the `where` argument doesn't exist, create a new PipelineYearlyStats with this data.
+     */
+    create: XOR<PipelineYearlyStatsCreateInput, PipelineYearlyStatsUncheckedCreateInput>
+    /**
+     * In case the PipelineYearlyStats was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PipelineYearlyStatsUpdateInput, PipelineYearlyStatsUncheckedUpdateInput>
+  }
+
+  /**
+   * PipelineYearlyStats delete
+   */
+  export type PipelineYearlyStatsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    /**
+     * Filter which PipelineYearlyStats to delete.
+     */
+    where: PipelineYearlyStatsWhereUniqueInput
+  }
+
+  /**
+   * PipelineYearlyStats deleteMany
+   */
+  export type PipelineYearlyStatsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineYearlyStats to delete
+     */
+    where?: PipelineYearlyStatsWhereInput
+    /**
+     * Limit how many PipelineYearlyStats to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineYearlyStats without action
+   */
+  export type PipelineYearlyStatsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineYearlyStats
+     */
+    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineYearlyStats
+     */
+    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
   }
 
 
@@ -20375,6 +24871,11 @@ export namespace Prisma {
      * Skip the first `n` DailyEntries.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyEntries.
+     */
     distinct?: DailyEntryScalarFieldEnum | DailyEntryScalarFieldEnum[]
   }
 
@@ -21497,6 +25998,11 @@ export namespace Prisma {
      * Skip the first `n` Tanks.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tanks.
+     */
     distinct?: TankScalarFieldEnum | TankScalarFieldEnum[]
   }
 
@@ -22448,6 +26954,11 @@ export namespace Prisma {
      * Skip the first `n` Remarks.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Remarks.
+     */
     distinct?: RemarkScalarFieldEnum | RemarkScalarFieldEnum[]
   }
 
@@ -23446,6 +27957,11 @@ export namespace Prisma {
      * Skip the first `n` Suppliers.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Suppliers.
+     */
     distinct?: SupplierScalarFieldEnum | SupplierScalarFieldEnum[]
   }
 
@@ -23587,6 +28103,930 @@ export namespace Prisma {
      * Omit specific fields from the Supplier
      */
     omit?: SupplierOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PipelineProgress
+   */
+
+  export type AggregatePipelineProgress = {
+    _count: PipelineProgressCountAggregateOutputType | null
+    _avg: PipelineProgressAvgAggregateOutputType | null
+    _sum: PipelineProgressSumAggregateOutputType | null
+    _min: PipelineProgressMinAggregateOutputType | null
+    _max: PipelineProgressMaxAggregateOutputType | null
+  }
+
+  export type PipelineProgressAvgAggregateOutputType = {
+    distanceKm: number | null
+    totalDistance: number | null
+  }
+
+  export type PipelineProgressSumAggregateOutputType = {
+    distanceKm: number | null
+    totalDistance: number | null
+  }
+
+  export type PipelineProgressMinAggregateOutputType = {
+    id: string | null
+    distanceKm: number | null
+    totalDistance: number | null
+    lastStation: string | null
+    updatedAt: Date | null
+  }
+
+  export type PipelineProgressMaxAggregateOutputType = {
+    id: string | null
+    distanceKm: number | null
+    totalDistance: number | null
+    lastStation: string | null
+    updatedAt: Date | null
+  }
+
+  export type PipelineProgressCountAggregateOutputType = {
+    id: number
+    distanceKm: number
+    totalDistance: number
+    lastStation: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PipelineProgressAvgAggregateInputType = {
+    distanceKm?: true
+    totalDistance?: true
+  }
+
+  export type PipelineProgressSumAggregateInputType = {
+    distanceKm?: true
+    totalDistance?: true
+  }
+
+  export type PipelineProgressMinAggregateInputType = {
+    id?: true
+    distanceKm?: true
+    totalDistance?: true
+    lastStation?: true
+    updatedAt?: true
+  }
+
+  export type PipelineProgressMaxAggregateInputType = {
+    id?: true
+    distanceKm?: true
+    totalDistance?: true
+    lastStation?: true
+    updatedAt?: true
+  }
+
+  export type PipelineProgressCountAggregateInputType = {
+    id?: true
+    distanceKm?: true
+    totalDistance?: true
+    lastStation?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PipelineProgressAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineProgress to aggregate.
+     */
+    where?: PipelineProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineProgresses to fetch.
+     */
+    orderBy?: PipelineProgressOrderByWithRelationInput | PipelineProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PipelineProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PipelineProgresses
+    **/
+    _count?: true | PipelineProgressCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PipelineProgressAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PipelineProgressSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PipelineProgressMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PipelineProgressMaxAggregateInputType
+  }
+
+  export type GetPipelineProgressAggregateType<T extends PipelineProgressAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipelineProgress]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipelineProgress[P]>
+      : GetScalarType<T[P], AggregatePipelineProgress[P]>
+  }
+
+
+
+
+  export type PipelineProgressGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelineProgressWhereInput
+    orderBy?: PipelineProgressOrderByWithAggregationInput | PipelineProgressOrderByWithAggregationInput[]
+    by: PipelineProgressScalarFieldEnum[] | PipelineProgressScalarFieldEnum
+    having?: PipelineProgressScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PipelineProgressCountAggregateInputType | true
+    _avg?: PipelineProgressAvgAggregateInputType
+    _sum?: PipelineProgressSumAggregateInputType
+    _min?: PipelineProgressMinAggregateInputType
+    _max?: PipelineProgressMaxAggregateInputType
+  }
+
+  export type PipelineProgressGroupByOutputType = {
+    id: string
+    distanceKm: number
+    totalDistance: number
+    lastStation: string | null
+    updatedAt: Date
+    _count: PipelineProgressCountAggregateOutputType | null
+    _avg: PipelineProgressAvgAggregateOutputType | null
+    _sum: PipelineProgressSumAggregateOutputType | null
+    _min: PipelineProgressMinAggregateOutputType | null
+    _max: PipelineProgressMaxAggregateOutputType | null
+  }
+
+  type GetPipelineProgressGroupByPayload<T extends PipelineProgressGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PipelineProgressGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PipelineProgressGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PipelineProgressGroupByOutputType[P]>
+            : GetScalarType<T[P], PipelineProgressGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PipelineProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    distanceKm?: boolean
+    totalDistance?: boolean
+    lastStation?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pipelineProgress"]>
+
+
+
+  export type PipelineProgressSelectScalar = {
+    id?: boolean
+    distanceKm?: boolean
+    totalDistance?: boolean
+    lastStation?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PipelineProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "distanceKm" | "totalDistance" | "lastStation" | "updatedAt", ExtArgs["result"]["pipelineProgress"]>
+
+  export type $PipelineProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PipelineProgress"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      distanceKm: number
+      totalDistance: number
+      lastStation: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["pipelineProgress"]>
+    composites: {}
+  }
+
+  type PipelineProgressGetPayload<S extends boolean | null | undefined | PipelineProgressDefaultArgs> = $Result.GetResult<Prisma.$PipelineProgressPayload, S>
+
+  type PipelineProgressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PipelineProgressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PipelineProgressCountAggregateInputType | true
+    }
+
+  export interface PipelineProgressDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipelineProgress'], meta: { name: 'PipelineProgress' } }
+    /**
+     * Find zero or one PipelineProgress that matches the filter.
+     * @param {PipelineProgressFindUniqueArgs} args - Arguments to find a PipelineProgress
+     * @example
+     * // Get one PipelineProgress
+     * const pipelineProgress = await prisma.pipelineProgress.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PipelineProgressFindUniqueArgs>(args: SelectSubset<T, PipelineProgressFindUniqueArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PipelineProgress that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PipelineProgressFindUniqueOrThrowArgs} args - Arguments to find a PipelineProgress
+     * @example
+     * // Get one PipelineProgress
+     * const pipelineProgress = await prisma.pipelineProgress.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PipelineProgressFindUniqueOrThrowArgs>(args: SelectSubset<T, PipelineProgressFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineProgress that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineProgressFindFirstArgs} args - Arguments to find a PipelineProgress
+     * @example
+     * // Get one PipelineProgress
+     * const pipelineProgress = await prisma.pipelineProgress.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PipelineProgressFindFirstArgs>(args?: SelectSubset<T, PipelineProgressFindFirstArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PipelineProgress that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineProgressFindFirstOrThrowArgs} args - Arguments to find a PipelineProgress
+     * @example
+     * // Get one PipelineProgress
+     * const pipelineProgress = await prisma.pipelineProgress.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PipelineProgressFindFirstOrThrowArgs>(args?: SelectSubset<T, PipelineProgressFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PipelineProgresses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineProgressFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PipelineProgresses
+     * const pipelineProgresses = await prisma.pipelineProgress.findMany()
+     * 
+     * // Get first 10 PipelineProgresses
+     * const pipelineProgresses = await prisma.pipelineProgress.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pipelineProgressWithIdOnly = await prisma.pipelineProgress.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PipelineProgressFindManyArgs>(args?: SelectSubset<T, PipelineProgressFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PipelineProgress.
+     * @param {PipelineProgressCreateArgs} args - Arguments to create a PipelineProgress.
+     * @example
+     * // Create one PipelineProgress
+     * const PipelineProgress = await prisma.pipelineProgress.create({
+     *   data: {
+     *     // ... data to create a PipelineProgress
+     *   }
+     * })
+     * 
+     */
+    create<T extends PipelineProgressCreateArgs>(args: SelectSubset<T, PipelineProgressCreateArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PipelineProgresses.
+     * @param {PipelineProgressCreateManyArgs} args - Arguments to create many PipelineProgresses.
+     * @example
+     * // Create many PipelineProgresses
+     * const pipelineProgress = await prisma.pipelineProgress.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PipelineProgressCreateManyArgs>(args?: SelectSubset<T, PipelineProgressCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PipelineProgress.
+     * @param {PipelineProgressDeleteArgs} args - Arguments to delete one PipelineProgress.
+     * @example
+     * // Delete one PipelineProgress
+     * const PipelineProgress = await prisma.pipelineProgress.delete({
+     *   where: {
+     *     // ... filter to delete one PipelineProgress
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PipelineProgressDeleteArgs>(args: SelectSubset<T, PipelineProgressDeleteArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PipelineProgress.
+     * @param {PipelineProgressUpdateArgs} args - Arguments to update one PipelineProgress.
+     * @example
+     * // Update one PipelineProgress
+     * const pipelineProgress = await prisma.pipelineProgress.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PipelineProgressUpdateArgs>(args: SelectSubset<T, PipelineProgressUpdateArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PipelineProgresses.
+     * @param {PipelineProgressDeleteManyArgs} args - Arguments to filter PipelineProgresses to delete.
+     * @example
+     * // Delete a few PipelineProgresses
+     * const { count } = await prisma.pipelineProgress.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PipelineProgressDeleteManyArgs>(args?: SelectSubset<T, PipelineProgressDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PipelineProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineProgressUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PipelineProgresses
+     * const pipelineProgress = await prisma.pipelineProgress.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PipelineProgressUpdateManyArgs>(args: SelectSubset<T, PipelineProgressUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PipelineProgress.
+     * @param {PipelineProgressUpsertArgs} args - Arguments to update or create a PipelineProgress.
+     * @example
+     * // Update or create a PipelineProgress
+     * const pipelineProgress = await prisma.pipelineProgress.upsert({
+     *   create: {
+     *     // ... data to create a PipelineProgress
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PipelineProgress we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PipelineProgressUpsertArgs>(args: SelectSubset<T, PipelineProgressUpsertArgs<ExtArgs>>): Prisma__PipelineProgressClient<$Result.GetResult<Prisma.$PipelineProgressPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PipelineProgresses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineProgressCountArgs} args - Arguments to filter PipelineProgresses to count.
+     * @example
+     * // Count the number of PipelineProgresses
+     * const count = await prisma.pipelineProgress.count({
+     *   where: {
+     *     // ... the filter for the PipelineProgresses we want to count
+     *   }
+     * })
+    **/
+    count<T extends PipelineProgressCountArgs>(
+      args?: Subset<T, PipelineProgressCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PipelineProgressCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PipelineProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineProgressAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PipelineProgressAggregateArgs>(args: Subset<T, PipelineProgressAggregateArgs>): Prisma.PrismaPromise<GetPipelineProgressAggregateType<T>>
+
+    /**
+     * Group by PipelineProgress.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelineProgressGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PipelineProgressGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PipelineProgressGroupByArgs['orderBy'] }
+        : { orderBy?: PipelineProgressGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PipelineProgressGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelineProgressGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PipelineProgress model
+   */
+  readonly fields: PipelineProgressFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PipelineProgress.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PipelineProgressClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PipelineProgress model
+   */
+  interface PipelineProgressFieldRefs {
+    readonly id: FieldRef<"PipelineProgress", 'String'>
+    readonly distanceKm: FieldRef<"PipelineProgress", 'Float'>
+    readonly totalDistance: FieldRef<"PipelineProgress", 'Float'>
+    readonly lastStation: FieldRef<"PipelineProgress", 'String'>
+    readonly updatedAt: FieldRef<"PipelineProgress", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PipelineProgress findUnique
+   */
+  export type PipelineProgressFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineProgress to fetch.
+     */
+    where: PipelineProgressWhereUniqueInput
+  }
+
+  /**
+   * PipelineProgress findUniqueOrThrow
+   */
+  export type PipelineProgressFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineProgress to fetch.
+     */
+    where: PipelineProgressWhereUniqueInput
+  }
+
+  /**
+   * PipelineProgress findFirst
+   */
+  export type PipelineProgressFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineProgress to fetch.
+     */
+    where?: PipelineProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineProgresses to fetch.
+     */
+    orderBy?: PipelineProgressOrderByWithRelationInput | PipelineProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineProgresses.
+     */
+    cursor?: PipelineProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineProgresses.
+     */
+    distinct?: PipelineProgressScalarFieldEnum | PipelineProgressScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineProgress findFirstOrThrow
+   */
+  export type PipelineProgressFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineProgress to fetch.
+     */
+    where?: PipelineProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineProgresses to fetch.
+     */
+    orderBy?: PipelineProgressOrderByWithRelationInput | PipelineProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PipelineProgresses.
+     */
+    cursor?: PipelineProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineProgresses.
+     */
+    distinct?: PipelineProgressScalarFieldEnum | PipelineProgressScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineProgress findMany
+   */
+  export type PipelineProgressFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * Filter, which PipelineProgresses to fetch.
+     */
+    where?: PipelineProgressWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PipelineProgresses to fetch.
+     */
+    orderBy?: PipelineProgressOrderByWithRelationInput | PipelineProgressOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PipelineProgresses.
+     */
+    cursor?: PipelineProgressWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PipelineProgresses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PipelineProgresses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PipelineProgresses.
+     */
+    distinct?: PipelineProgressScalarFieldEnum | PipelineProgressScalarFieldEnum[]
+  }
+
+  /**
+   * PipelineProgress create
+   */
+  export type PipelineProgressCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PipelineProgress.
+     */
+    data: XOR<PipelineProgressCreateInput, PipelineProgressUncheckedCreateInput>
+  }
+
+  /**
+   * PipelineProgress createMany
+   */
+  export type PipelineProgressCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PipelineProgresses.
+     */
+    data: PipelineProgressCreateManyInput | PipelineProgressCreateManyInput[]
+  }
+
+  /**
+   * PipelineProgress update
+   */
+  export type PipelineProgressUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PipelineProgress.
+     */
+    data: XOR<PipelineProgressUpdateInput, PipelineProgressUncheckedUpdateInput>
+    /**
+     * Choose, which PipelineProgress to update.
+     */
+    where: PipelineProgressWhereUniqueInput
+  }
+
+  /**
+   * PipelineProgress updateMany
+   */
+  export type PipelineProgressUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PipelineProgresses.
+     */
+    data: XOR<PipelineProgressUpdateManyMutationInput, PipelineProgressUncheckedUpdateManyInput>
+    /**
+     * Filter which PipelineProgresses to update
+     */
+    where?: PipelineProgressWhereInput
+    /**
+     * Limit how many PipelineProgresses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineProgress upsert
+   */
+  export type PipelineProgressUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PipelineProgress to update in case it exists.
+     */
+    where: PipelineProgressWhereUniqueInput
+    /**
+     * In case the PipelineProgress found by the `where` argument doesn't exist, create a new PipelineProgress with this data.
+     */
+    create: XOR<PipelineProgressCreateInput, PipelineProgressUncheckedCreateInput>
+    /**
+     * In case the PipelineProgress was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PipelineProgressUpdateInput, PipelineProgressUncheckedUpdateInput>
+  }
+
+  /**
+   * PipelineProgress delete
+   */
+  export type PipelineProgressDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
+    /**
+     * Filter which PipelineProgress to delete.
+     */
+    where: PipelineProgressWhereUniqueInput
+  }
+
+  /**
+   * PipelineProgress deleteMany
+   */
+  export type PipelineProgressDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PipelineProgresses to delete
+     */
+    where?: PipelineProgressWhereInput
+    /**
+     * Limit how many PipelineProgresses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PipelineProgress without action
+   */
+  export type PipelineProgressDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelineProgress
+     */
+    select?: PipelineProgressSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelineProgress
+     */
+    omit?: PipelineProgressOmit<ExtArgs> | null
   }
 
 
@@ -23844,10 +29284,71 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    facilityId: 'facilityId'
   };
 
   export type StationScalarFieldEnum = (typeof StationScalarFieldEnum)[keyof typeof StationScalarFieldEnum]
+
+
+  export const FacilityScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    shortName: 'shortName',
+    type: 'type',
+    km: 'km',
+    country: 'country',
+    status: 'status',
+    pressure: 'pressure',
+    flow: 'flow',
+    temp: 'temp',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FacilityScalarFieldEnum = (typeof FacilityScalarFieldEnum)[keyof typeof FacilityScalarFieldEnum]
+
+
+  export const PipelineBatchScalarFieldEnum: {
+    id: 'id',
+    year: 'year',
+    product: 'product',
+    volume: 'volume',
+    startKm: 'startKm',
+    endKm: 'endKm',
+    color: 'color',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PipelineBatchScalarFieldEnum = (typeof PipelineBatchScalarFieldEnum)[keyof typeof PipelineBatchScalarFieldEnum]
+
+
+  export const PipelinePigScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    position: 'position',
+    speed: 'speed',
+    type: 'type',
+    launched: 'launched',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PipelinePigScalarFieldEnum = (typeof PipelinePigScalarFieldEnum)[keyof typeof PipelinePigScalarFieldEnum]
+
+
+  export const PipelineYearlyStatsScalarFieldEnum: {
+    id: 'id',
+    year: 'year',
+    throughput: 'throughput',
+    delivered: 'delivered',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PipelineYearlyStatsScalarFieldEnum = (typeof PipelineYearlyStatsScalarFieldEnum)[keyof typeof PipelineYearlyStatsScalarFieldEnum]
 
 
   export const DailyEntryScalarFieldEnum: {
@@ -23911,6 +29412,17 @@ export namespace Prisma {
   };
 
   export type SupplierScalarFieldEnum = (typeof SupplierScalarFieldEnum)[keyof typeof SupplierScalarFieldEnum]
+
+
+  export const PipelineProgressScalarFieldEnum: {
+    id: 'id',
+    distanceKm: 'distanceKm',
+    totalDistance: 'totalDistance',
+    lastStation: 'lastStation',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PipelineProgressScalarFieldEnum = (typeof PipelineProgressScalarFieldEnum)[keyof typeof PipelineProgressScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -25176,7 +30688,9 @@ export namespace Prisma {
     name?: StringFilter<"Station"> | string
     createdAt?: DateTimeFilter<"Station"> | Date | string
     updatedAt?: DateTimeFilter<"Station"> | Date | string
+    facilityId?: StringNullableFilter<"Station"> | string | null
     entries?: DailyEntryListRelationFilter
+    facility?: XOR<FacilityNullableScalarRelationFilter, FacilityWhereInput> | null
   }
 
   export type StationOrderByWithRelationInput = {
@@ -25184,25 +30698,30 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facilityId?: SortOrderInput | SortOrder
     entries?: DailyEntryOrderByRelationAggregateInput
+    facility?: FacilityOrderByWithRelationInput
   }
 
   export type StationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     name?: string
+    facilityId?: string
     AND?: StationWhereInput | StationWhereInput[]
     OR?: StationWhereInput[]
     NOT?: StationWhereInput | StationWhereInput[]
     createdAt?: DateTimeFilter<"Station"> | Date | string
     updatedAt?: DateTimeFilter<"Station"> | Date | string
     entries?: DailyEntryListRelationFilter
-  }, "id" | "name">
+    facility?: XOR<FacilityNullableScalarRelationFilter, FacilityWhereInput> | null
+  }, "id" | "name" | "facilityId">
 
   export type StationOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facilityId?: SortOrderInput | SortOrder
     _count?: StationCountOrderByAggregateInput
     _max?: StationMaxOrderByAggregateInput
     _min?: StationMinOrderByAggregateInput
@@ -25216,6 +30735,306 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Station"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Station"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Station"> | Date | string
+    facilityId?: StringNullableWithAggregatesFilter<"Station"> | string | null
+  }
+
+  export type FacilityWhereInput = {
+    AND?: FacilityWhereInput | FacilityWhereInput[]
+    OR?: FacilityWhereInput[]
+    NOT?: FacilityWhereInput | FacilityWhereInput[]
+    id?: StringFilter<"Facility"> | string
+    name?: StringFilter<"Facility"> | string
+    shortName?: StringNullableFilter<"Facility"> | string | null
+    type?: StringNullableFilter<"Facility"> | string | null
+    km?: FloatNullableFilter<"Facility"> | number | null
+    country?: StringNullableFilter<"Facility"> | string | null
+    status?: StringNullableFilter<"Facility"> | string | null
+    pressure?: FloatNullableFilter<"Facility"> | number | null
+    flow?: FloatNullableFilter<"Facility"> | number | null
+    temp?: FloatNullableFilter<"Facility"> | number | null
+    createdAt?: DateTimeFilter<"Facility"> | Date | string
+    updatedAt?: DateTimeFilter<"Facility"> | Date | string
+    station?: XOR<StationNullableScalarRelationFilter, StationWhereInput> | null
+  }
+
+  export type FacilityOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrderInput | SortOrder
+    type?: SortOrderInput | SortOrder
+    km?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    pressure?: SortOrderInput | SortOrder
+    flow?: SortOrderInput | SortOrder
+    temp?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    station?: StationOrderByWithRelationInput
+  }
+
+  export type FacilityWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: FacilityWhereInput | FacilityWhereInput[]
+    OR?: FacilityWhereInput[]
+    NOT?: FacilityWhereInput | FacilityWhereInput[]
+    shortName?: StringNullableFilter<"Facility"> | string | null
+    type?: StringNullableFilter<"Facility"> | string | null
+    km?: FloatNullableFilter<"Facility"> | number | null
+    country?: StringNullableFilter<"Facility"> | string | null
+    status?: StringNullableFilter<"Facility"> | string | null
+    pressure?: FloatNullableFilter<"Facility"> | number | null
+    flow?: FloatNullableFilter<"Facility"> | number | null
+    temp?: FloatNullableFilter<"Facility"> | number | null
+    createdAt?: DateTimeFilter<"Facility"> | Date | string
+    updatedAt?: DateTimeFilter<"Facility"> | Date | string
+    station?: XOR<StationNullableScalarRelationFilter, StationWhereInput> | null
+  }, "id" | "name">
+
+  export type FacilityOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrderInput | SortOrder
+    type?: SortOrderInput | SortOrder
+    km?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    pressure?: SortOrderInput | SortOrder
+    flow?: SortOrderInput | SortOrder
+    temp?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FacilityCountOrderByAggregateInput
+    _avg?: FacilityAvgOrderByAggregateInput
+    _max?: FacilityMaxOrderByAggregateInput
+    _min?: FacilityMinOrderByAggregateInput
+    _sum?: FacilitySumOrderByAggregateInput
+  }
+
+  export type FacilityScalarWhereWithAggregatesInput = {
+    AND?: FacilityScalarWhereWithAggregatesInput | FacilityScalarWhereWithAggregatesInput[]
+    OR?: FacilityScalarWhereWithAggregatesInput[]
+    NOT?: FacilityScalarWhereWithAggregatesInput | FacilityScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Facility"> | string
+    name?: StringWithAggregatesFilter<"Facility"> | string
+    shortName?: StringNullableWithAggregatesFilter<"Facility"> | string | null
+    type?: StringNullableWithAggregatesFilter<"Facility"> | string | null
+    km?: FloatNullableWithAggregatesFilter<"Facility"> | number | null
+    country?: StringNullableWithAggregatesFilter<"Facility"> | string | null
+    status?: StringNullableWithAggregatesFilter<"Facility"> | string | null
+    pressure?: FloatNullableWithAggregatesFilter<"Facility"> | number | null
+    flow?: FloatNullableWithAggregatesFilter<"Facility"> | number | null
+    temp?: FloatNullableWithAggregatesFilter<"Facility"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"Facility"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Facility"> | Date | string
+  }
+
+  export type PipelineBatchWhereInput = {
+    AND?: PipelineBatchWhereInput | PipelineBatchWhereInput[]
+    OR?: PipelineBatchWhereInput[]
+    NOT?: PipelineBatchWhereInput | PipelineBatchWhereInput[]
+    id?: StringFilter<"PipelineBatch"> | string
+    year?: IntFilter<"PipelineBatch"> | number
+    product?: StringFilter<"PipelineBatch"> | string
+    volume?: FloatFilter<"PipelineBatch"> | number
+    startKm?: FloatFilter<"PipelineBatch"> | number
+    endKm?: FloatFilter<"PipelineBatch"> | number
+    color?: StringFilter<"PipelineBatch"> | string
+    createdAt?: DateTimeFilter<"PipelineBatch"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelineBatch"> | Date | string
+  }
+
+  export type PipelineBatchOrderByWithRelationInput = {
+    id?: SortOrder
+    year?: SortOrder
+    product?: SortOrder
+    volume?: SortOrder
+    startKm?: SortOrder
+    endKm?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineBatchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PipelineBatchWhereInput | PipelineBatchWhereInput[]
+    OR?: PipelineBatchWhereInput[]
+    NOT?: PipelineBatchWhereInput | PipelineBatchWhereInput[]
+    year?: IntFilter<"PipelineBatch"> | number
+    product?: StringFilter<"PipelineBatch"> | string
+    volume?: FloatFilter<"PipelineBatch"> | number
+    startKm?: FloatFilter<"PipelineBatch"> | number
+    endKm?: FloatFilter<"PipelineBatch"> | number
+    color?: StringFilter<"PipelineBatch"> | string
+    createdAt?: DateTimeFilter<"PipelineBatch"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelineBatch"> | Date | string
+  }, "id">
+
+  export type PipelineBatchOrderByWithAggregationInput = {
+    id?: SortOrder
+    year?: SortOrder
+    product?: SortOrder
+    volume?: SortOrder
+    startKm?: SortOrder
+    endKm?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PipelineBatchCountOrderByAggregateInput
+    _avg?: PipelineBatchAvgOrderByAggregateInput
+    _max?: PipelineBatchMaxOrderByAggregateInput
+    _min?: PipelineBatchMinOrderByAggregateInput
+    _sum?: PipelineBatchSumOrderByAggregateInput
+  }
+
+  export type PipelineBatchScalarWhereWithAggregatesInput = {
+    AND?: PipelineBatchScalarWhereWithAggregatesInput | PipelineBatchScalarWhereWithAggregatesInput[]
+    OR?: PipelineBatchScalarWhereWithAggregatesInput[]
+    NOT?: PipelineBatchScalarWhereWithAggregatesInput | PipelineBatchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PipelineBatch"> | string
+    year?: IntWithAggregatesFilter<"PipelineBatch"> | number
+    product?: StringWithAggregatesFilter<"PipelineBatch"> | string
+    volume?: FloatWithAggregatesFilter<"PipelineBatch"> | number
+    startKm?: FloatWithAggregatesFilter<"PipelineBatch"> | number
+    endKm?: FloatWithAggregatesFilter<"PipelineBatch"> | number
+    color?: StringWithAggregatesFilter<"PipelineBatch"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PipelineBatch"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PipelineBatch"> | Date | string
+  }
+
+  export type PipelinePigWhereInput = {
+    AND?: PipelinePigWhereInput | PipelinePigWhereInput[]
+    OR?: PipelinePigWhereInput[]
+    NOT?: PipelinePigWhereInput | PipelinePigWhereInput[]
+    id?: StringFilter<"PipelinePig"> | string
+    name?: StringFilter<"PipelinePig"> | string
+    position?: FloatFilter<"PipelinePig"> | number
+    speed?: FloatFilter<"PipelinePig"> | number
+    type?: StringFilter<"PipelinePig"> | string
+    launched?: DateTimeFilter<"PipelinePig"> | Date | string
+    isActive?: BoolFilter<"PipelinePig"> | boolean
+    createdAt?: DateTimeFilter<"PipelinePig"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelinePig"> | Date | string
+  }
+
+  export type PipelinePigOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    speed?: SortOrder
+    type?: SortOrder
+    launched?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelinePigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PipelinePigWhereInput | PipelinePigWhereInput[]
+    OR?: PipelinePigWhereInput[]
+    NOT?: PipelinePigWhereInput | PipelinePigWhereInput[]
+    name?: StringFilter<"PipelinePig"> | string
+    position?: FloatFilter<"PipelinePig"> | number
+    speed?: FloatFilter<"PipelinePig"> | number
+    type?: StringFilter<"PipelinePig"> | string
+    launched?: DateTimeFilter<"PipelinePig"> | Date | string
+    isActive?: BoolFilter<"PipelinePig"> | boolean
+    createdAt?: DateTimeFilter<"PipelinePig"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelinePig"> | Date | string
+  }, "id">
+
+  export type PipelinePigOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    speed?: SortOrder
+    type?: SortOrder
+    launched?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PipelinePigCountOrderByAggregateInput
+    _avg?: PipelinePigAvgOrderByAggregateInput
+    _max?: PipelinePigMaxOrderByAggregateInput
+    _min?: PipelinePigMinOrderByAggregateInput
+    _sum?: PipelinePigSumOrderByAggregateInput
+  }
+
+  export type PipelinePigScalarWhereWithAggregatesInput = {
+    AND?: PipelinePigScalarWhereWithAggregatesInput | PipelinePigScalarWhereWithAggregatesInput[]
+    OR?: PipelinePigScalarWhereWithAggregatesInput[]
+    NOT?: PipelinePigScalarWhereWithAggregatesInput | PipelinePigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PipelinePig"> | string
+    name?: StringWithAggregatesFilter<"PipelinePig"> | string
+    position?: FloatWithAggregatesFilter<"PipelinePig"> | number
+    speed?: FloatWithAggregatesFilter<"PipelinePig"> | number
+    type?: StringWithAggregatesFilter<"PipelinePig"> | string
+    launched?: DateTimeWithAggregatesFilter<"PipelinePig"> | Date | string
+    isActive?: BoolWithAggregatesFilter<"PipelinePig"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"PipelinePig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PipelinePig"> | Date | string
+  }
+
+  export type PipelineYearlyStatsWhereInput = {
+    AND?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
+    OR?: PipelineYearlyStatsWhereInput[]
+    NOT?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
+    id?: StringFilter<"PipelineYearlyStats"> | string
+    year?: IntFilter<"PipelineYearlyStats"> | number
+    throughput?: FloatFilter<"PipelineYearlyStats"> | number
+    delivered?: FloatFilter<"PipelineYearlyStats"> | number
+    createdAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
+  }
+
+  export type PipelineYearlyStatsOrderByWithRelationInput = {
+    id?: SortOrder
+    year?: SortOrder
+    throughput?: SortOrder
+    delivered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineYearlyStatsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    year?: number
+    AND?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
+    OR?: PipelineYearlyStatsWhereInput[]
+    NOT?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
+    throughput?: FloatFilter<"PipelineYearlyStats"> | number
+    delivered?: FloatFilter<"PipelineYearlyStats"> | number
+    createdAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
+  }, "id" | "year">
+
+  export type PipelineYearlyStatsOrderByWithAggregationInput = {
+    id?: SortOrder
+    year?: SortOrder
+    throughput?: SortOrder
+    delivered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PipelineYearlyStatsCountOrderByAggregateInput
+    _avg?: PipelineYearlyStatsAvgOrderByAggregateInput
+    _max?: PipelineYearlyStatsMaxOrderByAggregateInput
+    _min?: PipelineYearlyStatsMinOrderByAggregateInput
+    _sum?: PipelineYearlyStatsSumOrderByAggregateInput
+  }
+
+  export type PipelineYearlyStatsScalarWhereWithAggregatesInput = {
+    AND?: PipelineYearlyStatsScalarWhereWithAggregatesInput | PipelineYearlyStatsScalarWhereWithAggregatesInput[]
+    OR?: PipelineYearlyStatsScalarWhereWithAggregatesInput[]
+    NOT?: PipelineYearlyStatsScalarWhereWithAggregatesInput | PipelineYearlyStatsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PipelineYearlyStats"> | string
+    year?: IntWithAggregatesFilter<"PipelineYearlyStats"> | number
+    throughput?: FloatWithAggregatesFilter<"PipelineYearlyStats"> | number
+    delivered?: FloatWithAggregatesFilter<"PipelineYearlyStats"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"PipelineYearlyStats"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PipelineYearlyStats"> | Date | string
   }
 
   export type DailyEntryWhereInput = {
@@ -25544,6 +31363,60 @@ export namespace Prisma {
     reliability?: FloatWithAggregatesFilter<"Supplier"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Supplier"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Supplier"> | Date | string
+  }
+
+  export type PipelineProgressWhereInput = {
+    AND?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
+    OR?: PipelineProgressWhereInput[]
+    NOT?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
+    id?: StringFilter<"PipelineProgress"> | string
+    distanceKm?: FloatFilter<"PipelineProgress"> | number
+    totalDistance?: FloatFilter<"PipelineProgress"> | number
+    lastStation?: StringNullableFilter<"PipelineProgress"> | string | null
+    updatedAt?: DateTimeFilter<"PipelineProgress"> | Date | string
+  }
+
+  export type PipelineProgressOrderByWithRelationInput = {
+    id?: SortOrder
+    distanceKm?: SortOrder
+    totalDistance?: SortOrder
+    lastStation?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineProgressWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
+    OR?: PipelineProgressWhereInput[]
+    NOT?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
+    distanceKm?: FloatFilter<"PipelineProgress"> | number
+    totalDistance?: FloatFilter<"PipelineProgress"> | number
+    lastStation?: StringNullableFilter<"PipelineProgress"> | string | null
+    updatedAt?: DateTimeFilter<"PipelineProgress"> | Date | string
+  }, "id">
+
+  export type PipelineProgressOrderByWithAggregationInput = {
+    id?: SortOrder
+    distanceKm?: SortOrder
+    totalDistance?: SortOrder
+    lastStation?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: PipelineProgressCountOrderByAggregateInput
+    _avg?: PipelineProgressAvgOrderByAggregateInput
+    _max?: PipelineProgressMaxOrderByAggregateInput
+    _min?: PipelineProgressMinOrderByAggregateInput
+    _sum?: PipelineProgressSumOrderByAggregateInput
+  }
+
+  export type PipelineProgressScalarWhereWithAggregatesInput = {
+    AND?: PipelineProgressScalarWhereWithAggregatesInput | PipelineProgressScalarWhereWithAggregatesInput[]
+    OR?: PipelineProgressScalarWhereWithAggregatesInput[]
+    NOT?: PipelineProgressScalarWhereWithAggregatesInput | PipelineProgressScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PipelineProgress"> | string
+    distanceKm?: FloatWithAggregatesFilter<"PipelineProgress"> | number
+    totalDistance?: FloatWithAggregatesFilter<"PipelineProgress"> | number
+    lastStation?: StringNullableWithAggregatesFilter<"PipelineProgress"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"PipelineProgress"> | Date | string
   }
 
   export type AccountCreateInput = {
@@ -26872,6 +32745,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     entries?: DailyEntryCreateNestedManyWithoutStationInput
+    facility?: FacilityCreateNestedOneWithoutStationInput
   }
 
   export type StationUncheckedCreateInput = {
@@ -26879,6 +32753,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    facilityId?: string | null
     entries?: DailyEntryUncheckedCreateNestedManyWithoutStationInput
   }
 
@@ -26888,6 +32763,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     entries?: DailyEntryUpdateManyWithoutStationNestedInput
+    facility?: FacilityUpdateOneWithoutStationNestedInput
   }
 
   export type StationUncheckedUpdateInput = {
@@ -26895,6 +32771,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facilityId?: NullableStringFieldUpdateOperationsInput | string | null
     entries?: DailyEntryUncheckedUpdateManyWithoutStationNestedInput
   }
 
@@ -26903,6 +32780,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    facilityId?: string | null
   }
 
   export type StationUpdateManyMutationInput = {
@@ -26915,6 +32793,347 @@ export namespace Prisma {
   export type StationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facilityId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FacilityCreateInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    type?: string | null
+    km?: number | null
+    country?: string | null
+    status?: string | null
+    pressure?: number | null
+    flow?: number | null
+    temp?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    station?: StationCreateNestedOneWithoutFacilityInput
+  }
+
+  export type FacilityUncheckedCreateInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    type?: string | null
+    km?: number | null
+    country?: string | null
+    status?: string | null
+    pressure?: number | null
+    flow?: number | null
+    temp?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    station?: StationUncheckedCreateNestedOneWithoutFacilityInput
+  }
+
+  export type FacilityUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    km?: NullableFloatFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    pressure?: NullableFloatFieldUpdateOperationsInput | number | null
+    flow?: NullableFloatFieldUpdateOperationsInput | number | null
+    temp?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    station?: StationUpdateOneWithoutFacilityNestedInput
+  }
+
+  export type FacilityUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    km?: NullableFloatFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    pressure?: NullableFloatFieldUpdateOperationsInput | number | null
+    flow?: NullableFloatFieldUpdateOperationsInput | number | null
+    temp?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    station?: StationUncheckedUpdateOneWithoutFacilityNestedInput
+  }
+
+  export type FacilityCreateManyInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    type?: string | null
+    km?: number | null
+    country?: string | null
+    status?: string | null
+    pressure?: number | null
+    flow?: number | null
+    temp?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FacilityUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    km?: NullableFloatFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    pressure?: NullableFloatFieldUpdateOperationsInput | number | null
+    flow?: NullableFloatFieldUpdateOperationsInput | number | null
+    temp?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FacilityUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    km?: NullableFloatFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    pressure?: NullableFloatFieldUpdateOperationsInput | number | null
+    flow?: NullableFloatFieldUpdateOperationsInput | number | null
+    temp?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineBatchCreateInput = {
+    id?: string
+    year: number
+    product: string
+    volume: number
+    startKm: number
+    endKm: number
+    color: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelineBatchUncheckedCreateInput = {
+    id?: string
+    year: number
+    product: string
+    volume: number
+    startKm: number
+    endKm: number
+    color: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelineBatchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    product?: StringFieldUpdateOperationsInput | string
+    volume?: FloatFieldUpdateOperationsInput | number
+    startKm?: FloatFieldUpdateOperationsInput | number
+    endKm?: FloatFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineBatchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    product?: StringFieldUpdateOperationsInput | string
+    volume?: FloatFieldUpdateOperationsInput | number
+    startKm?: FloatFieldUpdateOperationsInput | number
+    endKm?: FloatFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineBatchCreateManyInput = {
+    id?: string
+    year: number
+    product: string
+    volume: number
+    startKm: number
+    endKm: number
+    color: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelineBatchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    product?: StringFieldUpdateOperationsInput | string
+    volume?: FloatFieldUpdateOperationsInput | number
+    startKm?: FloatFieldUpdateOperationsInput | number
+    endKm?: FloatFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineBatchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    product?: StringFieldUpdateOperationsInput | string
+    volume?: FloatFieldUpdateOperationsInput | number
+    startKm?: FloatFieldUpdateOperationsInput | number
+    endKm?: FloatFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelinePigCreateInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    type: string
+    launched?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelinePigUncheckedCreateInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    type: string
+    launched?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelinePigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelinePigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelinePigCreateManyInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    type: string
+    launched?: Date | string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelinePigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelinePigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineYearlyStatsCreateInput = {
+    id?: string
+    year: number
+    throughput: number
+    delivered: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelineYearlyStatsUncheckedCreateInput = {
+    id?: string
+    year: number
+    throughput: number
+    delivered: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelineYearlyStatsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    delivered?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineYearlyStatsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    delivered?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineYearlyStatsCreateManyInput = {
+    id?: string
+    year: number
+    throughput: number
+    delivered: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelineYearlyStatsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    delivered?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineYearlyStatsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    delivered?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27278,6 +33497,62 @@ export namespace Prisma {
     activeShipments?: IntFieldUpdateOperationsInput | number
     reliability?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineProgressCreateInput = {
+    id?: string
+    distanceKm?: number
+    totalDistance?: number
+    lastStation?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PipelineProgressUncheckedCreateInput = {
+    id?: string
+    distanceKm?: number
+    totalDistance?: number
+    lastStation?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PipelineProgressUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    distanceKm?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    lastStation?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineProgressUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    distanceKm?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    lastStation?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineProgressCreateManyInput = {
+    id?: string
+    distanceKm?: number
+    totalDistance?: number
+    lastStation?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PipelineProgressUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    distanceKm?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    lastStation?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelineProgressUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    distanceKm?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    lastStation?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28252,6 +34527,11 @@ export namespace Prisma {
     none?: DailyEntryWhereInput
   }
 
+  export type FacilityNullableScalarRelationFilter = {
+    is?: FacilityWhereInput | null
+    isNot?: FacilityWhereInput | null
+  }
+
   export type DailyEntryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -28261,6 +34541,7 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facilityId?: SortOrder
   }
 
   export type StationMaxOrderByAggregateInput = {
@@ -28268,6 +34549,7 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facilityId?: SortOrder
   }
 
   export type StationMinOrderByAggregateInput = {
@@ -28275,6 +34557,233 @@ export namespace Prisma {
     name?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type StationNullableScalarRelationFilter = {
+    is?: StationWhereInput | null
+    isNot?: StationWhereInput | null
+  }
+
+  export type FacilityCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    type?: SortOrder
+    km?: SortOrder
+    country?: SortOrder
+    status?: SortOrder
+    pressure?: SortOrder
+    flow?: SortOrder
+    temp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FacilityAvgOrderByAggregateInput = {
+    km?: SortOrder
+    pressure?: SortOrder
+    flow?: SortOrder
+    temp?: SortOrder
+  }
+
+  export type FacilityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    type?: SortOrder
+    km?: SortOrder
+    country?: SortOrder
+    status?: SortOrder
+    pressure?: SortOrder
+    flow?: SortOrder
+    temp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FacilityMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    shortName?: SortOrder
+    type?: SortOrder
+    km?: SortOrder
+    country?: SortOrder
+    status?: SortOrder
+    pressure?: SortOrder
+    flow?: SortOrder
+    temp?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FacilitySumOrderByAggregateInput = {
+    km?: SortOrder
+    pressure?: SortOrder
+    flow?: SortOrder
+    temp?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type PipelineBatchCountOrderByAggregateInput = {
+    id?: SortOrder
+    year?: SortOrder
+    product?: SortOrder
+    volume?: SortOrder
+    startKm?: SortOrder
+    endKm?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineBatchAvgOrderByAggregateInput = {
+    year?: SortOrder
+    volume?: SortOrder
+    startKm?: SortOrder
+    endKm?: SortOrder
+  }
+
+  export type PipelineBatchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    year?: SortOrder
+    product?: SortOrder
+    volume?: SortOrder
+    startKm?: SortOrder
+    endKm?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineBatchMinOrderByAggregateInput = {
+    id?: SortOrder
+    year?: SortOrder
+    product?: SortOrder
+    volume?: SortOrder
+    startKm?: SortOrder
+    endKm?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineBatchSumOrderByAggregateInput = {
+    year?: SortOrder
+    volume?: SortOrder
+    startKm?: SortOrder
+    endKm?: SortOrder
+  }
+
+  export type PipelinePigCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    speed?: SortOrder
+    type?: SortOrder
+    launched?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelinePigAvgOrderByAggregateInput = {
+    position?: SortOrder
+    speed?: SortOrder
+  }
+
+  export type PipelinePigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    speed?: SortOrder
+    type?: SortOrder
+    launched?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelinePigMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    speed?: SortOrder
+    type?: SortOrder
+    launched?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelinePigSumOrderByAggregateInput = {
+    position?: SortOrder
+    speed?: SortOrder
+  }
+
+  export type PipelineYearlyStatsCountOrderByAggregateInput = {
+    id?: SortOrder
+    year?: SortOrder
+    throughput?: SortOrder
+    delivered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineYearlyStatsAvgOrderByAggregateInput = {
+    year?: SortOrder
+    throughput?: SortOrder
+    delivered?: SortOrder
+  }
+
+  export type PipelineYearlyStatsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    year?: SortOrder
+    throughput?: SortOrder
+    delivered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineYearlyStatsMinOrderByAggregateInput = {
+    id?: SortOrder
+    year?: SortOrder
+    throughput?: SortOrder
+    delivered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineYearlyStatsSumOrderByAggregateInput = {
+    year?: SortOrder
+    throughput?: SortOrder
+    delivered?: SortOrder
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -28605,6 +35114,40 @@ export namespace Prisma {
     rating?: SortOrder
     activeShipments?: SortOrder
     reliability?: SortOrder
+  }
+
+  export type PipelineProgressCountOrderByAggregateInput = {
+    id?: SortOrder
+    distanceKm?: SortOrder
+    totalDistance?: SortOrder
+    lastStation?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineProgressAvgOrderByAggregateInput = {
+    distanceKm?: SortOrder
+    totalDistance?: SortOrder
+  }
+
+  export type PipelineProgressMaxOrderByAggregateInput = {
+    id?: SortOrder
+    distanceKm?: SortOrder
+    totalDistance?: SortOrder
+    lastStation?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineProgressMinOrderByAggregateInput = {
+    id?: SortOrder
+    distanceKm?: SortOrder
+    totalDistance?: SortOrder
+    lastStation?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PipelineProgressSumOrderByAggregateInput = {
+    distanceKm?: SortOrder
+    totalDistance?: SortOrder
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -29080,6 +35623,12 @@ export namespace Prisma {
     connect?: DailyEntryWhereUniqueInput | DailyEntryWhereUniqueInput[]
   }
 
+  export type FacilityCreateNestedOneWithoutStationInput = {
+    create?: XOR<FacilityCreateWithoutStationInput, FacilityUncheckedCreateWithoutStationInput>
+    connectOrCreate?: FacilityCreateOrConnectWithoutStationInput
+    connect?: FacilityWhereUniqueInput
+  }
+
   export type DailyEntryUncheckedCreateNestedManyWithoutStationInput = {
     create?: XOR<DailyEntryCreateWithoutStationInput, DailyEntryUncheckedCreateWithoutStationInput> | DailyEntryCreateWithoutStationInput[] | DailyEntryUncheckedCreateWithoutStationInput[]
     connectOrCreate?: DailyEntryCreateOrConnectWithoutStationInput | DailyEntryCreateOrConnectWithoutStationInput[]
@@ -29101,6 +35650,16 @@ export namespace Prisma {
     deleteMany?: DailyEntryScalarWhereInput | DailyEntryScalarWhereInput[]
   }
 
+  export type FacilityUpdateOneWithoutStationNestedInput = {
+    create?: XOR<FacilityCreateWithoutStationInput, FacilityUncheckedCreateWithoutStationInput>
+    connectOrCreate?: FacilityCreateOrConnectWithoutStationInput
+    upsert?: FacilityUpsertWithoutStationInput
+    disconnect?: FacilityWhereInput | boolean
+    delete?: FacilityWhereInput | boolean
+    connect?: FacilityWhereUniqueInput
+    update?: XOR<XOR<FacilityUpdateToOneWithWhereWithoutStationInput, FacilityUpdateWithoutStationInput>, FacilityUncheckedUpdateWithoutStationInput>
+  }
+
   export type DailyEntryUncheckedUpdateManyWithoutStationNestedInput = {
     create?: XOR<DailyEntryCreateWithoutStationInput, DailyEntryUncheckedCreateWithoutStationInput> | DailyEntryCreateWithoutStationInput[] | DailyEntryUncheckedCreateWithoutStationInput[]
     connectOrCreate?: DailyEntryCreateOrConnectWithoutStationInput | DailyEntryCreateOrConnectWithoutStationInput[]
@@ -29113,6 +35672,46 @@ export namespace Prisma {
     update?: DailyEntryUpdateWithWhereUniqueWithoutStationInput | DailyEntryUpdateWithWhereUniqueWithoutStationInput[]
     updateMany?: DailyEntryUpdateManyWithWhereWithoutStationInput | DailyEntryUpdateManyWithWhereWithoutStationInput[]
     deleteMany?: DailyEntryScalarWhereInput | DailyEntryScalarWhereInput[]
+  }
+
+  export type StationCreateNestedOneWithoutFacilityInput = {
+    create?: XOR<StationCreateWithoutFacilityInput, StationUncheckedCreateWithoutFacilityInput>
+    connectOrCreate?: StationCreateOrConnectWithoutFacilityInput
+    connect?: StationWhereUniqueInput
+  }
+
+  export type StationUncheckedCreateNestedOneWithoutFacilityInput = {
+    create?: XOR<StationCreateWithoutFacilityInput, StationUncheckedCreateWithoutFacilityInput>
+    connectOrCreate?: StationCreateOrConnectWithoutFacilityInput
+    connect?: StationWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type StationUpdateOneWithoutFacilityNestedInput = {
+    create?: XOR<StationCreateWithoutFacilityInput, StationUncheckedCreateWithoutFacilityInput>
+    connectOrCreate?: StationCreateOrConnectWithoutFacilityInput
+    upsert?: StationUpsertWithoutFacilityInput
+    disconnect?: StationWhereInput | boolean
+    delete?: StationWhereInput | boolean
+    connect?: StationWhereUniqueInput
+    update?: XOR<XOR<StationUpdateToOneWithWhereWithoutFacilityInput, StationUpdateWithoutFacilityInput>, StationUncheckedUpdateWithoutFacilityInput>
+  }
+
+  export type StationUncheckedUpdateOneWithoutFacilityNestedInput = {
+    create?: XOR<StationCreateWithoutFacilityInput, StationUncheckedCreateWithoutFacilityInput>
+    connectOrCreate?: StationCreateOrConnectWithoutFacilityInput
+    upsert?: StationUpsertWithoutFacilityInput
+    disconnect?: StationWhereInput | boolean
+    delete?: StationWhereInput | boolean
+    connect?: StationWhereUniqueInput
+    update?: XOR<XOR<StationUpdateToOneWithWhereWithoutFacilityInput, StationUpdateWithoutFacilityInput>, StationUncheckedUpdateWithoutFacilityInput>
   }
 
   export type StationCreateNestedOneWithoutEntriesInput = {
@@ -29451,6 +36050,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -30476,6 +37091,41 @@ export namespace Prisma {
     data: DailyEntryCreateManyStationInput | DailyEntryCreateManyStationInput[]
   }
 
+  export type FacilityCreateWithoutStationInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    type?: string | null
+    km?: number | null
+    country?: string | null
+    status?: string | null
+    pressure?: number | null
+    flow?: number | null
+    temp?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FacilityUncheckedCreateWithoutStationInput = {
+    id?: string
+    name: string
+    shortName?: string | null
+    type?: string | null
+    km?: number | null
+    country?: string | null
+    status?: string | null
+    pressure?: number | null
+    flow?: number | null
+    temp?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FacilityCreateOrConnectWithoutStationInput = {
+    where: FacilityWhereUniqueInput
+    create: XOR<FacilityCreateWithoutStationInput, FacilityUncheckedCreateWithoutStationInput>
+  }
+
   export type DailyEntryUpsertWithWhereUniqueWithoutStationInput = {
     where: DailyEntryWhereUniqueInput
     update: XOR<DailyEntryUpdateWithoutStationInput, DailyEntryUncheckedUpdateWithoutStationInput>
@@ -30510,11 +37160,101 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"DailyEntry"> | Date | string
   }
 
+  export type FacilityUpsertWithoutStationInput = {
+    update: XOR<FacilityUpdateWithoutStationInput, FacilityUncheckedUpdateWithoutStationInput>
+    create: XOR<FacilityCreateWithoutStationInput, FacilityUncheckedCreateWithoutStationInput>
+    where?: FacilityWhereInput
+  }
+
+  export type FacilityUpdateToOneWithWhereWithoutStationInput = {
+    where?: FacilityWhereInput
+    data: XOR<FacilityUpdateWithoutStationInput, FacilityUncheckedUpdateWithoutStationInput>
+  }
+
+  export type FacilityUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    km?: NullableFloatFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    pressure?: NullableFloatFieldUpdateOperationsInput | number | null
+    flow?: NullableFloatFieldUpdateOperationsInput | number | null
+    temp?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FacilityUncheckedUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    shortName?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: NullableStringFieldUpdateOperationsInput | string | null
+    km?: NullableFloatFieldUpdateOperationsInput | number | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    pressure?: NullableFloatFieldUpdateOperationsInput | number | null
+    flow?: NullableFloatFieldUpdateOperationsInput | number | null
+    temp?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StationCreateWithoutFacilityInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: DailyEntryCreateNestedManyWithoutStationInput
+  }
+
+  export type StationUncheckedCreateWithoutFacilityInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    entries?: DailyEntryUncheckedCreateNestedManyWithoutStationInput
+  }
+
+  export type StationCreateOrConnectWithoutFacilityInput = {
+    where: StationWhereUniqueInput
+    create: XOR<StationCreateWithoutFacilityInput, StationUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type StationUpsertWithoutFacilityInput = {
+    update: XOR<StationUpdateWithoutFacilityInput, StationUncheckedUpdateWithoutFacilityInput>
+    create: XOR<StationCreateWithoutFacilityInput, StationUncheckedCreateWithoutFacilityInput>
+    where?: StationWhereInput
+  }
+
+  export type StationUpdateToOneWithWhereWithoutFacilityInput = {
+    where?: StationWhereInput
+    data: XOR<StationUpdateWithoutFacilityInput, StationUncheckedUpdateWithoutFacilityInput>
+  }
+
+  export type StationUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: DailyEntryUpdateManyWithoutStationNestedInput
+  }
+
+  export type StationUncheckedUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: DailyEntryUncheckedUpdateManyWithoutStationNestedInput
+  }
+
   export type StationCreateWithoutEntriesInput = {
     id?: string
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    facility?: FacilityCreateNestedOneWithoutStationInput
   }
 
   export type StationUncheckedCreateWithoutEntriesInput = {
@@ -30522,6 +37262,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    facilityId?: string | null
   }
 
   export type StationCreateOrConnectWithoutEntriesInput = {
@@ -30605,6 +37346,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facility?: FacilityUpdateOneWithoutStationNestedInput
   }
 
   export type StationUncheckedUpdateWithoutEntriesInput = {
@@ -30612,6 +37354,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facilityId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TankUpsertWithWhereUniqueWithoutEntryInput = {

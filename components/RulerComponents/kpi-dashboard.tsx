@@ -18,19 +18,19 @@ import {
   BarChart3
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { Station } from '@/app/page'
+import { Facility } from './station-grid'
 
 interface KPIDashboardProps {
-  stations: Station[]
+  stations: Facility[]
 }
 
 export default function KPIDashboard({ stations }: KPIDashboardProps) {
   // Calculate real metrics from stations
-  const totalFlow = stations.reduce((acc, s) => acc + s.flow, 0)
-  const avgPressure = stations.reduce((acc, s) => acc + s.pressure, 0) / stations.length
-  const avgTemp = stations.reduce((acc, s) => acc + s.temp, 0) / stations.length
-  const onlineCount = stations.filter(s => s.status === 'online').length
-  const efficiency = (onlineCount / stations.length) * 100
+  const totalFlow = stations.reduce((acc, s) => acc + (s.flow || 0), 0)
+  const avgPressure = stations.length > 0 ? stations.reduce((acc, s) => acc + (s.pressure || 0), 0) / stations.length : 0
+  const avgTemp = stations.length > 0 ? stations.reduce((acc, s) => acc + (s.temp || 0), 0) / stations.length : 0
+  const onlineCount = stations.filter(s => s.status === 'active' || s.status === 'idle').length
+  const efficiency = stations.length > 0 ? (onlineCount / stations.length) * 100 : 0
 
   // Simulated real-time data
   const throughputToday = 2847000 // liters

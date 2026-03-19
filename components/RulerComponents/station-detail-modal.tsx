@@ -6,21 +6,24 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { X, MapPin, Activity, Gauge, Thermometer, Droplets, Clock, TrendingUp, AlertTriangle } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
-import type { Station } from '@/app/page'
+import { Facility } from './station-grid'
 
 interface StationDetailModalProps {
-  station: Station
+  station: Facility
   onClose: () => void
 }
 
 // Generate mock historical data
-function generateHistoricalData(station: Station) {
+function generateHistoricalData(station: Facility) {
   const hours = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00']
+  const basePressure = station.pressure || 0
+  const baseFlow = station.flow || 0
+  const baseTemp = station.temp || 0
   return hours.map((time, i) => ({
     time,
-    pressure: station.pressure + (Math.random() - 0.5) * 6,
-    flow: station.flow + (Math.random() - 0.5) * 300,
-    temp: station.temp + (Math.random() - 0.5) * 3,
+    pressure: basePressure + (Math.random() - 0.5) * 6,
+    flow: baseFlow + (Math.random() - 0.5) * 300,
+    temp: baseTemp + (Math.random() - 0.5) * 3,
   }))
 }
 
@@ -30,7 +33,7 @@ export default function StationDetailModal({ station, onClose }: StationDetailMo
   const operationalParams = [
     { 
       label: 'Pressure', 
-      value: station.pressure, 
+      value: station.pressure || 0, 
       unit: 'bar', 
       icon: Gauge,
       min: 40, 
@@ -40,7 +43,7 @@ export default function StationDetailModal({ station, onClose }: StationDetailMo
     },
     { 
       label: 'Flow Rate', 
-      value: station.flow, 
+      value: station.flow || 0, 
       unit: 'L/h', 
       icon: Droplets,
       min: 1500, 
@@ -50,7 +53,7 @@ export default function StationDetailModal({ station, onClose }: StationDetailMo
     },
     { 
       label: 'Temperature', 
-      value: station.temp, 
+      value: station.temp || 0, 
       unit: '°C', 
       icon: Thermometer,
       min: 20, 
@@ -71,10 +74,10 @@ export default function StationDetailModal({ station, onClose }: StationDetailMo
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-              station.status === 'online' ? 'bg-green-500/20' : 'bg-yellow-500/20'
+              (station.status === 'active' || station.status === 'idle') ? 'bg-green-500/20' : 'bg-yellow-500/20'
             }`}>
               <Activity className={`h-6 w-6 ${
-                station.status === 'online' ? 'text-green-500' : 'text-yellow-500'
+                (station.status === 'active' || station.status === 'idle') ? 'text-green-500' : 'text-yellow-500'
               }`} />
             </div>
             <div>
@@ -87,11 +90,11 @@ export default function StationDetailModal({ station, onClose }: StationDetailMo
                 <Badge variant="outline" className="text-xs">
                   {station.type}
                 </Badge>
-                <Badge className={station.status === 'online' 
+                <Badge className={(station.status === 'active' || station.status === 'idle') 
                   ? 'bg-green-500/20 text-green-400 border-0' 
                   : 'bg-yellow-500/20 text-yellow-400 border-0'
                 }>
-                  {station.status === 'online' ? 'Operational' : 'Warning'}
+                  {(station.status === 'active' || station.status === 'idle') ? 'Operational' : 'Warning'}
                 </Badge>
               </div>
             </div>
@@ -169,7 +172,7 @@ export default function StationDetailModal({ station, onClose }: StationDetailMo
                   </div>
                   <div>
                     <p className="text-muted-foreground">Station ID</p>
-                    <p className="font-medium">STA-{station.id.toString().padStart(3, '0')}</p>
+                    <p className="font-medium truncate max-w-[120px]" title={station.id}>{station.id.substring(0, 8)}...</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Last Maintenance</p>
