@@ -1,14 +1,14 @@
-'use client'
-
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { AlertTriangle, AlertCircle, Info, CheckCircle, X, Clock, MapPin } from 'lucide-react'
-import { useState } from 'react'
+import { AlertTriangle, AlertCircle, Info, CheckCircle, X, Clock, MapPin, Loader2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { getAlerts, acknowledgeAlert, dismissAlert, checkAndGenerateAlerts } from '@/lib/actions/alerts'
 
 export interface Alert {
-  id: number
+  id: string
   type: 'critical' | 'warning' | 'info' | 'resolved'
   title: string
   message: string
@@ -18,9 +18,7 @@ export interface Alert {
 }
 
 interface AlertsPanelProps {
-  alerts: Alert[]
-  onAcknowledge: (id: number) => void
-  onDismiss: (id: number) => void
+  className?: string
 }
 
 const alertConfig = {
@@ -67,8 +65,55 @@ function formatTimeAgo(date: Date): string {
   return `${diffDays}d ago`
 }
 
-export default function AlertsPanel({ alerts, onAcknowledge, onDismiss }: AlertsPanelProps) {
+export default function AlertsPanel({ className }: AlertsPanelProps) {
+  const [mounted, setMounted] = useState(false)
   const [filter, setFilter] = useState<'all' | 'critical' | 'warning' | 'info'>('all')
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    setMounted(true)
+    // Auto-generate alerts based on current DB data
+    const syncAlerts = async () => {
+      try {
+        await checkAndGenerateAlerts()
+        queryClient.invalidateQueries({ queryKey: ['alerts'] })
+      } catch (err) {
+        console.error('Failed to auto-generate alerts:', err)
+      }
+    }
+    syncAlerts()
+  }, [queryClient])
+
+  const { data: rawAlerts = [], isLoading, error } = useQuery({
+    queryKey: ['alerts'],
+    queryFn: () => getAlerts(),
+    refetchInterval: 30000, // Refetch every 30 seconds
+  })
+
+  // Map Prisma Alert model to UI Alert interface
+  const alerts: Alert[] = rawAlerts.map(a => ({
+    id: a.id,
+    type: a.type as any,
+    title: a.title,
+    message: a.message,
+    station: a.station || 'Unknown',
+    timestamp: new Date(a.timestamp),
+    acknowledged: a.read,
+  }))
+
+  const ackMutation = useMutation({
+    mutationFn: (id: string) => acknowledgeAlert(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+    },
+  })
+
+  const dismissMutation = useMutation({
+    mutationFn: (id: string) => dismissAlert(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+    },
+  })
 
   const filteredAlerts = alerts.filter(alert => {
     if (filter === 'all') return true
@@ -78,8 +123,19 @@ export default function AlertsPanel({ alerts, onAcknowledge, onDismiss }: Alerts
   const criticalCount = alerts.filter(a => a.type === 'critical' && !a.acknowledged).length
   const warningCount = alerts.filter(a => a.type === 'warning' && !a.acknowledged).length
 
+  if (isLoading) {
+    return (
+      <Card className={cn("p-4 flex items-center justify-center min-h-[200px]", className)}>
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="h-8 w-8 animate-spin text-primary opacity-50" />
+          <p className="text-sm text-muted-foreground">Loading alerts...</p>
+        </div>
+      </Card>
+    )
+  }
+
   return (
-    <Card className="p-4">
+    <Card className={cn("p-4", className)}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <h3 className="font-bold">System Alerts</h3>
@@ -94,6 +150,7 @@ export default function AlertsPanel({ alerts, onAcknowledge, onDismiss }: Alerts
             </Badge>
           )}
         </div>
+        {error && <span className="text-xs text-red-500">Error loading alerts</span>}
       </div>
 
       <div className="flex gap-2 mb-4 flex-wrap">
@@ -148,7 +205,7 @@ export default function AlertsPanel({ alerts, onAcknowledge, onDismiss }: Alerts
           </div>
         ) : (
           filteredAlerts.map((alert) => {
-            const config = alertConfig[alert.type]
+            const config = alertConfig[alert.type] || alertConfig.info
             const Icon = config.icon
 
             return (
@@ -178,7 +235,7 @@ export default function AlertsPanel({ alerts, onAcknowledge, onDismiss }: Alerts
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        {formatTimeAgo(alert.timestamp)}
+                        {mounted ? formatTimeAgo(alert.timestamp) : '--'}
                       </span>
                     </div>
                   </div>
@@ -187,19 +244,29 @@ export default function AlertsPanel({ alerts, onAcknowledge, onDismiss }: Alerts
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => onAcknowledge(alert.id)}
+                        onClick={() => ackMutation.mutate(alert.id)}
+                        disabled={ackMutation.isPending}
                         className="h-7 px-2 text-xs"
                       >
-                        Ack
+                        {ackMutation.isPending && ackMutation.variables === alert.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          'Ack'
+                        )}
                       </Button>
                     )}
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={() => onDismiss(alert.id)}
+                      onClick={() => dismissMutation.mutate(alert.id)}
+                      disabled={dismissMutation.isPending}
                       className="h-7 w-7 p-0"
                     >
-                      <X className="h-4 w-4" />
+                      {dismissMutation.isPending && dismissMutation.variables === alert.id ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <X className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </div>

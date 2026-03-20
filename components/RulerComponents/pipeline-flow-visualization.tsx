@@ -30,14 +30,21 @@ import {
 import { useState, useEffect, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { useQuery } from '@tanstack/react-query'
-import { getPipelineProgress } from '@/lib/actions/pipeline'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Calendar } from '@/components/ui/calendar'
-import { format } from 'date-fns'
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { getPipelineProgress, getPipelineBatches, getPipelineStats, getPipelinePigs, getPipelineMetrics } from '@/lib/actions/pipeline'
+import { getFacilities } from '@/lib/actions/facilities'
 
 interface FlowVisualizationProps {
   selectedStation?: string | null
   onStationSelect?: (stationName: string) => void
+  selectedYear: number
+  onYearChange: (year: number) => void
 }
 
 interface Facility {
@@ -74,15 +81,25 @@ interface PigTracker {
   name: string
   position: number
   speed: number
-  type: string
-  launched: Date
+  category: {
+    name: string
+    color: string
+    icon: string
+  } | null
+  status: string
+  condition: string
   isActive: boolean
 }
 
 const TOTAL_LENGTH = 1710
 const BORDER_KM = 1330
 
-export default function PipelineFlowVisualization({ selectedStation, onStationSelect }: FlowVisualizationProps) {
+export default function PipelineFlowVisualization({ 
+  selectedStation, 
+  onStationSelect,
+  selectedYear,
+  onYearChange
+}: FlowVisualizationProps) {
   const [zoom, setZoom] = useState(1)
   const [isPlaying, setIsPlaying] = useState(false)
   const [flowSpeed, setFlowSpeed] = useState([50])
@@ -91,39 +108,42 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
   const [activeFacility, setActiveFacility] = useState<Facility | null>(null)
   const [showControls, setShowControls] = useState(false)
   const [animationOffset, setAnimationOffset] = useState(0)
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 0, 1))
   const [currentKm, setCurrentKm] = useState(0)
   const [highlightedStationName, setHighlightedStationName] = useState<string | null>(null)
 
-  const selectedYear = selectedDate.getFullYear()
-
-  // API Data Fetching
+  // API Data Fetching using Server Actions
   const { data: facilities, isLoading: isLoadingFacilities } = useQuery<Facility[]>({
     queryKey: ['pipeline-facilities'],
-    queryFn: () => fetch('/api/pipeline/facilities').then(res => res.json()),
+    queryFn: () => getFacilities(),
   })
 
   const { data: batches, isLoading: isLoadingBatches } = useQuery<PipelineBatch[]>({
     queryKey: ['pipeline-batches', selectedYear],
-    queryFn: () => fetch(`/api/pipeline/batches?year=${selectedYear}`).then(res => res.json()),
+    queryFn: () => getPipelineBatches(selectedYear),
   })
 
-  const { data: yearlyStats, isLoading: isLoadingStats } = useQuery<YearlyStats>({
+  const { data: yearlyStats, isLoading: isLoadingStats } = useQuery<YearlyStats | null>({
     queryKey: ['pipeline-stats', selectedYear],
-    queryFn: () => fetch(`/api/pipeline/stats?year=${selectedYear}`).then(res => res.json()),
+    queryFn: () => getPipelineStats(selectedYear),
   })
 
   const { data: pigs, isLoading: isLoadingPigs } = useQuery<PigTracker[]>({
     queryKey: ['pipeline-pigs'],
-    queryFn: () => fetch('/api/pipeline/pigs').then(res => res.json()),
+    queryFn: () => getPipelinePigs(),
     refetchInterval: 5000,
   })
 
   // Fetch real-time progress from DB
   const { data: dbProgress, isLoading: isLoadingProgress } = useQuery({
-    queryKey: ['pipeline-progress'],
-    queryFn: () => getPipelineProgress(),
+    queryKey: ['pipeline-progress', selectedYear],
+    queryFn: () => getPipelineProgress(selectedYear),
     refetchInterval: 10000,
+  })
+
+  const { data: metrics, isLoading: isLoadingMetrics } = useQuery({
+    queryKey: ['pipeline-metrics'],
+    queryFn: () => getPipelineMetrics(),
+    refetchInterval: 30000,
   })
 
   // Helper to get visual position based on index-based station spacing
@@ -204,12 +224,12 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
     }
   }
 
-  // Calculate metrics
-  const avgPressure = facilities && facilities.length > 0 ? facilities.reduce((acc, f) => acc + (f.pressure || 0), 0) / facilities.length : 0
-  const avgFlow = facilities && facilities.length > 0 ? facilities.reduce((acc, f) => acc + (f.flow || 0), 0) / facilities.length : 0
-  const avgTemp = facilities && facilities.length > 0 ? facilities.reduce((acc, f) => acc + (f.temp || 0), 0) / facilities.length : 0
-  const activeCount = facilities ? facilities.filter(f => ['active', 'discharging', 'receiving'].includes(f.status || '')).length : 0
-  const warningCount = facilities ? facilities.filter(f => f.status === 'warning').length : 0
+  // Calculate metrics (handled by server action now, but provide defaults)
+  const avgPressure = metrics?.avgPressure ?? 0
+  const avgFlow = metrics?.avgFlow ?? 0
+  const avgTemp = metrics?.avgTemp ?? 0
+  const activeCount = metrics?.activeStations ?? 0
+  const warningCount = metrics?.warningAlerts ?? 0
 
   // Get unique products from batches for the legend
   const uniqueProducts = useMemo(() => {
@@ -227,7 +247,8 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
     <div className="space-y-4">
       {/* Metrics Bar */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <Card className="p-3 bg-card border-border">
+        <Card className="p-3 bg-card border-border relative overflow-hidden">
+          {isLoadingMetrics && <div className="absolute inset-0 bg-background/50 flex items-center justify-center"><Loader2 className="h-4 w-4 animate-spin" /></div>}
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <Gauge className="h-4 w-4 text-primary" />
             <span className="text-xs">Avg Pressure</span>
@@ -235,7 +256,8 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
           <p className="text-xl font-bold">{avgPressure.toFixed(1)} <span className="text-xs font-normal text-muted-foreground">bar</span></p>
         </Card>
         
-        <Card className="p-3 bg-card border-border">
+        <Card className="p-3 bg-card border-border relative overflow-hidden">
+          {isLoadingMetrics && <div className="absolute inset-0 bg-background/50 flex items-center justify-center"><Loader2 className="h-4 w-4 animate-spin" /></div>}
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <Droplets className="h-4 w-4 text-cyan-500" />
             <span className="text-xs">Avg Flow</span>
@@ -243,7 +265,8 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
           <p className="text-xl font-bold">{(avgFlow / 1000).toFixed(1)}k <span className="text-xs font-normal text-muted-foreground">L/h</span></p>
         </Card>
         
-        <Card className="p-3 bg-card border-border">
+        <Card className="p-3 bg-card border-border relative overflow-hidden">
+          {isLoadingMetrics && <div className="absolute inset-0 bg-background/50 flex items-center justify-center"><Loader2 className="h-4 w-4 animate-spin" /></div>}
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <Thermometer className="h-4 w-4 text-orange-500" />
             <span className="text-xs">Avg Temp</span>
@@ -251,7 +274,8 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
           <p className="text-xl font-bold">{avgTemp.toFixed(1)} <span className="text-xs font-normal text-muted-foreground">C</span></p>
         </Card>
         
-        <Card className="p-3 bg-card border-border">
+        <Card className="p-3 bg-card border-border relative overflow-hidden">
+          {isLoadingMetrics && <div className="absolute inset-0 bg-background/50 flex items-center justify-center"><Loader2 className="h-4 w-4 animate-spin" /></div>}
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <CheckCircle2 className="h-4 w-4 text-green-500" />
             <span className="text-xs">Active</span>
@@ -259,7 +283,8 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
           <p className="text-xl font-bold">{activeCount} <span className="text-xs font-normal text-muted-foreground">stations</span></p>
         </Card>
         
-        <Card className="p-3 bg-card border-border">
+        <Card className="p-3 bg-card border-border relative overflow-hidden">
+          {isLoadingMetrics && <div className="absolute inset-0 bg-background/50 flex items-center justify-center"><Loader2 className="h-4 w-4 animate-spin" /></div>}
           <div className="flex items-center gap-2 text-muted-foreground mb-1">
             <AlertTriangle className="h-4 w-4 text-yellow-500" />
             <span className="text-xs">Warnings</span>
@@ -279,31 +304,21 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
           
           <div className="flex items-center gap-2 flex-wrap">
             {/* Date Selection instead of Year Selector */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    "h-8 justify-start text-left font-normal border-border bg-secondary hover:bg-secondary/80",
-                    !selectedDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-                  {selectedDate ? format(selectedDate, "PPP") : <span className="text-xs">Pick a date</span>}
-                  <ChevronDown className="ml-2 h-3 w-3 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 border-border" align="end">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => date && setSelectedDate(date)}
-                  initialFocus
-                  className="bg-card"
-                />
-              </PopoverContent>
-            </Popover>
+            <Select value={selectedYear.toString()} onValueChange={(v) => onYearChange(parseInt(v))}>
+              <SelectTrigger className="w-[120px] h-8 bg-secondary border-border text-xs">
+                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                <SelectValue placeholder="Year" />
+              </SelectTrigger>
+              <SelectContent className="bg-card border-border">
+                <SelectItem value="2026">2026</SelectItem>
+                <SelectItem value="2025">2025</SelectItem>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2023">2023</SelectItem>
+                <SelectItem value="2022">2022</SelectItem>
+                <SelectItem value="2021">2021</SelectItem>
+                <SelectItem value="2020">2020</SelectItem>
+              </SelectContent>
+            </Select>
 
             <Button
               variant="outline"
@@ -374,7 +389,7 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
                     <span className="text-xs text-muted-foreground">No active pigs</span>
                   ) : pigs.map(pig => (
                     <Badge key={pig.id} variant="secondary" className="text-xs">
-                      {pig.type === 'cleaning' ? 'C' : 'I'} @ {pig.position.toFixed(0)} km
+                      {pig.category?.name.charAt(0) || 'P'} @ {pig.position.toFixed(0)} km
                     </Badge>
                   ))}
                 </div>
@@ -608,7 +623,7 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
                   >
                     <div className={cn(
                       "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-transform hover:scale-110",
-                      pig.type === 'cleaning' ? 'bg-yellow-500 border-yellow-300' : 'bg-blue-500 border-blue-300'
+                      pig.category?.color || 'bg-slate-500'
                     )}>
                       <Truck className="h-3 w-3 text-white" />
                     </div>
@@ -691,31 +706,54 @@ export default function PipelineFlowVisualization({ selectedStation, onStationSe
         </div>
 
         {/* Legend */}
-        <div className="mt-4 pt-4 border-t border-border">
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-orange-500 border border-orange-300" />
-              <span>Discharging</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-cyan-500 border border-cyan-300" />
-              <span>Receiving</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-green-500 border border-green-300" />
-              <span>Active</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-yellow-500 border border-yellow-300 animate-pulse" />
-              <span>Warning</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-slate-500 border border-slate-300" />
-              <span>Idle</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Truck className="h-3 w-3 text-yellow-500" />
-              <span>Pipeline Pig</span>
+        <div className="mt-6 pt-6 border-t border-border">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+              {/* Station Status Group */}
+              <div className="flex items-center gap-4 border-r border-border pr-8">
+                <span className="text-[10px] opacity-70">Station Status:</span>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-orange-500 border border-orange-300" />
+                    <span className="text-foreground">Discharging</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-cyan-500 border border-cyan-300" />
+                    <span className="text-foreground">Receiving</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500 border border-green-300" />
+                    <span className="text-foreground">Active</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 border border-blue-300" />
+                    <span className="text-foreground">Maintenance</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 border border-yellow-300 animate-pulse" />
+                    <span className="text-foreground">Warning</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-slate-500 border border-slate-300" />
+                    <span className="text-foreground">Idle</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Infrastructure Group */}
+              <div className="flex items-center gap-4">
+                <span className="text-[10px] opacity-70">Infrastructure:</span>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <Truck className="h-3.5 w-3.5 text-primary" />
+                    <span className="text-foreground">Pipeline Pig</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-0.5 bg-primary" />
+                    <span className="text-foreground">TZ | ZM Border</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

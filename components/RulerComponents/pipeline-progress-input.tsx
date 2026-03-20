@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,15 +14,22 @@ interface PipelineProgressInputProps {
   initialDistance: number
   totalDistance: number
   stations: { name: string; km: number }[]
+  year: number
 }
 
 export default function PipelineProgressInput({ 
   initialDistance, 
   totalDistance,
-  stations 
+  stations,
+  year
 }: PipelineProgressInputProps) {
   const [distance, setDistance] = useState(initialDistance)
   const queryClient = useQueryClient()
+
+  // Sync distance when year/initialDistance changes
+  useEffect(() => {
+    setDistance(initialDistance)
+  }, [initialDistance])
 
   // Find the last station reached based on current distance
   const currentStation = stations
@@ -32,10 +39,10 @@ export default function PipelineProgressInput({
 
   const mutation = useMutation({
     mutationFn: (data: { distanceKm: number; lastStation: string }) => 
-      updatePipelineProgress(data.distanceKm, data.lastStation),
+      updatePipelineProgress(data.distanceKm, data.lastStation, year),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['pipeline-progress'] })
-      toast.success('Pipeline progress updated successfully')
+      queryClient.invalidateQueries({ queryKey: ['pipeline-progress', year] })
+      toast.success(`Pipeline progress for ${year} updated successfully`)
     },
     onError: (error) => {
       toast.error('Failed to update progress: ' + error.message)

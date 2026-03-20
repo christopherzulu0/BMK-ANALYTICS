@@ -94,85 +94,18 @@ import {
   Scale,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { getFuelInputs, createFuelInput, updateFuelInput, deleteFuelInput, getSuppliers } from '@/lib/actions/fuel'
+import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
-// Supplier data with more details
-const suppliers = [
-  { id: 'sup-1', name: 'Tanzania Petroleum Development Corporation', shortName: 'TPDC', country: 'Tanzania', rating: 4.8, onTimeDelivery: 96 },
-  { id: 'sup-2', name: 'Oryx Energies Tanzania', shortName: 'Oryx', country: 'Tanzania', rating: 4.5, onTimeDelivery: 92 },
-  { id: 'sup-3', name: 'Puma Energy Tanzania', shortName: 'Puma', country: 'Tanzania', rating: 4.6, onTimeDelivery: 94 },
-  { id: 'sup-4', name: 'Total Energies East Africa', shortName: 'Total', country: 'Tanzania', rating: 4.7, onTimeDelivery: 95 },
-  { id: 'sup-5', name: 'Vivo Energy Tanzania', shortName: 'Vivo', country: 'Tanzania', rating: 4.4, onTimeDelivery: 91 },
-  { id: 'sup-6', name: 'Oil Com Tanzania', shortName: 'OilCom', country: 'Tanzania', rating: 4.2, onTimeDelivery: 88 },
-]
+const APPROVER_ROLES = ['admin', 'dispatcher', 'doe']
 
-// Extended fuel input records with more fields
-const initialRecords = [
-  { id: 1, date: '2024-01-20', supplier: 'TPDC', litres: 2850000, status: 'verified', vessel: 'MT Coral Star', deliveryType: 'vessel', temperature: 28.5, density: 0.845, qualityGrade: 'A', batchNo: 'LSG-2024-0120', receiptNo: 'REC-001520', apiGravity: 35.2, sulphurContent: 0.08 },
-  { id: 2, date: '2024-01-19', supplier: 'Oryx', litres: 1920000, status: 'verified', vessel: 'MT Ocean Pride', deliveryType: 'vessel', temperature: 27.8, density: 0.842, qualityGrade: 'A', batchNo: 'LSG-2024-0119', receiptNo: 'REC-001519', apiGravity: 35.8, sulphurContent: 0.07 },
-  { id: 3, date: '2024-01-18', supplier: 'Puma', litres: 2150000, status: 'pending', vessel: 'MT Gulf Stream', deliveryType: 'vessel', temperature: 29.2, density: 0.848, qualityGrade: 'B', batchNo: 'LSG-2024-0118', receiptNo: 'REC-001518', apiGravity: 34.5, sulphurContent: 0.09 },
-  { id: 4, date: '2024-01-17', supplier: 'Total', litres: 1680000, status: 'verified', vessel: 'MT Sea Breeze', deliveryType: 'vessel', temperature: 28.1, density: 0.844, qualityGrade: 'A', batchNo: 'LSG-2024-0117', receiptNo: 'REC-001517', apiGravity: 35.4, sulphurContent: 0.06 },
-  { id: 5, date: '2024-01-16', supplier: 'Vivo', litres: 2340000, status: 'verified', vessel: 'MT Horizon', deliveryType: 'vessel', temperature: 27.5, density: 0.841, qualityGrade: 'A', batchNo: 'LSG-2024-0116', receiptNo: 'REC-001516', apiGravity: 36.0, sulphurContent: 0.05 },
-  { id: 6, date: '2024-01-15', supplier: 'TPDC', litres: 2780000, status: 'verified', vessel: 'MT Neptune', deliveryType: 'vessel', temperature: 28.8, density: 0.846, qualityGrade: 'A', batchNo: 'LSG-2024-0115', receiptNo: 'REC-001515', apiGravity: 35.0, sulphurContent: 0.08 },
-  { id: 7, date: '2024-01-14', supplier: 'OilCom', litres: 1450000, status: 'rejected', vessel: 'MT Atlantic', deliveryType: 'vessel', temperature: 31.2, density: 0.852, qualityGrade: 'C', batchNo: 'LSG-2024-0114', receiptNo: 'REC-001514', apiGravity: 33.2, sulphurContent: 0.12 },
-  { id: 8, date: '2024-01-13', supplier: 'Oryx', litres: 2100000, status: 'verified', vessel: 'MT Pacific', deliveryType: 'vessel', temperature: 28.0, density: 0.843, qualityGrade: 'A', batchNo: 'LSG-2024-0113', receiptNo: 'REC-001513', apiGravity: 35.6, sulphurContent: 0.07 },
-  { id: 9, date: '2024-01-12', supplier: 'Puma', litres: 1890000, status: 'verified', vessel: 'MT Indian', deliveryType: 'vessel', temperature: 27.9, density: 0.844, qualityGrade: 'A', batchNo: 'LSG-2024-0112', receiptNo: 'REC-001512', apiGravity: 35.3, sulphurContent: 0.06 },
-  { id: 10, date: '2024-01-11', supplier: 'Total', litres: 2450000, status: 'verified', vessel: 'MT Arctic', deliveryType: 'vessel', temperature: 28.3, density: 0.845, qualityGrade: 'A', batchNo: 'LSG-2024-0111', receiptNo: 'REC-001511', apiGravity: 35.1, sulphurContent: 0.07 },
-  { id: 11, date: '2024-01-10', supplier: 'TPDC', litres: 2650000, status: 'verified', vessel: 'MT Titan', deliveryType: 'vessel', temperature: 28.6, density: 0.846, qualityGrade: 'A', batchNo: 'LSG-2024-0110', receiptNo: 'REC-001510', apiGravity: 35.0, sulphurContent: 0.08 },
-  { id: 12, date: '2024-01-09', supplier: 'Vivo', litres: 1980000, status: 'verified', vessel: 'MT Voyager', deliveryType: 'vessel', temperature: 27.7, density: 0.842, qualityGrade: 'A', batchNo: 'LSG-2024-0109', receiptNo: 'REC-001509', apiGravity: 35.7, sulphurContent: 0.06 },
-]
+// Monthly comparison - Helper for empty state
+const monthShortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const chartColors = ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#ef4444', '#6366f1', '#ec4899', '#f97316']
 
-// Daily trend data with more metrics
-const dailyTrendData = [
-  { date: 'Jan 09', litres: 1980, target: 2200, cumulative: 1980 },
-  { date: 'Jan 10', litres: 2650, target: 2200, cumulative: 4630 },
-  { date: 'Jan 11', litres: 2450, target: 2200, cumulative: 7080 },
-  { date: 'Jan 12', litres: 1890, target: 2200, cumulative: 8970 },
-  { date: 'Jan 13', litres: 2100, target: 2200, cumulative: 11070 },
-  { date: 'Jan 14', litres: 1450, target: 2200, cumulative: 12520 },
-  { date: 'Jan 15', litres: 2780, target: 2200, cumulative: 15300 },
-  { date: 'Jan 16', litres: 2340, target: 2200, cumulative: 17640 },
-  { date: 'Jan 17', litres: 1680, target: 2200, cumulative: 19320 },
-  { date: 'Jan 18', litres: 2150, target: 2200, cumulative: 21470 },
-  { date: 'Jan 19', litres: 1920, target: 2200, cumulative: 23390 },
-  { date: 'Jan 20', litres: 2850, target: 2200, cumulative: 26240 },
-]
-
-// Supplier distribution
-const supplierDistribution = [
-  { name: 'TPDC', value: 8280, color: '#10b981', deliveries: 3 },
-  { name: 'Oryx', value: 4020, color: '#06b6d4', deliveries: 2 },
-  { name: 'Puma', value: 4040, color: '#8b5cf6', deliveries: 2 },
-  { name: 'Total', value: 4130, color: '#f59e0b', deliveries: 2 },
-  { name: 'Vivo', value: 4320, color: '#ef4444', deliveries: 2 },
-  { name: 'OilCom', value: 1450, color: '#6366f1', deliveries: 1 },
-]
-
-// Quality metrics data
-const qualityTrendData = [
-  { date: 'Jan 09', density: 0.842, apiGravity: 35.7, sulphur: 0.06 },
-  { date: 'Jan 10', density: 0.846, apiGravity: 35.0, sulphur: 0.08 },
-  { date: 'Jan 11', density: 0.845, apiGravity: 35.1, sulphur: 0.07 },
-  { date: 'Jan 12', density: 0.844, apiGravity: 35.3, sulphur: 0.06 },
-  { date: 'Jan 13', density: 0.843, apiGravity: 35.6, sulphur: 0.07 },
-  { date: 'Jan 14', density: 0.852, apiGravity: 33.2, sulphur: 0.12 },
-  { date: 'Jan 15', density: 0.846, apiGravity: 35.0, sulphur: 0.08 },
-  { date: 'Jan 16', density: 0.841, apiGravity: 36.0, sulphur: 0.05 },
-  { date: 'Jan 17', density: 0.844, apiGravity: 35.4, sulphur: 0.06 },
-  { date: 'Jan 18', density: 0.848, apiGravity: 34.5, sulphur: 0.09 },
-  { date: 'Jan 19', density: 0.842, apiGravity: 35.8, sulphur: 0.07 },
-  { date: 'Jan 20', density: 0.845, apiGravity: 35.2, sulphur: 0.08 },
-]
-
-// Monthly comparison
-const monthlyComparison = [
-  { month: 'Sep', volume: 52.1, deliveries: 24 },
-  { month: 'Oct', volume: 58.2, deliveries: 27 },
-  { month: 'Nov', volume: 62.5, deliveries: 29 },
-  { month: 'Dec', volume: 71.8, deliveries: 32 },
-  { month: 'Jan', volume: 26.2, deliveries: 12 },
-]
-
-// Vessel list
 const vessels = [
   'MT Coral Star', 'MT Ocean Pride', 'MT Gulf Stream', 'MT Sea Breeze', 
   'MT Horizon', 'MT Neptune', 'MT Atlantic', 'MT Pacific', 
@@ -183,55 +116,211 @@ type SortField = 'date' | 'supplier' | 'litres' | 'status'
 type SortDirection = 'asc' | 'desc'
 
 export default function DailyFuelInput() {
-  const [records, setRecords] = useState(initialRecords)
+  const queryClient = useQueryClient()
+  const { data: session } = useSession()
+  const userRole = session?.user?.role?.toLowerCase() || ''
+  const isApprover = APPROVER_ROLES.includes(userRole)
+  
+  // Queries
+  const { data: records = [], isLoading } = useQuery({
+    queryKey: ['fuel-inputs'],
+    queryFn: () => getFuelInputs()
+  })
+
+  const { data: suppliers = [] } = useQuery({
+    queryKey: ['suppliers'],
+    queryFn: () => getSuppliers()
+  })
+
   const [showAddForm, setShowAddForm] = useState(false)
-  const [selectedYear, setSelectedYear] = useState('2024')
-  const [selectedMonth, setSelectedMonth] = useState('01')
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString())
+  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString().padStart(2, '0'))
   const [filterSupplier, setFilterSupplier] = useState('all')
   const [filterStatus, setFilterStatus] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortField, setSortField] = useState<SortField>('date')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
   const [currentPage, setCurrentPage] = useState(1)
-  const [selectedRecord, setSelectedRecord] = useState<typeof initialRecords[0] | null>(null)
+  const [selectedRecord, setSelectedRecord] = useState<any | null>(null)
   const [showDetailDialog, setShowDetailDialog] = useState(false)
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
   const [analysisTab, setAnalysisTab] = useState('volume')
+  const [isEditing, setIsEditing] = useState(false)
+  const [editId, setEditId] = useState<number | null>(null)
+  
   const [newRecord, setNewRecord] = useState({
-    date: '',
+    date: new Date().toISOString().split('T')[0],
     supplier: '',
     litres: '',
     vessel: '',
     deliveryType: 'vessel',
-    temperature: '',
-    density: '',
-    apiGravity: '',
-    sulphurContent: '',
+    temperature: '28.0',
+    density: '0.845',
+    apiGravity: '35.0',
+    sulphurContent: '0.07',
+    batchNo: '',
+    receiptNo: ''
   })
+
+  // Mutations
+  const addMutation = useMutation({
+    mutationFn: (data: any) => createFuelInput(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['fuel-inputs'] })
+      setShowAddForm(false)
+      setNewRecord({
+        date: new Date().toISOString().split('T')[0],
+        supplier: '',
+        litres: '',
+        vessel: '',
+        deliveryType: 'vessel',
+        temperature: '28.0',
+        density: '0.845',
+        apiGravity: '35.0',
+        sulphurContent: '0.07',
+        batchNo: '',
+        receiptNo: ''
+      })
+      setIsEditing(false)
+      setEditId(null)
+      toast.success('Fuel entry added successfully')
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to add fuel entry: ${error.message}`)
+    }
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number, data: any }) => updateFuelInput(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['fuel-inputs'] })
+      setShowAddForm(false)
+      setIsEditing(false)
+      setEditId(null)
+      setNewRecord({
+        date: new Date().toISOString().split('T')[0],
+        supplier: '',
+        litres: '',
+        vessel: '',
+        deliveryType: 'vessel',
+        temperature: '28.0',
+        density: '0.845',
+        apiGravity: '35.0',
+        sulphurContent: '0.07',
+        batchNo: '',
+        receiptNo: ''
+      })
+      toast.success('Fuel entry updated')
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to update entry: ${error.message}`)
+    }
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteFuelInput(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['fuel-inputs'] })
+      toast.success('Fuel entry deleted')
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to delete entry: ${error.message}`)
+    }
+  })
+
+  const isAdding = addMutation.isPending
+  const isUpdating = updateMutation.isPending
+  const isDeleting = deleteMutation.isPending
 
   const recordsPerPage = 8
 
-  // Calculate statistics
+  // Calculate all statistics and chart data dynamically
   const stats = useMemo(() => {
     const verified = records.filter(r => r.status === 'verified')
     const pending = records.filter(r => r.status === 'pending')
     const rejected = records.filter(r => r.status === 'rejected')
     
-    const totalLitres = verified.reduce((acc, r) => acc + r.litres, 0)
-    const avgDaily = totalLitres / verified.length
-    const avgDensity = verified.reduce((acc, r) => acc + r.density, 0) / verified.length
-    const avgTemp = verified.reduce((acc, r) => acc + r.temperature, 0) / verified.length
+    const totalLitres = verified.reduce((acc, r) => acc + (r.litres || 0), 0)
+    const avgDaily = verified.length > 0 ? totalLitres / verified.length : 0
+    const avgDensity = verified.length > 0 ? verified.reduce((acc, r) => acc + (r.density || 0), 0) / verified.length : 0
+    const avgTemp = verified.length > 0 ? verified.reduce((acc, r) => acc + (r.temperature || 0), 0) / verified.length : 0
     
-    const todayRecord = records.find(r => r.date === '2024-01-20')
-    const yesterdayRecord = records.find(r => r.date === '2024-01-19')
+    // Find today's and yesterday's metrics for change calculation
+    const todayStr = new Date().toISOString().split('T')[0]
+    const yesterdayDate = new Date()
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+    const yesterdayStr = yesterdayDate.toISOString().split('T')[0]
+
+    const todayRecord = records.find(r => (r.date instanceof Date ? r.date.toISOString().split('T')[0] : r.date) === todayStr)
+    const yesterdayRecord = records.find(r => (r.date instanceof Date ? r.date.toISOString().split('T')[0] : r.date) === yesterdayStr)
+    
     const todayLitres = todayRecord?.litres || 0
     const yesterdayLitres = yesterdayRecord?.litres || 0
     const changePercent = yesterdayLitres ? ((todayLitres - yesterdayLitres) / yesterdayLitres * 100) : 0
 
     // Target metrics
     const dailyTarget = 2200000
-    const monthlyTarget = dailyTarget * 31
-    const targetAchievement = (totalLitres / monthlyTarget) * 100
+    const monthlyTarget = dailyTarget * 30
+    const targetAchievement = monthlyTarget > 0 ? (totalLitres / monthlyTarget) * 100 : 0
+
+    // Dynamic Supplier Distribution
+    const distributionMap = new Map()
+    records.forEach(r => {
+      const s = r.supplier || 'Unknown'
+      const current = distributionMap.get(s) || { value: 0, deliveries: 0 }
+      distributionMap.set(s, { 
+        value: current.value + ((r.litres || 0) / 1000), 
+        deliveries: current.deliveries + 1 
+      })
+    })
+
+    const supplierDistribution = Array.from(distributionMap.entries()).map(([name, data]: [string, any], idx) => ({
+      name,
+      value: Math.round(data.value),
+      deliveries: data.deliveries,
+      color: chartColors[idx % chartColors.length]
+    }))
+
+    // Dynamic Daily Trend
+    const sortedRecords = [...records].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    let cumulative = 0
+    const dailyTrendData = sortedRecords.slice(-12).map(r => {
+      const volumeK = (r.litres || 0) / 1000
+      cumulative += volumeK
+      return {
+        date: new Date(r.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+        litres: Math.round(volumeK),
+        target: 2200 / 1000, 
+        cumulative: Math.round(cumulative)
+      }
+    })
+
+    // Dynamic Quality Metrics
+    const qualityTrendData = sortedRecords.slice(-12).map(r => ({
+      date: new Date(r.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+      density: r.density || 0,
+      apiGravity: r.apiGravity || 0,
+      sulphur: r.sulphurContent || 0
+    }))
+
+    // Dynamic Monthly Comparison
+    const monthsMap = new Map()
+    records.forEach(r => {
+      const month = new Date(r.date).toLocaleDateString('en-GB', { month: 'short' })
+      const current = monthsMap.get(month) || { volume: 0, deliveries: 0 }
+      monthsMap.set(month, {
+        volume: current.volume + ((r.litres || 0) / 1000000),
+        deliveries: current.deliveries + 1
+      })
+    })
+    
+    const monthlyComparison = monthShortNames
+      .filter(m => monthsMap.has(m))
+      .map(m => ({
+        month: m,
+        volume: parseFloat(monthsMap.get(m).volume.toFixed(1)),
+        deliveries: monthsMap.get(m).deliveries
+      }))
 
     return {
       totalLitres,
@@ -246,19 +335,38 @@ export default function DailyFuelInput() {
       dailyTarget,
       monthlyTarget,
       targetAchievement,
+      supplierDistribution,
+      dailyTrendData,
+      qualityTrendData,
+      monthlyComparison
     }
   }, [records])
+
+  // Destructure stats for use in JSX
+  const { 
+    totalLitres, avgDaily, verifiedCount, pendingCount, rejectedCount, 
+    todayLitres, changePercent, avgDensity, avgTemp, dailyTarget, 
+    monthlyTarget, targetAchievement, supplierDistribution, 
+    dailyTrendData, qualityTrendData, monthlyComparison 
+  } = stats
 
   // Sorting and filtering
   const filteredAndSortedRecords = useMemo(() => {
     let filtered = records.filter(record => {
+      const recordDate = new Date(record.date)
+      const recordYear = recordDate.getFullYear().toString()
+      const recordMonth = (recordDate.getMonth() + 1).toString().padStart(2, '0')
+      
+      const matchesDate = recordYear === selectedYear && recordMonth === selectedMonth
       const matchesSupplier = filterSupplier === 'all' || record.supplier === filterSupplier
       const matchesStatus = filterStatus === 'all' || record.status === filterStatus
       const matchesSearch = 
-        record.supplier.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        record.vessel?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        record.batchNo?.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesSupplier && matchesStatus && matchesSearch
+        (record.supplier || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (record.vessel || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (record.batchNo || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (record.receiptNo || '').toLowerCase().includes(searchQuery.toLowerCase())
+        
+      return matchesDate && matchesSupplier && matchesStatus && matchesSearch
     })
 
     filtered.sort((a, b) => {
@@ -268,20 +376,20 @@ export default function DailyFuelInput() {
           comparison = new Date(a.date).getTime() - new Date(b.date).getTime()
           break
         case 'supplier':
-          comparison = a.supplier.localeCompare(b.supplier)
+          comparison = (a.supplier || '').localeCompare(b.supplier || '')
           break
         case 'litres':
           comparison = a.litres - b.litres
           break
         case 'status':
-          comparison = a.status.localeCompare(b.status)
+          comparison = (a.status || '').localeCompare(b.status || '')
           break
       }
       return sortDirection === 'asc' ? comparison : -comparison
     })
 
     return filtered
-  }, [records, filterSupplier, filterStatus, searchQuery, sortField, sortDirection])
+  }, [records, filterSupplier, filterStatus, searchQuery, sortField, sortDirection, selectedMonth, selectedYear])
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedRecords.length / recordsPerPage)
@@ -301,39 +409,75 @@ export default function DailyFuelInput() {
 
   const handleAddRecord = () => {
     if (newRecord.date && newRecord.supplier && newRecord.litres) {
-      const record = {
-        id: records.length + 1,
-        date: newRecord.date,
-        supplier: newRecord.supplier,
-        litres: parseInt(newRecord.litres),
-        status: 'pending' as const,
-        vessel: newRecord.vessel,
-        deliveryType: newRecord.deliveryType,
-        temperature: parseFloat(newRecord.temperature) || 28.0,
-        density: parseFloat(newRecord.density) || 0.845,
-        qualityGrade: 'A' as const,
-        batchNo: `LSG-2024-${newRecord.date.replace(/-/g, '').slice(-4)}`,
-        receiptNo: `REC-00${1520 + records.length + 1}`,
-        apiGravity: parseFloat(newRecord.apiGravity) || 35.0,
-        sulphurContent: parseFloat(newRecord.sulphurContent) || 0.08,
+      const data = {
+        ...newRecord,
+        litres: parseFloat(newRecord.litres),
+        temperature: parseFloat(newRecord.temperature),
+        density: parseFloat(newRecord.density),
+        apiGravity: parseFloat(newRecord.apiGravity),
+        sulphurContent: parseFloat(newRecord.sulphurContent),
       }
-      setRecords([record, ...records])
-      setNewRecord({ date: '', supplier: '', litres: '', vessel: '', deliveryType: 'vessel', temperature: '', density: '', apiGravity: '', sulphurContent: '' })
-      setShowAddForm(false)
+
+      if (isEditing && editId !== null) {
+        updateMutation.mutate({ id: editId, data })
+      } else {
+        addMutation.mutate(data)
+      }
     }
   }
 
-  const handleViewDetail = (record: typeof initialRecords[0]) => {
+  const handleEdit = (record: any) => {
+    setNewRecord({
+      date: new Date(record.date).toISOString().split('T')[0],
+      supplier: record.supplier || '',
+      litres: record.litres.toString(),
+      vessel: record.vessel || '',
+      deliveryType: record.deliveryType || 'vessel',
+      temperature: (record.temperature || 28.0).toString(),
+      density: (record.density || 0.845).toString(),
+      apiGravity: (record.apiGravity || 35.0).toString(),
+      sulphurContent: (record.sulphurContent || 0.07).toString(),
+      batchNo: record.batchNo || '',
+      receiptNo: record.receiptNo || ''
+    })
+    setEditId(record.id)
+    setIsEditing(true)
+    setShowAddForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const cancelAdd = () => {
+    setShowAddForm(false)
+    setIsEditing(false)
+    setEditId(null)
+    setNewRecord({
+      date: new Date().toISOString().split('T')[0],
+      supplier: '',
+      litres: '',
+      vessel: '',
+      deliveryType: 'vessel',
+      temperature: '28.0',
+      density: '0.845',
+      apiGravity: '35.0',
+      sulphurContent: '0.07',
+      batchNo: '',
+      receiptNo: ''
+    })
+  }
+
+  const handleViewDetail = (record: any) => {
     setSelectedRecord(record)
     setShowDetailDialog(true)
   }
 
   const handleVerify = (id: number) => {
-    setRecords(records.map(r => r.id === id ? { ...r, status: 'verified' } : r))
+    updateMutation.mutate({ id, data: { status: 'verified' } })
   }
 
   const handleDelete = (id: number) => {
-    setRecords(records.filter(r => r.id !== id))
+    if (confirm('Are you sure you want to delete this entry?')) {
+      deleteMutation.mutate(id)
+    }
   }
 
   const SortIcon = ({ field }: { field: SortField }) => {
@@ -384,7 +528,7 @@ export default function DailyFuelInput() {
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <select 
                 value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
+                onChange={(e) => { setSelectedMonth(e.target.value); setCurrentPage(1) }}
                 className="bg-transparent text-sm font-medium border-0 focus:outline-none cursor-pointer"
                 style={{ colorScheme: 'dark' }}
               >
@@ -404,22 +548,81 @@ export default function DailyFuelInput() {
             </div>
             <select 
               value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
+              onChange={(e) => { setSelectedYear(e.target.value); setCurrentPage(1) }}
               className="bg-transparent text-sm font-medium border-0 focus:outline-none cursor-pointer px-3 py-2"
               style={{ colorScheme: 'dark' }}
             >
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
               <option value="2024">2024</option>
               <option value="2023">2023</option>
-              <option value="2022">2022</option>
             </select>
           </div>
           
-          <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+          {/* <Button variant="outline" size="sm" className="gap-2 bg-transparent" onClick={() => {
+            const input = document.createElement('input')
+            input.type = 'file'
+            input.accept = '.csv'
+            input.onchange = (e: any) => {
+              const file = e.target.files[0]
+              if (!file) return
+              const reader = new FileReader()
+              reader.onload = (event) => {
+                const text = event.target?.result as string
+                const lines = text.split('\n').filter(l => l.trim())
+                const headers = lines[0].split(',')
+                let imported = 0
+                for (let i = 1; i < lines.length; i++) {
+                  const values = lines[i].split(',')
+                  if (values.length >= 3) {
+                    const row: any = {}
+                    headers.forEach((h, idx) => { row[h.trim()] = values[idx]?.trim() })
+                    addMutation.mutate({
+                      date: row.date || new Date().toISOString().split('T')[0],
+                      supplier: row.supplier || '',
+                      litres: parseFloat(row.litres) || 0,
+                      vessel: row.vessel || '',
+                      deliveryType: row.deliveryType || 'vessel',
+                      temperature: parseFloat(row.temperature) || 28.0,
+                      density: parseFloat(row.density) || 0.845,
+                      apiGravity: parseFloat(row.apiGravity) || 35.0,
+                      sulphurContent: parseFloat(row.sulphurContent) || 0.07,
+                      batchNo: row.batchNo || '',
+                      receiptNo: row.receiptNo || ''
+                    })
+                    imported++
+                  }
+                }
+                toast.success(`Imported ${imported} records from CSV`)
+              }
+              reader.readAsText(file)
+            }
+            input.click()
+          }}>
             <Upload className="h-4 w-4" />
             Import
-          </Button>
+          </Button> */}
           
-          <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+          <Button variant="outline" size="sm" className="gap-2 bg-transparent" onClick={() => {
+            const data = filteredAndSortedRecords
+            if (data.length === 0) { toast.error('No records to export'); return }
+            const headers = ['date','supplier','vessel','litres','status','batchNo','receiptNo','temperature','density','apiGravity','sulphurContent','qualityGrade']
+            const csv = [headers.join(','), ...data.map(r => 
+              headers.map(h => {
+                const val = (r as any)[h]
+                if (h === 'date') return new Date(val).toISOString().split('T')[0]
+                return val ?? ''
+              }).join(',')
+            )].join('\n')
+            const blob = new Blob([csv], { type: 'text/csv' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `fuel-inputs-${selectedYear}-${selectedMonth}.csv`
+            a.click()
+            URL.revokeObjectURL(url)
+            toast.success(`Exported ${data.length} records`)
+          }}>
             <FileDown className="h-4 w-4" />
             Export
           </Button>
@@ -544,7 +747,453 @@ export default function DailyFuelInput() {
         </Card>
       </div>
 
-      {/* Analysis Section with Tabs */}
+      
+
+      {/* Add Entry Form Modal */}
+      {showAddForm && (
+        <Card className="p-6 border-2 border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/20">
+                {isEditing ? <Edit2 className="h-5 w-5 text-primary" /> : <Plus className="h-5 w-5 text-primary" />}
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">{isEditing ? 'Edit Fuel Entry' : 'Add New Fuel Entry'}</h3>
+                <p className="text-sm text-muted-foreground">{isEditing ? 'Update the details for this delivery' : 'Record a new LSG delivery from supplier'}</p>
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" onClick={cancelAdd}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="space-y-2">
+              <Label htmlFor="date" className="text-xs">Delivery Date</Label>
+              <Input 
+                id="date"
+                type="date" 
+                value={newRecord.date}
+                onChange={(e) => setNewRecord({ ...newRecord, date: e.target.value })}
+                className="bg-secondary"
+                style={{ colorScheme: 'dark' }}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="supplier" className="text-xs">Supplier</Label>
+              <Select value={newRecord.supplier} onValueChange={(v) => setNewRecord({ ...newRecord, supplier: v })}>
+                <SelectTrigger className="bg-secondary">
+                        <SelectValue placeholder="Select Supplier" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {suppliers.map((s: any) => (
+                            <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="litres" className="text-xs">Volume (Litres)</Label>
+              <Input 
+                id="litres"
+                type="number" 
+                placeholder="e.g. 2500000"
+                value={newRecord.litres}
+                onChange={(e) => setNewRecord({ ...newRecord, litres: e.target.value })}
+                className="bg-secondary"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="vessel" className="text-xs">Vessel Name</Label>
+              <Input 
+                id="vessel"
+                placeholder="e.g. MT JADE"
+                value={newRecord.vessel}
+                onChange={(e) => setNewRecord({ ...newRecord, vessel: e.target.value })}
+                className="bg-secondary"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="space-y-2">
+              <Label htmlFor="batchNo" className="text-xs">Batch Number</Label>
+              <Input 
+                id="batchNo"
+                placeholder="e.g. LSG-2024-001"
+                value={newRecord.batchNo}
+                onChange={(e) => setNewRecord({ ...newRecord, batchNo: e.target.value })}
+                className="bg-secondary"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="receiptNo" className="text-xs">Receipt Number</Label>
+              <Input 
+                id="receiptNo"
+                placeholder="e.g. REC-98765"
+                value={newRecord.receiptNo}
+                onChange={(e) => setNewRecord({ ...newRecord, receiptNo: e.target.value })}
+                className="bg-secondary"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="deliveryType" className="text-xs">Delivery Mode</Label>
+              <Select value={newRecord.deliveryType} onValueChange={(v) => setNewRecord({ ...newRecord, deliveryType: v })}>
+                <SelectTrigger className="bg-secondary">
+                  <SelectValue placeholder="Mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="vessel">Vessel</SelectItem>
+                  <SelectItem value="truck">Truck</SelectItem>
+                  <SelectItem value="pipeline">Pipeline</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Quality Parameters */}
+          <div className="border-t border-border pt-4 mb-4">
+            <p className="text-sm font-medium mb-3 flex items-center gap-2">
+              <Activity className="h-4 w-4 text-muted-foreground" />
+              Quality Parameters (Optional)
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="temperature" className="text-xs">Temperature (C)</Label>
+                <Input 
+                  id="temperature"
+                  type="number"
+                  step="0.1"
+                  placeholder="e.g. 28.5"
+                  value={newRecord.temperature}
+                  onChange={(e) => setNewRecord({ ...newRecord, temperature: e.target.value })}
+                  className="bg-secondary"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="density" className="text-xs">Density (g/ml)</Label>
+                <Input 
+                  id="density"
+                  type="number"
+                  step="0.001"
+                  placeholder="e.g. 0.845"
+                  value={newRecord.density}
+                  onChange={(e) => setNewRecord({ ...newRecord, density: e.target.value })}
+                  className="bg-secondary"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="apiGravity" className="text-xs">API Gravity</Label>
+                <Input 
+                  id="apiGravity"
+                  type="number"
+                  step="0.1"
+                  placeholder="e.g. 35.2"
+                  value={newRecord.apiGravity}
+                  onChange={(e) => setNewRecord({ ...newRecord, apiGravity: e.target.value })}
+                  className="bg-secondary"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sulphurContent" className="text-xs">Sulphur Content (%)</Label>
+                <Input 
+                  id="sulphurContent"
+                  type="number"
+                  step="0.01"
+                  placeholder="e.g. 0.08"
+                  value={newRecord.sulphurContent}
+                  onChange={(e) => setNewRecord({ ...newRecord, sulphurContent: e.target.value })}
+                  className="bg-secondary"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-3">
+            <Button variant="outline" onClick={cancelAdd} className="bg-transparent">Cancel</Button>
+            <Button onClick={handleAddRecord} className="gap-2" disabled={isAdding || isUpdating}>
+              {isAdding || isUpdating ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              ) : (
+                isEditing ? <Edit2 className="h-4 w-4" /> : <Plus className="h-4 w-4" />
+              )}
+              {isEditing ? 'Update Entry' : 'Add Entry'}
+            </Button>
+          </div>
+        </Card>
+      )}
+
+      {/* Records Table */}
+      <Card className="p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div>
+            <h3 className="font-semibold">Delivery Records</h3>
+            <p className="text-xs text-muted-foreground">All fuel input entries for the selected period</p>
+          </div>
+          
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search records..." 
+                className="pl-9 w-48 bg-secondary"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            {/* Filter by Supplier */}
+            <Select value={filterSupplier} onValueChange={setFilterSupplier}>
+              <SelectTrigger className="w-36 bg-secondary">
+                <Building2 className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="All Suppliers" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Suppliers</SelectItem>
+                {suppliers.map((s: any) => (
+                  <SelectItem key={s.id} value={s.name}>{s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Filter by Status */}
+            <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <SelectTrigger className="w-32 bg-secondary">
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="verified">Verified</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* View Toggle */}
+            <div className="flex items-center border border-border rounded-lg overflow-hidden bg-secondary">
+              <Button 
+                variant={viewMode === 'table' ? 'default' : 'ghost'} 
+                size="sm" 
+                className={cn("rounded-none h-8", viewMode !== 'table' && 'bg-transparent')}
+                onClick={() => setViewMode('table')}
+              >
+                <BarChart3 className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant={viewMode === 'cards' ? 'default' : 'ghost'} 
+                size="sm" 
+                className={cn("rounded-none h-8", viewMode !== 'cards' && 'bg-transparent')}
+                onClick={() => setViewMode('cards')}
+              >
+                <PieChartIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {viewMode === 'table' ? (
+          <div className="rounded-lg border border-border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50 hover:bg-muted/50">
+                  <TableHead className="w-12">#</TableHead>
+                  <TableHead className="cursor-pointer hover:text-foreground" onClick={() => handleSort('date')}>
+                    <div className="flex items-center gap-1">
+                      Date
+                      <SortIcon field="date" />
+                    </div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer hover:text-foreground" onClick={() => handleSort('supplier')}>
+                    <div className="flex items-center gap-1">
+                      Supplier
+                      <SortIcon field="supplier" />
+                    </div>
+                  </TableHead>
+                  <TableHead>Vessel / Batch</TableHead>
+                  <TableHead className="text-right cursor-pointer hover:text-foreground" onClick={() => handleSort('litres')}>
+                    <div className="flex items-center justify-end gap-1">
+                      Volume
+                      <SortIcon field="litres" />
+                    </div>
+                  </TableHead>
+                  <TableHead>Quality</TableHead>
+                  <TableHead className="cursor-pointer hover:text-foreground" onClick={() => handleSort('status')}>
+                    <div className="flex items-center gap-1">
+                      Status
+                      <SortIcon field="status" />
+                    </div>
+                  </TableHead>
+                  <TableHead className="w-28">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedRecords.map((record, index) => (
+                  <TableRow key={record.id} className="hover:bg-muted/30 group">
+                    <TableCell className="font-mono text-xs text-muted-foreground">{(currentPage - 1) * recordsPerPage + index + 1}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm">{new Date(record.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ 
+                          backgroundColor: supplierDistribution.find(s => s.name === (record.supplier || ''))?.color + '30',
+                          color: supplierDistribution.find(s => s.name === (record.supplier || ''))?.color 
+                        }}>
+                          {(record.supplier || 'U').charAt(0)}
+                        </div>
+                        <span className="font-medium">{record.supplier || 'Unknown'}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <Ship className="h-3 w-3 text-cyan-500" />
+                          <span className="text-sm">{record.vessel}</span>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground font-mono">{record.batchNo}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <span className="font-mono font-medium">{record.litres.toLocaleString()}</span>
+                      <span className="text-xs text-muted-foreground ml-1">L</span>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={cn(
+                        "text-[10px]",
+                        record.qualityGrade === 'A' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' :
+                        record.qualityGrade === 'B' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
+                        'bg-red-500/10 text-red-500 border-red-500/30'
+                      )}>
+                        Grade {record.qualityGrade}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {getStatusBadge(record.status)}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleViewDetail(record)}>
+                          <Eye className="h-3.5 w-3.5" />
+                        </Button>
+                        {isApprover && record.status === 'pending' && (
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-emerald-500 hover:text-emerald-400" onClick={() => handleVerify(record.id)}>
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                        {isApprover && (
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEdit(record)}>
+                            <Edit2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                        {isApprover && (
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:text-red-400" onClick={() => handleDelete(record.id)}>
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {paginatedRecords.map((record) => (
+              <Card key={record.id} className="p-4 hover:border-primary/50 transition-colors cursor-pointer group" onClick={() => handleViewDetail(record)}>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ 
+                      backgroundColor: supplierDistribution.find(s => s.name === (record.supplier || ''))?.color + '30',
+                      color: supplierDistribution.find(s => s.name === (record.supplier || ''))?.color 
+                    }}>
+                      {(record.supplier || 'U').charAt(0)}
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{record.supplier || 'Unknown'}</p>
+                      <p className="text-[10px] text-muted-foreground">{new Date(record.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</p>
+                    </div>
+                  </div>
+                  {getStatusBadge(record.status)}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Volume</span>
+                    <span className="font-mono font-bold">{(record.litres / 1000000).toFixed(2)}M L</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Vessel</span>
+                    <span className="text-xs">{record.vessel}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">Quality</span>
+                    <Badge variant="outline" className={cn(
+                      "text-[10px]",
+                      record.qualityGrade === 'A' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' :
+                      record.qualityGrade === 'B' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
+                      'bg-red-500/10 text-red-500 border-red-500/30'
+                    )}>
+                      Grade {record.qualityGrade}
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        <div className="flex items-center justify-between mt-4">
+          <p className="text-sm text-muted-foreground">
+            Showing {(currentPage - 1) * recordsPerPage + 1}-{Math.min(currentPage * recordsPerPage, filteredAndSortedRecords.length)} of {filteredAndSortedRecords.length} entries
+          </p>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className="bg-transparent"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <Button 
+                key={page}
+                variant={page === currentPage ? 'default' : 'ghost'} 
+                size="sm" 
+                className={cn("min-w-8", page !== currentPage && 'bg-transparent')}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </Button>
+            ))}
+            <Button 
+              variant="outline" 
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className="bg-transparent"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+
+
+{/* Analysis Section with Tabs */}
       <Card className="p-5">
         <Tabs value={analysisTab} onValueChange={setAnalysisTab}>
           <div className="flex items-center justify-between mb-4">
@@ -795,18 +1444,18 @@ export default function DailyFuelInput() {
               <div className="lg:col-span-2">
                 <p className="text-sm font-medium mb-3">Supplier Performance</p>
                 <div className="space-y-3">
-                  {suppliers.map((supplier, index) => {
-                    const dist = supplierDistribution.find(s => s.name === supplier.shortName)
+                  {suppliers.map((supplier: any, index: number) => {
+                    const dist = supplierDistribution.find(s => s.name === supplier.name)
                     return (
                       <div key={supplier.id} className="p-3 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ backgroundColor: dist?.color + '30', color: dist?.color }}>
-                              {supplier.shortName.charAt(0)}
+                              {supplier.name.charAt(0)}
                             </div>
                             <div>
-                              <p className="font-medium text-sm">{supplier.shortName}</p>
-                              <p className="text-[10px] text-muted-foreground">{supplier.name}</p>
+                              <p className="font-medium text-sm">{supplier.name}</p>
+                              <p className="text-[10px] text-muted-foreground">{supplier.location}</p>
                             </div>
                           </div>
                           <div className="text-right">
@@ -897,404 +1546,7 @@ export default function DailyFuelInput() {
         </Tabs>
       </Card>
 
-      {/* Add Entry Form Modal */}
-      {showAddForm && (
-        <Card className="p-6 border-2 border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/20">
-                <Plus className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold">Add New Fuel Entry</h3>
-                <p className="text-sm text-muted-foreground">Record a new LSG delivery from supplier</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="icon" onClick={() => setShowAddForm(false)}>
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-            <div className="space-y-2">
-              <Label htmlFor="date" className="text-xs">Delivery Date</Label>
-              <Input 
-                id="date"
-                type="date" 
-                value={newRecord.date}
-                onChange={(e) => setNewRecord({ ...newRecord, date: e.target.value })}
-                className="bg-secondary"
-                style={{ colorScheme: 'dark' }}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="supplier" className="text-xs">Supplier</Label>
-              <Select value={newRecord.supplier} onValueChange={(v) => setNewRecord({ ...newRecord, supplier: v })}>
-                <SelectTrigger className="bg-secondary">
-                  <SelectValue placeholder="Select supplier" />
-                </SelectTrigger>
-                <SelectContent>
-                  {suppliers.map((s) => (
-                    <SelectItem key={s.id} value={s.shortName}>{s.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="litres" className="text-xs">Volume (Litres)</Label>
-              <Input 
-                id="litres"
-                type="number" 
-                placeholder="e.g. 2500000"
-                value={newRecord.litres}
-                onChange={(e) => setNewRecord({ ...newRecord, litres: e.target.value })}
-                className="bg-secondary"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="vessel" className="text-xs">Vessel Name</Label>
-              <Select value={newRecord.vessel} onValueChange={(v) => setNewRecord({ ...newRecord, vessel: v })}>
-                <SelectTrigger className="bg-secondary">
-                  <SelectValue placeholder="Select vessel" />
-                </SelectTrigger>
-                <SelectContent>
-                  {vessels.map((v) => (
-                    <SelectItem key={v} value={v}>{v}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
 
-          {/* Quality Parameters */}
-          <div className="border-t border-border pt-4 mb-4">
-            <p className="text-sm font-medium mb-3 flex items-center gap-2">
-              <Activity className="h-4 w-4 text-muted-foreground" />
-              Quality Parameters (Optional)
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="temperature" className="text-xs">Temperature (C)</Label>
-                <Input 
-                  id="temperature"
-                  type="number"
-                  step="0.1"
-                  placeholder="e.g. 28.5"
-                  value={newRecord.temperature}
-                  onChange={(e) => setNewRecord({ ...newRecord, temperature: e.target.value })}
-                  className="bg-secondary"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="density" className="text-xs">Density (g/ml)</Label>
-                <Input 
-                  id="density"
-                  type="number"
-                  step="0.001"
-                  placeholder="e.g. 0.845"
-                  value={newRecord.density}
-                  onChange={(e) => setNewRecord({ ...newRecord, density: e.target.value })}
-                  className="bg-secondary"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="apiGravity" className="text-xs">API Gravity</Label>
-                <Input 
-                  id="apiGravity"
-                  type="number"
-                  step="0.1"
-                  placeholder="e.g. 35.2"
-                  value={newRecord.apiGravity}
-                  onChange={(e) => setNewRecord({ ...newRecord, apiGravity: e.target.value })}
-                  className="bg-secondary"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sulphurContent" className="text-xs">Sulphur Content (%)</Label>
-                <Input 
-                  id="sulphurContent"
-                  type="number"
-                  step="0.01"
-                  placeholder="e.g. 0.08"
-                  value={newRecord.sulphurContent}
-                  onChange={(e) => setNewRecord({ ...newRecord, sulphurContent: e.target.value })}
-                  className="bg-secondary"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-end gap-3">
-            <Button variant="outline" onClick={() => setShowAddForm(false)} className="bg-transparent">Cancel</Button>
-            <Button onClick={handleAddRecord} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Entry
-            </Button>
-          </div>
-        </Card>
-      )}
-
-      {/* Records Table */}
-      <Card className="p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <div>
-            <h3 className="font-semibold">Delivery Records</h3>
-            <p className="text-xs text-muted-foreground">All fuel input entries for the selected period</p>
-          </div>
-          
-          <div className="flex items-center gap-3 flex-wrap">
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search records..." 
-                className="pl-9 w-48 bg-secondary"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            
-            {/* Filter by Supplier */}
-            <Select value={filterSupplier} onValueChange={setFilterSupplier}>
-              <SelectTrigger className="w-36 bg-secondary">
-                <Building2 className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Supplier" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Suppliers</SelectItem>
-                {suppliers.map((s) => (
-                  <SelectItem key={s.id} value={s.shortName}>{s.shortName}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Filter by Status */}
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-32 bg-secondary">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="verified">Verified</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* View Toggle */}
-            <div className="flex items-center border border-border rounded-lg overflow-hidden bg-secondary">
-              <Button 
-                variant={viewMode === 'table' ? 'default' : 'ghost'} 
-                size="sm" 
-                className={cn("rounded-none h-8", viewMode !== 'table' && 'bg-transparent')}
-                onClick={() => setViewMode('table')}
-              >
-                <BarChart3 className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant={viewMode === 'cards' ? 'default' : 'ghost'} 
-                size="sm" 
-                className={cn("rounded-none h-8", viewMode !== 'cards' && 'bg-transparent')}
-                onClick={() => setViewMode('cards')}
-              >
-                <PieChartIcon className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {viewMode === 'table' ? (
-          <div className="rounded-lg border border-border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50 hover:bg-muted/50">
-                  <TableHead className="w-12">#</TableHead>
-                  <TableHead className="cursor-pointer hover:text-foreground" onClick={() => handleSort('date')}>
-                    <div className="flex items-center gap-1">
-                      Date
-                      <SortIcon field="date" />
-                    </div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer hover:text-foreground" onClick={() => handleSort('supplier')}>
-                    <div className="flex items-center gap-1">
-                      Supplier
-                      <SortIcon field="supplier" />
-                    </div>
-                  </TableHead>
-                  <TableHead>Vessel / Batch</TableHead>
-                  <TableHead className="text-right cursor-pointer hover:text-foreground" onClick={() => handleSort('litres')}>
-                    <div className="flex items-center justify-end gap-1">
-                      Volume
-                      <SortIcon field="litres" />
-                    </div>
-                  </TableHead>
-                  <TableHead>Quality</TableHead>
-                  <TableHead className="cursor-pointer hover:text-foreground" onClick={() => handleSort('status')}>
-                    <div className="flex items-center gap-1">
-                      Status
-                      <SortIcon field="status" />
-                    </div>
-                  </TableHead>
-                  <TableHead className="w-28">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedRecords.map((record, index) => (
-                  <TableRow key={record.id} className="hover:bg-muted/30 group">
-                    <TableCell className="font-mono text-xs text-muted-foreground">{(currentPage - 1) * recordsPerPage + index + 1}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-sm">{new Date(record.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ 
-                          backgroundColor: supplierDistribution.find(s => s.name === record.supplier)?.color + '30',
-                          color: supplierDistribution.find(s => s.name === record.supplier)?.color 
-                        }}>
-                          {record.supplier.charAt(0)}
-                        </div>
-                        <span className="font-medium">{record.supplier}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-1.5">
-                          <Ship className="h-3 w-3 text-cyan-500" />
-                          <span className="text-sm">{record.vessel}</span>
-                        </div>
-                        <span className="text-[10px] text-muted-foreground font-mono">{record.batchNo}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className="font-mono font-medium">{record.litres.toLocaleString()}</span>
-                      <span className="text-xs text-muted-foreground ml-1">L</span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={cn(
-                        "text-[10px]",
-                        record.qualityGrade === 'A' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' :
-                        record.qualityGrade === 'B' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
-                        'bg-red-500/10 text-red-500 border-red-500/30'
-                      )}>
-                        Grade {record.qualityGrade}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {getStatusBadge(record.status)}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleViewDetail(record)}>
-                          <Eye className="h-3.5 w-3.5" />
-                        </Button>
-                        {record.status === 'pending' && (
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-emerald-500 hover:text-emerald-400" onClick={() => handleVerify(record.id)}>
-                            <CheckCircle2 className="h-3.5 w-3.5" />
-                          </Button>
-                        )}
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <Edit2 className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500 hover:text-red-400" onClick={() => handleDelete(record.id)}>
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {paginatedRecords.map((record) => (
-              <Card key={record.id} className="p-4 hover:border-primary/50 transition-colors cursor-pointer group" onClick={() => handleViewDetail(record)}>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold" style={{ 
-                      backgroundColor: supplierDistribution.find(s => s.name === record.supplier)?.color + '30',
-                      color: supplierDistribution.find(s => s.name === record.supplier)?.color 
-                    }}>
-                      {record.supplier.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{record.supplier}</p>
-                      <p className="text-[10px] text-muted-foreground">{new Date(record.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</p>
-                    </div>
-                  </div>
-                  {getStatusBadge(record.status)}
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Volume</span>
-                    <span className="font-mono font-bold">{(record.litres / 1000000).toFixed(2)}M L</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Vessel</span>
-                    <span className="text-xs">{record.vessel}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Quality</span>
-                    <Badge variant="outline" className={cn(
-                      "text-[10px]",
-                      record.qualityGrade === 'A' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/30' :
-                      record.qualityGrade === 'B' ? 'bg-amber-500/10 text-amber-500 border-amber-500/30' :
-                      'bg-red-500/10 text-red-500 border-red-500/30'
-                    )}>
-                      Grade {record.qualityGrade}
-                    </Badge>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between mt-4">
-          <p className="text-sm text-muted-foreground">
-            Showing {(currentPage - 1) * recordsPerPage + 1}-{Math.min(currentPage * recordsPerPage, filteredAndSortedRecords.length)} of {filteredAndSortedRecords.length} entries
-          </p>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="bg-transparent"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <Button 
-                key={page}
-                variant={page === currentPage ? 'default' : 'ghost'} 
-                size="sm" 
-                className={cn("min-w-8", page !== currentPage && 'bg-transparent')}
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </Button>
-            ))}
-            <Button 
-              variant="outline" 
-              size="sm"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="bg-transparent"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </Card>
 
       {/* Detail Dialog */}
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
@@ -1321,7 +1573,7 @@ export default function DailyFuelInput() {
                   </div>
                   <div>
                     <p className="font-semibold">{selectedRecord.supplier}</p>
-                    <p className="text-sm text-muted-foreground">{suppliers.find(s => s.shortName === selectedRecord.supplier)?.name}</p>
+                    <p className="text-sm text-muted-foreground">{suppliers.find(s => s.name === selectedRecord.supplier)?.location}</p>
                   </div>
                 </div>
                 {getStatusBadge(selectedRecord.status)}

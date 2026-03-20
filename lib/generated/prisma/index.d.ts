@@ -110,10 +110,20 @@ export type Facility = $Result.DefaultSelection<Prisma.$FacilityPayload>
  */
 export type PipelineBatch = $Result.DefaultSelection<Prisma.$PipelineBatchPayload>
 /**
+ * Model PigCategory
+ * 
+ */
+export type PigCategory = $Result.DefaultSelection<Prisma.$PigCategoryPayload>
+/**
  * Model PipelinePig
  * 
  */
 export type PipelinePig = $Result.DefaultSelection<Prisma.$PipelinePigPayload>
+/**
+ * Model PigRun
+ * 
+ */
+export type PigRun = $Result.DefaultSelection<Prisma.$PigRunPayload>
 /**
  * Model PipelineYearlyStats
  * 
@@ -146,6 +156,21 @@ export type Supplier = $Result.DefaultSelection<Prisma.$SupplierPayload>
  * 
  */
 export type PipelineProgress = $Result.DefaultSelection<Prisma.$PipelineProgressPayload>
+/**
+ * Model ShiftHandover
+ * 
+ */
+export type ShiftHandover = $Result.DefaultSelection<Prisma.$ShiftHandoverPayload>
+/**
+ * Model ShiftLogEntry
+ * 
+ */
+export type ShiftLogEntry = $Result.DefaultSelection<Prisma.$ShiftLogEntryPayload>
+/**
+ * Model OutstandingIssue
+ * 
+ */
+export type OutstandingIssue = $Result.DefaultSelection<Prisma.$OutstandingIssuePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -459,6 +484,16 @@ export class PrismaClient<
   get pipelineBatch(): Prisma.PipelineBatchDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.pigCategory`: Exposes CRUD operations for the **PigCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PigCategories
+    * const pigCategories = await prisma.pigCategory.findMany()
+    * ```
+    */
+  get pigCategory(): Prisma.PigCategoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.pipelinePig`: Exposes CRUD operations for the **PipelinePig** model.
     * Example usage:
     * ```ts
@@ -467,6 +502,16 @@ export class PrismaClient<
     * ```
     */
   get pipelinePig(): Prisma.PipelinePigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pigRun`: Exposes CRUD operations for the **PigRun** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PigRuns
+    * const pigRuns = await prisma.pigRun.findMany()
+    * ```
+    */
+  get pigRun(): Prisma.PigRunDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.pipelineYearlyStats`: Exposes CRUD operations for the **PipelineYearlyStats** model.
@@ -527,6 +572,36 @@ export class PrismaClient<
     * ```
     */
   get pipelineProgress(): Prisma.PipelineProgressDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.shiftHandover`: Exposes CRUD operations for the **ShiftHandover** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ShiftHandovers
+    * const shiftHandovers = await prisma.shiftHandover.findMany()
+    * ```
+    */
+  get shiftHandover(): Prisma.ShiftHandoverDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.shiftLogEntry`: Exposes CRUD operations for the **ShiftLogEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ShiftLogEntries
+    * const shiftLogEntries = await prisma.shiftLogEntry.findMany()
+    * ```
+    */
+  get shiftLogEntry(): Prisma.ShiftLogEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.outstandingIssue`: Exposes CRUD operations for the **OutstandingIssue** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OutstandingIssues
+    * const outstandingIssues = await prisma.outstandingIssue.findMany()
+    * ```
+    */
+  get outstandingIssue(): Prisma.OutstandingIssueDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -980,13 +1055,18 @@ export namespace Prisma {
     Station: 'Station',
     Facility: 'Facility',
     PipelineBatch: 'PipelineBatch',
+    PigCategory: 'PigCategory',
     PipelinePig: 'PipelinePig',
+    PigRun: 'PigRun',
     PipelineYearlyStats: 'PipelineYearlyStats',
     DailyEntry: 'DailyEntry',
     Tank: 'Tank',
     Remark: 'Remark',
     Supplier: 'Supplier',
-    PipelineProgress: 'PipelineProgress'
+    PipelineProgress: 'PipelineProgress',
+    ShiftHandover: 'ShiftHandover',
+    ShiftLogEntry: 'ShiftLogEntry',
+    OutstandingIssue: 'OutstandingIssue'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1002,7 +1082,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "facility" | "pipelineBatch" | "pipelinePig" | "pipelineYearlyStats" | "dailyEntry" | "tank" | "remark" | "supplier" | "pipelineProgress"
+      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "facility" | "pipelineBatch" | "pigCategory" | "pipelinePig" | "pigRun" | "pipelineYearlyStats" | "dailyEntry" | "tank" | "remark" | "supplier" | "pipelineProgress" | "shiftHandover" | "shiftLogEntry" | "outstandingIssue"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2260,6 +2340,72 @@ export namespace Prisma {
           }
         }
       }
+      PigCategory: {
+        payload: Prisma.$PigCategoryPayload<ExtArgs>
+        fields: Prisma.PigCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PigCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PigCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.PigCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PigCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.PigCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.PigCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.PigCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PigCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload>
+          }
+          update: {
+            args: Prisma.PigCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.PigCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PigCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PigCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.PigCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePigCategory>
+          }
+          groupBy: {
+            args: Prisma.PigCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PigCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PigCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<PigCategoryCountAggregateOutputType> | number
+          }
+        }
+      }
       PipelinePig: {
         payload: Prisma.$PipelinePigPayload<ExtArgs>
         fields: Prisma.PipelinePigFieldRefs
@@ -2323,6 +2469,72 @@ export namespace Prisma {
           count: {
             args: Prisma.PipelinePigCountArgs<ExtArgs>
             result: $Utils.Optional<PipelinePigCountAggregateOutputType> | number
+          }
+        }
+      }
+      PigRun: {
+        payload: Prisma.$PigRunPayload<ExtArgs>
+        fields: Prisma.PigRunFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PigRunFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PigRunFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload>
+          }
+          findFirst: {
+            args: Prisma.PigRunFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PigRunFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload>
+          }
+          findMany: {
+            args: Prisma.PigRunFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload>[]
+          }
+          create: {
+            args: Prisma.PigRunCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload>
+          }
+          createMany: {
+            args: Prisma.PigRunCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PigRunDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload>
+          }
+          update: {
+            args: Prisma.PigRunUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload>
+          }
+          deleteMany: {
+            args: Prisma.PigRunDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PigRunUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PigRunUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PigRunPayload>
+          }
+          aggregate: {
+            args: Prisma.PigRunAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePigRun>
+          }
+          groupBy: {
+            args: Prisma.PigRunGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PigRunGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PigRunCountArgs<ExtArgs>
+            result: $Utils.Optional<PigRunCountAggregateOutputType> | number
           }
         }
       }
@@ -2722,6 +2934,204 @@ export namespace Prisma {
           }
         }
       }
+      ShiftHandover: {
+        payload: Prisma.$ShiftHandoverPayload<ExtArgs>
+        fields: Prisma.ShiftHandoverFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ShiftHandoverFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ShiftHandoverFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload>
+          }
+          findFirst: {
+            args: Prisma.ShiftHandoverFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ShiftHandoverFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload>
+          }
+          findMany: {
+            args: Prisma.ShiftHandoverFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload>[]
+          }
+          create: {
+            args: Prisma.ShiftHandoverCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload>
+          }
+          createMany: {
+            args: Prisma.ShiftHandoverCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ShiftHandoverDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload>
+          }
+          update: {
+            args: Prisma.ShiftHandoverUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload>
+          }
+          deleteMany: {
+            args: Prisma.ShiftHandoverDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ShiftHandoverUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ShiftHandoverUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftHandoverPayload>
+          }
+          aggregate: {
+            args: Prisma.ShiftHandoverAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateShiftHandover>
+          }
+          groupBy: {
+            args: Prisma.ShiftHandoverGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ShiftHandoverGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ShiftHandoverCountArgs<ExtArgs>
+            result: $Utils.Optional<ShiftHandoverCountAggregateOutputType> | number
+          }
+        }
+      }
+      ShiftLogEntry: {
+        payload: Prisma.$ShiftLogEntryPayload<ExtArgs>
+        fields: Prisma.ShiftLogEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ShiftLogEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ShiftLogEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.ShiftLogEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ShiftLogEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload>
+          }
+          findMany: {
+            args: Prisma.ShiftLogEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload>[]
+          }
+          create: {
+            args: Prisma.ShiftLogEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload>
+          }
+          createMany: {
+            args: Prisma.ShiftLogEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ShiftLogEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload>
+          }
+          update: {
+            args: Prisma.ShiftLogEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.ShiftLogEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ShiftLogEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ShiftLogEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ShiftLogEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.ShiftLogEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateShiftLogEntry>
+          }
+          groupBy: {
+            args: Prisma.ShiftLogEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ShiftLogEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ShiftLogEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<ShiftLogEntryCountAggregateOutputType> | number
+          }
+        }
+      }
+      OutstandingIssue: {
+        payload: Prisma.$OutstandingIssuePayload<ExtArgs>
+        fields: Prisma.OutstandingIssueFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OutstandingIssueFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OutstandingIssueFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload>
+          }
+          findFirst: {
+            args: Prisma.OutstandingIssueFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OutstandingIssueFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload>
+          }
+          findMany: {
+            args: Prisma.OutstandingIssueFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload>[]
+          }
+          create: {
+            args: Prisma.OutstandingIssueCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload>
+          }
+          createMany: {
+            args: Prisma.OutstandingIssueCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.OutstandingIssueDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload>
+          }
+          update: {
+            args: Prisma.OutstandingIssueUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload>
+          }
+          deleteMany: {
+            args: Prisma.OutstandingIssueDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OutstandingIssueUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.OutstandingIssueUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OutstandingIssuePayload>
+          }
+          aggregate: {
+            args: Prisma.OutstandingIssueAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOutstandingIssue>
+          }
+          groupBy: {
+            args: Prisma.OutstandingIssueGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OutstandingIssueGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OutstandingIssueCountArgs<ExtArgs>
+            result: $Utils.Optional<OutstandingIssueCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2849,13 +3259,18 @@ export namespace Prisma {
     station?: StationOmit
     facility?: FacilityOmit
     pipelineBatch?: PipelineBatchOmit
+    pigCategory?: PigCategoryOmit
     pipelinePig?: PipelinePigOmit
+    pigRun?: PigRunOmit
     pipelineYearlyStats?: PipelineYearlyStatsOmit
     dailyEntry?: DailyEntryOmit
     tank?: TankOmit
     remark?: RemarkOmit
     supplier?: SupplierOmit
     pipelineProgress?: PipelineProgressOmit
+    shiftHandover?: ShiftHandoverOmit
+    shiftLogEntry?: ShiftLogEntryOmit
+    outstandingIssue?: OutstandingIssueOmit
   }
 
   /* Types for Logging */
@@ -3119,6 +3534,77 @@ export namespace Prisma {
    */
   export type StationCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DailyEntryWhereInput
+  }
+
+
+  /**
+   * Count Type PigCategoryCountOutputType
+   */
+
+  export type PigCategoryCountOutputType = {
+    pigs: number
+    pigRuns: number
+  }
+
+  export type PigCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pigs?: boolean | PigCategoryCountOutputTypeCountPigsArgs
+    pigRuns?: boolean | PigCategoryCountOutputTypeCountPigRunsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PigCategoryCountOutputType without action
+   */
+  export type PigCategoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategoryCountOutputType
+     */
+    select?: PigCategoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PigCategoryCountOutputType without action
+   */
+  export type PigCategoryCountOutputTypeCountPigsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelinePigWhereInput
+  }
+
+  /**
+   * PigCategoryCountOutputType without action
+   */
+  export type PigCategoryCountOutputTypeCountPigRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PigRunWhereInput
+  }
+
+
+  /**
+   * Count Type PipelinePigCountOutputType
+   */
+
+  export type PipelinePigCountOutputType = {
+    pigRuns: number
+  }
+
+  export type PipelinePigCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pigRuns?: boolean | PipelinePigCountOutputTypeCountPigRunsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PipelinePigCountOutputType without action
+   */
+  export type PipelinePigCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePigCountOutputType
+     */
+    select?: PipelinePigCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PipelinePigCountOutputType without action
+   */
+  export type PipelinePigCountOutputTypeCountPigRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PigRunWhereInput
   }
 
 
@@ -6040,32 +6526,37 @@ export namespace Prisma {
 
   export type FuelInputEntryAvgAggregateOutputType = {
     id: number | null
-    volume_litres: number | null
+    litres: number | null
     temperature: number | null
     density: number | null
-    gravity: number | null
-    sulphur_content: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
   }
 
   export type FuelInputEntrySumAggregateOutputType = {
     id: number | null
-    volume_litres: number | null
+    litres: number | null
     temperature: number | null
     density: number | null
-    gravity: number | null
-    sulphur_content: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
   }
 
   export type FuelInputEntryMinAggregateOutputType = {
     id: number | null
     date: Date | null
-    supplier_name: string | null
-    vessel_name: string | null
-    volume_litres: number | null
+    supplier: string | null
+    vessel: string | null
+    litres: number | null
+    status: string | null
+    deliveryType: string | null
     temperature: number | null
     density: number | null
-    gravity: number | null
-    sulphur_content: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
+    qualityGrade: string | null
+    batchNo: string | null
+    receiptNo: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6073,13 +6564,18 @@ export namespace Prisma {
   export type FuelInputEntryMaxAggregateOutputType = {
     id: number | null
     date: Date | null
-    supplier_name: string | null
-    vessel_name: string | null
-    volume_litres: number | null
+    supplier: string | null
+    vessel: string | null
+    litres: number | null
+    status: string | null
+    deliveryType: string | null
     temperature: number | null
     density: number | null
-    gravity: number | null
-    sulphur_content: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
+    qualityGrade: string | null
+    batchNo: string | null
+    receiptNo: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6087,13 +6583,18 @@ export namespace Prisma {
   export type FuelInputEntryCountAggregateOutputType = {
     id: number
     date: number
-    supplier_name: number
-    vessel_name: number
-    volume_litres: number
+    supplier: number
+    vessel: number
+    litres: number
+    status: number
+    deliveryType: number
     temperature: number
     density: number
-    gravity: number
-    sulphur_content: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade: number
+    batchNo: number
+    receiptNo: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6102,32 +6603,37 @@ export namespace Prisma {
 
   export type FuelInputEntryAvgAggregateInputType = {
     id?: true
-    volume_litres?: true
+    litres?: true
     temperature?: true
     density?: true
-    gravity?: true
-    sulphur_content?: true
+    apiGravity?: true
+    sulphurContent?: true
   }
 
   export type FuelInputEntrySumAggregateInputType = {
     id?: true
-    volume_litres?: true
+    litres?: true
     temperature?: true
     density?: true
-    gravity?: true
-    sulphur_content?: true
+    apiGravity?: true
+    sulphurContent?: true
   }
 
   export type FuelInputEntryMinAggregateInputType = {
     id?: true
     date?: true
-    supplier_name?: true
-    vessel_name?: true
-    volume_litres?: true
+    supplier?: true
+    vessel?: true
+    litres?: true
+    status?: true
+    deliveryType?: true
     temperature?: true
     density?: true
-    gravity?: true
-    sulphur_content?: true
+    apiGravity?: true
+    sulphurContent?: true
+    qualityGrade?: true
+    batchNo?: true
+    receiptNo?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6135,13 +6641,18 @@ export namespace Prisma {
   export type FuelInputEntryMaxAggregateInputType = {
     id?: true
     date?: true
-    supplier_name?: true
-    vessel_name?: true
-    volume_litres?: true
+    supplier?: true
+    vessel?: true
+    litres?: true
+    status?: true
+    deliveryType?: true
     temperature?: true
     density?: true
-    gravity?: true
-    sulphur_content?: true
+    apiGravity?: true
+    sulphurContent?: true
+    qualityGrade?: true
+    batchNo?: true
+    receiptNo?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6149,13 +6660,18 @@ export namespace Prisma {
   export type FuelInputEntryCountAggregateInputType = {
     id?: true
     date?: true
-    supplier_name?: true
-    vessel_name?: true
-    volume_litres?: true
+    supplier?: true
+    vessel?: true
+    litres?: true
+    status?: true
+    deliveryType?: true
     temperature?: true
     density?: true
-    gravity?: true
-    sulphur_content?: true
+    apiGravity?: true
+    sulphurContent?: true
+    qualityGrade?: true
+    batchNo?: true
+    receiptNo?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6250,13 +6766,18 @@ export namespace Prisma {
   export type FuelInputEntryGroupByOutputType = {
     id: number
     date: Date
-    supplier_name: string | null
-    vessel_name: string | null
-    volume_litres: number
+    supplier: string | null
+    vessel: string | null
+    litres: number
+    status: string
+    deliveryType: string
     temperature: number
     density: number
-    gravity: number
-    sulphur_content: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade: string
+    batchNo: string | null
+    receiptNo: string | null
     createdAt: Date
     updatedAt: Date
     _count: FuelInputEntryCountAggregateOutputType | null
@@ -6283,13 +6804,18 @@ export namespace Prisma {
   export type FuelInputEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     date?: boolean
-    supplier_name?: boolean
-    vessel_name?: boolean
-    volume_litres?: boolean
+    supplier?: boolean
+    vessel?: boolean
+    litres?: boolean
+    status?: boolean
+    deliveryType?: boolean
     temperature?: boolean
     density?: boolean
-    gravity?: boolean
-    sulphur_content?: boolean
+    apiGravity?: boolean
+    sulphurContent?: boolean
+    qualityGrade?: boolean
+    batchNo?: boolean
+    receiptNo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["fuelInputEntry"]>
@@ -6299,18 +6825,23 @@ export namespace Prisma {
   export type FuelInputEntrySelectScalar = {
     id?: boolean
     date?: boolean
-    supplier_name?: boolean
-    vessel_name?: boolean
-    volume_litres?: boolean
+    supplier?: boolean
+    vessel?: boolean
+    litres?: boolean
+    status?: boolean
+    deliveryType?: boolean
     temperature?: boolean
     density?: boolean
-    gravity?: boolean
-    sulphur_content?: boolean
+    apiGravity?: boolean
+    sulphurContent?: boolean
+    qualityGrade?: boolean
+    batchNo?: boolean
+    receiptNo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type FuelInputEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "supplier_name" | "vessel_name" | "volume_litres" | "temperature" | "density" | "gravity" | "sulphur_content" | "createdAt" | "updatedAt", ExtArgs["result"]["fuelInputEntry"]>
+  export type FuelInputEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "supplier" | "vessel" | "litres" | "status" | "deliveryType" | "temperature" | "density" | "apiGravity" | "sulphurContent" | "qualityGrade" | "batchNo" | "receiptNo" | "createdAt" | "updatedAt", ExtArgs["result"]["fuelInputEntry"]>
 
   export type $FuelInputEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FuelInputEntry"
@@ -6318,13 +6849,18 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       date: Date
-      supplier_name: string | null
-      vessel_name: string | null
-      volume_litres: number
+      supplier: string | null
+      vessel: string | null
+      litres: number
+      status: string
+      deliveryType: string
       temperature: number
       density: number
-      gravity: number
-      sulphur_content: number
+      apiGravity: number
+      sulphurContent: number
+      qualityGrade: string
+      batchNo: string | null
+      receiptNo: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["fuelInputEntry"]>
@@ -6698,13 +7234,18 @@ export namespace Prisma {
   interface FuelInputEntryFieldRefs {
     readonly id: FieldRef<"FuelInputEntry", 'Int'>
     readonly date: FieldRef<"FuelInputEntry", 'DateTime'>
-    readonly supplier_name: FieldRef<"FuelInputEntry", 'String'>
-    readonly vessel_name: FieldRef<"FuelInputEntry", 'String'>
-    readonly volume_litres: FieldRef<"FuelInputEntry", 'Float'>
+    readonly supplier: FieldRef<"FuelInputEntry", 'String'>
+    readonly vessel: FieldRef<"FuelInputEntry", 'String'>
+    readonly litres: FieldRef<"FuelInputEntry", 'Float'>
+    readonly status: FieldRef<"FuelInputEntry", 'String'>
+    readonly deliveryType: FieldRef<"FuelInputEntry", 'String'>
     readonly temperature: FieldRef<"FuelInputEntry", 'Float'>
     readonly density: FieldRef<"FuelInputEntry", 'Float'>
-    readonly gravity: FieldRef<"FuelInputEntry", 'Float'>
-    readonly sulphur_content: FieldRef<"FuelInputEntry", 'Float'>
+    readonly apiGravity: FieldRef<"FuelInputEntry", 'Float'>
+    readonly sulphurContent: FieldRef<"FuelInputEntry", 'Float'>
+    readonly qualityGrade: FieldRef<"FuelInputEntry", 'String'>
+    readonly batchNo: FieldRef<"FuelInputEntry", 'String'>
+    readonly receiptNo: FieldRef<"FuelInputEntry", 'String'>
     readonly createdAt: FieldRef<"FuelInputEntry", 'DateTime'>
     readonly updatedAt: FieldRef<"FuelInputEntry", 'DateTime'>
   }
@@ -10185,6 +10726,7 @@ export namespace Prisma {
     type: string | null
     title: string | null
     message: string | null
+    station: string | null
     timestamp: Date | null
     read: boolean | null
     createdAt: Date | null
@@ -10196,6 +10738,7 @@ export namespace Prisma {
     type: string | null
     title: string | null
     message: string | null
+    station: string | null
     timestamp: Date | null
     read: boolean | null
     createdAt: Date | null
@@ -10207,6 +10750,7 @@ export namespace Prisma {
     type: number
     title: number
     message: number
+    station: number
     timestamp: number
     read: number
     createdAt: number
@@ -10220,6 +10764,7 @@ export namespace Prisma {
     type?: true
     title?: true
     message?: true
+    station?: true
     timestamp?: true
     read?: true
     createdAt?: true
@@ -10231,6 +10776,7 @@ export namespace Prisma {
     type?: true
     title?: true
     message?: true
+    station?: true
     timestamp?: true
     read?: true
     createdAt?: true
@@ -10242,6 +10788,7 @@ export namespace Prisma {
     type?: true
     title?: true
     message?: true
+    station?: true
     timestamp?: true
     read?: true
     createdAt?: true
@@ -10326,6 +10873,7 @@ export namespace Prisma {
     type: string
     title: string
     message: string
+    station: string | null
     timestamp: Date
     read: boolean
     createdAt: Date
@@ -10354,6 +10902,7 @@ export namespace Prisma {
     type?: boolean
     title?: boolean
     message?: boolean
+    station?: boolean
     timestamp?: boolean
     read?: boolean
     createdAt?: boolean
@@ -10367,13 +10916,14 @@ export namespace Prisma {
     type?: boolean
     title?: boolean
     message?: boolean
+    station?: boolean
     timestamp?: boolean
     read?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AlertOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "message" | "timestamp" | "read" | "createdAt" | "updatedAt", ExtArgs["result"]["alert"]>
+  export type AlertOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "message" | "station" | "timestamp" | "read" | "createdAt" | "updatedAt", ExtArgs["result"]["alert"]>
 
   export type $AlertPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Alert"
@@ -10383,6 +10933,7 @@ export namespace Prisma {
       type: string
       title: string
       message: string
+      station: string | null
       timestamp: Date
       read: boolean
       createdAt: Date
@@ -10760,6 +11311,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Alert", 'String'>
     readonly title: FieldRef<"Alert", 'String'>
     readonly message: FieldRef<"Alert", 'String'>
+    readonly station: FieldRef<"Alert", 'String'>
     readonly timestamp: FieldRef<"Alert", 'DateTime'>
     readonly read: FieldRef<"Alert", 'Boolean'>
     readonly createdAt: FieldRef<"Alert", 'DateTime'>
@@ -22057,6 +22609,1015 @@ export namespace Prisma {
 
 
   /**
+   * Model PigCategory
+   */
+
+  export type AggregatePigCategory = {
+    _count: PigCategoryCountAggregateOutputType | null
+    _min: PigCategoryMinAggregateOutputType | null
+    _max: PigCategoryMaxAggregateOutputType | null
+  }
+
+  export type PigCategoryMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    color: string | null
+    icon: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PigCategoryMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    color: string | null
+    icon: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PigCategoryCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    color: number
+    icon: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PigCategoryMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    color?: true
+    icon?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PigCategoryMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    color?: true
+    icon?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PigCategoryCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    color?: true
+    icon?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PigCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PigCategory to aggregate.
+     */
+    where?: PigCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigCategories to fetch.
+     */
+    orderBy?: PigCategoryOrderByWithRelationInput | PigCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PigCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PigCategories
+    **/
+    _count?: true | PigCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PigCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PigCategoryMaxAggregateInputType
+  }
+
+  export type GetPigCategoryAggregateType<T extends PigCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregatePigCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePigCategory[P]>
+      : GetScalarType<T[P], AggregatePigCategory[P]>
+  }
+
+
+
+
+  export type PigCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PigCategoryWhereInput
+    orderBy?: PigCategoryOrderByWithAggregationInput | PigCategoryOrderByWithAggregationInput[]
+    by: PigCategoryScalarFieldEnum[] | PigCategoryScalarFieldEnum
+    having?: PigCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PigCategoryCountAggregateInputType | true
+    _min?: PigCategoryMinAggregateInputType
+    _max?: PigCategoryMaxAggregateInputType
+  }
+
+  export type PigCategoryGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    color: string
+    icon: string
+    createdAt: Date
+    updatedAt: Date
+    _count: PigCategoryCountAggregateOutputType | null
+    _min: PigCategoryMinAggregateOutputType | null
+    _max: PigCategoryMaxAggregateOutputType | null
+  }
+
+  type GetPigCategoryGroupByPayload<T extends PigCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PigCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PigCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PigCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], PigCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PigCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    icon?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    pigs?: boolean | PigCategory$pigsArgs<ExtArgs>
+    pigRuns?: boolean | PigCategory$pigRunsArgs<ExtArgs>
+    _count?: boolean | PigCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pigCategory"]>
+
+
+
+  export type PigCategorySelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    icon?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PigCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "color" | "icon" | "createdAt" | "updatedAt", ExtArgs["result"]["pigCategory"]>
+  export type PigCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pigs?: boolean | PigCategory$pigsArgs<ExtArgs>
+    pigRuns?: boolean | PigCategory$pigRunsArgs<ExtArgs>
+    _count?: boolean | PigCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $PigCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PigCategory"
+    objects: {
+      pigs: Prisma.$PipelinePigPayload<ExtArgs>[]
+      pigRuns: Prisma.$PigRunPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      color: string
+      icon: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["pigCategory"]>
+    composites: {}
+  }
+
+  type PigCategoryGetPayload<S extends boolean | null | undefined | PigCategoryDefaultArgs> = $Result.GetResult<Prisma.$PigCategoryPayload, S>
+
+  type PigCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PigCategoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PigCategoryCountAggregateInputType | true
+    }
+
+  export interface PigCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PigCategory'], meta: { name: 'PigCategory' } }
+    /**
+     * Find zero or one PigCategory that matches the filter.
+     * @param {PigCategoryFindUniqueArgs} args - Arguments to find a PigCategory
+     * @example
+     * // Get one PigCategory
+     * const pigCategory = await prisma.pigCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PigCategoryFindUniqueArgs>(args: SelectSubset<T, PigCategoryFindUniqueArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PigCategory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PigCategoryFindUniqueOrThrowArgs} args - Arguments to find a PigCategory
+     * @example
+     * // Get one PigCategory
+     * const pigCategory = await prisma.pigCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PigCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, PigCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PigCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigCategoryFindFirstArgs} args - Arguments to find a PigCategory
+     * @example
+     * // Get one PigCategory
+     * const pigCategory = await prisma.pigCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PigCategoryFindFirstArgs>(args?: SelectSubset<T, PigCategoryFindFirstArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PigCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigCategoryFindFirstOrThrowArgs} args - Arguments to find a PigCategory
+     * @example
+     * // Get one PigCategory
+     * const pigCategory = await prisma.pigCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PigCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, PigCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PigCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PigCategories
+     * const pigCategories = await prisma.pigCategory.findMany()
+     * 
+     * // Get first 10 PigCategories
+     * const pigCategories = await prisma.pigCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pigCategoryWithIdOnly = await prisma.pigCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PigCategoryFindManyArgs>(args?: SelectSubset<T, PigCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PigCategory.
+     * @param {PigCategoryCreateArgs} args - Arguments to create a PigCategory.
+     * @example
+     * // Create one PigCategory
+     * const PigCategory = await prisma.pigCategory.create({
+     *   data: {
+     *     // ... data to create a PigCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends PigCategoryCreateArgs>(args: SelectSubset<T, PigCategoryCreateArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PigCategories.
+     * @param {PigCategoryCreateManyArgs} args - Arguments to create many PigCategories.
+     * @example
+     * // Create many PigCategories
+     * const pigCategory = await prisma.pigCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PigCategoryCreateManyArgs>(args?: SelectSubset<T, PigCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PigCategory.
+     * @param {PigCategoryDeleteArgs} args - Arguments to delete one PigCategory.
+     * @example
+     * // Delete one PigCategory
+     * const PigCategory = await prisma.pigCategory.delete({
+     *   where: {
+     *     // ... filter to delete one PigCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PigCategoryDeleteArgs>(args: SelectSubset<T, PigCategoryDeleteArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PigCategory.
+     * @param {PigCategoryUpdateArgs} args - Arguments to update one PigCategory.
+     * @example
+     * // Update one PigCategory
+     * const pigCategory = await prisma.pigCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PigCategoryUpdateArgs>(args: SelectSubset<T, PigCategoryUpdateArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PigCategories.
+     * @param {PigCategoryDeleteManyArgs} args - Arguments to filter PigCategories to delete.
+     * @example
+     * // Delete a few PigCategories
+     * const { count } = await prisma.pigCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PigCategoryDeleteManyArgs>(args?: SelectSubset<T, PigCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PigCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PigCategories
+     * const pigCategory = await prisma.pigCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PigCategoryUpdateManyArgs>(args: SelectSubset<T, PigCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PigCategory.
+     * @param {PigCategoryUpsertArgs} args - Arguments to update or create a PigCategory.
+     * @example
+     * // Update or create a PigCategory
+     * const pigCategory = await prisma.pigCategory.upsert({
+     *   create: {
+     *     // ... data to create a PigCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PigCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PigCategoryUpsertArgs>(args: SelectSubset<T, PigCategoryUpsertArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PigCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigCategoryCountArgs} args - Arguments to filter PigCategories to count.
+     * @example
+     * // Count the number of PigCategories
+     * const count = await prisma.pigCategory.count({
+     *   where: {
+     *     // ... the filter for the PigCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends PigCategoryCountArgs>(
+      args?: Subset<T, PigCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PigCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PigCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PigCategoryAggregateArgs>(args: Subset<T, PigCategoryAggregateArgs>): Prisma.PrismaPromise<GetPigCategoryAggregateType<T>>
+
+    /**
+     * Group by PigCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PigCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PigCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: PigCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PigCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPigCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PigCategory model
+   */
+  readonly fields: PigCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PigCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PigCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    pigs<T extends PigCategory$pigsArgs<ExtArgs> = {}>(args?: Subset<T, PigCategory$pigsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pigRuns<T extends PigCategory$pigRunsArgs<ExtArgs> = {}>(args?: Subset<T, PigCategory$pigRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PigCategory model
+   */
+  interface PigCategoryFieldRefs {
+    readonly id: FieldRef<"PigCategory", 'String'>
+    readonly name: FieldRef<"PigCategory", 'String'>
+    readonly description: FieldRef<"PigCategory", 'String'>
+    readonly color: FieldRef<"PigCategory", 'String'>
+    readonly icon: FieldRef<"PigCategory", 'String'>
+    readonly createdAt: FieldRef<"PigCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"PigCategory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PigCategory findUnique
+   */
+  export type PigCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PigCategory to fetch.
+     */
+    where: PigCategoryWhereUniqueInput
+  }
+
+  /**
+   * PigCategory findUniqueOrThrow
+   */
+  export type PigCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PigCategory to fetch.
+     */
+    where: PigCategoryWhereUniqueInput
+  }
+
+  /**
+   * PigCategory findFirst
+   */
+  export type PigCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PigCategory to fetch.
+     */
+    where?: PigCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigCategories to fetch.
+     */
+    orderBy?: PigCategoryOrderByWithRelationInput | PigCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PigCategories.
+     */
+    cursor?: PigCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PigCategories.
+     */
+    distinct?: PigCategoryScalarFieldEnum | PigCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PigCategory findFirstOrThrow
+   */
+  export type PigCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PigCategory to fetch.
+     */
+    where?: PigCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigCategories to fetch.
+     */
+    orderBy?: PigCategoryOrderByWithRelationInput | PigCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PigCategories.
+     */
+    cursor?: PigCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PigCategories.
+     */
+    distinct?: PigCategoryScalarFieldEnum | PigCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PigCategory findMany
+   */
+  export type PigCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which PigCategories to fetch.
+     */
+    where?: PigCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigCategories to fetch.
+     */
+    orderBy?: PigCategoryOrderByWithRelationInput | PigCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PigCategories.
+     */
+    cursor?: PigCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PigCategories.
+     */
+    distinct?: PigCategoryScalarFieldEnum | PigCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * PigCategory create
+   */
+  export type PigCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PigCategory.
+     */
+    data: XOR<PigCategoryCreateInput, PigCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * PigCategory createMany
+   */
+  export type PigCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PigCategories.
+     */
+    data: PigCategoryCreateManyInput | PigCategoryCreateManyInput[]
+  }
+
+  /**
+   * PigCategory update
+   */
+  export type PigCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PigCategory.
+     */
+    data: XOR<PigCategoryUpdateInput, PigCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which PigCategory to update.
+     */
+    where: PigCategoryWhereUniqueInput
+  }
+
+  /**
+   * PigCategory updateMany
+   */
+  export type PigCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PigCategories.
+     */
+    data: XOR<PigCategoryUpdateManyMutationInput, PigCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which PigCategories to update
+     */
+    where?: PigCategoryWhereInput
+    /**
+     * Limit how many PigCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PigCategory upsert
+   */
+  export type PigCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PigCategory to update in case it exists.
+     */
+    where: PigCategoryWhereUniqueInput
+    /**
+     * In case the PigCategory found by the `where` argument doesn't exist, create a new PigCategory with this data.
+     */
+    create: XOR<PigCategoryCreateInput, PigCategoryUncheckedCreateInput>
+    /**
+     * In case the PigCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PigCategoryUpdateInput, PigCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * PigCategory delete
+   */
+  export type PigCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    /**
+     * Filter which PigCategory to delete.
+     */
+    where: PigCategoryWhereUniqueInput
+  }
+
+  /**
+   * PigCategory deleteMany
+   */
+  export type PigCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PigCategories to delete
+     */
+    where?: PigCategoryWhereInput
+    /**
+     * Limit how many PigCategories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PigCategory.pigs
+   */
+  export type PigCategory$pigsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinePig
+     */
+    select?: PipelinePigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PipelinePig
+     */
+    omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+    where?: PipelinePigWhereInput
+    orderBy?: PipelinePigOrderByWithRelationInput | PipelinePigOrderByWithRelationInput[]
+    cursor?: PipelinePigWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PipelinePigScalarFieldEnum | PipelinePigScalarFieldEnum[]
+  }
+
+  /**
+   * PigCategory.pigRuns
+   */
+  export type PigCategory$pigRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    where?: PigRunWhereInput
+    orderBy?: PigRunOrderByWithRelationInput | PigRunOrderByWithRelationInput[]
+    cursor?: PigRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PigRunScalarFieldEnum | PigRunScalarFieldEnum[]
+  }
+
+  /**
+   * PigCategory without action
+   */
+  export type PigCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model PipelinePig
    */
 
@@ -22071,11 +23632,13 @@ export namespace Prisma {
   export type PipelinePigAvgAggregateOutputType = {
     position: number | null
     speed: number | null
+    runs: number | null
   }
 
   export type PipelinePigSumAggregateOutputType = {
     position: number | null
     speed: number | null
+    runs: number | null
   }
 
   export type PipelinePigMinAggregateOutputType = {
@@ -22083,8 +23646,11 @@ export namespace Prisma {
     name: string | null
     position: number | null
     speed: number | null
-    type: string | null
-    launched: Date | null
+    categoryId: string | null
+    status: string | null
+    condition: string | null
+    lastRun: Date | null
+    runs: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -22095,8 +23661,11 @@ export namespace Prisma {
     name: string | null
     position: number | null
     speed: number | null
-    type: string | null
-    launched: Date | null
+    categoryId: string | null
+    status: string | null
+    condition: string | null
+    lastRun: Date | null
+    runs: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -22107,8 +23676,11 @@ export namespace Prisma {
     name: number
     position: number
     speed: number
-    type: number
-    launched: number
+    categoryId: number
+    status: number
+    condition: number
+    lastRun: number
+    runs: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -22119,11 +23691,13 @@ export namespace Prisma {
   export type PipelinePigAvgAggregateInputType = {
     position?: true
     speed?: true
+    runs?: true
   }
 
   export type PipelinePigSumAggregateInputType = {
     position?: true
     speed?: true
+    runs?: true
   }
 
   export type PipelinePigMinAggregateInputType = {
@@ -22131,8 +23705,11 @@ export namespace Prisma {
     name?: true
     position?: true
     speed?: true
-    type?: true
-    launched?: true
+    categoryId?: true
+    status?: true
+    condition?: true
+    lastRun?: true
+    runs?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -22143,8 +23720,11 @@ export namespace Prisma {
     name?: true
     position?: true
     speed?: true
-    type?: true
-    launched?: true
+    categoryId?: true
+    status?: true
+    condition?: true
+    lastRun?: true
+    runs?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -22155,8 +23735,11 @@ export namespace Prisma {
     name?: true
     position?: true
     speed?: true
-    type?: true
-    launched?: true
+    categoryId?: true
+    status?: true
+    condition?: true
+    lastRun?: true
+    runs?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -22254,8 +23837,11 @@ export namespace Prisma {
     name: string
     position: number
     speed: number
-    type: string
-    launched: Date
+    categoryId: string | null
+    status: string
+    condition: string
+    lastRun: Date | null
+    runs: number
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -22285,11 +23871,17 @@ export namespace Prisma {
     name?: boolean
     position?: boolean
     speed?: boolean
-    type?: boolean
-    launched?: boolean
+    categoryId?: boolean
+    status?: boolean
+    condition?: boolean
+    lastRun?: boolean
+    runs?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    category?: boolean | PipelinePig$categoryArgs<ExtArgs>
+    pigRuns?: boolean | PipelinePig$pigRunsArgs<ExtArgs>
+    _count?: boolean | PipelinePigCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pipelinePig"]>
 
 
@@ -22299,25 +23891,39 @@ export namespace Prisma {
     name?: boolean
     position?: boolean
     speed?: boolean
-    type?: boolean
-    launched?: boolean
+    categoryId?: boolean
+    status?: boolean
+    condition?: boolean
+    lastRun?: boolean
+    runs?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PipelinePigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "position" | "speed" | "type" | "launched" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelinePig"]>
+  export type PipelinePigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "position" | "speed" | "categoryId" | "status" | "condition" | "lastRun" | "runs" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelinePig"]>
+  export type PipelinePigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | PipelinePig$categoryArgs<ExtArgs>
+    pigRuns?: boolean | PipelinePig$pigRunsArgs<ExtArgs>
+    _count?: boolean | PipelinePigCountOutputTypeDefaultArgs<ExtArgs>
+  }
 
   export type $PipelinePigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PipelinePig"
-    objects: {}
+    objects: {
+      category: Prisma.$PigCategoryPayload<ExtArgs> | null
+      pigRuns: Prisma.$PigRunPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       position: number
       speed: number
-      type: string
-      launched: Date
+      categoryId: string | null
+      status: string
+      condition: string
+      lastRun: Date | null
+      runs: number
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -22661,6 +24267,8 @@ export namespace Prisma {
    */
   export interface Prisma__PipelinePigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends PipelinePig$categoryArgs<ExtArgs> = {}>(args?: Subset<T, PipelinePig$categoryArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    pigRuns<T extends PipelinePig$pigRunsArgs<ExtArgs> = {}>(args?: Subset<T, PipelinePig$pigRunsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22694,8 +24302,11 @@ export namespace Prisma {
     readonly name: FieldRef<"PipelinePig", 'String'>
     readonly position: FieldRef<"PipelinePig", 'Float'>
     readonly speed: FieldRef<"PipelinePig", 'Float'>
-    readonly type: FieldRef<"PipelinePig", 'String'>
-    readonly launched: FieldRef<"PipelinePig", 'DateTime'>
+    readonly categoryId: FieldRef<"PipelinePig", 'String'>
+    readonly status: FieldRef<"PipelinePig", 'String'>
+    readonly condition: FieldRef<"PipelinePig", 'String'>
+    readonly lastRun: FieldRef<"PipelinePig", 'DateTime'>
+    readonly runs: FieldRef<"PipelinePig", 'Int'>
     readonly isActive: FieldRef<"PipelinePig", 'Boolean'>
     readonly createdAt: FieldRef<"PipelinePig", 'DateTime'>
     readonly updatedAt: FieldRef<"PipelinePig", 'DateTime'>
@@ -22716,6 +24327,10 @@ export namespace Prisma {
      */
     omit?: PipelinePigOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+    /**
      * Filter, which PipelinePig to fetch.
      */
     where: PipelinePigWhereUniqueInput
@@ -22734,6 +24349,10 @@ export namespace Prisma {
      */
     omit?: PipelinePigOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+    /**
      * Filter, which PipelinePig to fetch.
      */
     where: PipelinePigWhereUniqueInput
@@ -22751,6 +24370,10 @@ export namespace Prisma {
      * Omit specific fields from the PipelinePig
      */
     omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
     /**
      * Filter, which PipelinePig to fetch.
      */
@@ -22800,6 +24423,10 @@ export namespace Prisma {
      */
     omit?: PipelinePigOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+    /**
      * Filter, which PipelinePig to fetch.
      */
     where?: PipelinePigWhereInput
@@ -22847,6 +24474,10 @@ export namespace Prisma {
      * Omit specific fields from the PipelinePig
      */
     omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
     /**
      * Filter, which PipelinePigs to fetch.
      */
@@ -22896,6 +24527,10 @@ export namespace Prisma {
      */
     omit?: PipelinePigOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+    /**
      * The data needed to create a PipelinePig.
      */
     data: XOR<PipelinePigCreateInput, PipelinePigUncheckedCreateInput>
@@ -22923,6 +24558,10 @@ export namespace Prisma {
      * Omit specific fields from the PipelinePig
      */
     omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
     /**
      * The data needed to update a PipelinePig.
      */
@@ -22964,6 +24603,10 @@ export namespace Prisma {
      */
     omit?: PipelinePigOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+    /**
      * The filter to search for the PipelinePig to update in case it exists.
      */
     where: PipelinePigWhereUniqueInput
@@ -22990,6 +24633,10 @@ export namespace Prisma {
      */
     omit?: PipelinePigOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+    /**
      * Filter which PipelinePig to delete.
      */
     where: PipelinePigWhereUniqueInput
@@ -23010,6 +24657,49 @@ export namespace Prisma {
   }
 
   /**
+   * PipelinePig.category
+   */
+  export type PipelinePig$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    where?: PigCategoryWhereInput
+  }
+
+  /**
+   * PipelinePig.pigRuns
+   */
+  export type PipelinePig$pigRunsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    where?: PigRunWhereInput
+    orderBy?: PigRunOrderByWithRelationInput | PigRunOrderByWithRelationInput[]
+    cursor?: PigRunWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PigRunScalarFieldEnum | PigRunScalarFieldEnum[]
+  }
+
+  /**
    * PipelinePig without action
    */
   export type PipelinePigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23021,6 +24711,1144 @@ export namespace Prisma {
      * Omit specific fields from the PipelinePig
      */
     omit?: PipelinePigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PipelinePigInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PigRun
+   */
+
+  export type AggregatePigRun = {
+    _count: PigRunCountAggregateOutputType | null
+    _avg: PigRunAvgAggregateOutputType | null
+    _sum: PigRunSumAggregateOutputType | null
+    _min: PigRunMinAggregateOutputType | null
+    _max: PigRunMaxAggregateOutputType | null
+  }
+
+  export type PigRunAvgAggregateOutputType = {
+    currentPosition: number | null
+    speed: number | null
+    distanceCovered: number | null
+    totalDistance: number | null
+  }
+
+  export type PigRunSumAggregateOutputType = {
+    currentPosition: number | null
+    speed: number | null
+    distanceCovered: number | null
+    totalDistance: number | null
+  }
+
+  export type PigRunMinAggregateOutputType = {
+    id: string | null
+    pigId: string | null
+    categoryId: string | null
+    status: string | null
+    launchStation: string | null
+    receiveStation: string | null
+    launchTime: Date | null
+    estimatedArrival: Date | null
+    actualArrival: Date | null
+    currentPosition: number | null
+    speed: number | null
+    distanceCovered: number | null
+    totalDistance: number | null
+    findings: string | null
+    operator: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PigRunMaxAggregateOutputType = {
+    id: string | null
+    pigId: string | null
+    categoryId: string | null
+    status: string | null
+    launchStation: string | null
+    receiveStation: string | null
+    launchTime: Date | null
+    estimatedArrival: Date | null
+    actualArrival: Date | null
+    currentPosition: number | null
+    speed: number | null
+    distanceCovered: number | null
+    totalDistance: number | null
+    findings: string | null
+    operator: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PigRunCountAggregateOutputType = {
+    id: number
+    pigId: number
+    categoryId: number
+    status: number
+    launchStation: number
+    receiveStation: number
+    launchTime: number
+    estimatedArrival: number
+    actualArrival: number
+    currentPosition: number
+    speed: number
+    distanceCovered: number
+    totalDistance: number
+    findings: number
+    operator: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PigRunAvgAggregateInputType = {
+    currentPosition?: true
+    speed?: true
+    distanceCovered?: true
+    totalDistance?: true
+  }
+
+  export type PigRunSumAggregateInputType = {
+    currentPosition?: true
+    speed?: true
+    distanceCovered?: true
+    totalDistance?: true
+  }
+
+  export type PigRunMinAggregateInputType = {
+    id?: true
+    pigId?: true
+    categoryId?: true
+    status?: true
+    launchStation?: true
+    receiveStation?: true
+    launchTime?: true
+    estimatedArrival?: true
+    actualArrival?: true
+    currentPosition?: true
+    speed?: true
+    distanceCovered?: true
+    totalDistance?: true
+    findings?: true
+    operator?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PigRunMaxAggregateInputType = {
+    id?: true
+    pigId?: true
+    categoryId?: true
+    status?: true
+    launchStation?: true
+    receiveStation?: true
+    launchTime?: true
+    estimatedArrival?: true
+    actualArrival?: true
+    currentPosition?: true
+    speed?: true
+    distanceCovered?: true
+    totalDistance?: true
+    findings?: true
+    operator?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PigRunCountAggregateInputType = {
+    id?: true
+    pigId?: true
+    categoryId?: true
+    status?: true
+    launchStation?: true
+    receiveStation?: true
+    launchTime?: true
+    estimatedArrival?: true
+    actualArrival?: true
+    currentPosition?: true
+    speed?: true
+    distanceCovered?: true
+    totalDistance?: true
+    findings?: true
+    operator?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PigRunAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PigRun to aggregate.
+     */
+    where?: PigRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigRuns to fetch.
+     */
+    orderBy?: PigRunOrderByWithRelationInput | PigRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PigRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PigRuns
+    **/
+    _count?: true | PigRunCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PigRunAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PigRunSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PigRunMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PigRunMaxAggregateInputType
+  }
+
+  export type GetPigRunAggregateType<T extends PigRunAggregateArgs> = {
+        [P in keyof T & keyof AggregatePigRun]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePigRun[P]>
+      : GetScalarType<T[P], AggregatePigRun[P]>
+  }
+
+
+
+
+  export type PigRunGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PigRunWhereInput
+    orderBy?: PigRunOrderByWithAggregationInput | PigRunOrderByWithAggregationInput[]
+    by: PigRunScalarFieldEnum[] | PigRunScalarFieldEnum
+    having?: PigRunScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PigRunCountAggregateInputType | true
+    _avg?: PigRunAvgAggregateInputType
+    _sum?: PigRunSumAggregateInputType
+    _min?: PigRunMinAggregateInputType
+    _max?: PigRunMaxAggregateInputType
+  }
+
+  export type PigRunGroupByOutputType = {
+    id: string
+    pigId: string
+    categoryId: string | null
+    status: string
+    launchStation: string
+    receiveStation: string
+    launchTime: Date
+    estimatedArrival: Date
+    actualArrival: Date | null
+    currentPosition: number
+    speed: number
+    distanceCovered: number
+    totalDistance: number
+    findings: string | null
+    operator: string
+    createdAt: Date
+    updatedAt: Date
+    _count: PigRunCountAggregateOutputType | null
+    _avg: PigRunAvgAggregateOutputType | null
+    _sum: PigRunSumAggregateOutputType | null
+    _min: PigRunMinAggregateOutputType | null
+    _max: PigRunMaxAggregateOutputType | null
+  }
+
+  type GetPigRunGroupByPayload<T extends PigRunGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PigRunGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PigRunGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PigRunGroupByOutputType[P]>
+            : GetScalarType<T[P], PigRunGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PigRunSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    pigId?: boolean
+    categoryId?: boolean
+    status?: boolean
+    launchStation?: boolean
+    receiveStation?: boolean
+    launchTime?: boolean
+    estimatedArrival?: boolean
+    actualArrival?: boolean
+    currentPosition?: boolean
+    speed?: boolean
+    distanceCovered?: boolean
+    totalDistance?: boolean
+    findings?: boolean
+    operator?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    pig?: boolean | PipelinePigDefaultArgs<ExtArgs>
+    category?: boolean | PigRun$categoryArgs<ExtArgs>
+  }, ExtArgs["result"]["pigRun"]>
+
+
+
+  export type PigRunSelectScalar = {
+    id?: boolean
+    pigId?: boolean
+    categoryId?: boolean
+    status?: boolean
+    launchStation?: boolean
+    receiveStation?: boolean
+    launchTime?: boolean
+    estimatedArrival?: boolean
+    actualArrival?: boolean
+    currentPosition?: boolean
+    speed?: boolean
+    distanceCovered?: boolean
+    totalDistance?: boolean
+    findings?: boolean
+    operator?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PigRunOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "pigId" | "categoryId" | "status" | "launchStation" | "receiveStation" | "launchTime" | "estimatedArrival" | "actualArrival" | "currentPosition" | "speed" | "distanceCovered" | "totalDistance" | "findings" | "operator" | "createdAt" | "updatedAt", ExtArgs["result"]["pigRun"]>
+  export type PigRunInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pig?: boolean | PipelinePigDefaultArgs<ExtArgs>
+    category?: boolean | PigRun$categoryArgs<ExtArgs>
+  }
+
+  export type $PigRunPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PigRun"
+    objects: {
+      pig: Prisma.$PipelinePigPayload<ExtArgs>
+      category: Prisma.$PigCategoryPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      pigId: string
+      categoryId: string | null
+      status: string
+      launchStation: string
+      receiveStation: string
+      launchTime: Date
+      estimatedArrival: Date
+      actualArrival: Date | null
+      currentPosition: number
+      speed: number
+      distanceCovered: number
+      totalDistance: number
+      findings: string | null
+      operator: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["pigRun"]>
+    composites: {}
+  }
+
+  type PigRunGetPayload<S extends boolean | null | undefined | PigRunDefaultArgs> = $Result.GetResult<Prisma.$PigRunPayload, S>
+
+  type PigRunCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PigRunFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PigRunCountAggregateInputType | true
+    }
+
+  export interface PigRunDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PigRun'], meta: { name: 'PigRun' } }
+    /**
+     * Find zero or one PigRun that matches the filter.
+     * @param {PigRunFindUniqueArgs} args - Arguments to find a PigRun
+     * @example
+     * // Get one PigRun
+     * const pigRun = await prisma.pigRun.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PigRunFindUniqueArgs>(args: SelectSubset<T, PigRunFindUniqueArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PigRun that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PigRunFindUniqueOrThrowArgs} args - Arguments to find a PigRun
+     * @example
+     * // Get one PigRun
+     * const pigRun = await prisma.pigRun.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PigRunFindUniqueOrThrowArgs>(args: SelectSubset<T, PigRunFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PigRun that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigRunFindFirstArgs} args - Arguments to find a PigRun
+     * @example
+     * // Get one PigRun
+     * const pigRun = await prisma.pigRun.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PigRunFindFirstArgs>(args?: SelectSubset<T, PigRunFindFirstArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PigRun that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigRunFindFirstOrThrowArgs} args - Arguments to find a PigRun
+     * @example
+     * // Get one PigRun
+     * const pigRun = await prisma.pigRun.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PigRunFindFirstOrThrowArgs>(args?: SelectSubset<T, PigRunFindFirstOrThrowArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PigRuns that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigRunFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PigRuns
+     * const pigRuns = await prisma.pigRun.findMany()
+     * 
+     * // Get first 10 PigRuns
+     * const pigRuns = await prisma.pigRun.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pigRunWithIdOnly = await prisma.pigRun.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PigRunFindManyArgs>(args?: SelectSubset<T, PigRunFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PigRun.
+     * @param {PigRunCreateArgs} args - Arguments to create a PigRun.
+     * @example
+     * // Create one PigRun
+     * const PigRun = await prisma.pigRun.create({
+     *   data: {
+     *     // ... data to create a PigRun
+     *   }
+     * })
+     * 
+     */
+    create<T extends PigRunCreateArgs>(args: SelectSubset<T, PigRunCreateArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PigRuns.
+     * @param {PigRunCreateManyArgs} args - Arguments to create many PigRuns.
+     * @example
+     * // Create many PigRuns
+     * const pigRun = await prisma.pigRun.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PigRunCreateManyArgs>(args?: SelectSubset<T, PigRunCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PigRun.
+     * @param {PigRunDeleteArgs} args - Arguments to delete one PigRun.
+     * @example
+     * // Delete one PigRun
+     * const PigRun = await prisma.pigRun.delete({
+     *   where: {
+     *     // ... filter to delete one PigRun
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PigRunDeleteArgs>(args: SelectSubset<T, PigRunDeleteArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PigRun.
+     * @param {PigRunUpdateArgs} args - Arguments to update one PigRun.
+     * @example
+     * // Update one PigRun
+     * const pigRun = await prisma.pigRun.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PigRunUpdateArgs>(args: SelectSubset<T, PigRunUpdateArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PigRuns.
+     * @param {PigRunDeleteManyArgs} args - Arguments to filter PigRuns to delete.
+     * @example
+     * // Delete a few PigRuns
+     * const { count } = await prisma.pigRun.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PigRunDeleteManyArgs>(args?: SelectSubset<T, PigRunDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PigRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigRunUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PigRuns
+     * const pigRun = await prisma.pigRun.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PigRunUpdateManyArgs>(args: SelectSubset<T, PigRunUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PigRun.
+     * @param {PigRunUpsertArgs} args - Arguments to update or create a PigRun.
+     * @example
+     * // Update or create a PigRun
+     * const pigRun = await prisma.pigRun.upsert({
+     *   create: {
+     *     // ... data to create a PigRun
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PigRun we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PigRunUpsertArgs>(args: SelectSubset<T, PigRunUpsertArgs<ExtArgs>>): Prisma__PigRunClient<$Result.GetResult<Prisma.$PigRunPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PigRuns.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigRunCountArgs} args - Arguments to filter PigRuns to count.
+     * @example
+     * // Count the number of PigRuns
+     * const count = await prisma.pigRun.count({
+     *   where: {
+     *     // ... the filter for the PigRuns we want to count
+     *   }
+     * })
+    **/
+    count<T extends PigRunCountArgs>(
+      args?: Subset<T, PigRunCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PigRunCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PigRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigRunAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PigRunAggregateArgs>(args: Subset<T, PigRunAggregateArgs>): Prisma.PrismaPromise<GetPigRunAggregateType<T>>
+
+    /**
+     * Group by PigRun.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PigRunGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PigRunGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PigRunGroupByArgs['orderBy'] }
+        : { orderBy?: PigRunGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PigRunGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPigRunGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PigRun model
+   */
+  readonly fields: PigRunFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PigRun.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PigRunClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    pig<T extends PipelinePigDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PipelinePigDefaultArgs<ExtArgs>>): Prisma__PipelinePigClient<$Result.GetResult<Prisma.$PipelinePigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    category<T extends PigRun$categoryArgs<ExtArgs> = {}>(args?: Subset<T, PigRun$categoryArgs<ExtArgs>>): Prisma__PigCategoryClient<$Result.GetResult<Prisma.$PigCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PigRun model
+   */
+  interface PigRunFieldRefs {
+    readonly id: FieldRef<"PigRun", 'String'>
+    readonly pigId: FieldRef<"PigRun", 'String'>
+    readonly categoryId: FieldRef<"PigRun", 'String'>
+    readonly status: FieldRef<"PigRun", 'String'>
+    readonly launchStation: FieldRef<"PigRun", 'String'>
+    readonly receiveStation: FieldRef<"PigRun", 'String'>
+    readonly launchTime: FieldRef<"PigRun", 'DateTime'>
+    readonly estimatedArrival: FieldRef<"PigRun", 'DateTime'>
+    readonly actualArrival: FieldRef<"PigRun", 'DateTime'>
+    readonly currentPosition: FieldRef<"PigRun", 'Float'>
+    readonly speed: FieldRef<"PigRun", 'Float'>
+    readonly distanceCovered: FieldRef<"PigRun", 'Float'>
+    readonly totalDistance: FieldRef<"PigRun", 'Float'>
+    readonly findings: FieldRef<"PigRun", 'String'>
+    readonly operator: FieldRef<"PigRun", 'String'>
+    readonly createdAt: FieldRef<"PigRun", 'DateTime'>
+    readonly updatedAt: FieldRef<"PigRun", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PigRun findUnique
+   */
+  export type PigRunFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PigRun to fetch.
+     */
+    where: PigRunWhereUniqueInput
+  }
+
+  /**
+   * PigRun findUniqueOrThrow
+   */
+  export type PigRunFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PigRun to fetch.
+     */
+    where: PigRunWhereUniqueInput
+  }
+
+  /**
+   * PigRun findFirst
+   */
+  export type PigRunFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PigRun to fetch.
+     */
+    where?: PigRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigRuns to fetch.
+     */
+    orderBy?: PigRunOrderByWithRelationInput | PigRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PigRuns.
+     */
+    cursor?: PigRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PigRuns.
+     */
+    distinct?: PigRunScalarFieldEnum | PigRunScalarFieldEnum[]
+  }
+
+  /**
+   * PigRun findFirstOrThrow
+   */
+  export type PigRunFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PigRun to fetch.
+     */
+    where?: PigRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigRuns to fetch.
+     */
+    orderBy?: PigRunOrderByWithRelationInput | PigRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PigRuns.
+     */
+    cursor?: PigRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PigRuns.
+     */
+    distinct?: PigRunScalarFieldEnum | PigRunScalarFieldEnum[]
+  }
+
+  /**
+   * PigRun findMany
+   */
+  export type PigRunFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * Filter, which PigRuns to fetch.
+     */
+    where?: PigRunWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PigRuns to fetch.
+     */
+    orderBy?: PigRunOrderByWithRelationInput | PigRunOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PigRuns.
+     */
+    cursor?: PigRunWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PigRuns from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PigRuns.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PigRuns.
+     */
+    distinct?: PigRunScalarFieldEnum | PigRunScalarFieldEnum[]
+  }
+
+  /**
+   * PigRun create
+   */
+  export type PigRunCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PigRun.
+     */
+    data: XOR<PigRunCreateInput, PigRunUncheckedCreateInput>
+  }
+
+  /**
+   * PigRun createMany
+   */
+  export type PigRunCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PigRuns.
+     */
+    data: PigRunCreateManyInput | PigRunCreateManyInput[]
+  }
+
+  /**
+   * PigRun update
+   */
+  export type PigRunUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PigRun.
+     */
+    data: XOR<PigRunUpdateInput, PigRunUncheckedUpdateInput>
+    /**
+     * Choose, which PigRun to update.
+     */
+    where: PigRunWhereUniqueInput
+  }
+
+  /**
+   * PigRun updateMany
+   */
+  export type PigRunUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PigRuns.
+     */
+    data: XOR<PigRunUpdateManyMutationInput, PigRunUncheckedUpdateManyInput>
+    /**
+     * Filter which PigRuns to update
+     */
+    where?: PigRunWhereInput
+    /**
+     * Limit how many PigRuns to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PigRun upsert
+   */
+  export type PigRunUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PigRun to update in case it exists.
+     */
+    where: PigRunWhereUniqueInput
+    /**
+     * In case the PigRun found by the `where` argument doesn't exist, create a new PigRun with this data.
+     */
+    create: XOR<PigRunCreateInput, PigRunUncheckedCreateInput>
+    /**
+     * In case the PigRun was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PigRunUpdateInput, PigRunUncheckedUpdateInput>
+  }
+
+  /**
+   * PigRun delete
+   */
+  export type PigRunDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
+    /**
+     * Filter which PigRun to delete.
+     */
+    where: PigRunWhereUniqueInput
+  }
+
+  /**
+   * PigRun deleteMany
+   */
+  export type PigRunDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PigRuns to delete
+     */
+    where?: PigRunWhereInput
+    /**
+     * Limit how many PigRuns to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PigRun.category
+   */
+  export type PigRun$categoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigCategory
+     */
+    select?: PigCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigCategory
+     */
+    omit?: PigCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigCategoryInclude<ExtArgs> | null
+    where?: PigCategoryWhereInput
+  }
+
+  /**
+   * PigRun without action
+   */
+  export type PigRunDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PigRun
+     */
+    select?: PigRunSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PigRun
+     */
+    omit?: PigRunOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PigRunInclude<ExtArgs> | null
   }
 
 
@@ -28119,17 +30947,20 @@ export namespace Prisma {
   }
 
   export type PipelineProgressAvgAggregateOutputType = {
+    year: number | null
     distanceKm: number | null
     totalDistance: number | null
   }
 
   export type PipelineProgressSumAggregateOutputType = {
+    year: number | null
     distanceKm: number | null
     totalDistance: number | null
   }
 
   export type PipelineProgressMinAggregateOutputType = {
     id: string | null
+    year: number | null
     distanceKm: number | null
     totalDistance: number | null
     lastStation: string | null
@@ -28138,6 +30969,7 @@ export namespace Prisma {
 
   export type PipelineProgressMaxAggregateOutputType = {
     id: string | null
+    year: number | null
     distanceKm: number | null
     totalDistance: number | null
     lastStation: string | null
@@ -28146,6 +30978,7 @@ export namespace Prisma {
 
   export type PipelineProgressCountAggregateOutputType = {
     id: number
+    year: number
     distanceKm: number
     totalDistance: number
     lastStation: number
@@ -28155,17 +30988,20 @@ export namespace Prisma {
 
 
   export type PipelineProgressAvgAggregateInputType = {
+    year?: true
     distanceKm?: true
     totalDistance?: true
   }
 
   export type PipelineProgressSumAggregateInputType = {
+    year?: true
     distanceKm?: true
     totalDistance?: true
   }
 
   export type PipelineProgressMinAggregateInputType = {
     id?: true
+    year?: true
     distanceKm?: true
     totalDistance?: true
     lastStation?: true
@@ -28174,6 +31010,7 @@ export namespace Prisma {
 
   export type PipelineProgressMaxAggregateInputType = {
     id?: true
+    year?: true
     distanceKm?: true
     totalDistance?: true
     lastStation?: true
@@ -28182,6 +31019,7 @@ export namespace Prisma {
 
   export type PipelineProgressCountAggregateInputType = {
     id?: true
+    year?: true
     distanceKm?: true
     totalDistance?: true
     lastStation?: true
@@ -28277,6 +31115,7 @@ export namespace Prisma {
 
   export type PipelineProgressGroupByOutputType = {
     id: string
+    year: number | null
     distanceKm: number
     totalDistance: number
     lastStation: string | null
@@ -28304,6 +31143,7 @@ export namespace Prisma {
 
   export type PipelineProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    year?: boolean
     distanceKm?: boolean
     totalDistance?: boolean
     lastStation?: boolean
@@ -28314,19 +31154,21 @@ export namespace Prisma {
 
   export type PipelineProgressSelectScalar = {
     id?: boolean
+    year?: boolean
     distanceKm?: boolean
     totalDistance?: boolean
     lastStation?: boolean
     updatedAt?: boolean
   }
 
-  export type PipelineProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "distanceKm" | "totalDistance" | "lastStation" | "updatedAt", ExtArgs["result"]["pipelineProgress"]>
+  export type PipelineProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "year" | "distanceKm" | "totalDistance" | "lastStation" | "updatedAt", ExtArgs["result"]["pipelineProgress"]>
 
   export type $PipelineProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PipelineProgress"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      year: number | null
       distanceKm: number
       totalDistance: number
       lastStation: string | null
@@ -28701,6 +31543,7 @@ export namespace Prisma {
    */
   interface PipelineProgressFieldRefs {
     readonly id: FieldRef<"PipelineProgress", 'String'>
+    readonly year: FieldRef<"PipelineProgress", 'Int'>
     readonly distanceKm: FieldRef<"PipelineProgress", 'Float'>
     readonly totalDistance: FieldRef<"PipelineProgress", 'Float'>
     readonly lastStation: FieldRef<"PipelineProgress", 'String'>
@@ -29031,6 +31874,3002 @@ export namespace Prisma {
 
 
   /**
+   * Model ShiftHandover
+   */
+
+  export type AggregateShiftHandover = {
+    _count: ShiftHandoverCountAggregateOutputType | null
+    _avg: ShiftHandoverAvgAggregateOutputType | null
+    _sum: ShiftHandoverSumAggregateOutputType | null
+    _min: ShiftHandoverMinAggregateOutputType | null
+    _max: ShiftHandoverMaxAggregateOutputType | null
+  }
+
+  export type ShiftHandoverAvgAggregateOutputType = {
+    id: number | null
+    flowRate: number | null
+    pressure: number | null
+    throughput: number | null
+    outstandingIssues: number | null
+  }
+
+  export type ShiftHandoverSumAggregateOutputType = {
+    id: number | null
+    flowRate: number | null
+    pressure: number | null
+    throughput: number | null
+    outstandingIssues: number | null
+  }
+
+  export type ShiftHandoverMinAggregateOutputType = {
+    id: number | null
+    date: Date | null
+    shiftType: string | null
+    outgoingOperator: string | null
+    incomingOperator: string | null
+    station: string | null
+    status: string | null
+    operationalStatus: string | null
+    flowRate: number | null
+    pressure: number | null
+    throughput: number | null
+    outstandingIssues: number | null
+    notes: string | null
+    handoverTime: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShiftHandoverMaxAggregateOutputType = {
+    id: number | null
+    date: Date | null
+    shiftType: string | null
+    outgoingOperator: string | null
+    incomingOperator: string | null
+    station: string | null
+    status: string | null
+    operationalStatus: string | null
+    flowRate: number | null
+    pressure: number | null
+    throughput: number | null
+    outstandingIssues: number | null
+    notes: string | null
+    handoverTime: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShiftHandoverCountAggregateOutputType = {
+    id: number
+    date: number
+    shiftType: number
+    outgoingOperator: number
+    incomingOperator: number
+    station: number
+    status: number
+    operationalStatus: number
+    flowRate: number
+    pressure: number
+    throughput: number
+    outstandingIssues: number
+    notes: number
+    handoverTime: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ShiftHandoverAvgAggregateInputType = {
+    id?: true
+    flowRate?: true
+    pressure?: true
+    throughput?: true
+    outstandingIssues?: true
+  }
+
+  export type ShiftHandoverSumAggregateInputType = {
+    id?: true
+    flowRate?: true
+    pressure?: true
+    throughput?: true
+    outstandingIssues?: true
+  }
+
+  export type ShiftHandoverMinAggregateInputType = {
+    id?: true
+    date?: true
+    shiftType?: true
+    outgoingOperator?: true
+    incomingOperator?: true
+    station?: true
+    status?: true
+    operationalStatus?: true
+    flowRate?: true
+    pressure?: true
+    throughput?: true
+    outstandingIssues?: true
+    notes?: true
+    handoverTime?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShiftHandoverMaxAggregateInputType = {
+    id?: true
+    date?: true
+    shiftType?: true
+    outgoingOperator?: true
+    incomingOperator?: true
+    station?: true
+    status?: true
+    operationalStatus?: true
+    flowRate?: true
+    pressure?: true
+    throughput?: true
+    outstandingIssues?: true
+    notes?: true
+    handoverTime?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShiftHandoverCountAggregateInputType = {
+    id?: true
+    date?: true
+    shiftType?: true
+    outgoingOperator?: true
+    incomingOperator?: true
+    station?: true
+    status?: true
+    operationalStatus?: true
+    flowRate?: true
+    pressure?: true
+    throughput?: true
+    outstandingIssues?: true
+    notes?: true
+    handoverTime?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ShiftHandoverAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShiftHandover to aggregate.
+     */
+    where?: ShiftHandoverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftHandovers to fetch.
+     */
+    orderBy?: ShiftHandoverOrderByWithRelationInput | ShiftHandoverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ShiftHandoverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftHandovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftHandovers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ShiftHandovers
+    **/
+    _count?: true | ShiftHandoverCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ShiftHandoverAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ShiftHandoverSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ShiftHandoverMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ShiftHandoverMaxAggregateInputType
+  }
+
+  export type GetShiftHandoverAggregateType<T extends ShiftHandoverAggregateArgs> = {
+        [P in keyof T & keyof AggregateShiftHandover]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateShiftHandover[P]>
+      : GetScalarType<T[P], AggregateShiftHandover[P]>
+  }
+
+
+
+
+  export type ShiftHandoverGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShiftHandoverWhereInput
+    orderBy?: ShiftHandoverOrderByWithAggregationInput | ShiftHandoverOrderByWithAggregationInput[]
+    by: ShiftHandoverScalarFieldEnum[] | ShiftHandoverScalarFieldEnum
+    having?: ShiftHandoverScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ShiftHandoverCountAggregateInputType | true
+    _avg?: ShiftHandoverAvgAggregateInputType
+    _sum?: ShiftHandoverSumAggregateInputType
+    _min?: ShiftHandoverMinAggregateInputType
+    _max?: ShiftHandoverMaxAggregateInputType
+  }
+
+  export type ShiftHandoverGroupByOutputType = {
+    id: number
+    date: Date
+    shiftType: string
+    outgoingOperator: string
+    incomingOperator: string
+    station: string
+    status: string
+    operationalStatus: string
+    flowRate: number
+    pressure: number
+    throughput: number
+    outstandingIssues: number
+    notes: string | null
+    handoverTime: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ShiftHandoverCountAggregateOutputType | null
+    _avg: ShiftHandoverAvgAggregateOutputType | null
+    _sum: ShiftHandoverSumAggregateOutputType | null
+    _min: ShiftHandoverMinAggregateOutputType | null
+    _max: ShiftHandoverMaxAggregateOutputType | null
+  }
+
+  type GetShiftHandoverGroupByPayload<T extends ShiftHandoverGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ShiftHandoverGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ShiftHandoverGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ShiftHandoverGroupByOutputType[P]>
+            : GetScalarType<T[P], ShiftHandoverGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ShiftHandoverSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    shiftType?: boolean
+    outgoingOperator?: boolean
+    incomingOperator?: boolean
+    station?: boolean
+    status?: boolean
+    operationalStatus?: boolean
+    flowRate?: boolean
+    pressure?: boolean
+    throughput?: boolean
+    outstandingIssues?: boolean
+    notes?: boolean
+    handoverTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["shiftHandover"]>
+
+
+
+  export type ShiftHandoverSelectScalar = {
+    id?: boolean
+    date?: boolean
+    shiftType?: boolean
+    outgoingOperator?: boolean
+    incomingOperator?: boolean
+    station?: boolean
+    status?: boolean
+    operationalStatus?: boolean
+    flowRate?: boolean
+    pressure?: boolean
+    throughput?: boolean
+    outstandingIssues?: boolean
+    notes?: boolean
+    handoverTime?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ShiftHandoverOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "shiftType" | "outgoingOperator" | "incomingOperator" | "station" | "status" | "operationalStatus" | "flowRate" | "pressure" | "throughput" | "outstandingIssues" | "notes" | "handoverTime" | "createdAt" | "updatedAt", ExtArgs["result"]["shiftHandover"]>
+
+  export type $ShiftHandoverPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ShiftHandover"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      date: Date
+      shiftType: string
+      outgoingOperator: string
+      incomingOperator: string
+      station: string
+      status: string
+      operationalStatus: string
+      flowRate: number
+      pressure: number
+      throughput: number
+      outstandingIssues: number
+      notes: string | null
+      handoverTime: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["shiftHandover"]>
+    composites: {}
+  }
+
+  type ShiftHandoverGetPayload<S extends boolean | null | undefined | ShiftHandoverDefaultArgs> = $Result.GetResult<Prisma.$ShiftHandoverPayload, S>
+
+  type ShiftHandoverCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ShiftHandoverFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ShiftHandoverCountAggregateInputType | true
+    }
+
+  export interface ShiftHandoverDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ShiftHandover'], meta: { name: 'ShiftHandover' } }
+    /**
+     * Find zero or one ShiftHandover that matches the filter.
+     * @param {ShiftHandoverFindUniqueArgs} args - Arguments to find a ShiftHandover
+     * @example
+     * // Get one ShiftHandover
+     * const shiftHandover = await prisma.shiftHandover.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ShiftHandoverFindUniqueArgs>(args: SelectSubset<T, ShiftHandoverFindUniqueArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ShiftHandover that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ShiftHandoverFindUniqueOrThrowArgs} args - Arguments to find a ShiftHandover
+     * @example
+     * // Get one ShiftHandover
+     * const shiftHandover = await prisma.shiftHandover.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ShiftHandoverFindUniqueOrThrowArgs>(args: SelectSubset<T, ShiftHandoverFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShiftHandover that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftHandoverFindFirstArgs} args - Arguments to find a ShiftHandover
+     * @example
+     * // Get one ShiftHandover
+     * const shiftHandover = await prisma.shiftHandover.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ShiftHandoverFindFirstArgs>(args?: SelectSubset<T, ShiftHandoverFindFirstArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShiftHandover that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftHandoverFindFirstOrThrowArgs} args - Arguments to find a ShiftHandover
+     * @example
+     * // Get one ShiftHandover
+     * const shiftHandover = await prisma.shiftHandover.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ShiftHandoverFindFirstOrThrowArgs>(args?: SelectSubset<T, ShiftHandoverFindFirstOrThrowArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ShiftHandovers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftHandoverFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ShiftHandovers
+     * const shiftHandovers = await prisma.shiftHandover.findMany()
+     * 
+     * // Get first 10 ShiftHandovers
+     * const shiftHandovers = await prisma.shiftHandover.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const shiftHandoverWithIdOnly = await prisma.shiftHandover.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ShiftHandoverFindManyArgs>(args?: SelectSubset<T, ShiftHandoverFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ShiftHandover.
+     * @param {ShiftHandoverCreateArgs} args - Arguments to create a ShiftHandover.
+     * @example
+     * // Create one ShiftHandover
+     * const ShiftHandover = await prisma.shiftHandover.create({
+     *   data: {
+     *     // ... data to create a ShiftHandover
+     *   }
+     * })
+     * 
+     */
+    create<T extends ShiftHandoverCreateArgs>(args: SelectSubset<T, ShiftHandoverCreateArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ShiftHandovers.
+     * @param {ShiftHandoverCreateManyArgs} args - Arguments to create many ShiftHandovers.
+     * @example
+     * // Create many ShiftHandovers
+     * const shiftHandover = await prisma.shiftHandover.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ShiftHandoverCreateManyArgs>(args?: SelectSubset<T, ShiftHandoverCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ShiftHandover.
+     * @param {ShiftHandoverDeleteArgs} args - Arguments to delete one ShiftHandover.
+     * @example
+     * // Delete one ShiftHandover
+     * const ShiftHandover = await prisma.shiftHandover.delete({
+     *   where: {
+     *     // ... filter to delete one ShiftHandover
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ShiftHandoverDeleteArgs>(args: SelectSubset<T, ShiftHandoverDeleteArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ShiftHandover.
+     * @param {ShiftHandoverUpdateArgs} args - Arguments to update one ShiftHandover.
+     * @example
+     * // Update one ShiftHandover
+     * const shiftHandover = await prisma.shiftHandover.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ShiftHandoverUpdateArgs>(args: SelectSubset<T, ShiftHandoverUpdateArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ShiftHandovers.
+     * @param {ShiftHandoverDeleteManyArgs} args - Arguments to filter ShiftHandovers to delete.
+     * @example
+     * // Delete a few ShiftHandovers
+     * const { count } = await prisma.shiftHandover.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ShiftHandoverDeleteManyArgs>(args?: SelectSubset<T, ShiftHandoverDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ShiftHandovers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftHandoverUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ShiftHandovers
+     * const shiftHandover = await prisma.shiftHandover.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ShiftHandoverUpdateManyArgs>(args: SelectSubset<T, ShiftHandoverUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ShiftHandover.
+     * @param {ShiftHandoverUpsertArgs} args - Arguments to update or create a ShiftHandover.
+     * @example
+     * // Update or create a ShiftHandover
+     * const shiftHandover = await prisma.shiftHandover.upsert({
+     *   create: {
+     *     // ... data to create a ShiftHandover
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ShiftHandover we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ShiftHandoverUpsertArgs>(args: SelectSubset<T, ShiftHandoverUpsertArgs<ExtArgs>>): Prisma__ShiftHandoverClient<$Result.GetResult<Prisma.$ShiftHandoverPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ShiftHandovers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftHandoverCountArgs} args - Arguments to filter ShiftHandovers to count.
+     * @example
+     * // Count the number of ShiftHandovers
+     * const count = await prisma.shiftHandover.count({
+     *   where: {
+     *     // ... the filter for the ShiftHandovers we want to count
+     *   }
+     * })
+    **/
+    count<T extends ShiftHandoverCountArgs>(
+      args?: Subset<T, ShiftHandoverCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ShiftHandoverCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ShiftHandover.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftHandoverAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ShiftHandoverAggregateArgs>(args: Subset<T, ShiftHandoverAggregateArgs>): Prisma.PrismaPromise<GetShiftHandoverAggregateType<T>>
+
+    /**
+     * Group by ShiftHandover.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftHandoverGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ShiftHandoverGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ShiftHandoverGroupByArgs['orderBy'] }
+        : { orderBy?: ShiftHandoverGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ShiftHandoverGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetShiftHandoverGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ShiftHandover model
+   */
+  readonly fields: ShiftHandoverFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ShiftHandover.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ShiftHandoverClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ShiftHandover model
+   */
+  interface ShiftHandoverFieldRefs {
+    readonly id: FieldRef<"ShiftHandover", 'Int'>
+    readonly date: FieldRef<"ShiftHandover", 'DateTime'>
+    readonly shiftType: FieldRef<"ShiftHandover", 'String'>
+    readonly outgoingOperator: FieldRef<"ShiftHandover", 'String'>
+    readonly incomingOperator: FieldRef<"ShiftHandover", 'String'>
+    readonly station: FieldRef<"ShiftHandover", 'String'>
+    readonly status: FieldRef<"ShiftHandover", 'String'>
+    readonly operationalStatus: FieldRef<"ShiftHandover", 'String'>
+    readonly flowRate: FieldRef<"ShiftHandover", 'Float'>
+    readonly pressure: FieldRef<"ShiftHandover", 'Float'>
+    readonly throughput: FieldRef<"ShiftHandover", 'Float'>
+    readonly outstandingIssues: FieldRef<"ShiftHandover", 'Int'>
+    readonly notes: FieldRef<"ShiftHandover", 'String'>
+    readonly handoverTime: FieldRef<"ShiftHandover", 'String'>
+    readonly createdAt: FieldRef<"ShiftHandover", 'DateTime'>
+    readonly updatedAt: FieldRef<"ShiftHandover", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ShiftHandover findUnique
+   */
+  export type ShiftHandoverFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftHandover to fetch.
+     */
+    where: ShiftHandoverWhereUniqueInput
+  }
+
+  /**
+   * ShiftHandover findUniqueOrThrow
+   */
+  export type ShiftHandoverFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftHandover to fetch.
+     */
+    where: ShiftHandoverWhereUniqueInput
+  }
+
+  /**
+   * ShiftHandover findFirst
+   */
+  export type ShiftHandoverFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftHandover to fetch.
+     */
+    where?: ShiftHandoverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftHandovers to fetch.
+     */
+    orderBy?: ShiftHandoverOrderByWithRelationInput | ShiftHandoverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShiftHandovers.
+     */
+    cursor?: ShiftHandoverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftHandovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftHandovers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShiftHandovers.
+     */
+    distinct?: ShiftHandoverScalarFieldEnum | ShiftHandoverScalarFieldEnum[]
+  }
+
+  /**
+   * ShiftHandover findFirstOrThrow
+   */
+  export type ShiftHandoverFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftHandover to fetch.
+     */
+    where?: ShiftHandoverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftHandovers to fetch.
+     */
+    orderBy?: ShiftHandoverOrderByWithRelationInput | ShiftHandoverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShiftHandovers.
+     */
+    cursor?: ShiftHandoverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftHandovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftHandovers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShiftHandovers.
+     */
+    distinct?: ShiftHandoverScalarFieldEnum | ShiftHandoverScalarFieldEnum[]
+  }
+
+  /**
+   * ShiftHandover findMany
+   */
+  export type ShiftHandoverFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftHandovers to fetch.
+     */
+    where?: ShiftHandoverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftHandovers to fetch.
+     */
+    orderBy?: ShiftHandoverOrderByWithRelationInput | ShiftHandoverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ShiftHandovers.
+     */
+    cursor?: ShiftHandoverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftHandovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftHandovers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShiftHandovers.
+     */
+    distinct?: ShiftHandoverScalarFieldEnum | ShiftHandoverScalarFieldEnum[]
+  }
+
+  /**
+   * ShiftHandover create
+   */
+  export type ShiftHandoverCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ShiftHandover.
+     */
+    data: XOR<ShiftHandoverCreateInput, ShiftHandoverUncheckedCreateInput>
+  }
+
+  /**
+   * ShiftHandover createMany
+   */
+  export type ShiftHandoverCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ShiftHandovers.
+     */
+    data: ShiftHandoverCreateManyInput | ShiftHandoverCreateManyInput[]
+  }
+
+  /**
+   * ShiftHandover update
+   */
+  export type ShiftHandoverUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ShiftHandover.
+     */
+    data: XOR<ShiftHandoverUpdateInput, ShiftHandoverUncheckedUpdateInput>
+    /**
+     * Choose, which ShiftHandover to update.
+     */
+    where: ShiftHandoverWhereUniqueInput
+  }
+
+  /**
+   * ShiftHandover updateMany
+   */
+  export type ShiftHandoverUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ShiftHandovers.
+     */
+    data: XOR<ShiftHandoverUpdateManyMutationInput, ShiftHandoverUncheckedUpdateManyInput>
+    /**
+     * Filter which ShiftHandovers to update
+     */
+    where?: ShiftHandoverWhereInput
+    /**
+     * Limit how many ShiftHandovers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShiftHandover upsert
+   */
+  export type ShiftHandoverUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ShiftHandover to update in case it exists.
+     */
+    where: ShiftHandoverWhereUniqueInput
+    /**
+     * In case the ShiftHandover found by the `where` argument doesn't exist, create a new ShiftHandover with this data.
+     */
+    create: XOR<ShiftHandoverCreateInput, ShiftHandoverUncheckedCreateInput>
+    /**
+     * In case the ShiftHandover was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ShiftHandoverUpdateInput, ShiftHandoverUncheckedUpdateInput>
+  }
+
+  /**
+   * ShiftHandover delete
+   */
+  export type ShiftHandoverDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+    /**
+     * Filter which ShiftHandover to delete.
+     */
+    where: ShiftHandoverWhereUniqueInput
+  }
+
+  /**
+   * ShiftHandover deleteMany
+   */
+  export type ShiftHandoverDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShiftHandovers to delete
+     */
+    where?: ShiftHandoverWhereInput
+    /**
+     * Limit how many ShiftHandovers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShiftHandover without action
+   */
+  export type ShiftHandoverDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftHandover
+     */
+    select?: ShiftHandoverSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftHandover
+     */
+    omit?: ShiftHandoverOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ShiftLogEntry
+   */
+
+  export type AggregateShiftLogEntry = {
+    _count: ShiftLogEntryCountAggregateOutputType | null
+    _avg: ShiftLogEntryAvgAggregateOutputType | null
+    _sum: ShiftLogEntrySumAggregateOutputType | null
+    _min: ShiftLogEntryMinAggregateOutputType | null
+    _max: ShiftLogEntryMaxAggregateOutputType | null
+  }
+
+  export type ShiftLogEntryAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ShiftLogEntrySumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ShiftLogEntryMinAggregateOutputType = {
+    id: number | null
+    timestamp: Date | null
+    operator: string | null
+    station: string | null
+    category: string | null
+    priority: string | null
+    message: string | null
+    acknowledged: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShiftLogEntryMaxAggregateOutputType = {
+    id: number | null
+    timestamp: Date | null
+    operator: string | null
+    station: string | null
+    category: string | null
+    priority: string | null
+    message: string | null
+    acknowledged: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ShiftLogEntryCountAggregateOutputType = {
+    id: number
+    timestamp: number
+    operator: number
+    station: number
+    category: number
+    priority: number
+    message: number
+    acknowledged: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ShiftLogEntryAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type ShiftLogEntrySumAggregateInputType = {
+    id?: true
+  }
+
+  export type ShiftLogEntryMinAggregateInputType = {
+    id?: true
+    timestamp?: true
+    operator?: true
+    station?: true
+    category?: true
+    priority?: true
+    message?: true
+    acknowledged?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShiftLogEntryMaxAggregateInputType = {
+    id?: true
+    timestamp?: true
+    operator?: true
+    station?: true
+    category?: true
+    priority?: true
+    message?: true
+    acknowledged?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ShiftLogEntryCountAggregateInputType = {
+    id?: true
+    timestamp?: true
+    operator?: true
+    station?: true
+    category?: true
+    priority?: true
+    message?: true
+    acknowledged?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ShiftLogEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShiftLogEntry to aggregate.
+     */
+    where?: ShiftLogEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftLogEntries to fetch.
+     */
+    orderBy?: ShiftLogEntryOrderByWithRelationInput | ShiftLogEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ShiftLogEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftLogEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftLogEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ShiftLogEntries
+    **/
+    _count?: true | ShiftLogEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ShiftLogEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ShiftLogEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ShiftLogEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ShiftLogEntryMaxAggregateInputType
+  }
+
+  export type GetShiftLogEntryAggregateType<T extends ShiftLogEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateShiftLogEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateShiftLogEntry[P]>
+      : GetScalarType<T[P], AggregateShiftLogEntry[P]>
+  }
+
+
+
+
+  export type ShiftLogEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ShiftLogEntryWhereInput
+    orderBy?: ShiftLogEntryOrderByWithAggregationInput | ShiftLogEntryOrderByWithAggregationInput[]
+    by: ShiftLogEntryScalarFieldEnum[] | ShiftLogEntryScalarFieldEnum
+    having?: ShiftLogEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ShiftLogEntryCountAggregateInputType | true
+    _avg?: ShiftLogEntryAvgAggregateInputType
+    _sum?: ShiftLogEntrySumAggregateInputType
+    _min?: ShiftLogEntryMinAggregateInputType
+    _max?: ShiftLogEntryMaxAggregateInputType
+  }
+
+  export type ShiftLogEntryGroupByOutputType = {
+    id: number
+    timestamp: Date
+    operator: string
+    station: string
+    category: string
+    priority: string
+    message: string
+    acknowledged: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: ShiftLogEntryCountAggregateOutputType | null
+    _avg: ShiftLogEntryAvgAggregateOutputType | null
+    _sum: ShiftLogEntrySumAggregateOutputType | null
+    _min: ShiftLogEntryMinAggregateOutputType | null
+    _max: ShiftLogEntryMaxAggregateOutputType | null
+  }
+
+  type GetShiftLogEntryGroupByPayload<T extends ShiftLogEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ShiftLogEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ShiftLogEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ShiftLogEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], ShiftLogEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ShiftLogEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    timestamp?: boolean
+    operator?: boolean
+    station?: boolean
+    category?: boolean
+    priority?: boolean
+    message?: boolean
+    acknowledged?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["shiftLogEntry"]>
+
+
+
+  export type ShiftLogEntrySelectScalar = {
+    id?: boolean
+    timestamp?: boolean
+    operator?: boolean
+    station?: boolean
+    category?: boolean
+    priority?: boolean
+    message?: boolean
+    acknowledged?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ShiftLogEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "timestamp" | "operator" | "station" | "category" | "priority" | "message" | "acknowledged" | "createdAt" | "updatedAt", ExtArgs["result"]["shiftLogEntry"]>
+
+  export type $ShiftLogEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ShiftLogEntry"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      timestamp: Date
+      operator: string
+      station: string
+      category: string
+      priority: string
+      message: string
+      acknowledged: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["shiftLogEntry"]>
+    composites: {}
+  }
+
+  type ShiftLogEntryGetPayload<S extends boolean | null | undefined | ShiftLogEntryDefaultArgs> = $Result.GetResult<Prisma.$ShiftLogEntryPayload, S>
+
+  type ShiftLogEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ShiftLogEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ShiftLogEntryCountAggregateInputType | true
+    }
+
+  export interface ShiftLogEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ShiftLogEntry'], meta: { name: 'ShiftLogEntry' } }
+    /**
+     * Find zero or one ShiftLogEntry that matches the filter.
+     * @param {ShiftLogEntryFindUniqueArgs} args - Arguments to find a ShiftLogEntry
+     * @example
+     * // Get one ShiftLogEntry
+     * const shiftLogEntry = await prisma.shiftLogEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ShiftLogEntryFindUniqueArgs>(args: SelectSubset<T, ShiftLogEntryFindUniqueArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ShiftLogEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ShiftLogEntryFindUniqueOrThrowArgs} args - Arguments to find a ShiftLogEntry
+     * @example
+     * // Get one ShiftLogEntry
+     * const shiftLogEntry = await prisma.shiftLogEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ShiftLogEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, ShiftLogEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShiftLogEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftLogEntryFindFirstArgs} args - Arguments to find a ShiftLogEntry
+     * @example
+     * // Get one ShiftLogEntry
+     * const shiftLogEntry = await prisma.shiftLogEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ShiftLogEntryFindFirstArgs>(args?: SelectSubset<T, ShiftLogEntryFindFirstArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ShiftLogEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftLogEntryFindFirstOrThrowArgs} args - Arguments to find a ShiftLogEntry
+     * @example
+     * // Get one ShiftLogEntry
+     * const shiftLogEntry = await prisma.shiftLogEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ShiftLogEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, ShiftLogEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ShiftLogEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftLogEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ShiftLogEntries
+     * const shiftLogEntries = await prisma.shiftLogEntry.findMany()
+     * 
+     * // Get first 10 ShiftLogEntries
+     * const shiftLogEntries = await prisma.shiftLogEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const shiftLogEntryWithIdOnly = await prisma.shiftLogEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ShiftLogEntryFindManyArgs>(args?: SelectSubset<T, ShiftLogEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ShiftLogEntry.
+     * @param {ShiftLogEntryCreateArgs} args - Arguments to create a ShiftLogEntry.
+     * @example
+     * // Create one ShiftLogEntry
+     * const ShiftLogEntry = await prisma.shiftLogEntry.create({
+     *   data: {
+     *     // ... data to create a ShiftLogEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends ShiftLogEntryCreateArgs>(args: SelectSubset<T, ShiftLogEntryCreateArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ShiftLogEntries.
+     * @param {ShiftLogEntryCreateManyArgs} args - Arguments to create many ShiftLogEntries.
+     * @example
+     * // Create many ShiftLogEntries
+     * const shiftLogEntry = await prisma.shiftLogEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ShiftLogEntryCreateManyArgs>(args?: SelectSubset<T, ShiftLogEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ShiftLogEntry.
+     * @param {ShiftLogEntryDeleteArgs} args - Arguments to delete one ShiftLogEntry.
+     * @example
+     * // Delete one ShiftLogEntry
+     * const ShiftLogEntry = await prisma.shiftLogEntry.delete({
+     *   where: {
+     *     // ... filter to delete one ShiftLogEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ShiftLogEntryDeleteArgs>(args: SelectSubset<T, ShiftLogEntryDeleteArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ShiftLogEntry.
+     * @param {ShiftLogEntryUpdateArgs} args - Arguments to update one ShiftLogEntry.
+     * @example
+     * // Update one ShiftLogEntry
+     * const shiftLogEntry = await prisma.shiftLogEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ShiftLogEntryUpdateArgs>(args: SelectSubset<T, ShiftLogEntryUpdateArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ShiftLogEntries.
+     * @param {ShiftLogEntryDeleteManyArgs} args - Arguments to filter ShiftLogEntries to delete.
+     * @example
+     * // Delete a few ShiftLogEntries
+     * const { count } = await prisma.shiftLogEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ShiftLogEntryDeleteManyArgs>(args?: SelectSubset<T, ShiftLogEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ShiftLogEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftLogEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ShiftLogEntries
+     * const shiftLogEntry = await prisma.shiftLogEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ShiftLogEntryUpdateManyArgs>(args: SelectSubset<T, ShiftLogEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ShiftLogEntry.
+     * @param {ShiftLogEntryUpsertArgs} args - Arguments to update or create a ShiftLogEntry.
+     * @example
+     * // Update or create a ShiftLogEntry
+     * const shiftLogEntry = await prisma.shiftLogEntry.upsert({
+     *   create: {
+     *     // ... data to create a ShiftLogEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ShiftLogEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ShiftLogEntryUpsertArgs>(args: SelectSubset<T, ShiftLogEntryUpsertArgs<ExtArgs>>): Prisma__ShiftLogEntryClient<$Result.GetResult<Prisma.$ShiftLogEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ShiftLogEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftLogEntryCountArgs} args - Arguments to filter ShiftLogEntries to count.
+     * @example
+     * // Count the number of ShiftLogEntries
+     * const count = await prisma.shiftLogEntry.count({
+     *   where: {
+     *     // ... the filter for the ShiftLogEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends ShiftLogEntryCountArgs>(
+      args?: Subset<T, ShiftLogEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ShiftLogEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ShiftLogEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftLogEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ShiftLogEntryAggregateArgs>(args: Subset<T, ShiftLogEntryAggregateArgs>): Prisma.PrismaPromise<GetShiftLogEntryAggregateType<T>>
+
+    /**
+     * Group by ShiftLogEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ShiftLogEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ShiftLogEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ShiftLogEntryGroupByArgs['orderBy'] }
+        : { orderBy?: ShiftLogEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ShiftLogEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetShiftLogEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ShiftLogEntry model
+   */
+  readonly fields: ShiftLogEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ShiftLogEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ShiftLogEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ShiftLogEntry model
+   */
+  interface ShiftLogEntryFieldRefs {
+    readonly id: FieldRef<"ShiftLogEntry", 'Int'>
+    readonly timestamp: FieldRef<"ShiftLogEntry", 'DateTime'>
+    readonly operator: FieldRef<"ShiftLogEntry", 'String'>
+    readonly station: FieldRef<"ShiftLogEntry", 'String'>
+    readonly category: FieldRef<"ShiftLogEntry", 'String'>
+    readonly priority: FieldRef<"ShiftLogEntry", 'String'>
+    readonly message: FieldRef<"ShiftLogEntry", 'String'>
+    readonly acknowledged: FieldRef<"ShiftLogEntry", 'Boolean'>
+    readonly createdAt: FieldRef<"ShiftLogEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"ShiftLogEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ShiftLogEntry findUnique
+   */
+  export type ShiftLogEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftLogEntry to fetch.
+     */
+    where: ShiftLogEntryWhereUniqueInput
+  }
+
+  /**
+   * ShiftLogEntry findUniqueOrThrow
+   */
+  export type ShiftLogEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftLogEntry to fetch.
+     */
+    where: ShiftLogEntryWhereUniqueInput
+  }
+
+  /**
+   * ShiftLogEntry findFirst
+   */
+  export type ShiftLogEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftLogEntry to fetch.
+     */
+    where?: ShiftLogEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftLogEntries to fetch.
+     */
+    orderBy?: ShiftLogEntryOrderByWithRelationInput | ShiftLogEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShiftLogEntries.
+     */
+    cursor?: ShiftLogEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftLogEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftLogEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShiftLogEntries.
+     */
+    distinct?: ShiftLogEntryScalarFieldEnum | ShiftLogEntryScalarFieldEnum[]
+  }
+
+  /**
+   * ShiftLogEntry findFirstOrThrow
+   */
+  export type ShiftLogEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftLogEntry to fetch.
+     */
+    where?: ShiftLogEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftLogEntries to fetch.
+     */
+    orderBy?: ShiftLogEntryOrderByWithRelationInput | ShiftLogEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ShiftLogEntries.
+     */
+    cursor?: ShiftLogEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftLogEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftLogEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShiftLogEntries.
+     */
+    distinct?: ShiftLogEntryScalarFieldEnum | ShiftLogEntryScalarFieldEnum[]
+  }
+
+  /**
+   * ShiftLogEntry findMany
+   */
+  export type ShiftLogEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which ShiftLogEntries to fetch.
+     */
+    where?: ShiftLogEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ShiftLogEntries to fetch.
+     */
+    orderBy?: ShiftLogEntryOrderByWithRelationInput | ShiftLogEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ShiftLogEntries.
+     */
+    cursor?: ShiftLogEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ShiftLogEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ShiftLogEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ShiftLogEntries.
+     */
+    distinct?: ShiftLogEntryScalarFieldEnum | ShiftLogEntryScalarFieldEnum[]
+  }
+
+  /**
+   * ShiftLogEntry create
+   */
+  export type ShiftLogEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ShiftLogEntry.
+     */
+    data: XOR<ShiftLogEntryCreateInput, ShiftLogEntryUncheckedCreateInput>
+  }
+
+  /**
+   * ShiftLogEntry createMany
+   */
+  export type ShiftLogEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ShiftLogEntries.
+     */
+    data: ShiftLogEntryCreateManyInput | ShiftLogEntryCreateManyInput[]
+  }
+
+  /**
+   * ShiftLogEntry update
+   */
+  export type ShiftLogEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ShiftLogEntry.
+     */
+    data: XOR<ShiftLogEntryUpdateInput, ShiftLogEntryUncheckedUpdateInput>
+    /**
+     * Choose, which ShiftLogEntry to update.
+     */
+    where: ShiftLogEntryWhereUniqueInput
+  }
+
+  /**
+   * ShiftLogEntry updateMany
+   */
+  export type ShiftLogEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ShiftLogEntries.
+     */
+    data: XOR<ShiftLogEntryUpdateManyMutationInput, ShiftLogEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which ShiftLogEntries to update
+     */
+    where?: ShiftLogEntryWhereInput
+    /**
+     * Limit how many ShiftLogEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShiftLogEntry upsert
+   */
+  export type ShiftLogEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ShiftLogEntry to update in case it exists.
+     */
+    where: ShiftLogEntryWhereUniqueInput
+    /**
+     * In case the ShiftLogEntry found by the `where` argument doesn't exist, create a new ShiftLogEntry with this data.
+     */
+    create: XOR<ShiftLogEntryCreateInput, ShiftLogEntryUncheckedCreateInput>
+    /**
+     * In case the ShiftLogEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ShiftLogEntryUpdateInput, ShiftLogEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * ShiftLogEntry delete
+   */
+  export type ShiftLogEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+    /**
+     * Filter which ShiftLogEntry to delete.
+     */
+    where: ShiftLogEntryWhereUniqueInput
+  }
+
+  /**
+   * ShiftLogEntry deleteMany
+   */
+  export type ShiftLogEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ShiftLogEntries to delete
+     */
+    where?: ShiftLogEntryWhereInput
+    /**
+     * Limit how many ShiftLogEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ShiftLogEntry without action
+   */
+  export type ShiftLogEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ShiftLogEntry
+     */
+    select?: ShiftLogEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ShiftLogEntry
+     */
+    omit?: ShiftLogEntryOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OutstandingIssue
+   */
+
+  export type AggregateOutstandingIssue = {
+    _count: OutstandingIssueCountAggregateOutputType | null
+    _avg: OutstandingIssueAvgAggregateOutputType | null
+    _sum: OutstandingIssueSumAggregateOutputType | null
+    _min: OutstandingIssueMinAggregateOutputType | null
+    _max: OutstandingIssueMaxAggregateOutputType | null
+  }
+
+  export type OutstandingIssueAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type OutstandingIssueSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type OutstandingIssueMinAggregateOutputType = {
+    id: number | null
+    title: string | null
+    priority: string | null
+    station: string | null
+    reportedBy: string | null
+    date: Date | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OutstandingIssueMaxAggregateOutputType = {
+    id: number | null
+    title: string | null
+    priority: string | null
+    station: string | null
+    reportedBy: string | null
+    date: Date | null
+    status: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OutstandingIssueCountAggregateOutputType = {
+    id: number
+    title: number
+    priority: number
+    station: number
+    reportedBy: number
+    date: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type OutstandingIssueAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type OutstandingIssueSumAggregateInputType = {
+    id?: true
+  }
+
+  export type OutstandingIssueMinAggregateInputType = {
+    id?: true
+    title?: true
+    priority?: true
+    station?: true
+    reportedBy?: true
+    date?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OutstandingIssueMaxAggregateInputType = {
+    id?: true
+    title?: true
+    priority?: true
+    station?: true
+    reportedBy?: true
+    date?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OutstandingIssueCountAggregateInputType = {
+    id?: true
+    title?: true
+    priority?: true
+    station?: true
+    reportedBy?: true
+    date?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type OutstandingIssueAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OutstandingIssue to aggregate.
+     */
+    where?: OutstandingIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutstandingIssues to fetch.
+     */
+    orderBy?: OutstandingIssueOrderByWithRelationInput | OutstandingIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OutstandingIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutstandingIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutstandingIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OutstandingIssues
+    **/
+    _count?: true | OutstandingIssueCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OutstandingIssueAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OutstandingIssueSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OutstandingIssueMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OutstandingIssueMaxAggregateInputType
+  }
+
+  export type GetOutstandingIssueAggregateType<T extends OutstandingIssueAggregateArgs> = {
+        [P in keyof T & keyof AggregateOutstandingIssue]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOutstandingIssue[P]>
+      : GetScalarType<T[P], AggregateOutstandingIssue[P]>
+  }
+
+
+
+
+  export type OutstandingIssueGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OutstandingIssueWhereInput
+    orderBy?: OutstandingIssueOrderByWithAggregationInput | OutstandingIssueOrderByWithAggregationInput[]
+    by: OutstandingIssueScalarFieldEnum[] | OutstandingIssueScalarFieldEnum
+    having?: OutstandingIssueScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OutstandingIssueCountAggregateInputType | true
+    _avg?: OutstandingIssueAvgAggregateInputType
+    _sum?: OutstandingIssueSumAggregateInputType
+    _min?: OutstandingIssueMinAggregateInputType
+    _max?: OutstandingIssueMaxAggregateInputType
+  }
+
+  export type OutstandingIssueGroupByOutputType = {
+    id: number
+    title: string
+    priority: string
+    station: string
+    reportedBy: string
+    date: Date
+    status: string
+    createdAt: Date
+    updatedAt: Date
+    _count: OutstandingIssueCountAggregateOutputType | null
+    _avg: OutstandingIssueAvgAggregateOutputType | null
+    _sum: OutstandingIssueSumAggregateOutputType | null
+    _min: OutstandingIssueMinAggregateOutputType | null
+    _max: OutstandingIssueMaxAggregateOutputType | null
+  }
+
+  type GetOutstandingIssueGroupByPayload<T extends OutstandingIssueGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OutstandingIssueGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OutstandingIssueGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OutstandingIssueGroupByOutputType[P]>
+            : GetScalarType<T[P], OutstandingIssueGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OutstandingIssueSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    priority?: boolean
+    station?: boolean
+    reportedBy?: boolean
+    date?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["outstandingIssue"]>
+
+
+
+  export type OutstandingIssueSelectScalar = {
+    id?: boolean
+    title?: boolean
+    priority?: boolean
+    station?: boolean
+    reportedBy?: boolean
+    date?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type OutstandingIssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "priority" | "station" | "reportedBy" | "date" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["outstandingIssue"]>
+
+  export type $OutstandingIssuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OutstandingIssue"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      title: string
+      priority: string
+      station: string
+      reportedBy: string
+      date: Date
+      status: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["outstandingIssue"]>
+    composites: {}
+  }
+
+  type OutstandingIssueGetPayload<S extends boolean | null | undefined | OutstandingIssueDefaultArgs> = $Result.GetResult<Prisma.$OutstandingIssuePayload, S>
+
+  type OutstandingIssueCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OutstandingIssueFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OutstandingIssueCountAggregateInputType | true
+    }
+
+  export interface OutstandingIssueDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OutstandingIssue'], meta: { name: 'OutstandingIssue' } }
+    /**
+     * Find zero or one OutstandingIssue that matches the filter.
+     * @param {OutstandingIssueFindUniqueArgs} args - Arguments to find a OutstandingIssue
+     * @example
+     * // Get one OutstandingIssue
+     * const outstandingIssue = await prisma.outstandingIssue.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OutstandingIssueFindUniqueArgs>(args: SelectSubset<T, OutstandingIssueFindUniqueArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OutstandingIssue that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OutstandingIssueFindUniqueOrThrowArgs} args - Arguments to find a OutstandingIssue
+     * @example
+     * // Get one OutstandingIssue
+     * const outstandingIssue = await prisma.outstandingIssue.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OutstandingIssueFindUniqueOrThrowArgs>(args: SelectSubset<T, OutstandingIssueFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OutstandingIssue that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutstandingIssueFindFirstArgs} args - Arguments to find a OutstandingIssue
+     * @example
+     * // Get one OutstandingIssue
+     * const outstandingIssue = await prisma.outstandingIssue.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OutstandingIssueFindFirstArgs>(args?: SelectSubset<T, OutstandingIssueFindFirstArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OutstandingIssue that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutstandingIssueFindFirstOrThrowArgs} args - Arguments to find a OutstandingIssue
+     * @example
+     * // Get one OutstandingIssue
+     * const outstandingIssue = await prisma.outstandingIssue.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OutstandingIssueFindFirstOrThrowArgs>(args?: SelectSubset<T, OutstandingIssueFindFirstOrThrowArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OutstandingIssues that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutstandingIssueFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OutstandingIssues
+     * const outstandingIssues = await prisma.outstandingIssue.findMany()
+     * 
+     * // Get first 10 OutstandingIssues
+     * const outstandingIssues = await prisma.outstandingIssue.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const outstandingIssueWithIdOnly = await prisma.outstandingIssue.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OutstandingIssueFindManyArgs>(args?: SelectSubset<T, OutstandingIssueFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OutstandingIssue.
+     * @param {OutstandingIssueCreateArgs} args - Arguments to create a OutstandingIssue.
+     * @example
+     * // Create one OutstandingIssue
+     * const OutstandingIssue = await prisma.outstandingIssue.create({
+     *   data: {
+     *     // ... data to create a OutstandingIssue
+     *   }
+     * })
+     * 
+     */
+    create<T extends OutstandingIssueCreateArgs>(args: SelectSubset<T, OutstandingIssueCreateArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OutstandingIssues.
+     * @param {OutstandingIssueCreateManyArgs} args - Arguments to create many OutstandingIssues.
+     * @example
+     * // Create many OutstandingIssues
+     * const outstandingIssue = await prisma.outstandingIssue.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OutstandingIssueCreateManyArgs>(args?: SelectSubset<T, OutstandingIssueCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a OutstandingIssue.
+     * @param {OutstandingIssueDeleteArgs} args - Arguments to delete one OutstandingIssue.
+     * @example
+     * // Delete one OutstandingIssue
+     * const OutstandingIssue = await prisma.outstandingIssue.delete({
+     *   where: {
+     *     // ... filter to delete one OutstandingIssue
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OutstandingIssueDeleteArgs>(args: SelectSubset<T, OutstandingIssueDeleteArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OutstandingIssue.
+     * @param {OutstandingIssueUpdateArgs} args - Arguments to update one OutstandingIssue.
+     * @example
+     * // Update one OutstandingIssue
+     * const outstandingIssue = await prisma.outstandingIssue.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OutstandingIssueUpdateArgs>(args: SelectSubset<T, OutstandingIssueUpdateArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OutstandingIssues.
+     * @param {OutstandingIssueDeleteManyArgs} args - Arguments to filter OutstandingIssues to delete.
+     * @example
+     * // Delete a few OutstandingIssues
+     * const { count } = await prisma.outstandingIssue.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OutstandingIssueDeleteManyArgs>(args?: SelectSubset<T, OutstandingIssueDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OutstandingIssues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutstandingIssueUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OutstandingIssues
+     * const outstandingIssue = await prisma.outstandingIssue.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OutstandingIssueUpdateManyArgs>(args: SelectSubset<T, OutstandingIssueUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one OutstandingIssue.
+     * @param {OutstandingIssueUpsertArgs} args - Arguments to update or create a OutstandingIssue.
+     * @example
+     * // Update or create a OutstandingIssue
+     * const outstandingIssue = await prisma.outstandingIssue.upsert({
+     *   create: {
+     *     // ... data to create a OutstandingIssue
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OutstandingIssue we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OutstandingIssueUpsertArgs>(args: SelectSubset<T, OutstandingIssueUpsertArgs<ExtArgs>>): Prisma__OutstandingIssueClient<$Result.GetResult<Prisma.$OutstandingIssuePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OutstandingIssues.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutstandingIssueCountArgs} args - Arguments to filter OutstandingIssues to count.
+     * @example
+     * // Count the number of OutstandingIssues
+     * const count = await prisma.outstandingIssue.count({
+     *   where: {
+     *     // ... the filter for the OutstandingIssues we want to count
+     *   }
+     * })
+    **/
+    count<T extends OutstandingIssueCountArgs>(
+      args?: Subset<T, OutstandingIssueCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OutstandingIssueCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OutstandingIssue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutstandingIssueAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OutstandingIssueAggregateArgs>(args: Subset<T, OutstandingIssueAggregateArgs>): Prisma.PrismaPromise<GetOutstandingIssueAggregateType<T>>
+
+    /**
+     * Group by OutstandingIssue.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OutstandingIssueGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OutstandingIssueGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OutstandingIssueGroupByArgs['orderBy'] }
+        : { orderBy?: OutstandingIssueGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OutstandingIssueGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOutstandingIssueGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OutstandingIssue model
+   */
+  readonly fields: OutstandingIssueFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OutstandingIssue.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OutstandingIssueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OutstandingIssue model
+   */
+  interface OutstandingIssueFieldRefs {
+    readonly id: FieldRef<"OutstandingIssue", 'Int'>
+    readonly title: FieldRef<"OutstandingIssue", 'String'>
+    readonly priority: FieldRef<"OutstandingIssue", 'String'>
+    readonly station: FieldRef<"OutstandingIssue", 'String'>
+    readonly reportedBy: FieldRef<"OutstandingIssue", 'String'>
+    readonly date: FieldRef<"OutstandingIssue", 'DateTime'>
+    readonly status: FieldRef<"OutstandingIssue", 'String'>
+    readonly createdAt: FieldRef<"OutstandingIssue", 'DateTime'>
+    readonly updatedAt: FieldRef<"OutstandingIssue", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OutstandingIssue findUnique
+   */
+  export type OutstandingIssueFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * Filter, which OutstandingIssue to fetch.
+     */
+    where: OutstandingIssueWhereUniqueInput
+  }
+
+  /**
+   * OutstandingIssue findUniqueOrThrow
+   */
+  export type OutstandingIssueFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * Filter, which OutstandingIssue to fetch.
+     */
+    where: OutstandingIssueWhereUniqueInput
+  }
+
+  /**
+   * OutstandingIssue findFirst
+   */
+  export type OutstandingIssueFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * Filter, which OutstandingIssue to fetch.
+     */
+    where?: OutstandingIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutstandingIssues to fetch.
+     */
+    orderBy?: OutstandingIssueOrderByWithRelationInput | OutstandingIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OutstandingIssues.
+     */
+    cursor?: OutstandingIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutstandingIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutstandingIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OutstandingIssues.
+     */
+    distinct?: OutstandingIssueScalarFieldEnum | OutstandingIssueScalarFieldEnum[]
+  }
+
+  /**
+   * OutstandingIssue findFirstOrThrow
+   */
+  export type OutstandingIssueFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * Filter, which OutstandingIssue to fetch.
+     */
+    where?: OutstandingIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutstandingIssues to fetch.
+     */
+    orderBy?: OutstandingIssueOrderByWithRelationInput | OutstandingIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OutstandingIssues.
+     */
+    cursor?: OutstandingIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutstandingIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutstandingIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OutstandingIssues.
+     */
+    distinct?: OutstandingIssueScalarFieldEnum | OutstandingIssueScalarFieldEnum[]
+  }
+
+  /**
+   * OutstandingIssue findMany
+   */
+  export type OutstandingIssueFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * Filter, which OutstandingIssues to fetch.
+     */
+    where?: OutstandingIssueWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OutstandingIssues to fetch.
+     */
+    orderBy?: OutstandingIssueOrderByWithRelationInput | OutstandingIssueOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OutstandingIssues.
+     */
+    cursor?: OutstandingIssueWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OutstandingIssues from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OutstandingIssues.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OutstandingIssues.
+     */
+    distinct?: OutstandingIssueScalarFieldEnum | OutstandingIssueScalarFieldEnum[]
+  }
+
+  /**
+   * OutstandingIssue create
+   */
+  export type OutstandingIssueCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * The data needed to create a OutstandingIssue.
+     */
+    data: XOR<OutstandingIssueCreateInput, OutstandingIssueUncheckedCreateInput>
+  }
+
+  /**
+   * OutstandingIssue createMany
+   */
+  export type OutstandingIssueCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OutstandingIssues.
+     */
+    data: OutstandingIssueCreateManyInput | OutstandingIssueCreateManyInput[]
+  }
+
+  /**
+   * OutstandingIssue update
+   */
+  export type OutstandingIssueUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * The data needed to update a OutstandingIssue.
+     */
+    data: XOR<OutstandingIssueUpdateInput, OutstandingIssueUncheckedUpdateInput>
+    /**
+     * Choose, which OutstandingIssue to update.
+     */
+    where: OutstandingIssueWhereUniqueInput
+  }
+
+  /**
+   * OutstandingIssue updateMany
+   */
+  export type OutstandingIssueUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OutstandingIssues.
+     */
+    data: XOR<OutstandingIssueUpdateManyMutationInput, OutstandingIssueUncheckedUpdateManyInput>
+    /**
+     * Filter which OutstandingIssues to update
+     */
+    where?: OutstandingIssueWhereInput
+    /**
+     * Limit how many OutstandingIssues to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OutstandingIssue upsert
+   */
+  export type OutstandingIssueUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * The filter to search for the OutstandingIssue to update in case it exists.
+     */
+    where: OutstandingIssueWhereUniqueInput
+    /**
+     * In case the OutstandingIssue found by the `where` argument doesn't exist, create a new OutstandingIssue with this data.
+     */
+    create: XOR<OutstandingIssueCreateInput, OutstandingIssueUncheckedCreateInput>
+    /**
+     * In case the OutstandingIssue was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OutstandingIssueUpdateInput, OutstandingIssueUncheckedUpdateInput>
+  }
+
+  /**
+   * OutstandingIssue delete
+   */
+  export type OutstandingIssueDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+    /**
+     * Filter which OutstandingIssue to delete.
+     */
+    where: OutstandingIssueWhereUniqueInput
+  }
+
+  /**
+   * OutstandingIssue deleteMany
+   */
+  export type OutstandingIssueDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OutstandingIssues to delete
+     */
+    where?: OutstandingIssueWhereInput
+    /**
+     * Limit how many OutstandingIssues to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OutstandingIssue without action
+   */
+  export type OutstandingIssueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OutstandingIssue
+     */
+    select?: OutstandingIssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OutstandingIssue
+     */
+    omit?: OutstandingIssueOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -29085,13 +34924,18 @@ export namespace Prisma {
   export const FuelInputEntryScalarFieldEnum: {
     id: 'id',
     date: 'date',
-    supplier_name: 'supplier_name',
-    vessel_name: 'vessel_name',
-    volume_litres: 'volume_litres',
+    supplier: 'supplier',
+    vessel: 'vessel',
+    litres: 'litres',
+    status: 'status',
+    deliveryType: 'deliveryType',
     temperature: 'temperature',
     density: 'density',
-    gravity: 'gravity',
-    sulphur_content: 'sulphur_content',
+    apiGravity: 'apiGravity',
+    sulphurContent: 'sulphurContent',
+    qualityGrade: 'qualityGrade',
+    batchNo: 'batchNo',
+    receiptNo: 'receiptNo',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -29163,6 +35007,7 @@ export namespace Prisma {
     type: 'type',
     title: 'title',
     message: 'message',
+    station: 'station',
     timestamp: 'timestamp',
     read: 'read',
     createdAt: 'createdAt',
@@ -29324,19 +35169,58 @@ export namespace Prisma {
   export type PipelineBatchScalarFieldEnum = (typeof PipelineBatchScalarFieldEnum)[keyof typeof PipelineBatchScalarFieldEnum]
 
 
+  export const PigCategoryScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    color: 'color',
+    icon: 'icon',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PigCategoryScalarFieldEnum = (typeof PigCategoryScalarFieldEnum)[keyof typeof PigCategoryScalarFieldEnum]
+
+
   export const PipelinePigScalarFieldEnum: {
     id: 'id',
     name: 'name',
     position: 'position',
     speed: 'speed',
-    type: 'type',
-    launched: 'launched',
+    categoryId: 'categoryId',
+    status: 'status',
+    condition: 'condition',
+    lastRun: 'lastRun',
+    runs: 'runs',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type PipelinePigScalarFieldEnum = (typeof PipelinePigScalarFieldEnum)[keyof typeof PipelinePigScalarFieldEnum]
+
+
+  export const PigRunScalarFieldEnum: {
+    id: 'id',
+    pigId: 'pigId',
+    categoryId: 'categoryId',
+    status: 'status',
+    launchStation: 'launchStation',
+    receiveStation: 'receiveStation',
+    launchTime: 'launchTime',
+    estimatedArrival: 'estimatedArrival',
+    actualArrival: 'actualArrival',
+    currentPosition: 'currentPosition',
+    speed: 'speed',
+    distanceCovered: 'distanceCovered',
+    totalDistance: 'totalDistance',
+    findings: 'findings',
+    operator: 'operator',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PigRunScalarFieldEnum = (typeof PigRunScalarFieldEnum)[keyof typeof PigRunScalarFieldEnum]
 
 
   export const PipelineYearlyStatsScalarFieldEnum: {
@@ -29416,6 +35300,7 @@ export namespace Prisma {
 
   export const PipelineProgressScalarFieldEnum: {
     id: 'id',
+    year: 'year',
     distanceKm: 'distanceKm',
     totalDistance: 'totalDistance',
     lastStation: 'lastStation',
@@ -29423,6 +35308,59 @@ export namespace Prisma {
   };
 
   export type PipelineProgressScalarFieldEnum = (typeof PipelineProgressScalarFieldEnum)[keyof typeof PipelineProgressScalarFieldEnum]
+
+
+  export const ShiftHandoverScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    shiftType: 'shiftType',
+    outgoingOperator: 'outgoingOperator',
+    incomingOperator: 'incomingOperator',
+    station: 'station',
+    status: 'status',
+    operationalStatus: 'operationalStatus',
+    flowRate: 'flowRate',
+    pressure: 'pressure',
+    throughput: 'throughput',
+    outstandingIssues: 'outstandingIssues',
+    notes: 'notes',
+    handoverTime: 'handoverTime',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ShiftHandoverScalarFieldEnum = (typeof ShiftHandoverScalarFieldEnum)[keyof typeof ShiftHandoverScalarFieldEnum]
+
+
+  export const ShiftLogEntryScalarFieldEnum: {
+    id: 'id',
+    timestamp: 'timestamp',
+    operator: 'operator',
+    station: 'station',
+    category: 'category',
+    priority: 'priority',
+    message: 'message',
+    acknowledged: 'acknowledged',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ShiftLogEntryScalarFieldEnum = (typeof ShiftLogEntryScalarFieldEnum)[keyof typeof ShiftLogEntryScalarFieldEnum]
+
+
+  export const OutstandingIssueScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    priority: 'priority',
+    station: 'station',
+    reportedBy: 'reportedBy',
+    date: 'date',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type OutstandingIssueScalarFieldEnum = (typeof OutstandingIssueScalarFieldEnum)[keyof typeof OutstandingIssueScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -29686,13 +35624,18 @@ export namespace Prisma {
     NOT?: FuelInputEntryWhereInput | FuelInputEntryWhereInput[]
     id?: IntFilter<"FuelInputEntry"> | number
     date?: DateTimeFilter<"FuelInputEntry"> | Date | string
-    supplier_name?: StringNullableFilter<"FuelInputEntry"> | string | null
-    vessel_name?: StringNullableFilter<"FuelInputEntry"> | string | null
-    volume_litres?: FloatFilter<"FuelInputEntry"> | number
+    supplier?: StringNullableFilter<"FuelInputEntry"> | string | null
+    vessel?: StringNullableFilter<"FuelInputEntry"> | string | null
+    litres?: FloatFilter<"FuelInputEntry"> | number
+    status?: StringFilter<"FuelInputEntry"> | string
+    deliveryType?: StringFilter<"FuelInputEntry"> | string
     temperature?: FloatFilter<"FuelInputEntry"> | number
     density?: FloatFilter<"FuelInputEntry"> | number
-    gravity?: FloatFilter<"FuelInputEntry"> | number
-    sulphur_content?: FloatFilter<"FuelInputEntry"> | number
+    apiGravity?: FloatFilter<"FuelInputEntry"> | number
+    sulphurContent?: FloatFilter<"FuelInputEntry"> | number
+    qualityGrade?: StringFilter<"FuelInputEntry"> | string
+    batchNo?: StringNullableFilter<"FuelInputEntry"> | string | null
+    receiptNo?: StringNullableFilter<"FuelInputEntry"> | string | null
     createdAt?: DateTimeFilter<"FuelInputEntry"> | Date | string
     updatedAt?: DateTimeFilter<"FuelInputEntry"> | Date | string
   }
@@ -29700,13 +35643,18 @@ export namespace Prisma {
   export type FuelInputEntryOrderByWithRelationInput = {
     id?: SortOrder
     date?: SortOrder
-    supplier_name?: SortOrderInput | SortOrder
-    vessel_name?: SortOrderInput | SortOrder
-    volume_litres?: SortOrder
+    supplier?: SortOrderInput | SortOrder
+    vessel?: SortOrderInput | SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
     temperature?: SortOrder
     density?: SortOrder
-    gravity?: SortOrder
-    sulphur_content?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrderInput | SortOrder
+    receiptNo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29717,13 +35665,18 @@ export namespace Prisma {
     OR?: FuelInputEntryWhereInput[]
     NOT?: FuelInputEntryWhereInput | FuelInputEntryWhereInput[]
     date?: DateTimeFilter<"FuelInputEntry"> | Date | string
-    supplier_name?: StringNullableFilter<"FuelInputEntry"> | string | null
-    vessel_name?: StringNullableFilter<"FuelInputEntry"> | string | null
-    volume_litres?: FloatFilter<"FuelInputEntry"> | number
+    supplier?: StringNullableFilter<"FuelInputEntry"> | string | null
+    vessel?: StringNullableFilter<"FuelInputEntry"> | string | null
+    litres?: FloatFilter<"FuelInputEntry"> | number
+    status?: StringFilter<"FuelInputEntry"> | string
+    deliveryType?: StringFilter<"FuelInputEntry"> | string
     temperature?: FloatFilter<"FuelInputEntry"> | number
     density?: FloatFilter<"FuelInputEntry"> | number
-    gravity?: FloatFilter<"FuelInputEntry"> | number
-    sulphur_content?: FloatFilter<"FuelInputEntry"> | number
+    apiGravity?: FloatFilter<"FuelInputEntry"> | number
+    sulphurContent?: FloatFilter<"FuelInputEntry"> | number
+    qualityGrade?: StringFilter<"FuelInputEntry"> | string
+    batchNo?: StringNullableFilter<"FuelInputEntry"> | string | null
+    receiptNo?: StringNullableFilter<"FuelInputEntry"> | string | null
     createdAt?: DateTimeFilter<"FuelInputEntry"> | Date | string
     updatedAt?: DateTimeFilter<"FuelInputEntry"> | Date | string
   }, "id">
@@ -29731,13 +35684,18 @@ export namespace Prisma {
   export type FuelInputEntryOrderByWithAggregationInput = {
     id?: SortOrder
     date?: SortOrder
-    supplier_name?: SortOrderInput | SortOrder
-    vessel_name?: SortOrderInput | SortOrder
-    volume_litres?: SortOrder
+    supplier?: SortOrderInput | SortOrder
+    vessel?: SortOrderInput | SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
     temperature?: SortOrder
     density?: SortOrder
-    gravity?: SortOrder
-    sulphur_content?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrderInput | SortOrder
+    receiptNo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: FuelInputEntryCountOrderByAggregateInput
@@ -29753,13 +35711,18 @@ export namespace Prisma {
     NOT?: FuelInputEntryScalarWhereWithAggregatesInput | FuelInputEntryScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"FuelInputEntry"> | number
     date?: DateTimeWithAggregatesFilter<"FuelInputEntry"> | Date | string
-    supplier_name?: StringNullableWithAggregatesFilter<"FuelInputEntry"> | string | null
-    vessel_name?: StringNullableWithAggregatesFilter<"FuelInputEntry"> | string | null
-    volume_litres?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
+    supplier?: StringNullableWithAggregatesFilter<"FuelInputEntry"> | string | null
+    vessel?: StringNullableWithAggregatesFilter<"FuelInputEntry"> | string | null
+    litres?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
+    status?: StringWithAggregatesFilter<"FuelInputEntry"> | string
+    deliveryType?: StringWithAggregatesFilter<"FuelInputEntry"> | string
     temperature?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
     density?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
-    gravity?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
-    sulphur_content?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
+    apiGravity?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
+    sulphurContent?: FloatWithAggregatesFilter<"FuelInputEntry"> | number
+    qualityGrade?: StringWithAggregatesFilter<"FuelInputEntry"> | string
+    batchNo?: StringNullableWithAggregatesFilter<"FuelInputEntry"> | string | null
+    receiptNo?: StringNullableWithAggregatesFilter<"FuelInputEntry"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FuelInputEntry"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FuelInputEntry"> | Date | string
   }
@@ -30064,6 +36027,7 @@ export namespace Prisma {
     type?: StringFilter<"Alert"> | string
     title?: StringFilter<"Alert"> | string
     message?: StringFilter<"Alert"> | string
+    station?: StringNullableFilter<"Alert"> | string | null
     timestamp?: DateTimeFilter<"Alert"> | Date | string
     read?: BoolFilter<"Alert"> | boolean
     createdAt?: DateTimeFilter<"Alert"> | Date | string
@@ -30075,6 +36039,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    station?: SortOrderInput | SortOrder
     timestamp?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
@@ -30089,6 +36054,7 @@ export namespace Prisma {
     type?: StringFilter<"Alert"> | string
     title?: StringFilter<"Alert"> | string
     message?: StringFilter<"Alert"> | string
+    station?: StringNullableFilter<"Alert"> | string | null
     timestamp?: DateTimeFilter<"Alert"> | Date | string
     read?: BoolFilter<"Alert"> | boolean
     createdAt?: DateTimeFilter<"Alert"> | Date | string
@@ -30100,6 +36066,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    station?: SortOrderInput | SortOrder
     timestamp?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
@@ -30117,6 +36084,7 @@ export namespace Prisma {
     type?: StringWithAggregatesFilter<"Alert"> | string
     title?: StringWithAggregatesFilter<"Alert"> | string
     message?: StringWithAggregatesFilter<"Alert"> | string
+    station?: StringNullableWithAggregatesFilter<"Alert"> | string | null
     timestamp?: DateTimeWithAggregatesFilter<"Alert"> | Date | string
     read?: BoolWithAggregatesFilter<"Alert"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Alert"> | Date | string
@@ -30904,6 +36872,74 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"PipelineBatch"> | Date | string
   }
 
+  export type PigCategoryWhereInput = {
+    AND?: PigCategoryWhereInput | PigCategoryWhereInput[]
+    OR?: PigCategoryWhereInput[]
+    NOT?: PigCategoryWhereInput | PigCategoryWhereInput[]
+    id?: StringFilter<"PigCategory"> | string
+    name?: StringFilter<"PigCategory"> | string
+    description?: StringNullableFilter<"PigCategory"> | string | null
+    color?: StringFilter<"PigCategory"> | string
+    icon?: StringFilter<"PigCategory"> | string
+    createdAt?: DateTimeFilter<"PigCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"PigCategory"> | Date | string
+    pigs?: PipelinePigListRelationFilter
+    pigRuns?: PigRunListRelationFilter
+  }
+
+  export type PigCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    color?: SortOrder
+    icon?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    pigs?: PipelinePigOrderByRelationAggregateInput
+    pigRuns?: PigRunOrderByRelationAggregateInput
+  }
+
+  export type PigCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: PigCategoryWhereInput | PigCategoryWhereInput[]
+    OR?: PigCategoryWhereInput[]
+    NOT?: PigCategoryWhereInput | PigCategoryWhereInput[]
+    description?: StringNullableFilter<"PigCategory"> | string | null
+    color?: StringFilter<"PigCategory"> | string
+    icon?: StringFilter<"PigCategory"> | string
+    createdAt?: DateTimeFilter<"PigCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"PigCategory"> | Date | string
+    pigs?: PipelinePigListRelationFilter
+    pigRuns?: PigRunListRelationFilter
+  }, "id" | "name">
+
+  export type PigCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    color?: SortOrder
+    icon?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PigCategoryCountOrderByAggregateInput
+    _max?: PigCategoryMaxOrderByAggregateInput
+    _min?: PigCategoryMinOrderByAggregateInput
+  }
+
+  export type PigCategoryScalarWhereWithAggregatesInput = {
+    AND?: PigCategoryScalarWhereWithAggregatesInput | PigCategoryScalarWhereWithAggregatesInput[]
+    OR?: PigCategoryScalarWhereWithAggregatesInput[]
+    NOT?: PigCategoryScalarWhereWithAggregatesInput | PigCategoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PigCategory"> | string
+    name?: StringWithAggregatesFilter<"PigCategory"> | string
+    description?: StringNullableWithAggregatesFilter<"PigCategory"> | string | null
+    color?: StringWithAggregatesFilter<"PigCategory"> | string
+    icon?: StringWithAggregatesFilter<"PigCategory"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PigCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PigCategory"> | Date | string
+  }
+
   export type PipelinePigWhereInput = {
     AND?: PipelinePigWhereInput | PipelinePigWhereInput[]
     OR?: PipelinePigWhereInput[]
@@ -30912,11 +36948,16 @@ export namespace Prisma {
     name?: StringFilter<"PipelinePig"> | string
     position?: FloatFilter<"PipelinePig"> | number
     speed?: FloatFilter<"PipelinePig"> | number
-    type?: StringFilter<"PipelinePig"> | string
-    launched?: DateTimeFilter<"PipelinePig"> | Date | string
+    categoryId?: StringNullableFilter<"PipelinePig"> | string | null
+    status?: StringFilter<"PipelinePig"> | string
+    condition?: StringFilter<"PipelinePig"> | string
+    lastRun?: DateTimeNullableFilter<"PipelinePig"> | Date | string | null
+    runs?: IntFilter<"PipelinePig"> | number
     isActive?: BoolFilter<"PipelinePig"> | boolean
     createdAt?: DateTimeFilter<"PipelinePig"> | Date | string
     updatedAt?: DateTimeFilter<"PipelinePig"> | Date | string
+    category?: XOR<PigCategoryNullableScalarRelationFilter, PigCategoryWhereInput> | null
+    pigRuns?: PigRunListRelationFilter
   }
 
   export type PipelinePigOrderByWithRelationInput = {
@@ -30924,11 +36965,16 @@ export namespace Prisma {
     name?: SortOrder
     position?: SortOrder
     speed?: SortOrder
-    type?: SortOrder
-    launched?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    condition?: SortOrder
+    lastRun?: SortOrderInput | SortOrder
+    runs?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    category?: PigCategoryOrderByWithRelationInput
+    pigRuns?: PigRunOrderByRelationAggregateInput
   }
 
   export type PipelinePigWhereUniqueInput = Prisma.AtLeast<{
@@ -30939,11 +36985,16 @@ export namespace Prisma {
     name?: StringFilter<"PipelinePig"> | string
     position?: FloatFilter<"PipelinePig"> | number
     speed?: FloatFilter<"PipelinePig"> | number
-    type?: StringFilter<"PipelinePig"> | string
-    launched?: DateTimeFilter<"PipelinePig"> | Date | string
+    categoryId?: StringNullableFilter<"PipelinePig"> | string | null
+    status?: StringFilter<"PipelinePig"> | string
+    condition?: StringFilter<"PipelinePig"> | string
+    lastRun?: DateTimeNullableFilter<"PipelinePig"> | Date | string | null
+    runs?: IntFilter<"PipelinePig"> | number
     isActive?: BoolFilter<"PipelinePig"> | boolean
     createdAt?: DateTimeFilter<"PipelinePig"> | Date | string
     updatedAt?: DateTimeFilter<"PipelinePig"> | Date | string
+    category?: XOR<PigCategoryNullableScalarRelationFilter, PigCategoryWhereInput> | null
+    pigRuns?: PigRunListRelationFilter
   }, "id">
 
   export type PipelinePigOrderByWithAggregationInput = {
@@ -30951,8 +37002,11 @@ export namespace Prisma {
     name?: SortOrder
     position?: SortOrder
     speed?: SortOrder
-    type?: SortOrder
-    launched?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    condition?: SortOrder
+    lastRun?: SortOrderInput | SortOrder
+    runs?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30971,11 +37025,134 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"PipelinePig"> | string
     position?: FloatWithAggregatesFilter<"PipelinePig"> | number
     speed?: FloatWithAggregatesFilter<"PipelinePig"> | number
-    type?: StringWithAggregatesFilter<"PipelinePig"> | string
-    launched?: DateTimeWithAggregatesFilter<"PipelinePig"> | Date | string
+    categoryId?: StringNullableWithAggregatesFilter<"PipelinePig"> | string | null
+    status?: StringWithAggregatesFilter<"PipelinePig"> | string
+    condition?: StringWithAggregatesFilter<"PipelinePig"> | string
+    lastRun?: DateTimeNullableWithAggregatesFilter<"PipelinePig"> | Date | string | null
+    runs?: IntWithAggregatesFilter<"PipelinePig"> | number
     isActive?: BoolWithAggregatesFilter<"PipelinePig"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"PipelinePig"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PipelinePig"> | Date | string
+  }
+
+  export type PigRunWhereInput = {
+    AND?: PigRunWhereInput | PigRunWhereInput[]
+    OR?: PigRunWhereInput[]
+    NOT?: PigRunWhereInput | PigRunWhereInput[]
+    id?: StringFilter<"PigRun"> | string
+    pigId?: StringFilter<"PigRun"> | string
+    categoryId?: StringNullableFilter<"PigRun"> | string | null
+    status?: StringFilter<"PigRun"> | string
+    launchStation?: StringFilter<"PigRun"> | string
+    receiveStation?: StringFilter<"PigRun"> | string
+    launchTime?: DateTimeFilter<"PigRun"> | Date | string
+    estimatedArrival?: DateTimeFilter<"PigRun"> | Date | string
+    actualArrival?: DateTimeNullableFilter<"PigRun"> | Date | string | null
+    currentPosition?: FloatFilter<"PigRun"> | number
+    speed?: FloatFilter<"PigRun"> | number
+    distanceCovered?: FloatFilter<"PigRun"> | number
+    totalDistance?: FloatFilter<"PigRun"> | number
+    findings?: StringNullableFilter<"PigRun"> | string | null
+    operator?: StringFilter<"PigRun"> | string
+    createdAt?: DateTimeFilter<"PigRun"> | Date | string
+    updatedAt?: DateTimeFilter<"PigRun"> | Date | string
+    pig?: XOR<PipelinePigScalarRelationFilter, PipelinePigWhereInput>
+    category?: XOR<PigCategoryNullableScalarRelationFilter, PigCategoryWhereInput> | null
+  }
+
+  export type PigRunOrderByWithRelationInput = {
+    id?: SortOrder
+    pigId?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    launchStation?: SortOrder
+    receiveStation?: SortOrder
+    launchTime?: SortOrder
+    estimatedArrival?: SortOrder
+    actualArrival?: SortOrderInput | SortOrder
+    currentPosition?: SortOrder
+    speed?: SortOrder
+    distanceCovered?: SortOrder
+    totalDistance?: SortOrder
+    findings?: SortOrderInput | SortOrder
+    operator?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    pig?: PipelinePigOrderByWithRelationInput
+    category?: PigCategoryOrderByWithRelationInput
+  }
+
+  export type PigRunWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PigRunWhereInput | PigRunWhereInput[]
+    OR?: PigRunWhereInput[]
+    NOT?: PigRunWhereInput | PigRunWhereInput[]
+    pigId?: StringFilter<"PigRun"> | string
+    categoryId?: StringNullableFilter<"PigRun"> | string | null
+    status?: StringFilter<"PigRun"> | string
+    launchStation?: StringFilter<"PigRun"> | string
+    receiveStation?: StringFilter<"PigRun"> | string
+    launchTime?: DateTimeFilter<"PigRun"> | Date | string
+    estimatedArrival?: DateTimeFilter<"PigRun"> | Date | string
+    actualArrival?: DateTimeNullableFilter<"PigRun"> | Date | string | null
+    currentPosition?: FloatFilter<"PigRun"> | number
+    speed?: FloatFilter<"PigRun"> | number
+    distanceCovered?: FloatFilter<"PigRun"> | number
+    totalDistance?: FloatFilter<"PigRun"> | number
+    findings?: StringNullableFilter<"PigRun"> | string | null
+    operator?: StringFilter<"PigRun"> | string
+    createdAt?: DateTimeFilter<"PigRun"> | Date | string
+    updatedAt?: DateTimeFilter<"PigRun"> | Date | string
+    pig?: XOR<PipelinePigScalarRelationFilter, PipelinePigWhereInput>
+    category?: XOR<PigCategoryNullableScalarRelationFilter, PigCategoryWhereInput> | null
+  }, "id">
+
+  export type PigRunOrderByWithAggregationInput = {
+    id?: SortOrder
+    pigId?: SortOrder
+    categoryId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    launchStation?: SortOrder
+    receiveStation?: SortOrder
+    launchTime?: SortOrder
+    estimatedArrival?: SortOrder
+    actualArrival?: SortOrderInput | SortOrder
+    currentPosition?: SortOrder
+    speed?: SortOrder
+    distanceCovered?: SortOrder
+    totalDistance?: SortOrder
+    findings?: SortOrderInput | SortOrder
+    operator?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PigRunCountOrderByAggregateInput
+    _avg?: PigRunAvgOrderByAggregateInput
+    _max?: PigRunMaxOrderByAggregateInput
+    _min?: PigRunMinOrderByAggregateInput
+    _sum?: PigRunSumOrderByAggregateInput
+  }
+
+  export type PigRunScalarWhereWithAggregatesInput = {
+    AND?: PigRunScalarWhereWithAggregatesInput | PigRunScalarWhereWithAggregatesInput[]
+    OR?: PigRunScalarWhereWithAggregatesInput[]
+    NOT?: PigRunScalarWhereWithAggregatesInput | PigRunScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PigRun"> | string
+    pigId?: StringWithAggregatesFilter<"PigRun"> | string
+    categoryId?: StringNullableWithAggregatesFilter<"PigRun"> | string | null
+    status?: StringWithAggregatesFilter<"PigRun"> | string
+    launchStation?: StringWithAggregatesFilter<"PigRun"> | string
+    receiveStation?: StringWithAggregatesFilter<"PigRun"> | string
+    launchTime?: DateTimeWithAggregatesFilter<"PigRun"> | Date | string
+    estimatedArrival?: DateTimeWithAggregatesFilter<"PigRun"> | Date | string
+    actualArrival?: DateTimeNullableWithAggregatesFilter<"PigRun"> | Date | string | null
+    currentPosition?: FloatWithAggregatesFilter<"PigRun"> | number
+    speed?: FloatWithAggregatesFilter<"PigRun"> | number
+    distanceCovered?: FloatWithAggregatesFilter<"PigRun"> | number
+    totalDistance?: FloatWithAggregatesFilter<"PigRun"> | number
+    findings?: StringNullableWithAggregatesFilter<"PigRun"> | string | null
+    operator?: StringWithAggregatesFilter<"PigRun"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PigRun"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PigRun"> | Date | string
   }
 
   export type PipelineYearlyStatsWhereInput = {
@@ -31370,6 +37547,7 @@ export namespace Prisma {
     OR?: PipelineProgressWhereInput[]
     NOT?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
     id?: StringFilter<"PipelineProgress"> | string
+    year?: IntNullableFilter<"PipelineProgress"> | number | null
     distanceKm?: FloatFilter<"PipelineProgress"> | number
     totalDistance?: FloatFilter<"PipelineProgress"> | number
     lastStation?: StringNullableFilter<"PipelineProgress"> | string | null
@@ -31378,6 +37556,7 @@ export namespace Prisma {
 
   export type PipelineProgressOrderByWithRelationInput = {
     id?: SortOrder
+    year?: SortOrderInput | SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrderInput | SortOrder
@@ -31386,6 +37565,7 @@ export namespace Prisma {
 
   export type PipelineProgressWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    year?: number
     AND?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
     OR?: PipelineProgressWhereInput[]
     NOT?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
@@ -31393,10 +37573,11 @@ export namespace Prisma {
     totalDistance?: FloatFilter<"PipelineProgress"> | number
     lastStation?: StringNullableFilter<"PipelineProgress"> | string | null
     updatedAt?: DateTimeFilter<"PipelineProgress"> | Date | string
-  }, "id">
+  }, "id" | "year">
 
   export type PipelineProgressOrderByWithAggregationInput = {
     id?: SortOrder
+    year?: SortOrderInput | SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrderInput | SortOrder
@@ -31413,10 +37594,273 @@ export namespace Prisma {
     OR?: PipelineProgressScalarWhereWithAggregatesInput[]
     NOT?: PipelineProgressScalarWhereWithAggregatesInput | PipelineProgressScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"PipelineProgress"> | string
+    year?: IntNullableWithAggregatesFilter<"PipelineProgress"> | number | null
     distanceKm?: FloatWithAggregatesFilter<"PipelineProgress"> | number
     totalDistance?: FloatWithAggregatesFilter<"PipelineProgress"> | number
     lastStation?: StringNullableWithAggregatesFilter<"PipelineProgress"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"PipelineProgress"> | Date | string
+  }
+
+  export type ShiftHandoverWhereInput = {
+    AND?: ShiftHandoverWhereInput | ShiftHandoverWhereInput[]
+    OR?: ShiftHandoverWhereInput[]
+    NOT?: ShiftHandoverWhereInput | ShiftHandoverWhereInput[]
+    id?: IntFilter<"ShiftHandover"> | number
+    date?: DateTimeFilter<"ShiftHandover"> | Date | string
+    shiftType?: StringFilter<"ShiftHandover"> | string
+    outgoingOperator?: StringFilter<"ShiftHandover"> | string
+    incomingOperator?: StringFilter<"ShiftHandover"> | string
+    station?: StringFilter<"ShiftHandover"> | string
+    status?: StringFilter<"ShiftHandover"> | string
+    operationalStatus?: StringFilter<"ShiftHandover"> | string
+    flowRate?: FloatFilter<"ShiftHandover"> | number
+    pressure?: FloatFilter<"ShiftHandover"> | number
+    throughput?: FloatFilter<"ShiftHandover"> | number
+    outstandingIssues?: IntFilter<"ShiftHandover"> | number
+    notes?: StringNullableFilter<"ShiftHandover"> | string | null
+    handoverTime?: StringFilter<"ShiftHandover"> | string
+    createdAt?: DateTimeFilter<"ShiftHandover"> | Date | string
+    updatedAt?: DateTimeFilter<"ShiftHandover"> | Date | string
+  }
+
+  export type ShiftHandoverOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    shiftType?: SortOrder
+    outgoingOperator?: SortOrder
+    incomingOperator?: SortOrder
+    station?: SortOrder
+    status?: SortOrder
+    operationalStatus?: SortOrder
+    flowRate?: SortOrder
+    pressure?: SortOrder
+    throughput?: SortOrder
+    outstandingIssues?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    handoverTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftHandoverWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ShiftHandoverWhereInput | ShiftHandoverWhereInput[]
+    OR?: ShiftHandoverWhereInput[]
+    NOT?: ShiftHandoverWhereInput | ShiftHandoverWhereInput[]
+    date?: DateTimeFilter<"ShiftHandover"> | Date | string
+    shiftType?: StringFilter<"ShiftHandover"> | string
+    outgoingOperator?: StringFilter<"ShiftHandover"> | string
+    incomingOperator?: StringFilter<"ShiftHandover"> | string
+    station?: StringFilter<"ShiftHandover"> | string
+    status?: StringFilter<"ShiftHandover"> | string
+    operationalStatus?: StringFilter<"ShiftHandover"> | string
+    flowRate?: FloatFilter<"ShiftHandover"> | number
+    pressure?: FloatFilter<"ShiftHandover"> | number
+    throughput?: FloatFilter<"ShiftHandover"> | number
+    outstandingIssues?: IntFilter<"ShiftHandover"> | number
+    notes?: StringNullableFilter<"ShiftHandover"> | string | null
+    handoverTime?: StringFilter<"ShiftHandover"> | string
+    createdAt?: DateTimeFilter<"ShiftHandover"> | Date | string
+    updatedAt?: DateTimeFilter<"ShiftHandover"> | Date | string
+  }, "id">
+
+  export type ShiftHandoverOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    shiftType?: SortOrder
+    outgoingOperator?: SortOrder
+    incomingOperator?: SortOrder
+    station?: SortOrder
+    status?: SortOrder
+    operationalStatus?: SortOrder
+    flowRate?: SortOrder
+    pressure?: SortOrder
+    throughput?: SortOrder
+    outstandingIssues?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    handoverTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ShiftHandoverCountOrderByAggregateInput
+    _avg?: ShiftHandoverAvgOrderByAggregateInput
+    _max?: ShiftHandoverMaxOrderByAggregateInput
+    _min?: ShiftHandoverMinOrderByAggregateInput
+    _sum?: ShiftHandoverSumOrderByAggregateInput
+  }
+
+  export type ShiftHandoverScalarWhereWithAggregatesInput = {
+    AND?: ShiftHandoverScalarWhereWithAggregatesInput | ShiftHandoverScalarWhereWithAggregatesInput[]
+    OR?: ShiftHandoverScalarWhereWithAggregatesInput[]
+    NOT?: ShiftHandoverScalarWhereWithAggregatesInput | ShiftHandoverScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ShiftHandover"> | number
+    date?: DateTimeWithAggregatesFilter<"ShiftHandover"> | Date | string
+    shiftType?: StringWithAggregatesFilter<"ShiftHandover"> | string
+    outgoingOperator?: StringWithAggregatesFilter<"ShiftHandover"> | string
+    incomingOperator?: StringWithAggregatesFilter<"ShiftHandover"> | string
+    station?: StringWithAggregatesFilter<"ShiftHandover"> | string
+    status?: StringWithAggregatesFilter<"ShiftHandover"> | string
+    operationalStatus?: StringWithAggregatesFilter<"ShiftHandover"> | string
+    flowRate?: FloatWithAggregatesFilter<"ShiftHandover"> | number
+    pressure?: FloatWithAggregatesFilter<"ShiftHandover"> | number
+    throughput?: FloatWithAggregatesFilter<"ShiftHandover"> | number
+    outstandingIssues?: IntWithAggregatesFilter<"ShiftHandover"> | number
+    notes?: StringNullableWithAggregatesFilter<"ShiftHandover"> | string | null
+    handoverTime?: StringWithAggregatesFilter<"ShiftHandover"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ShiftHandover"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ShiftHandover"> | Date | string
+  }
+
+  export type ShiftLogEntryWhereInput = {
+    AND?: ShiftLogEntryWhereInput | ShiftLogEntryWhereInput[]
+    OR?: ShiftLogEntryWhereInput[]
+    NOT?: ShiftLogEntryWhereInput | ShiftLogEntryWhereInput[]
+    id?: IntFilter<"ShiftLogEntry"> | number
+    timestamp?: DateTimeFilter<"ShiftLogEntry"> | Date | string
+    operator?: StringFilter<"ShiftLogEntry"> | string
+    station?: StringFilter<"ShiftLogEntry"> | string
+    category?: StringFilter<"ShiftLogEntry"> | string
+    priority?: StringFilter<"ShiftLogEntry"> | string
+    message?: StringFilter<"ShiftLogEntry"> | string
+    acknowledged?: BoolFilter<"ShiftLogEntry"> | boolean
+    createdAt?: DateTimeFilter<"ShiftLogEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"ShiftLogEntry"> | Date | string
+  }
+
+  export type ShiftLogEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    timestamp?: SortOrder
+    operator?: SortOrder
+    station?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    acknowledged?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftLogEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ShiftLogEntryWhereInput | ShiftLogEntryWhereInput[]
+    OR?: ShiftLogEntryWhereInput[]
+    NOT?: ShiftLogEntryWhereInput | ShiftLogEntryWhereInput[]
+    timestamp?: DateTimeFilter<"ShiftLogEntry"> | Date | string
+    operator?: StringFilter<"ShiftLogEntry"> | string
+    station?: StringFilter<"ShiftLogEntry"> | string
+    category?: StringFilter<"ShiftLogEntry"> | string
+    priority?: StringFilter<"ShiftLogEntry"> | string
+    message?: StringFilter<"ShiftLogEntry"> | string
+    acknowledged?: BoolFilter<"ShiftLogEntry"> | boolean
+    createdAt?: DateTimeFilter<"ShiftLogEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"ShiftLogEntry"> | Date | string
+  }, "id">
+
+  export type ShiftLogEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    timestamp?: SortOrder
+    operator?: SortOrder
+    station?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    acknowledged?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ShiftLogEntryCountOrderByAggregateInput
+    _avg?: ShiftLogEntryAvgOrderByAggregateInput
+    _max?: ShiftLogEntryMaxOrderByAggregateInput
+    _min?: ShiftLogEntryMinOrderByAggregateInput
+    _sum?: ShiftLogEntrySumOrderByAggregateInput
+  }
+
+  export type ShiftLogEntryScalarWhereWithAggregatesInput = {
+    AND?: ShiftLogEntryScalarWhereWithAggregatesInput | ShiftLogEntryScalarWhereWithAggregatesInput[]
+    OR?: ShiftLogEntryScalarWhereWithAggregatesInput[]
+    NOT?: ShiftLogEntryScalarWhereWithAggregatesInput | ShiftLogEntryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ShiftLogEntry"> | number
+    timestamp?: DateTimeWithAggregatesFilter<"ShiftLogEntry"> | Date | string
+    operator?: StringWithAggregatesFilter<"ShiftLogEntry"> | string
+    station?: StringWithAggregatesFilter<"ShiftLogEntry"> | string
+    category?: StringWithAggregatesFilter<"ShiftLogEntry"> | string
+    priority?: StringWithAggregatesFilter<"ShiftLogEntry"> | string
+    message?: StringWithAggregatesFilter<"ShiftLogEntry"> | string
+    acknowledged?: BoolWithAggregatesFilter<"ShiftLogEntry"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"ShiftLogEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ShiftLogEntry"> | Date | string
+  }
+
+  export type OutstandingIssueWhereInput = {
+    AND?: OutstandingIssueWhereInput | OutstandingIssueWhereInput[]
+    OR?: OutstandingIssueWhereInput[]
+    NOT?: OutstandingIssueWhereInput | OutstandingIssueWhereInput[]
+    id?: IntFilter<"OutstandingIssue"> | number
+    title?: StringFilter<"OutstandingIssue"> | string
+    priority?: StringFilter<"OutstandingIssue"> | string
+    station?: StringFilter<"OutstandingIssue"> | string
+    reportedBy?: StringFilter<"OutstandingIssue"> | string
+    date?: DateTimeFilter<"OutstandingIssue"> | Date | string
+    status?: StringFilter<"OutstandingIssue"> | string
+    createdAt?: DateTimeFilter<"OutstandingIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"OutstandingIssue"> | Date | string
+  }
+
+  export type OutstandingIssueOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    station?: SortOrder
+    reportedBy?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OutstandingIssueWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: OutstandingIssueWhereInput | OutstandingIssueWhereInput[]
+    OR?: OutstandingIssueWhereInput[]
+    NOT?: OutstandingIssueWhereInput | OutstandingIssueWhereInput[]
+    title?: StringFilter<"OutstandingIssue"> | string
+    priority?: StringFilter<"OutstandingIssue"> | string
+    station?: StringFilter<"OutstandingIssue"> | string
+    reportedBy?: StringFilter<"OutstandingIssue"> | string
+    date?: DateTimeFilter<"OutstandingIssue"> | Date | string
+    status?: StringFilter<"OutstandingIssue"> | string
+    createdAt?: DateTimeFilter<"OutstandingIssue"> | Date | string
+    updatedAt?: DateTimeFilter<"OutstandingIssue"> | Date | string
+  }, "id">
+
+  export type OutstandingIssueOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    station?: SortOrder
+    reportedBy?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: OutstandingIssueCountOrderByAggregateInput
+    _avg?: OutstandingIssueAvgOrderByAggregateInput
+    _max?: OutstandingIssueMaxOrderByAggregateInput
+    _min?: OutstandingIssueMinOrderByAggregateInput
+    _sum?: OutstandingIssueSumOrderByAggregateInput
+  }
+
+  export type OutstandingIssueScalarWhereWithAggregatesInput = {
+    AND?: OutstandingIssueScalarWhereWithAggregatesInput | OutstandingIssueScalarWhereWithAggregatesInput[]
+    OR?: OutstandingIssueScalarWhereWithAggregatesInput[]
+    NOT?: OutstandingIssueScalarWhereWithAggregatesInput | OutstandingIssueScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"OutstandingIssue"> | number
+    title?: StringWithAggregatesFilter<"OutstandingIssue"> | string
+    priority?: StringWithAggregatesFilter<"OutstandingIssue"> | string
+    station?: StringWithAggregatesFilter<"OutstandingIssue"> | string
+    reportedBy?: StringWithAggregatesFilter<"OutstandingIssue"> | string
+    date?: DateTimeWithAggregatesFilter<"OutstandingIssue"> | Date | string
+    status?: StringWithAggregatesFilter<"OutstandingIssue"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"OutstandingIssue"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"OutstandingIssue"> | Date | string
   }
 
   export type AccountCreateInput = {
@@ -31619,13 +38063,18 @@ export namespace Prisma {
 
   export type FuelInputEntryCreateInput = {
     date: Date | string
-    supplier_name?: string | null
-    vessel_name?: string | null
-    volume_litres: number
+    supplier?: string | null
+    vessel?: string | null
+    litres: number
+    status?: string
+    deliveryType?: string
     temperature: number
     density: number
-    gravity: number
-    sulphur_content: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade?: string
+    batchNo?: string | null
+    receiptNo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31633,26 +38082,36 @@ export namespace Prisma {
   export type FuelInputEntryUncheckedCreateInput = {
     id?: number
     date: Date | string
-    supplier_name?: string | null
-    vessel_name?: string | null
-    volume_litres: number
+    supplier?: string | null
+    vessel?: string | null
+    litres: number
+    status?: string
+    deliveryType?: string
     temperature: number
     density: number
-    gravity: number
-    sulphur_content: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade?: string
+    batchNo?: string | null
+    receiptNo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type FuelInputEntryUpdateInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    supplier_name?: NullableStringFieldUpdateOperationsInput | string | null
-    vessel_name?: NullableStringFieldUpdateOperationsInput | string | null
-    volume_litres?: FloatFieldUpdateOperationsInput | number
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
     temperature?: FloatFieldUpdateOperationsInput | number
     density?: FloatFieldUpdateOperationsInput | number
-    gravity?: FloatFieldUpdateOperationsInput | number
-    sulphur_content?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31660,39 +38119,54 @@ export namespace Prisma {
   export type FuelInputEntryUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    supplier_name?: NullableStringFieldUpdateOperationsInput | string | null
-    vessel_name?: NullableStringFieldUpdateOperationsInput | string | null
-    volume_litres?: FloatFieldUpdateOperationsInput | number
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
     temperature?: FloatFieldUpdateOperationsInput | number
     density?: FloatFieldUpdateOperationsInput | number
-    gravity?: FloatFieldUpdateOperationsInput | number
-    sulphur_content?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FuelInputEntryCreateManyInput = {
     date: Date | string
-    supplier_name?: string | null
-    vessel_name?: string | null
-    volume_litres: number
+    supplier?: string | null
+    vessel?: string | null
+    litres: number
+    status?: string
+    deliveryType?: string
     temperature: number
     density: number
-    gravity: number
-    sulphur_content: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade?: string
+    batchNo?: string | null
+    receiptNo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type FuelInputEntryUpdateManyMutationInput = {
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    supplier_name?: NullableStringFieldUpdateOperationsInput | string | null
-    vessel_name?: NullableStringFieldUpdateOperationsInput | string | null
-    volume_litres?: FloatFieldUpdateOperationsInput | number
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
     temperature?: FloatFieldUpdateOperationsInput | number
     density?: FloatFieldUpdateOperationsInput | number
-    gravity?: FloatFieldUpdateOperationsInput | number
-    sulphur_content?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31700,13 +38174,18 @@ export namespace Prisma {
   export type FuelInputEntryUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
-    supplier_name?: NullableStringFieldUpdateOperationsInput | string | null
-    vessel_name?: NullableStringFieldUpdateOperationsInput | string | null
-    volume_litres?: FloatFieldUpdateOperationsInput | number
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
     temperature?: FloatFieldUpdateOperationsInput | number
     density?: FloatFieldUpdateOperationsInput | number
-    gravity?: FloatFieldUpdateOperationsInput | number
-    sulphur_content?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32058,6 +38537,7 @@ export namespace Prisma {
     type: string
     title: string
     message: string
+    station?: string | null
     timestamp?: Date | string
     read?: boolean
     createdAt?: Date | string
@@ -32069,6 +38549,7 @@ export namespace Prisma {
     type: string
     title: string
     message: string
+    station?: string | null
     timestamp?: Date | string
     read?: boolean
     createdAt?: Date | string
@@ -32080,6 +38561,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    station?: NullableStringFieldUpdateOperationsInput | string | null
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32091,6 +38573,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    station?: NullableStringFieldUpdateOperationsInput | string | null
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32102,6 +38585,7 @@ export namespace Prisma {
     type: string
     title: string
     message: string
+    station?: string | null
     timestamp?: Date | string
     read?: boolean
     createdAt?: Date | string
@@ -32113,6 +38597,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    station?: NullableStringFieldUpdateOperationsInput | string | null
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32124,6 +38609,7 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
+    station?: NullableStringFieldUpdateOperationsInput | string | null
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32991,16 +39477,98 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PigCategoryCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    icon?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigs?: PipelinePigCreateNestedManyWithoutCategoryInput
+    pigRuns?: PigRunCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PigCategoryUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    icon?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigs?: PipelinePigUncheckedCreateNestedManyWithoutCategoryInput
+    pigRuns?: PigRunUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PigCategoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigs?: PipelinePigUpdateManyWithoutCategoryNestedInput
+    pigRuns?: PigRunUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type PigCategoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigs?: PipelinePigUncheckedUpdateManyWithoutCategoryNestedInput
+    pigRuns?: PigRunUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type PigCategoryCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    icon?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PigCategoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigCategoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PipelinePigCreateInput = {
     id?: string
     name: string
     position: number
     speed: number
-    type: string
-    launched?: Date | string
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    category?: PigCategoryCreateNestedOneWithoutPigsInput
+    pigRuns?: PigRunCreateNestedManyWithoutPigInput
   }
 
   export type PipelinePigUncheckedCreateInput = {
@@ -33008,11 +39576,15 @@ export namespace Prisma {
     name: string
     position: number
     speed: number
-    type: string
-    launched?: Date | string
+    categoryId?: string | null
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    pigRuns?: PigRunUncheckedCreateNestedManyWithoutPigInput
   }
 
   export type PipelinePigUpdateInput = {
@@ -33020,11 +39592,15 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     position?: FloatFieldUpdateOperationsInput | number
     speed?: FloatFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: PigCategoryUpdateOneWithoutPigsNestedInput
+    pigRuns?: PigRunUpdateManyWithoutPigNestedInput
   }
 
   export type PipelinePigUncheckedUpdateInput = {
@@ -33032,11 +39608,15 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     position?: FloatFieldUpdateOperationsInput | number
     speed?: FloatFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigRuns?: PigRunUncheckedUpdateManyWithoutPigNestedInput
   }
 
   export type PipelinePigCreateManyInput = {
@@ -33044,8 +39624,11 @@ export namespace Prisma {
     name: string
     position: number
     speed: number
-    type: string
-    launched?: Date | string
+    categoryId?: string | null
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33056,8 +39639,10 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     position?: FloatFieldUpdateOperationsInput | number
     speed?: FloatFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33068,9 +39653,150 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     position?: FloatFieldUpdateOperationsInput | number
     speed?: FloatFieldUpdateOperationsInput | number
-    type?: StringFieldUpdateOperationsInput | string
-    launched?: DateTimeFieldUpdateOperationsInput | Date | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigRunCreateInput = {
+    id?: string
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pig: PipelinePigCreateNestedOneWithoutPigRunsInput
+    category?: PigCategoryCreateNestedOneWithoutPigRunsInput
+  }
+
+  export type PigRunUncheckedCreateInput = {
+    id?: string
+    pigId: string
+    categoryId?: string | null
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PigRunUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pig?: PipelinePigUpdateOneRequiredWithoutPigRunsNestedInput
+    category?: PigCategoryUpdateOneWithoutPigRunsNestedInput
+  }
+
+  export type PigRunUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pigId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigRunCreateManyInput = {
+    id?: string
+    pigId: string
+    categoryId?: string | null
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PigRunUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigRunUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pigId?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33502,6 +40228,7 @@ export namespace Prisma {
 
   export type PipelineProgressCreateInput = {
     id?: string
+    year?: number | null
     distanceKm?: number
     totalDistance?: number
     lastStation?: string | null
@@ -33510,6 +40237,7 @@ export namespace Prisma {
 
   export type PipelineProgressUncheckedCreateInput = {
     id?: string
+    year?: number | null
     distanceKm?: number
     totalDistance?: number
     lastStation?: string | null
@@ -33518,6 +40246,7 @@ export namespace Prisma {
 
   export type PipelineProgressUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    year?: NullableIntFieldUpdateOperationsInput | number | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33526,6 +40255,7 @@ export namespace Prisma {
 
   export type PipelineProgressUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    year?: NullableIntFieldUpdateOperationsInput | number | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33534,6 +40264,7 @@ export namespace Prisma {
 
   export type PipelineProgressCreateManyInput = {
     id?: string
+    year?: number | null
     distanceKm?: number
     totalDistance?: number
     lastStation?: string | null
@@ -33542,6 +40273,7 @@ export namespace Prisma {
 
   export type PipelineProgressUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    year?: NullableIntFieldUpdateOperationsInput | number | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33550,9 +40282,306 @@ export namespace Prisma {
 
   export type PipelineProgressUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    year?: NullableIntFieldUpdateOperationsInput | number | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftHandoverCreateInput = {
+    date: Date | string
+    shiftType?: string
+    outgoingOperator: string
+    incomingOperator: string
+    station: string
+    status?: string
+    operationalStatus?: string
+    flowRate?: number
+    pressure?: number
+    throughput?: number
+    outstandingIssues?: number
+    notes?: string | null
+    handoverTime?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShiftHandoverUncheckedCreateInput = {
+    id?: number
+    date: Date | string
+    shiftType?: string
+    outgoingOperator: string
+    incomingOperator: string
+    station: string
+    status?: string
+    operationalStatus?: string
+    flowRate?: number
+    pressure?: number
+    throughput?: number
+    outstandingIssues?: number
+    notes?: string | null
+    handoverTime?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShiftHandoverUpdateInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    shiftType?: StringFieldUpdateOperationsInput | string
+    outgoingOperator?: StringFieldUpdateOperationsInput | string
+    incomingOperator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    operationalStatus?: StringFieldUpdateOperationsInput | string
+    flowRate?: FloatFieldUpdateOperationsInput | number
+    pressure?: FloatFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    outstandingIssues?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    handoverTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftHandoverUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    shiftType?: StringFieldUpdateOperationsInput | string
+    outgoingOperator?: StringFieldUpdateOperationsInput | string
+    incomingOperator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    operationalStatus?: StringFieldUpdateOperationsInput | string
+    flowRate?: FloatFieldUpdateOperationsInput | number
+    pressure?: FloatFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    outstandingIssues?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    handoverTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftHandoverCreateManyInput = {
+    date: Date | string
+    shiftType?: string
+    outgoingOperator: string
+    incomingOperator: string
+    station: string
+    status?: string
+    operationalStatus?: string
+    flowRate?: number
+    pressure?: number
+    throughput?: number
+    outstandingIssues?: number
+    notes?: string | null
+    handoverTime?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShiftHandoverUpdateManyMutationInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    shiftType?: StringFieldUpdateOperationsInput | string
+    outgoingOperator?: StringFieldUpdateOperationsInput | string
+    incomingOperator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    operationalStatus?: StringFieldUpdateOperationsInput | string
+    flowRate?: FloatFieldUpdateOperationsInput | number
+    pressure?: FloatFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    outstandingIssues?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    handoverTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftHandoverUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    shiftType?: StringFieldUpdateOperationsInput | string
+    outgoingOperator?: StringFieldUpdateOperationsInput | string
+    incomingOperator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    operationalStatus?: StringFieldUpdateOperationsInput | string
+    flowRate?: FloatFieldUpdateOperationsInput | number
+    pressure?: FloatFieldUpdateOperationsInput | number
+    throughput?: FloatFieldUpdateOperationsInput | number
+    outstandingIssues?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    handoverTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftLogEntryCreateInput = {
+    timestamp?: Date | string
+    operator: string
+    station: string
+    category?: string
+    priority?: string
+    message: string
+    acknowledged?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShiftLogEntryUncheckedCreateInput = {
+    id?: number
+    timestamp?: Date | string
+    operator: string
+    station: string
+    category?: string
+    priority?: string
+    message: string
+    acknowledged?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShiftLogEntryUpdateInput = {
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    operator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    acknowledged?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftLogEntryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    operator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    acknowledged?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftLogEntryCreateManyInput = {
+    timestamp?: Date | string
+    operator: string
+    station: string
+    category?: string
+    priority?: string
+    message: string
+    acknowledged?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ShiftLogEntryUpdateManyMutationInput = {
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    operator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    acknowledged?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ShiftLogEntryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    operator?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    message?: StringFieldUpdateOperationsInput | string
+    acknowledged?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OutstandingIssueCreateInput = {
+    title: string
+    priority?: string
+    station: string
+    reportedBy: string
+    date?: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OutstandingIssueUncheckedCreateInput = {
+    id?: number
+    title: string
+    priority?: string
+    station: string
+    reportedBy: string
+    date?: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OutstandingIssueUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    reportedBy?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OutstandingIssueUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    reportedBy?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OutstandingIssueCreateManyInput = {
+    title: string
+    priority?: string
+    station: string
+    reportedBy: string
+    date?: Date | string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OutstandingIssueUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    reportedBy?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OutstandingIssueUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    priority?: StringFieldUpdateOperationsInput | string
+    station?: StringFieldUpdateOperationsInput | string
+    reportedBy?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -33817,36 +40846,46 @@ export namespace Prisma {
   export type FuelInputEntryCountOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
-    supplier_name?: SortOrder
-    vessel_name?: SortOrder
-    volume_litres?: SortOrder
+    supplier?: SortOrder
+    vessel?: SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
     temperature?: SortOrder
     density?: SortOrder
-    gravity?: SortOrder
-    sulphur_content?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrder
+    receiptNo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type FuelInputEntryAvgOrderByAggregateInput = {
     id?: SortOrder
-    volume_litres?: SortOrder
+    litres?: SortOrder
     temperature?: SortOrder
     density?: SortOrder
-    gravity?: SortOrder
-    sulphur_content?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
   }
 
   export type FuelInputEntryMaxOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
-    supplier_name?: SortOrder
-    vessel_name?: SortOrder
-    volume_litres?: SortOrder
+    supplier?: SortOrder
+    vessel?: SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
     temperature?: SortOrder
     density?: SortOrder
-    gravity?: SortOrder
-    sulphur_content?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrder
+    receiptNo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -33854,24 +40893,29 @@ export namespace Prisma {
   export type FuelInputEntryMinOrderByAggregateInput = {
     id?: SortOrder
     date?: SortOrder
-    supplier_name?: SortOrder
-    vessel_name?: SortOrder
-    volume_litres?: SortOrder
+    supplier?: SortOrder
+    vessel?: SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
     temperature?: SortOrder
     density?: SortOrder
-    gravity?: SortOrder
-    sulphur_content?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrder
+    receiptNo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type FuelInputEntrySumOrderByAggregateInput = {
     id?: SortOrder
-    volume_litres?: SortOrder
+    litres?: SortOrder
     temperature?: SortOrder
     density?: SortOrder
-    gravity?: SortOrder
-    sulphur_content?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -34136,6 +41180,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    station?: SortOrder
     timestamp?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
@@ -34147,6 +41192,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    station?: SortOrder
     timestamp?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
@@ -34158,6 +41204,7 @@ export namespace Prisma {
     type?: SortOrder
     title?: SortOrder
     message?: SortOrder
+    station?: SortOrder
     timestamp?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
@@ -34701,13 +41748,82 @@ export namespace Prisma {
     endKm?: SortOrder
   }
 
+  export type PipelinePigListRelationFilter = {
+    every?: PipelinePigWhereInput
+    some?: PipelinePigWhereInput
+    none?: PipelinePigWhereInput
+  }
+
+  export type PigRunListRelationFilter = {
+    every?: PigRunWhereInput
+    some?: PigRunWhereInput
+    none?: PigRunWhereInput
+  }
+
+  export type PipelinePigOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PigRunOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PigCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    icon?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PigCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    icon?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PigCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    icon?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type PigCategoryNullableScalarRelationFilter = {
+    is?: PigCategoryWhereInput | null
+    isNot?: PigCategoryWhereInput | null
+  }
+
   export type PipelinePigCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     position?: SortOrder
     speed?: SortOrder
-    type?: SortOrder
-    launched?: SortOrder
+    categoryId?: SortOrder
+    status?: SortOrder
+    condition?: SortOrder
+    lastRun?: SortOrder
+    runs?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -34716,6 +41832,7 @@ export namespace Prisma {
   export type PipelinePigAvgOrderByAggregateInput = {
     position?: SortOrder
     speed?: SortOrder
+    runs?: SortOrder
   }
 
   export type PipelinePigMaxOrderByAggregateInput = {
@@ -34723,8 +41840,11 @@ export namespace Prisma {
     name?: SortOrder
     position?: SortOrder
     speed?: SortOrder
-    type?: SortOrder
-    launched?: SortOrder
+    categoryId?: SortOrder
+    status?: SortOrder
+    condition?: SortOrder
+    lastRun?: SortOrder
+    runs?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -34735,8 +41855,11 @@ export namespace Prisma {
     name?: SortOrder
     position?: SortOrder
     speed?: SortOrder
-    type?: SortOrder
-    launched?: SortOrder
+    categoryId?: SortOrder
+    status?: SortOrder
+    condition?: SortOrder
+    lastRun?: SortOrder
+    runs?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -34745,6 +41868,100 @@ export namespace Prisma {
   export type PipelinePigSumOrderByAggregateInput = {
     position?: SortOrder
     speed?: SortOrder
+    runs?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type PipelinePigScalarRelationFilter = {
+    is?: PipelinePigWhereInput
+    isNot?: PipelinePigWhereInput
+  }
+
+  export type PigRunCountOrderByAggregateInput = {
+    id?: SortOrder
+    pigId?: SortOrder
+    categoryId?: SortOrder
+    status?: SortOrder
+    launchStation?: SortOrder
+    receiveStation?: SortOrder
+    launchTime?: SortOrder
+    estimatedArrival?: SortOrder
+    actualArrival?: SortOrder
+    currentPosition?: SortOrder
+    speed?: SortOrder
+    distanceCovered?: SortOrder
+    totalDistance?: SortOrder
+    findings?: SortOrder
+    operator?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PigRunAvgOrderByAggregateInput = {
+    currentPosition?: SortOrder
+    speed?: SortOrder
+    distanceCovered?: SortOrder
+    totalDistance?: SortOrder
+  }
+
+  export type PigRunMaxOrderByAggregateInput = {
+    id?: SortOrder
+    pigId?: SortOrder
+    categoryId?: SortOrder
+    status?: SortOrder
+    launchStation?: SortOrder
+    receiveStation?: SortOrder
+    launchTime?: SortOrder
+    estimatedArrival?: SortOrder
+    actualArrival?: SortOrder
+    currentPosition?: SortOrder
+    speed?: SortOrder
+    distanceCovered?: SortOrder
+    totalDistance?: SortOrder
+    findings?: SortOrder
+    operator?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PigRunMinOrderByAggregateInput = {
+    id?: SortOrder
+    pigId?: SortOrder
+    categoryId?: SortOrder
+    status?: SortOrder
+    launchStation?: SortOrder
+    receiveStation?: SortOrder
+    launchTime?: SortOrder
+    estimatedArrival?: SortOrder
+    actualArrival?: SortOrder
+    currentPosition?: SortOrder
+    speed?: SortOrder
+    distanceCovered?: SortOrder
+    totalDistance?: SortOrder
+    findings?: SortOrder
+    operator?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PigRunSumOrderByAggregateInput = {
+    currentPosition?: SortOrder
+    speed?: SortOrder
+    distanceCovered?: SortOrder
+    totalDistance?: SortOrder
   }
 
   export type PipelineYearlyStatsCountOrderByAggregateInput = {
@@ -34795,17 +42012,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type StationScalarRelationFilter = {
@@ -34915,20 +42121,6 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DecimalNullableFilter<$PrismaModel = never> = {
@@ -35118,6 +42310,7 @@ export namespace Prisma {
 
   export type PipelineProgressCountOrderByAggregateInput = {
     id?: SortOrder
+    year?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrder
@@ -35125,12 +42318,14 @@ export namespace Prisma {
   }
 
   export type PipelineProgressAvgOrderByAggregateInput = {
+    year?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
   }
 
   export type PipelineProgressMaxOrderByAggregateInput = {
     id?: SortOrder
+    year?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrder
@@ -35139,6 +42334,7 @@ export namespace Prisma {
 
   export type PipelineProgressMinOrderByAggregateInput = {
     id?: SortOrder
+    year?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrder
@@ -35146,8 +42342,173 @@ export namespace Prisma {
   }
 
   export type PipelineProgressSumOrderByAggregateInput = {
+    year?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
+  }
+
+  export type ShiftHandoverCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    shiftType?: SortOrder
+    outgoingOperator?: SortOrder
+    incomingOperator?: SortOrder
+    station?: SortOrder
+    status?: SortOrder
+    operationalStatus?: SortOrder
+    flowRate?: SortOrder
+    pressure?: SortOrder
+    throughput?: SortOrder
+    outstandingIssues?: SortOrder
+    notes?: SortOrder
+    handoverTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftHandoverAvgOrderByAggregateInput = {
+    id?: SortOrder
+    flowRate?: SortOrder
+    pressure?: SortOrder
+    throughput?: SortOrder
+    outstandingIssues?: SortOrder
+  }
+
+  export type ShiftHandoverMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    shiftType?: SortOrder
+    outgoingOperator?: SortOrder
+    incomingOperator?: SortOrder
+    station?: SortOrder
+    status?: SortOrder
+    operationalStatus?: SortOrder
+    flowRate?: SortOrder
+    pressure?: SortOrder
+    throughput?: SortOrder
+    outstandingIssues?: SortOrder
+    notes?: SortOrder
+    handoverTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftHandoverMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    shiftType?: SortOrder
+    outgoingOperator?: SortOrder
+    incomingOperator?: SortOrder
+    station?: SortOrder
+    status?: SortOrder
+    operationalStatus?: SortOrder
+    flowRate?: SortOrder
+    pressure?: SortOrder
+    throughput?: SortOrder
+    outstandingIssues?: SortOrder
+    notes?: SortOrder
+    handoverTime?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftHandoverSumOrderByAggregateInput = {
+    id?: SortOrder
+    flowRate?: SortOrder
+    pressure?: SortOrder
+    throughput?: SortOrder
+    outstandingIssues?: SortOrder
+  }
+
+  export type ShiftLogEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    timestamp?: SortOrder
+    operator?: SortOrder
+    station?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    acknowledged?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftLogEntryAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ShiftLogEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    timestamp?: SortOrder
+    operator?: SortOrder
+    station?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    acknowledged?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftLogEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    timestamp?: SortOrder
+    operator?: SortOrder
+    station?: SortOrder
+    category?: SortOrder
+    priority?: SortOrder
+    message?: SortOrder
+    acknowledged?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ShiftLogEntrySumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type OutstandingIssueCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    station?: SortOrder
+    reportedBy?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OutstandingIssueAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type OutstandingIssueMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    station?: SortOrder
+    reportedBy?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OutstandingIssueMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    station?: SortOrder
+    reportedBy?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OutstandingIssueSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -35714,6 +43075,182 @@ export namespace Prisma {
     update?: XOR<XOR<StationUpdateToOneWithWhereWithoutFacilityInput, StationUpdateWithoutFacilityInput>, StationUncheckedUpdateWithoutFacilityInput>
   }
 
+  export type PipelinePigCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PipelinePigCreateWithoutCategoryInput, PipelinePigUncheckedCreateWithoutCategoryInput> | PipelinePigCreateWithoutCategoryInput[] | PipelinePigUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PipelinePigCreateOrConnectWithoutCategoryInput | PipelinePigCreateOrConnectWithoutCategoryInput[]
+    createMany?: PipelinePigCreateManyCategoryInputEnvelope
+    connect?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+  }
+
+  export type PigRunCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PigRunCreateWithoutCategoryInput, PigRunUncheckedCreateWithoutCategoryInput> | PigRunCreateWithoutCategoryInput[] | PigRunUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutCategoryInput | PigRunCreateOrConnectWithoutCategoryInput[]
+    createMany?: PigRunCreateManyCategoryInputEnvelope
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+  }
+
+  export type PipelinePigUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PipelinePigCreateWithoutCategoryInput, PipelinePigUncheckedCreateWithoutCategoryInput> | PipelinePigCreateWithoutCategoryInput[] | PipelinePigUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PipelinePigCreateOrConnectWithoutCategoryInput | PipelinePigCreateOrConnectWithoutCategoryInput[]
+    createMany?: PipelinePigCreateManyCategoryInputEnvelope
+    connect?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+  }
+
+  export type PigRunUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<PigRunCreateWithoutCategoryInput, PigRunUncheckedCreateWithoutCategoryInput> | PigRunCreateWithoutCategoryInput[] | PigRunUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutCategoryInput | PigRunCreateOrConnectWithoutCategoryInput[]
+    createMany?: PigRunCreateManyCategoryInputEnvelope
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+  }
+
+  export type PipelinePigUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PipelinePigCreateWithoutCategoryInput, PipelinePigUncheckedCreateWithoutCategoryInput> | PipelinePigCreateWithoutCategoryInput[] | PipelinePigUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PipelinePigCreateOrConnectWithoutCategoryInput | PipelinePigCreateOrConnectWithoutCategoryInput[]
+    upsert?: PipelinePigUpsertWithWhereUniqueWithoutCategoryInput | PipelinePigUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PipelinePigCreateManyCategoryInputEnvelope
+    set?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    disconnect?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    delete?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    connect?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    update?: PipelinePigUpdateWithWhereUniqueWithoutCategoryInput | PipelinePigUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PipelinePigUpdateManyWithWhereWithoutCategoryInput | PipelinePigUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PipelinePigScalarWhereInput | PipelinePigScalarWhereInput[]
+  }
+
+  export type PigRunUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PigRunCreateWithoutCategoryInput, PigRunUncheckedCreateWithoutCategoryInput> | PigRunCreateWithoutCategoryInput[] | PigRunUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutCategoryInput | PigRunCreateOrConnectWithoutCategoryInput[]
+    upsert?: PigRunUpsertWithWhereUniqueWithoutCategoryInput | PigRunUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PigRunCreateManyCategoryInputEnvelope
+    set?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    disconnect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    delete?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    update?: PigRunUpdateWithWhereUniqueWithoutCategoryInput | PigRunUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PigRunUpdateManyWithWhereWithoutCategoryInput | PigRunUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PigRunScalarWhereInput | PigRunScalarWhereInput[]
+  }
+
+  export type PipelinePigUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PipelinePigCreateWithoutCategoryInput, PipelinePigUncheckedCreateWithoutCategoryInput> | PipelinePigCreateWithoutCategoryInput[] | PipelinePigUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PipelinePigCreateOrConnectWithoutCategoryInput | PipelinePigCreateOrConnectWithoutCategoryInput[]
+    upsert?: PipelinePigUpsertWithWhereUniqueWithoutCategoryInput | PipelinePigUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PipelinePigCreateManyCategoryInputEnvelope
+    set?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    disconnect?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    delete?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    connect?: PipelinePigWhereUniqueInput | PipelinePigWhereUniqueInput[]
+    update?: PipelinePigUpdateWithWhereUniqueWithoutCategoryInput | PipelinePigUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PipelinePigUpdateManyWithWhereWithoutCategoryInput | PipelinePigUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PipelinePigScalarWhereInput | PipelinePigScalarWhereInput[]
+  }
+
+  export type PigRunUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<PigRunCreateWithoutCategoryInput, PigRunUncheckedCreateWithoutCategoryInput> | PigRunCreateWithoutCategoryInput[] | PigRunUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutCategoryInput | PigRunCreateOrConnectWithoutCategoryInput[]
+    upsert?: PigRunUpsertWithWhereUniqueWithoutCategoryInput | PigRunUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: PigRunCreateManyCategoryInputEnvelope
+    set?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    disconnect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    delete?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    update?: PigRunUpdateWithWhereUniqueWithoutCategoryInput | PigRunUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: PigRunUpdateManyWithWhereWithoutCategoryInput | PigRunUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: PigRunScalarWhereInput | PigRunScalarWhereInput[]
+  }
+
+  export type PigCategoryCreateNestedOneWithoutPigsInput = {
+    create?: XOR<PigCategoryCreateWithoutPigsInput, PigCategoryUncheckedCreateWithoutPigsInput>
+    connectOrCreate?: PigCategoryCreateOrConnectWithoutPigsInput
+    connect?: PigCategoryWhereUniqueInput
+  }
+
+  export type PigRunCreateNestedManyWithoutPigInput = {
+    create?: XOR<PigRunCreateWithoutPigInput, PigRunUncheckedCreateWithoutPigInput> | PigRunCreateWithoutPigInput[] | PigRunUncheckedCreateWithoutPigInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutPigInput | PigRunCreateOrConnectWithoutPigInput[]
+    createMany?: PigRunCreateManyPigInputEnvelope
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+  }
+
+  export type PigRunUncheckedCreateNestedManyWithoutPigInput = {
+    create?: XOR<PigRunCreateWithoutPigInput, PigRunUncheckedCreateWithoutPigInput> | PigRunCreateWithoutPigInput[] | PigRunUncheckedCreateWithoutPigInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutPigInput | PigRunCreateOrConnectWithoutPigInput[]
+    createMany?: PigRunCreateManyPigInputEnvelope
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type PigCategoryUpdateOneWithoutPigsNestedInput = {
+    create?: XOR<PigCategoryCreateWithoutPigsInput, PigCategoryUncheckedCreateWithoutPigsInput>
+    connectOrCreate?: PigCategoryCreateOrConnectWithoutPigsInput
+    upsert?: PigCategoryUpsertWithoutPigsInput
+    disconnect?: PigCategoryWhereInput | boolean
+    delete?: PigCategoryWhereInput | boolean
+    connect?: PigCategoryWhereUniqueInput
+    update?: XOR<XOR<PigCategoryUpdateToOneWithWhereWithoutPigsInput, PigCategoryUpdateWithoutPigsInput>, PigCategoryUncheckedUpdateWithoutPigsInput>
+  }
+
+  export type PigRunUpdateManyWithoutPigNestedInput = {
+    create?: XOR<PigRunCreateWithoutPigInput, PigRunUncheckedCreateWithoutPigInput> | PigRunCreateWithoutPigInput[] | PigRunUncheckedCreateWithoutPigInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutPigInput | PigRunCreateOrConnectWithoutPigInput[]
+    upsert?: PigRunUpsertWithWhereUniqueWithoutPigInput | PigRunUpsertWithWhereUniqueWithoutPigInput[]
+    createMany?: PigRunCreateManyPigInputEnvelope
+    set?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    disconnect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    delete?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    update?: PigRunUpdateWithWhereUniqueWithoutPigInput | PigRunUpdateWithWhereUniqueWithoutPigInput[]
+    updateMany?: PigRunUpdateManyWithWhereWithoutPigInput | PigRunUpdateManyWithWhereWithoutPigInput[]
+    deleteMany?: PigRunScalarWhereInput | PigRunScalarWhereInput[]
+  }
+
+  export type PigRunUncheckedUpdateManyWithoutPigNestedInput = {
+    create?: XOR<PigRunCreateWithoutPigInput, PigRunUncheckedCreateWithoutPigInput> | PigRunCreateWithoutPigInput[] | PigRunUncheckedCreateWithoutPigInput[]
+    connectOrCreate?: PigRunCreateOrConnectWithoutPigInput | PigRunCreateOrConnectWithoutPigInput[]
+    upsert?: PigRunUpsertWithWhereUniqueWithoutPigInput | PigRunUpsertWithWhereUniqueWithoutPigInput[]
+    createMany?: PigRunCreateManyPigInputEnvelope
+    set?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    disconnect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    delete?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    connect?: PigRunWhereUniqueInput | PigRunWhereUniqueInput[]
+    update?: PigRunUpdateWithWhereUniqueWithoutPigInput | PigRunUpdateWithWhereUniqueWithoutPigInput[]
+    updateMany?: PigRunUpdateManyWithWhereWithoutPigInput | PigRunUpdateManyWithWhereWithoutPigInput[]
+    deleteMany?: PigRunScalarWhereInput | PigRunScalarWhereInput[]
+  }
+
+  export type PipelinePigCreateNestedOneWithoutPigRunsInput = {
+    create?: XOR<PipelinePigCreateWithoutPigRunsInput, PipelinePigUncheckedCreateWithoutPigRunsInput>
+    connectOrCreate?: PipelinePigCreateOrConnectWithoutPigRunsInput
+    connect?: PipelinePigWhereUniqueInput
+  }
+
+  export type PigCategoryCreateNestedOneWithoutPigRunsInput = {
+    create?: XOR<PigCategoryCreateWithoutPigRunsInput, PigCategoryUncheckedCreateWithoutPigRunsInput>
+    connectOrCreate?: PigCategoryCreateOrConnectWithoutPigRunsInput
+    connect?: PigCategoryWhereUniqueInput
+  }
+
+  export type PipelinePigUpdateOneRequiredWithoutPigRunsNestedInput = {
+    create?: XOR<PipelinePigCreateWithoutPigRunsInput, PipelinePigUncheckedCreateWithoutPigRunsInput>
+    connectOrCreate?: PipelinePigCreateOrConnectWithoutPigRunsInput
+    upsert?: PipelinePigUpsertWithoutPigRunsInput
+    connect?: PipelinePigWhereUniqueInput
+    update?: XOR<XOR<PipelinePigUpdateToOneWithWhereWithoutPigRunsInput, PipelinePigUpdateWithoutPigRunsInput>, PipelinePigUncheckedUpdateWithoutPigRunsInput>
+  }
+
+  export type PigCategoryUpdateOneWithoutPigRunsNestedInput = {
+    create?: XOR<PigCategoryCreateWithoutPigRunsInput, PigCategoryUncheckedCreateWithoutPigRunsInput>
+    connectOrCreate?: PigCategoryCreateOrConnectWithoutPigRunsInput
+    upsert?: PigCategoryUpsertWithoutPigRunsInput
+    disconnect?: PigCategoryWhereInput | boolean
+    delete?: PigCategoryWhereInput | boolean
+    connect?: PigCategoryWhereUniqueInput
+    update?: XOR<XOR<PigCategoryUpdateToOneWithWhereWithoutPigRunsInput, PigCategoryUpdateWithoutPigRunsInput>, PigCategoryUncheckedUpdateWithoutPigRunsInput>
+  }
+
   export type StationCreateNestedOneWithoutEntriesInput = {
     create?: XOR<StationCreateWithoutEntriesInput, StationUncheckedCreateWithoutEntriesInput>
     connectOrCreate?: StationCreateOrConnectWithoutEntriesInput
@@ -35754,10 +43291,6 @@ export namespace Prisma {
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type StationUpdateOneRequiredWithoutEntriesNestedInput = {
@@ -36068,17 +43601,6 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -36088,6 +43610,31 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -36104,20 +43651,6 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | null
-    notIn?: Date[] | string[] | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
@@ -37249,6 +44782,424 @@ export namespace Prisma {
     entries?: DailyEntryUncheckedUpdateManyWithoutStationNestedInput
   }
 
+  export type PipelinePigCreateWithoutCategoryInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigRuns?: PigRunCreateNestedManyWithoutPigInput
+  }
+
+  export type PipelinePigUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigRuns?: PigRunUncheckedCreateNestedManyWithoutPigInput
+  }
+
+  export type PipelinePigCreateOrConnectWithoutCategoryInput = {
+    where: PipelinePigWhereUniqueInput
+    create: XOR<PipelinePigCreateWithoutCategoryInput, PipelinePigUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PipelinePigCreateManyCategoryInputEnvelope = {
+    data: PipelinePigCreateManyCategoryInput | PipelinePigCreateManyCategoryInput[]
+  }
+
+  export type PigRunCreateWithoutCategoryInput = {
+    id?: string
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pig: PipelinePigCreateNestedOneWithoutPigRunsInput
+  }
+
+  export type PigRunUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    pigId: string
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PigRunCreateOrConnectWithoutCategoryInput = {
+    where: PigRunWhereUniqueInput
+    create: XOR<PigRunCreateWithoutCategoryInput, PigRunUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PigRunCreateManyCategoryInputEnvelope = {
+    data: PigRunCreateManyCategoryInput | PigRunCreateManyCategoryInput[]
+  }
+
+  export type PipelinePigUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: PipelinePigWhereUniqueInput
+    update: XOR<PipelinePigUpdateWithoutCategoryInput, PipelinePigUncheckedUpdateWithoutCategoryInput>
+    create: XOR<PipelinePigCreateWithoutCategoryInput, PipelinePigUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PipelinePigUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: PipelinePigWhereUniqueInput
+    data: XOR<PipelinePigUpdateWithoutCategoryInput, PipelinePigUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type PipelinePigUpdateManyWithWhereWithoutCategoryInput = {
+    where: PipelinePigScalarWhereInput
+    data: XOR<PipelinePigUpdateManyMutationInput, PipelinePigUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type PipelinePigScalarWhereInput = {
+    AND?: PipelinePigScalarWhereInput | PipelinePigScalarWhereInput[]
+    OR?: PipelinePigScalarWhereInput[]
+    NOT?: PipelinePigScalarWhereInput | PipelinePigScalarWhereInput[]
+    id?: StringFilter<"PipelinePig"> | string
+    name?: StringFilter<"PipelinePig"> | string
+    position?: FloatFilter<"PipelinePig"> | number
+    speed?: FloatFilter<"PipelinePig"> | number
+    categoryId?: StringNullableFilter<"PipelinePig"> | string | null
+    status?: StringFilter<"PipelinePig"> | string
+    condition?: StringFilter<"PipelinePig"> | string
+    lastRun?: DateTimeNullableFilter<"PipelinePig"> | Date | string | null
+    runs?: IntFilter<"PipelinePig"> | number
+    isActive?: BoolFilter<"PipelinePig"> | boolean
+    createdAt?: DateTimeFilter<"PipelinePig"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelinePig"> | Date | string
+  }
+
+  export type PigRunUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: PigRunWhereUniqueInput
+    update: XOR<PigRunUpdateWithoutCategoryInput, PigRunUncheckedUpdateWithoutCategoryInput>
+    create: XOR<PigRunCreateWithoutCategoryInput, PigRunUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type PigRunUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: PigRunWhereUniqueInput
+    data: XOR<PigRunUpdateWithoutCategoryInput, PigRunUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type PigRunUpdateManyWithWhereWithoutCategoryInput = {
+    where: PigRunScalarWhereInput
+    data: XOR<PigRunUpdateManyMutationInput, PigRunUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type PigRunScalarWhereInput = {
+    AND?: PigRunScalarWhereInput | PigRunScalarWhereInput[]
+    OR?: PigRunScalarWhereInput[]
+    NOT?: PigRunScalarWhereInput | PigRunScalarWhereInput[]
+    id?: StringFilter<"PigRun"> | string
+    pigId?: StringFilter<"PigRun"> | string
+    categoryId?: StringNullableFilter<"PigRun"> | string | null
+    status?: StringFilter<"PigRun"> | string
+    launchStation?: StringFilter<"PigRun"> | string
+    receiveStation?: StringFilter<"PigRun"> | string
+    launchTime?: DateTimeFilter<"PigRun"> | Date | string
+    estimatedArrival?: DateTimeFilter<"PigRun"> | Date | string
+    actualArrival?: DateTimeNullableFilter<"PigRun"> | Date | string | null
+    currentPosition?: FloatFilter<"PigRun"> | number
+    speed?: FloatFilter<"PigRun"> | number
+    distanceCovered?: FloatFilter<"PigRun"> | number
+    totalDistance?: FloatFilter<"PigRun"> | number
+    findings?: StringNullableFilter<"PigRun"> | string | null
+    operator?: StringFilter<"PigRun"> | string
+    createdAt?: DateTimeFilter<"PigRun"> | Date | string
+    updatedAt?: DateTimeFilter<"PigRun"> | Date | string
+  }
+
+  export type PigCategoryCreateWithoutPigsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    icon?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigRuns?: PigRunCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PigCategoryUncheckedCreateWithoutPigsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    icon?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigRuns?: PigRunUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PigCategoryCreateOrConnectWithoutPigsInput = {
+    where: PigCategoryWhereUniqueInput
+    create: XOR<PigCategoryCreateWithoutPigsInput, PigCategoryUncheckedCreateWithoutPigsInput>
+  }
+
+  export type PigRunCreateWithoutPigInput = {
+    id?: string
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category?: PigCategoryCreateNestedOneWithoutPigRunsInput
+  }
+
+  export type PigRunUncheckedCreateWithoutPigInput = {
+    id?: string
+    categoryId?: string | null
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PigRunCreateOrConnectWithoutPigInput = {
+    where: PigRunWhereUniqueInput
+    create: XOR<PigRunCreateWithoutPigInput, PigRunUncheckedCreateWithoutPigInput>
+  }
+
+  export type PigRunCreateManyPigInputEnvelope = {
+    data: PigRunCreateManyPigInput | PigRunCreateManyPigInput[]
+  }
+
+  export type PigCategoryUpsertWithoutPigsInput = {
+    update: XOR<PigCategoryUpdateWithoutPigsInput, PigCategoryUncheckedUpdateWithoutPigsInput>
+    create: XOR<PigCategoryCreateWithoutPigsInput, PigCategoryUncheckedCreateWithoutPigsInput>
+    where?: PigCategoryWhereInput
+  }
+
+  export type PigCategoryUpdateToOneWithWhereWithoutPigsInput = {
+    where?: PigCategoryWhereInput
+    data: XOR<PigCategoryUpdateWithoutPigsInput, PigCategoryUncheckedUpdateWithoutPigsInput>
+  }
+
+  export type PigCategoryUpdateWithoutPigsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigRuns?: PigRunUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type PigCategoryUncheckedUpdateWithoutPigsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigRuns?: PigRunUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type PigRunUpsertWithWhereUniqueWithoutPigInput = {
+    where: PigRunWhereUniqueInput
+    update: XOR<PigRunUpdateWithoutPigInput, PigRunUncheckedUpdateWithoutPigInput>
+    create: XOR<PigRunCreateWithoutPigInput, PigRunUncheckedCreateWithoutPigInput>
+  }
+
+  export type PigRunUpdateWithWhereUniqueWithoutPigInput = {
+    where: PigRunWhereUniqueInput
+    data: XOR<PigRunUpdateWithoutPigInput, PigRunUncheckedUpdateWithoutPigInput>
+  }
+
+  export type PigRunUpdateManyWithWhereWithoutPigInput = {
+    where: PigRunScalarWhereInput
+    data: XOR<PigRunUpdateManyMutationInput, PigRunUncheckedUpdateManyWithoutPigInput>
+  }
+
+  export type PipelinePigCreateWithoutPigRunsInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category?: PigCategoryCreateNestedOneWithoutPigsInput
+  }
+
+  export type PipelinePigUncheckedCreateWithoutPigRunsInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    categoryId?: string | null
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelinePigCreateOrConnectWithoutPigRunsInput = {
+    where: PipelinePigWhereUniqueInput
+    create: XOR<PipelinePigCreateWithoutPigRunsInput, PipelinePigUncheckedCreateWithoutPigRunsInput>
+  }
+
+  export type PigCategoryCreateWithoutPigRunsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    icon?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigs?: PipelinePigCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PigCategoryUncheckedCreateWithoutPigRunsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    icon?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pigs?: PipelinePigUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type PigCategoryCreateOrConnectWithoutPigRunsInput = {
+    where: PigCategoryWhereUniqueInput
+    create: XOR<PigCategoryCreateWithoutPigRunsInput, PigCategoryUncheckedCreateWithoutPigRunsInput>
+  }
+
+  export type PipelinePigUpsertWithoutPigRunsInput = {
+    update: XOR<PipelinePigUpdateWithoutPigRunsInput, PipelinePigUncheckedUpdateWithoutPigRunsInput>
+    create: XOR<PipelinePigCreateWithoutPigRunsInput, PipelinePigUncheckedCreateWithoutPigRunsInput>
+    where?: PipelinePigWhereInput
+  }
+
+  export type PipelinePigUpdateToOneWithWhereWithoutPigRunsInput = {
+    where?: PipelinePigWhereInput
+    data: XOR<PipelinePigUpdateWithoutPigRunsInput, PipelinePigUncheckedUpdateWithoutPigRunsInput>
+  }
+
+  export type PipelinePigUpdateWithoutPigRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: PigCategoryUpdateOneWithoutPigsNestedInput
+  }
+
+  export type PipelinePigUncheckedUpdateWithoutPigRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigCategoryUpsertWithoutPigRunsInput = {
+    update: XOR<PigCategoryUpdateWithoutPigRunsInput, PigCategoryUncheckedUpdateWithoutPigRunsInput>
+    create: XOR<PigCategoryCreateWithoutPigRunsInput, PigCategoryUncheckedCreateWithoutPigRunsInput>
+    where?: PigCategoryWhereInput
+  }
+
+  export type PigCategoryUpdateToOneWithWhereWithoutPigRunsInput = {
+    where?: PigCategoryWhereInput
+    data: XOR<PigCategoryUpdateWithoutPigRunsInput, PigCategoryUncheckedUpdateWithoutPigRunsInput>
+  }
+
+  export type PigCategoryUpdateWithoutPigRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigs?: PipelinePigUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type PigCategoryUncheckedUpdateWithoutPigRunsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    icon?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigs?: PipelinePigUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
   export type StationCreateWithoutEntriesInput = {
     id?: string
     name: string
@@ -37954,6 +45905,216 @@ export namespace Prisma {
     pumpOverDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     prevVolumeM3?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     opUllageVolM3?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PipelinePigCreateManyCategoryInput = {
+    id?: string
+    name: string
+    position: number
+    speed: number
+    status?: string
+    condition?: string
+    lastRun?: Date | string | null
+    runs?: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PigRunCreateManyCategoryInput = {
+    id?: string
+    pigId: string
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PipelinePigUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigRuns?: PigRunUpdateManyWithoutPigNestedInput
+  }
+
+  export type PipelinePigUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pigRuns?: PigRunUncheckedUpdateManyWithoutPigNestedInput
+  }
+
+  export type PipelinePigUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    condition?: StringFieldUpdateOperationsInput | string
+    lastRun?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    runs?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigRunUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pig?: PipelinePigUpdateOneRequiredWithoutPigRunsNestedInput
+  }
+
+  export type PigRunUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pigId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigRunUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    pigId?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigRunCreateManyPigInput = {
+    id?: string
+    categoryId?: string | null
+    status?: string
+    launchStation: string
+    receiveStation: string
+    launchTime?: Date | string
+    estimatedArrival: Date | string
+    actualArrival?: Date | string | null
+    currentPosition?: number
+    speed?: number
+    distanceCovered?: number
+    totalDistance?: number
+    findings?: string | null
+    operator: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PigRunUpdateWithoutPigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: PigCategoryUpdateOneWithoutPigRunsNestedInput
+  }
+
+  export type PigRunUncheckedUpdateWithoutPigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PigRunUncheckedUpdateManyWithoutPigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    categoryId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    launchStation?: StringFieldUpdateOperationsInput | string
+    receiveStation?: StringFieldUpdateOperationsInput | string
+    launchTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedArrival?: DateTimeFieldUpdateOperationsInput | Date | string
+    actualArrival?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    currentPosition?: FloatFieldUpdateOperationsInput | number
+    speed?: FloatFieldUpdateOperationsInput | number
+    distanceCovered?: FloatFieldUpdateOperationsInput | number
+    totalDistance?: FloatFieldUpdateOperationsInput | number
+    findings?: NullableStringFieldUpdateOperationsInput | string | null
+    operator?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

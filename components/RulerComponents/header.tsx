@@ -1,27 +1,49 @@
 'use client'
 
-import { Menu, Settings, Bell, RefreshCw, Clock, Fuel } from 'lucide-react'
+import { Menu, Settings, Bell, RefreshCw, Clock, Fuel, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useState, useEffect } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getAlerts, checkAndGenerateAlerts } from '@/lib/actions/alerts'
 
 interface HeaderProps {
   onMenuClick: () => void
-  alertCount?: number
 }
 
-export default function Header({ onMenuClick, alertCount = 2 }: HeaderProps) {
+export default function Header({ onMenuClick }: HeaderProps) {
+  const [mounted, setMounted] = useState(false)
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const queryClient = useQueryClient()
+
+  const { data: alerts = [] } = useQuery({
+    queryKey: ['alerts'],
+    queryFn: () => getAlerts(),
+    refetchInterval: 30000,
+  })
+
+  // Count unread critical and warning alerts
+  const alertCount = alerts.filter(a => !a.read && (a.type === 'critical' || a.type === 'warning')).length
 
   useEffect(() => {
+    setMounted(true)
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsRefreshing(true)
-    setTimeout(() => setIsRefreshing(false), 1000)
+    try {
+      // Sync alerts from DB anomalies
+      await checkAndGenerateAlerts()
+      // Refresh all data
+      queryClient.invalidateQueries()
+    } catch (err) {
+      console.error('Refresh failed:', err)
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 1000)
+    }
   }
 
   return (
@@ -53,7 +75,7 @@ export default function Header({ onMenuClick, alertCount = 2 }: HeaderProps) {
           <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-secondary rounded-lg">
             <Clock className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-mono">
-              {currentTime.toLocaleTimeString('en-US', { hour12: false })}
+              {mounted ? currentTime.toLocaleTimeString('en-US', { hour12: false }) : '--:--:--'}
             </span>
           </div>
 

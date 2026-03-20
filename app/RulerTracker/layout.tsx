@@ -1,8 +1,8 @@
-import { ThemeProvider } from '@/components/theme-provider'
 import { requireAuth } from '@/lib/auth';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
+// ... (icons etc)
   title: 'TAZAMA Pipeline Management System',
   description: 'Real-time monitoring and management of the TAZAMA pipeline infrastructure across Tanzania and Zambia',
   icons: {
@@ -31,8 +31,8 @@ export default async function RootLayout({
 }>) {
   // await requireAuth("dispatcher");
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem forcedTheme="light">
+    <div className="light">
         {children}
-    </ThemeProvider>
+    </div>
   )
 }

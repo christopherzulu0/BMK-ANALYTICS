@@ -2,12 +2,14 @@
   "name": "pipeline-data",
   "version": "0.1.0",
   "private": true,
+
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "ts-node prisma/seed.ts",
+    "seed-pipeline": "tsx prisma/seed-pipeline-data.ts",
     "tanks": "npx ts-node prisma/migrate-tanks.ts",
     "permissions": "npx ts-node prisma/permissions.ts",
     "postinstall": "prisma generate",

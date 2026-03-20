@@ -1,4 +1,6 @@
-import { prisma } from '@/lib/prisma'
+import "dotenv/config";
+import { prisma } from "../lib/prisma"
+
 
 const pipelineStations = [
   // Tanzania Section (Start - Source)
@@ -77,6 +79,33 @@ const yearlyData = {
 const pigs = [
   { id: 'pig-1', name: 'Cleaning Pig #1', position: 300, speed: 8, type: 'cleaning', launched: new Date(Date.now() - 1000 * 60 * 60 * 8) },
   { id: 'pig-2', name: 'Inspection Pig #2', position: 950, speed: 5, type: 'inspection', launched: new Date(Date.now() - 1000 * 60 * 60 * 4) },
+]
+
+const testAlerts = [
+  {
+    type: 'warning',
+    title: 'Low Pressure Detected',
+    message: 'Pressure dropped below optimal range. Current: 44 bar',
+    station: 'Ilula Sub-Station',
+    timestamp: new Date(Date.now() - 1000 * 60 * 15),
+    read: false,
+  },
+  {
+    type: 'critical',
+    title: 'High Temperature Alarm',
+    message: 'Extreme temperature detected at pump bearings.',
+    station: 'Morogoro Pump Station',
+    timestamp: new Date(Date.now() - 1000 * 60 * 5),
+    read: false,
+  },
+  {
+    type: 'info',
+    title: 'Maintenance Reminder',
+    message: 'Annual inspection due by end of month.',
+    station: 'Mbeya Pump Station',
+    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
+    read: true,
+  }
 ]
 
 export async function seedPipelineData() {
@@ -161,21 +190,163 @@ export async function seedPipelineData() {
     }
     console.log('Yearly stats and batches seeded.')
 
+    // Seed Pig Categories
+    await prisma.pigCategory.deleteMany({})
+    
+    const catCleaning = await prisma.pigCategory.create({
+      data: {
+        name: 'Cleaning',
+        description: 'Standard cleaning pigs for wax and debris removal',
+        color: 'bg-yellow-500',
+        icon: 'Truck'
+      }
+    })
+
+    const catInspection = await prisma.pigCategory.create({
+      data: {
+        name: 'Inspection',
+        description: 'Smart pigs with MFL or Ultrasonic sensors',
+        color: 'bg-blue-500',
+        icon: 'Activity'
+      }
+    })
+
+    const catBatching = await prisma.pigCategory.create({
+      data: {
+        name: 'Batching',
+        description: 'Pigs used for separating different product batches',
+        color: 'bg-purple-500',
+        icon: 'Zap'
+      }
+    })
+
+    console.log('PIG Categories seeded.')
+
     // Seed Pigs
-    await prisma.pipelinePig.deleteMany({}) // Reset pigs
-    for (const pig of pigs) {
-      await prisma.pipelinePig.create({
-        data: {
-          name: pig.name,
-          position: pig.position,
-          speed: pig.speed,
-          type: pig.type,
-          launched: pig.launched,
-          isActive: true
-        }
+    await prisma.pigRun.deleteMany({})
+    await prisma.pipelinePig.deleteMany({})
+
+    const pig1 = await prisma.pipelinePig.create({
+      data: {
+        name: 'Cleaning PIG Alpha',
+        categoryId: catCleaning.id,
+        status: 'in-use',
+        condition: 'excellent',
+        runs: 24,
+        lastRun: new Date('2024-01-15T06:00:00.000Z'),
+        position: 892,
+        speed: 4.2,
+      }
+    })
+
+    const pig2 = await prisma.pipelinePig.create({
+      data: {
+        name: 'Smart PIG Beta',
+        categoryId: catInspection.id,
+        status: 'available',
+        condition: 'good',
+        runs: 8,
+        lastRun: new Date('2023-12-20T08:00:00.000Z'),
+        position: 0,
+        speed: 0,
+      }
+    })
+
+    const pig3 = await prisma.pipelinePig.create({
+      data: {
+        name: 'Cleaning PIG Gamma',
+        categoryId: catCleaning.id,
+        status: 'maintenance',
+        condition: 'fair',
+        runs: 32,
+        lastRun: new Date('2024-01-10T07:00:00.000Z'),
+        position: 0,
+        speed: 0,
+      }
+    })
+
+    const pig4 = await prisma.pipelinePig.create({
+      data: {
+        name: 'Smart PIG Alpha',
+        categoryId: catInspection.id,
+        status: 'available',
+        condition: 'excellent',
+        runs: 12,
+        lastRun: new Date('2024-01-05T06:00:00.000Z'),
+        position: 0,
+        speed: 0,
+      }
+    })
+
+    console.log('PIG Inventory seeded.')
+
+    // Seed Pig Runs
+    await prisma.pigRun.create({
+      data: {
+        id: 'PR-2024-001',
+        pigId: pig1.id,
+        categoryId: catCleaning.id,
+        status: 'in-transit',
+        launchStation: 'Single Point Mooring',
+        receiveStation: 'Ndola Terminal',
+        launchTime: new Date('2024-01-15T06:00:00.000Z'),
+        estimatedArrival: new Date('2024-01-17T18:00:00.000Z'),
+        currentPosition: 892,
+        speed: 4.2,
+        distanceCovered: 892,
+        totalDistance: 1710,
+        operator: 'John Mwamba'
+      }
+    })
+
+    await prisma.pigRun.create({
+      data: {
+        id: 'PR-2024-002',
+        pigId: pig2.id,
+        categoryId: catInspection.id,
+        status: 'scheduled',
+        launchStation: 'Kigamboni PS',
+        receiveStation: 'Bwana Mkubwa',
+        launchTime: new Date('2024-01-20T08:00:00.000Z'),
+        estimatedArrival: new Date('2024-01-22T14:00:00.000Z'),
+        currentPosition: 0,
+        speed: 0,
+        distanceCovered: 0,
+        totalDistance: 1635,
+        operator: 'Sarah Tembo'
+      }
+    })
+
+    await prisma.pigRun.create({
+      data: {
+        id: 'PR-2023-089',
+        pigId: pig3.id,
+        categoryId: catCleaning.id,
+        status: 'completed',
+        launchStation: 'Single Point Mooring',
+        receiveStation: 'Ndola Terminal',
+        launchTime: new Date('2024-01-10T07:00:00.000Z'),
+        estimatedArrival: new Date('2024-01-12T16:00:00.000Z'),
+        actualArrival: new Date('2024-01-12T15:30:00.000Z'),
+        currentPosition: 1710,
+        speed: 0,
+        distanceCovered: 1710,
+        totalDistance: 1710,
+        findings: 'Light wax deposits removed. Pipeline in good condition.',
+        operator: 'Michael Banda'
+      }
+    })
+
+    console.log('PIG Runs seeded.')
+    
+    // Seed Alerts
+    await prisma.alert.deleteMany({}) // Reset alerts
+    for (const alert of testAlerts) {
+      await prisma.alert.create({
+        data: alert
       })
     }
-    console.log('Pigs seeded.')
+    console.log('Test alerts seeded.')
 
     console.log('Pipeline data seed completed successfully.')
     return { success: true }
@@ -184,3 +355,10 @@ export async function seedPipelineData() {
     return { success: false, error }
   }
 }
+
+seedPipelineData()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })

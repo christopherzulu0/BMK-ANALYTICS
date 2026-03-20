@@ -1,6 +1,4 @@
-'use client'
-
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -12,109 +10,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { 
   Truck, Calendar, Clock, MapPin, Play, Pause, CheckCircle2, AlertTriangle,
   Plus, Filter, Search, Eye, FileText, ArrowRight, Timer, Gauge, Activity,
-  TrendingUp, BarChart3, ChevronRight, Settings, Target, Zap
+  TrendingUp, BarChart3, ChevronRight, Settings, Target, Zap, Loader2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { getPigs, getPigRuns, createPigRun, updatePigRun, getPigCategories, createPigCategory, createPig } from '@/lib/actions/pigs'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from 'sonner'
+import { format } from 'date-fns'
 
-interface PigRun {
-  id: string
-  pigId: string
-  pigName: string
-  type: 'cleaning' | 'inspection' | 'batching'
-  status: 'scheduled' | 'launched' | 'in-transit' | 'received' | 'completed' | 'delayed'
-  launchStation: string
-  receiveStation: string
-  launchTime: string
-  estimatedArrival: string
-  actualArrival?: string
-  currentPosition: number
-  speed: number
-  distanceCovered: number
-  totalDistance: number
-  findings?: string
-  operator: string
-}
+// Removed hardcoded data
 
-const pigRuns: PigRun[] = [
-  {
-    id: 'PR-2024-001',
-    pigId: 'PIG-C-01',
-    pigName: 'Cleaning PIG Alpha',
-    type: 'cleaning',
-    status: 'in-transit',
-    launchStation: 'Single Point Mooring',
-    receiveStation: 'Ndola Terminal',
-    launchTime: '2024-01-15 06:00',
-    estimatedArrival: '2024-01-17 18:00',
-    currentPosition: 892,
-    speed: 4.2,
-    distanceCovered: 892,
-    totalDistance: 1710,
-    operator: 'John Mwamba'
-  },
-  {
-    id: 'PR-2024-002',
-    pigId: 'PIG-I-02',
-    pigName: 'Smart PIG Beta',
-    type: 'inspection',
-    status: 'scheduled',
-    launchStation: 'Kigamboni PS',
-    receiveStation: 'Bwana Mkubwa',
-    launchTime: '2024-01-20 08:00',
-    estimatedArrival: '2024-01-22 14:00',
-    currentPosition: 0,
-    speed: 0,
-    distanceCovered: 0,
-    totalDistance: 1635,
-    operator: 'Sarah Tembo'
-  },
-  {
-    id: 'PR-2023-089',
-    pigId: 'PIG-C-03',
-    pigName: 'Cleaning PIG Gamma',
-    type: 'cleaning',
-    status: 'completed',
-    launchStation: 'Single Point Mooring',
-    receiveStation: 'Ndola Terminal',
-    launchTime: '2024-01-10 07:00',
-    estimatedArrival: '2024-01-12 16:00',
-    actualArrival: '2024-01-12 15:30',
-    currentPosition: 1710,
-    speed: 0,
-    distanceCovered: 1710,
-    totalDistance: 1710,
-    findings: 'Light wax deposits removed. Pipeline in good condition.',
-    operator: 'Michael Banda'
-  },
-  {
-    id: 'PR-2023-088',
-    pigId: 'PIG-I-01',
-    pigName: 'Smart PIG Alpha',
-    type: 'inspection',
-    status: 'completed',
-    launchStation: 'Single Point Mooring',
-    receiveStation: 'Ndola Terminal',
-    launchTime: '2024-01-05 06:00',
-    estimatedArrival: '2024-01-07 18:00',
-    actualArrival: '2024-01-07 17:45',
-    currentPosition: 1710,
-    speed: 0,
-    distanceCovered: 1710,
-    totalDistance: 1710,
-    findings: 'No anomalies detected. Wall thickness within acceptable range.',
-    operator: 'Grace Phiri'
-  },
-]
-
-const pigInventory = [
-  { id: 'PIG-C-01', name: 'Cleaning PIG Alpha', type: 'cleaning', status: 'in-use', lastRun: '2024-01-15', runs: 24, condition: 'good' },
-  { id: 'PIG-C-02', name: 'Cleaning PIG Beta', type: 'cleaning', status: 'available', lastRun: '2024-01-08', runs: 18, condition: 'good' },
-  { id: 'PIG-C-03', name: 'Cleaning PIG Gamma', type: 'cleaning', status: 'maintenance', lastRun: '2024-01-10', runs: 32, condition: 'fair' },
-  { id: 'PIG-I-01', name: 'Smart PIG Alpha', type: 'inspection', status: 'available', lastRun: '2024-01-05', runs: 12, condition: 'excellent' },
-  { id: 'PIG-I-02', name: 'Smart PIG Beta', type: 'inspection', status: 'available', lastRun: '2023-12-20', runs: 8, condition: 'good' },
-  { id: 'PIG-B-01', name: 'Batching PIG', type: 'batching', status: 'available', lastRun: '2023-12-15', runs: 45, condition: 'good' },
-]
+// Removed hardcoded inventory
 
 const monthlyStats = [
   { month: 'Aug', cleaning: 3, inspection: 1 },
@@ -139,16 +47,141 @@ const integrityData = [
 ]
 
 export default function PigScheduling() {
+  const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [showNewRunDialog, setShowNewRunDialog] = useState(false)
-  const [selectedRun, setSelectedRun] = useState<PigRun | null>(null)
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false)
+  const [showNewPigDialog, setShowNewPigDialog] = useState(false)
+  const [selectedRun, setSelectedRun] = useState<any | null>(null)
+  
+  // Category form state
+  const [newCategory, setNewCategory] = useState({
+    name: '',
+    description: '',
+    color: 'bg-blue-500',
+    icon: 'Truck'
+  })
 
-  const activeRun = pigRuns.find(r => r.status === 'in-transit')
-  const scheduledRuns = pigRuns.filter(r => r.status === 'scheduled').length
-  const completedRuns = pigRuns.filter(r => r.status === 'completed').length
+  // PIG form state
+  const [newPig, setNewPig] = useState({
+    name: '',
+    categoryId: '',
+    condition: 'excellent'
+  })
 
-  const getStatusColor = (status: PigRun['status']) => {
+  // Form state for scheduling
+  const [newRun, setNewRun] = useState({
+    pigId: '',
+    launchStation: 'Single Point Mooring',
+    receiveStation: 'Ndola Terminal',
+    launchDate: format(new Date(), 'yyyy-MM-dd'),
+    launchTime: '08:00',
+    operator: '',
+    estimatedDurationDays: 2
+  })
+
+  // Queries
+  const { data: pigs, isLoading: isLoadingInventory } = useQuery({
+    queryKey: ['pig-inventory'],
+    queryFn: () => getPigs()
+  })
+
+  const { data: pigRuns, isLoading: isLoadingRuns } = useQuery({
+    queryKey: ['pig-runs'],
+    queryFn: () => getPigRuns()
+  })
+
+  const { data: categories, isLoading: isLoadingCategories } = useQuery({
+    queryKey: ['pig-categories'],
+    queryFn: () => getPigCategories()
+  })
+
+  // Mutations
+  const scheduleMutation = useMutation({
+    mutationFn: (data: any) => createPigRun(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pig-runs'] })
+      queryClient.invalidateQueries({ queryKey: ['pig-inventory'] })
+      setShowNewRunDialog(false)
+      toast.success('PIG run scheduled successfully')
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to schedule PIG run: ${error.message}`)
+    }
+  })
+
+  const addCategoryMutation = useMutation({
+    mutationFn: (data: any) => createPigCategory(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pig-categories'] })
+      setShowCategoryDialog(false)
+      setNewCategory({ name: '', description: '', color: 'bg-blue-500', icon: 'Truck' })
+      toast.success('Category added successfully')
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to add category: ${error.message}`)
+    }
+  })
+
+  const addPigMutation = useMutation({
+    mutationFn: (data: any) => createPig(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pig-inventory'] })
+      setShowNewPigDialog(false)
+      setNewPig({ name: '', categoryId: '', condition: 'excellent' })
+      toast.success('PIG registered successfully')
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to register PIG: ${error.message}`)
+    }
+  })
+
+  const updateRunMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string, status: string }) => updatePigRun(id, { status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pig-runs'] })
+      queryClient.invalidateQueries({ queryKey: ['pig-inventory'] })
+      toast.success('PIG run status updated')
+    },
+    onError: (error: any) => {
+      toast.error(`Failed to update PIG run: ${error.message}`)
+    }
+  })
+
+  const isPending = scheduleMutation.isPending
+  const isAddingCategory = addCategoryMutation.isPending
+  const isAddingPig = addPigMutation.isPending
+
+  const handleSchedule = () => {
+    if (!newRun.pigId || !newRun.operator) {
+      toast.error('Please fill in all required fields')
+      return
+    }
+
+    const selectedPig = pigs?.find(p => p.id === newRun.pigId)
+    const launchDateTime = new Date(`${newRun.launchDate}T${newRun.launchTime}`)
+    const estimatedArrival = new Date(launchDateTime)
+    estimatedArrival.setDate(estimatedArrival.getDate() + newRun.estimatedDurationDays)
+
+    scheduleMutation.mutate({
+      pigId: newRun.pigId,
+      categoryId: selectedPig?.categoryId,
+      status: 'scheduled',
+      launchStation: newRun.launchStation,
+      receiveStation: newRun.receiveStation,
+      launchTime: launchDateTime,
+      estimatedArrival: estimatedArrival,
+      operator: newRun.operator,
+      totalDistance: 1710 
+    })
+  }
+
+  const activeRun = pigRuns?.find((r: any) => r.status === 'in-transit' || r.status === 'launched')
+  const scheduledRuns = pigRuns?.filter((r: any) => r.status === 'scheduled').length || 0
+  const completedRuns = pigRuns?.filter((r: any) => r.status === 'completed').length || 0
+
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'in-transit': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
       case 'scheduled': return 'bg-amber-500/20 text-amber-400 border-amber-500/30'
@@ -160,8 +193,10 @@ export default function PigScheduling() {
     }
   }
 
-  const getTypeColor = (type: PigRun['type']) => {
-    switch (type) {
+  const getTypeColor = (type: string, categoryColor?: string) => {
+    if (categoryColor) return `${categoryColor}/20 ${categoryColor.replace('bg-', 'text-')} border-${categoryColor.split('-')[1]}-500/30`
+    
+    switch (type.toLowerCase()) {
       case 'cleaning': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
       case 'inspection': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
       case 'batching': return 'bg-purple-500/20 text-purple-400 border-purple-500/30'
@@ -169,9 +204,10 @@ export default function PigScheduling() {
     }
   }
 
-  const filteredRuns = pigRuns.filter(run => {
-    const matchesSearch = run.pigName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         run.id.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredRuns = (pigRuns || []).filter((run: any) => {
+    const matchesSearch = run.pig.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         run.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         run.category?.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = statusFilter === 'all' || run.status === statusFilter
     return matchesSearch && matchesStatus
   })
@@ -189,13 +225,86 @@ export default function PigScheduling() {
           </h1>
           <p className="text-muted-foreground mt-1">Pipeline inspection gauge operations and integrity management</p>
         </div>
-        <Dialog open={showNewRunDialog} onOpenChange={setShowNewRunDialog}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Schedule PIG Run
-            </Button>
-          </DialogTrigger>
+        <div className="flex flex-wrap gap-2">
+          <Dialog open={showCategoryDialog} onOpenChange={setShowCategoryDialog}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Settings className="h-4 w-4" />
+                Manage Categories
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>PIG Categories</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="grid gap-2">
+                  <Label>Existing Categories</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {(categories || []).map((cat: any) => (
+                      <Badge key={cat.id} className={cn("px-3 py-1", cat.color)}>
+                        {cat.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-border rounded-lg space-y-3">
+                  <p className="text-sm font-medium">Add New Category</p>
+                  <div className="space-y-2">
+                    <Label className="text-xs">Category Name</Label>
+                    <Input 
+                      placeholder="e.g. Ultrasonic Inspection" 
+                      value={newCategory.name}
+                      onChange={(e) => setNewCategory({...newCategory, name: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">Description</Label>
+                    <Input 
+                      placeholder="e.g. Cleans debris and wax" 
+                      value={newCategory.description}
+                      onChange={(e) => setNewCategory({...newCategory, description: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">Color Scheme</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {['bg-blue-500', 'bg-yellow-500', 'bg-purple-500', 'bg-red-500', 'bg-emerald-500', 'bg-cyan-500', 'bg-indigo-500'].map(c => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => setNewCategory({...newCategory, color: c})}
+                          className={cn(
+                            "w-6 h-6 rounded-full border-2 transition-all",
+                            c,
+                            newCategory.color === c ? "border-white scale-110 shadow-lg" : "border-transparent opacity-70"
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <Button 
+                    className="w-full h-8" 
+                    size="sm" 
+                    onClick={() => addCategoryMutation.mutate(newCategory)}
+                    disabled={isAddingCategory || !newCategory.name}
+                  >
+                    {isAddingCategory ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <Plus className="h-3 w-3 mr-2" />}
+                    Save Category
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={showNewRunDialog} onOpenChange={setShowNewRunDialog}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Schedule PIG Run
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>Schedule New PIG Run</DialogTitle>
@@ -203,52 +312,78 @@ export default function PigScheduling() {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label>PIG Selection</Label>
-                <select className="w-full h-10 px-3 bg-secondary border border-border rounded-md">
-                  <option value="">Select PIG</option>
-                  {pigInventory.filter(p => p.status === 'available').map(pig => (
-                    <option key={pig.id} value={pig.id}>{pig.name} ({pig.type})</option>
-                  ))}
-                </select>
+                  <select 
+                    className="w-full h-10 px-3 bg-secondary border border-border rounded-md"
+                    value={newRun.pigId}
+                    onChange={(e) => setNewRun({...newRun, pigId: e.target.value})}
+                  >
+                    <option value="">Select PIG</option>
+                    {(pigs || []).filter((p: any) => p.status === 'available').map((pig: any) => (
+                      <option key={pig.id} value={pig.id}>{pig.name} ({pig.category?.name || 'Uncategorized'})</option>
+                    ))}
+                  </select>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Launch Station</Label>
-                  <select className="w-full h-10 px-3 bg-secondary border border-border rounded-md">
-                    <option value="spm">Single Point Mooring</option>
-                    <option value="kigamboni">Kigamboni PS</option>
-                    <option value="morogoro">Morogoro PS</option>
+                  <select 
+                    className="w-full h-10 px-3 bg-secondary border border-border rounded-md"
+                    value={newRun.launchStation}
+                    onChange={(e) => setNewRun({...newRun, launchStation: e.target.value})}
+                  >
+                    <option value="Single Point Mooring">Single Point Mooring</option>
+                    <option value="Kigamboni PS">Kigamboni PS</option>
+                    <option value="Morogoro PS">Morogoro PS</option>
                   </select>
                 </div>
                 <div className="space-y-2">
                   <Label>Receive Station</Label>
-                  <select className="w-full h-10 px-3 bg-secondary border border-border rounded-md">
-                    <option value="ndola">Ndola Terminal</option>
-                    <option value="bwana">Bwana Mkubwa</option>
-                    <option value="kalonje">Kalonje PS</option>
+                  <select 
+                    className="w-full h-10 px-3 bg-secondary border border-border rounded-md"
+                    value={newRun.receiveStation}
+                    onChange={(e) => setNewRun({...newRun, receiveStation: e.target.value})}
+                  >
+                    <option value="Ndola Terminal">Ndola Terminal</option>
+                    <option value="Bwana Mkubwa">Bwana Mkubwa</option>
+                    <option value="Kalonje PS">Kalonje PS</option>
                   </select>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Launch Date</Label>
-                  <Input type="date" />
+                  <Input 
+                    type="date" 
+                    value={newRun.launchDate}
+                    onChange={(e) => setNewRun({...newRun, launchDate: e.target.value})}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Launch Time</Label>
-                  <Input type="time" />
+                  <Input 
+                    type="time" 
+                    value={newRun.launchTime}
+                    onChange={(e) => setNewRun({...newRun, launchTime: e.target.value})}
+                  />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label>Operator</Label>
-                <Input placeholder="Assigned operator name" />
+                <Input 
+                  placeholder="Assigned operator name" 
+                  value={newRun.operator}
+                  onChange={(e) => setNewRun({...newRun, operator: e.target.value})}
+                />
               </div>
-              <Button className="w-full" onClick={() => setShowNewRunDialog(false)}>
+              <Button className="w-full" onClick={handleSchedule} disabled={isPending}>
+                {isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
                 Schedule Run
               </Button>
             </div>
           </DialogContent>
         </Dialog>
       </div>
+    </div>
 
       {/* Live Tracking Card */}
       {activeRun && (
@@ -260,7 +395,7 @@ export default function PigScheduling() {
               </div>
               <div>
                 <h3 className="font-bold text-lg">Live PIG Tracking</h3>
-                <p className="text-sm text-muted-foreground">{activeRun.pigName} - {activeRun.id}</p>
+                <p className="text-sm text-muted-foreground">{activeRun.pig.name} - {activeRun.id}</p>
               </div>
             </div>
             <Badge className={cn("text-sm", getStatusColor(activeRun.status))}>
@@ -364,7 +499,7 @@ export default function PigScheduling() {
               <Truck className="h-5 w-5 text-purple-500" />
             </div>
             <div>
-              <p className="text-2xl font-bold">{pigInventory.filter(p => p.status === 'available').length}</p>
+              <p className="text-2xl font-bold">{(pigs || []).filter((p: any) => p.status === 'available').length}</p>
               <p className="text-xs text-muted-foreground">PIGs Available</p>
             </div>
           </div>
@@ -409,18 +544,18 @@ export default function PigScheduling() {
 
           {/* Runs List */}
           <div className="space-y-3">
-            {filteredRuns.map(run => (
+            {filteredRuns.map((run: any) => (
               <Card key={run.id} className="p-4 hover:border-primary/50 transition-colors cursor-pointer" onClick={() => setSelectedRun(run)}>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className={cn("p-3 rounded-lg", run.type === 'cleaning' ? 'bg-yellow-500/10' : run.type === 'inspection' ? 'bg-blue-500/10' : 'bg-purple-500/10')}>
-                      <Truck className={cn("h-5 w-5", run.type === 'cleaning' ? 'text-yellow-500' : run.type === 'inspection' ? 'text-blue-500' : 'text-purple-500')} />
+                    <div className={cn("p-3 rounded-lg", run.category?.color || 'bg-slate-500/10')}>
+                      <Truck className={cn("h-5 w-5", run.category?.color ? run.category.color.replace('bg-', 'text-') : 'text-slate-500')} />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="font-semibold">{run.pigName}</p>
-                        <Badge variant="outline" className={cn("text-[10px]", getTypeColor(run.type))}>
-                          {run.type}
+                        <p className="font-semibold">{run.pig.name}</p>
+                        <Badge variant="outline" className={cn("text-[10px]", getTypeColor('', run.category?.color))}>
+                          {run.category?.name || 'N/A'}
                         </Badge>
                       </div>
                       <p className="text-sm text-muted-foreground">{run.id}</p>
@@ -436,7 +571,7 @@ export default function PigScheduling() {
                     </div>
                     <div className="text-center">
                       <p className="text-muted-foreground">Launch</p>
-                      <p className="font-medium">{run.launchTime.split(' ')[0]}</p>
+                      <p className="font-medium">{format(new Date(run.launchTime), 'MMM dd')}</p>
                     </div>
                     {run.status === 'in-transit' && (
                       <div className="text-center">
@@ -460,17 +595,88 @@ export default function PigScheduling() {
         </TabsContent>
 
         <TabsContent value="inventory" className="space-y-4">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">PIG Inventory</h2>
+            <Dialog open={showNewPigDialog} onOpenChange={setShowNewPigDialog}>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add PIG
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Register New PIG</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label>PIG Name</Label>
+                    <Input 
+                      placeholder="e.g. Smart Alpha" 
+                      value={newPig.name}
+                      onChange={(e) => setNewPig({...newPig, name: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Category</Label>
+                    <select 
+                      className="w-full h-10 px-3 bg-secondary border border-border rounded-md"
+                      value={newPig.categoryId}
+                      onChange={(e) => setNewPig({...newPig, categoryId: e.target.value})}
+                    >
+                      <option value="">Select Category</option>
+                      {(categories || []).map((cat: any) => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                   <div className="space-y-2">
+                    <Label>Initial Condition</Label>
+                    <select 
+                      className="w-full h-10 px-3 bg-secondary border border-border rounded-md"
+                      value={newPig.condition}
+                      onChange={(e) => setNewPig({...newPig, condition: e.target.value})}
+                    >
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Good</option>
+                      <option value="fair">Fair</option>
+                      <option value="needs-maintenance">Needs Maintenance</option>
+                    </select>
+                  </div>
+                  <Button 
+                    className="w-full" 
+                    onClick={() => addPigMutation.mutate(newPig)}
+                    disabled={isAddingPig || !newPig.name || !newPig.categoryId}
+                  >
+                    {isAddingPig ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
+                    Register PIG
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {pigInventory.map(pig => (
+            {isLoadingInventory ? (
+              <div className="col-span-full flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (pigs || []).map((pig: any) => (
               <Card key={pig.id} className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className={cn("p-2 rounded-lg", pig.type === 'cleaning' ? 'bg-yellow-500/10' : pig.type === 'inspection' ? 'bg-blue-500/10' : 'bg-purple-500/10')}>
-                      <Truck className={cn("h-5 w-5", pig.type === 'cleaning' ? 'text-yellow-500' : pig.type === 'inspection' ? 'text-blue-500' : 'text-purple-500')} />
+                    <div className={cn("p-2 rounded-lg", pig.category?.color || 'bg-slate-500/10')}>
+                      <Truck className={cn("h-5 w-5", pig.category?.color ? pig.category.color.replace('bg-', 'text-') : 'text-slate-500')} />
                     </div>
                     <div>
                       <p className="font-semibold">{pig.name}</p>
-                      <p className="text-xs text-muted-foreground">{pig.id}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs text-muted-foreground">{pig.id}</p>
+                        {pig.category && (
+                          <Badge variant="outline" className="text-[9px] h-4 py-0 px-1.5 opacity-70">
+                            {pig.category.name}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <Badge className={cn(
@@ -487,7 +693,7 @@ export default function PigScheduling() {
                     <p className="text-[10px] text-muted-foreground">Total Runs</p>
                   </div>
                   <div className="p-2 bg-secondary rounded">
-                    <p className="text-sm font-medium">{pig.lastRun.split('-').slice(1).join('/')}</p>
+                    <p className="text-sm font-medium">{pig.lastRun ? format(new Date(pig.lastRun), 'MM/dd') : 'N/A'}</p>
                     <p className="text-[10px] text-muted-foreground">Last Run</p>
                   </div>
                   <div className="p-2 bg-secondary rounded">
@@ -614,11 +820,11 @@ export default function PigScheduling() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">PIG Name</p>
-                  <p className="font-medium">{selectedRun.pigName}</p>
+                  <p className="font-medium">{selectedRun.pig.name}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Type</p>
-                  <Badge className={getTypeColor(selectedRun.type)}>{selectedRun.type}</Badge>
+                  <p className="text-sm text-muted-foreground">Category</p>
+                  <Badge className={getTypeColor('', selectedRun.category?.color)}>{selectedRun.category?.name || 'N/A'}</Badge>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Launch Station</p>
@@ -630,11 +836,11 @@ export default function PigScheduling() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Launch Time</p>
-                  <p className="font-medium">{selectedRun.launchTime}</p>
+                  <p className="font-medium">{format(new Date(selectedRun.launchTime), 'yyyy-MM-dd HH:mm')}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">{selectedRun.actualArrival ? 'Actual Arrival' : 'Est. Arrival'}</p>
-                  <p className="font-medium">{selectedRun.actualArrival || selectedRun.estimatedArrival}</p>
+                  <p className="font-medium">{selectedRun.actualArrival ? format(new Date(selectedRun.actualArrival), 'yyyy-MM-dd HH:mm') : format(new Date(selectedRun.estimatedArrival), 'yyyy-MM-dd HH:mm')}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Operator</p>
@@ -642,7 +848,22 @@ export default function PigScheduling() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Status</p>
-                  <Badge className={getStatusColor(selectedRun.status)}>{selectedRun.status}</Badge>
+                  <Select 
+                    defaultValue={selectedRun.status} 
+                    onValueChange={(value) => updateRunMutation.mutate({ id: selectedRun.id, status: value })}
+                  >
+                    <SelectTrigger className={cn("h-8 capitalize", getStatusColor(selectedRun.status))}>
+                      <SelectValue placeholder="Update status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="scheduled">Scheduled</SelectItem>
+                      <SelectItem value="launched">Launched</SelectItem>
+                      <SelectItem value="in-transit">In-Transit</SelectItem>
+                      <SelectItem value="received">Received</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                      <SelectItem value="delayed">Delayed</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               {selectedRun.findings && (

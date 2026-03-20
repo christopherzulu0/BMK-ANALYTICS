@@ -49,17 +49,22 @@ model VerificationToken {
 }
 
 model FuelInputEntry {
-  id              Int      @id @default(autoincrement())
-  date            DateTime
-  supplier_name   String?
-  vessel_name     String?
-  volume_litres   Float
-  temperature     Float
-  density         Float
-  gravity         Float
-  sulphur_content Float
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  date           DateTime
+  supplier       String?
+  vessel         String?
+  litres         Float
+  status         String   @default("pending") // "pending" | "verified" | "rejected"
+  deliveryType   String   @default("vessel") // "vessel" | "truck"
+  temperature    Float
+  density        Float
+  apiGravity     Float
+  sulphurContent Float
+  qualityGrade   String   @default("A")
+  batchNo        String?
+  receiptNo      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model PipelineData {
@@ -120,6 +125,7 @@ model Alert {
   type      String
   title     String
   message   String   @db.Text
+  station   String?  @db.NVarChar(100)
   timestamp DateTime @default(now())
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -279,16 +285,60 @@ model PipelineBatch {
   updatedAt DateTime @updatedAt
 }
 
+model PigCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  color       String   @default("bg-blue-500") // bg class or hex
+  icon        String   @default("Truck")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  pigs    PipelinePig[]
+  pigRuns PigRun[]
+}
+
 model PipelinePig {
-  id        String   @id @default(cuid())
-  name      String
-  position  Float
-  speed     Float
-  type      String // "cleaning" | "inspection"
-  launched  DateTime @default(now())
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String       @id @default(cuid())
+  name       String
+  position   Float
+  speed      Float
+  categoryId String?
+  category   PigCategory? @relation(fields: [categoryId], references: [id])
+  status     String       @default("available") // "available" | "in-use" | "maintenance"
+  condition  String       @default("good") // "excellent" | "good" | "fair" | "poor"
+  lastRun    DateTime?
+  runs       Int          @default(0)
+  isActive   Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  pigRuns PigRun[]
+}
+
+model PigRun {
+  id               String       @id @default(cuid())
+  pigId            String
+  pig              PipelinePig  @relation(fields: [pigId], references: [id])
+  categoryId       String?
+  category         PigCategory? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  status           String       @default("scheduled") // "scheduled" | "launched" | "in-transit" | "received" | "completed" | "delayed"
+  launchStation    String
+  receiveStation   String
+  launchTime       DateTime     @default(now())
+  estimatedArrival DateTime
+  actualArrival    DateTime?
+  currentPosition  Float        @default(0)
+  speed            Float        @default(0)
+  distanceCovered  Float        @default(0)
+  totalDistance    Float        @default(1710)
+  findings         String?      @db.Text
+  operator         String
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([pigId])
+  @@index([status])
 }
 
 model PipelineYearlyStats {
@@ -396,8 +446,53 @@ model Supplier {
 
 model PipelineProgress {
   id            String   @id @default(cuid())
+  year          Int?     @unique
   distanceKm    Float    @default(0)
   totalDistance Float    @default(1710)
   lastStation   String?
   updatedAt     DateTime @updatedAt
+}
+
+model ShiftHandover {
+  id                Int      @id @default(autoincrement())
+  date              DateTime
+  shiftType         String   @default("day")
+  outgoingOperator  String
+  incomingOperator  String
+  station           String
+  status            String   @default("pending")
+  operationalStatus String   @default("normal")
+  flowRate          Float    @default(0)
+  pressure          Float    @default(0)
+  throughput        Float    @default(0)
+  outstandingIssues Int      @default(0)
+  notes             String?  @db.Text
+  handoverTime      String   @default("06:00")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model ShiftLogEntry {
+  id           Int      @id @default(autoincrement())
+  timestamp    DateTime @default(now())
+  operator     String
+  station      String
+  category     String   @default("operational")
+  priority     String   @default("normal")
+  message      String   @db.Text
+  acknowledged Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model OutstandingIssue {
+  id         Int      @id @default(autoincrement())
+  title      String
+  priority   String   @default("medium")
+  station    String
+  reportedBy String
+  date       DateTime @default(now())
+  status     String   @default("monitoring")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

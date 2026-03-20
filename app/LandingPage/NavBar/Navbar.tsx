@@ -102,7 +102,7 @@ export default function Navbar() {
               <div className="absolute top-full left-0 mt-3 w-150 bg-white text-foreground rounded-xl shadow-2xl p-5 z-50 border border-secondary/20">
                 <div className="grid grid-cols-3 gap-6">
                   {solutions.map((item) => {
-                    const isDisabled = item.name === "Ruler Track";
+                    const isDisabled = item.name === "Ruler Tracks";
                     return (
                       <Link
                         key={item.name}
