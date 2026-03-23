@@ -14,6 +14,7 @@ const nextConfig = {
     cpus: 2, // Limit to 4 workers to prevent OOM on build
     workerThreads: false,
   },
+   allowedDevOrigins: ['192.168.0.223'],
   productionBrowserSourceMaps: false, // Disable source maps to save memory
   turbopack: {
     resolveAlias: {
