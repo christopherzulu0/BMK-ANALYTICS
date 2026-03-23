@@ -1204,11 +1204,14 @@ export default function Page() {
           onOpenChange={setChangeDateOpen} 
           stationId={stationId}
           currentDate={date}
-          onSuccess={(newDate) => {
-            // Because we only have a date string state in this component, we update the state.
+          stations={stations}
+          onSuccess={(newDate, newStationId) => {
+            // Update both the station and the date to navigate to the new relocated entry.
             const dateStr = newDate.toISOString().slice(0, 10)
+            if (newStationId && newStationId !== stationId) {
+              setStationId(newStationId)
+            }
             setDate(dateStr)
-            // Changing `date` will trigger the useEffect inside this component to fetch new data
           }}
         />
       </div>

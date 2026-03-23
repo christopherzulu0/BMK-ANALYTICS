@@ -11,14 +11,27 @@ import {
 } from "@/components/ui/dialog"
 import { DatePicker } from "@/components/date-picker"
 import { useToast } from "@/components/ui/use-toast"
-import { CalendarIcon, Loader2 } from "lucide-react"
+import { CalendarIcon, Loader2, Factory } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+interface Station {
+  id: string
+  name: string
+}
 
 interface ChangeDateDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   stationId: string
   currentDate: string // YYYY-MM-DD format expected
-  onSuccess: (newDate: Date) => void
+  stations: Station[] 
+  onSuccess: (newDate: Date, newStationId: string) => void
 }
 
 export function ChangeDateDialog({
@@ -26,11 +39,19 @@ export function ChangeDateDialog({
   onOpenChange,
   stationId,
   currentDate,
+  stations,
   onSuccess,
 }: ChangeDateDialogProps) {
   const [targetDate, setTargetDate] = useState<Date | undefined>(new Date())
+  const [targetStation, setTargetStation] = useState<string>(stationId)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
+
+  // Reset targetStation when dialog opens and stationId changes
+  // Not strictly necessary as effects could do it, but simple inline:
+  if (open && targetStation === "" && stationId) {
+    setTargetStation(stationId)
+  }
 
   const handleSubmit = async () => {
     if (!targetDate) {
@@ -42,12 +63,21 @@ export function ChangeDateDialog({
       return
     }
 
-    const tDateStr = format(targetDate, "yyyy-MM-dd")
-    
-    if (tDateStr === currentDate) {
+    if (!targetStation) {
       toast({
         title: "Validation Error",
-        description: "The target date cannot be the same as the current date.",
+        description: "Please select a target station.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    const tDateStr = format(targetDate, "yyyy-MM-dd")
+    
+    if (tDateStr === currentDate && targetStation === stationId) {
+      toast({
+        title: "Validation Error",
+        description: "You must change either the date or the station.",
         variant: "destructive",
       })
       return
@@ -63,20 +93,23 @@ export function ChangeDateDialog({
           stationId,
           oldDate: currentDate,
           newDate: tDateStr,
+          newStationId: targetStation,
         }),
       })
 
       if (!response.ok) {
         const errorText = await response.text()
-        throw new Error(errorText || "Failed to update date")
+        throw new Error(errorText || "Failed to update entry")
       }
+
+      const newStationName = stations.find(s => s.id === targetStation)?.name
 
       toast({
         title: "Success",
-        description: `Date successfully transferred to ${tDateStr}.`,
+        description: `Entry successfully transferred to ${newStationName} on ${tDateStr}.`,
       })
       
-      onSuccess(targetDate)
+      onSuccess(targetDate, targetStation)
       onOpenChange(false)
     } catch (error: any) {
       toast({
@@ -89,36 +122,62 @@ export function ChangeDateDialog({
     }
   }
 
+  const currentStationName = stations.find(s => s.id === stationId)?.name || "Unknown"
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Transfer Entry Date</DialogTitle>
+          <DialogTitle>Transfer Entry</DialogTitle>
           <DialogDescription>
-            Change the date for the current daily entry. All associated tanks and remarks will be transferred.
+            Move the current daily entry to a different date or station. All associated tanks and remarks will be transferred.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <div className="text-sm font-medium">Current Date</div>
-            <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm text-muted-foreground border">
-              <CalendarIcon className="h-4 w-4" />
-              {currentDate}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-medium">Current Station</div>
+              <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm text-muted-foreground border">
+                <Factory className="h-4 w-4" />
+                <span className="truncate">{currentStationName}</span>
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <div className="text-sm font-medium">Current Date</div>
+              <div className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm text-muted-foreground border">
+                <CalendarIcon className="h-4 w-4" />
+                {currentDate}
+              </div>
             </div>
           </div>
           
-          <div className="grid gap-2">
-            <div className="text-sm font-medium">New Target Date</div>
-            <DatePicker
-              value={targetDate}
-              onSelect={setTargetDate}
-              placeholder="Select target date..."
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <div className="text-sm font-medium">New Station</div>
+              <Select value={targetStation} onValueChange={setTargetStation}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select station..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {stations.map(s => (
+                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <div className="text-sm font-medium">New Date</div>
+              <DatePicker
+                value={targetDate}
+                onSelect={setTargetDate}
+                placeholder="Select date..."
+              />
+            </div>
           </div>
 
           <div className="text-xs text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-950/50 p-3 rounded-md border border-amber-200 dark:border-amber-900 mt-2">
-            <strong>Warning:</strong> The target date must not already have an entry for this station.
+            <strong>Warning:</strong> The target date and station must not already contain an entry.
           </div>
         </div>
 
@@ -132,7 +191,7 @@ export function ChangeDateDialog({
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={isSubmitting || !targetDate}
+            disabled={isSubmitting || !targetDate || !targetStation}
           >
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Confirm Transfer

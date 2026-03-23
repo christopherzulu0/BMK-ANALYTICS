@@ -7,10 +7,12 @@ export async function POST(req: Request) {
     const data = await req.json().catch(() => null)
     if (!data) return new NextResponse("Invalid JSON", { status: 400 })
 
-    const { stationId, oldDate, newDate } = data
+    const { stationId, oldDate, newDate, newStationId } = data
     if (!stationId || !oldDate || !newDate) {
         return new NextResponse("stationId, oldDate, and newDate are required", { status: 400 })
     }
+
+    const targetStationId = newStationId || stationId
 
     // Verify session and role
     const session = await getServerSession(authOptions)
@@ -41,21 +43,21 @@ export async function POST(req: Request) {
             return new NextResponse("No entry found for the selected station and old date", { status: 404 })
         }
 
-        // 2. Check if an entry already exists for the NEW date
+        // 2. Check if an entry already exists for the NEW date and NEW station
         const targetEntry = await prisma.dailyEntry.findUnique({
-            where: { stationId_date: { stationId, date: newDateObj } },
+            where: { stationId_date: { stationId: targetStationId, date: newDateObj } },
             select: { id: true }
         })
 
         if (targetEntry) {
-            return new NextResponse("An entry already exists for this station on the new date. Please delete or modify it first.", { status: 409 })
+            return new NextResponse("An entry already exists for the target station on the target date. Please delete or modify it first.", { status: 409 })
         }
 
-        // 3. Update the entry's date.
+        // 3. Update the entry's date and stationId.
         // Because Tank and Remark are linked by entryId, their date association implicitly updates.
         await prisma.dailyEntry.update({
             where: { id: existingEntry.id },
-            data: { date: newDateObj }
+            data: { date: newDateObj, stationId: targetStationId }
         })
 
         // 4. Log the action
