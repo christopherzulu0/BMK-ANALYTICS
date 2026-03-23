@@ -34,7 +34,7 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [detailStation, setDetailStation] = useState<Facility | null>(null)
   const [activeTab, setActiveTab] = useState('flow')
-  const [selectedYear, setSelectedYear] = useState(2024)
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
 
   // Data Fetching for Facilities (shared by multiple components)
   const { data: stations = [], isLoading: isLoadingFacilities } = useQuery<Facility[]>({

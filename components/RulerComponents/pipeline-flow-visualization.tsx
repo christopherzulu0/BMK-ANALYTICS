@@ -310,13 +310,14 @@ export default function PipelineFlowVisualization({
                 <SelectValue placeholder="Year" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
-                <SelectItem value="2026">2026</SelectItem>
-                <SelectItem value="2025">2025</SelectItem>
-                <SelectItem value="2024">2024</SelectItem>
-                <SelectItem value="2023">2023</SelectItem>
-                <SelectItem value="2022">2022</SelectItem>
-                <SelectItem value="2021">2021</SelectItem>
-                <SelectItem value="2020">2020</SelectItem>
+                {Array.from(
+                  { length: Math.max(new Date().getFullYear() - 2019, 7) }, 
+                  (_, i) => Math.max(new Date().getFullYear(), 2026) - i
+                ).map(year => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
