@@ -69,7 +69,13 @@ export default function TankageDashboard() {
   // Set initial selected station when data loads
   useEffect(() => {
     if (stations.length > 0 && !selectedStation) {
-      setSelectedStation(stations[0].id)
+      // Find exact Kigamboni station
+      const kigamboniStation = stations.find(s =>
+        s.id === "test_kigamboni_station" ||
+        s.name.trim().toLowerCase() === "kigamboni"
+      )
+
+      setSelectedStation(kigamboniStation ? kigamboniStation.id : stations[0].id)
     }
   }, [stations, selectedStation])
 

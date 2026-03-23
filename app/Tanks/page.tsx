@@ -177,8 +177,14 @@ export default function Page() {
       .then((rows) => {
         if (ignore) return
         if (Array.isArray(rows) && rows.length) {
+          // Find exact Kigamboni station
+          const kigamboniStation = rows.find(s =>
+            s.id === "test_kigamboni_station" ||
+            s.name.trim().toLowerCase() === "kigamboni"
+          )
+          
           setStations(rows.map((r) => ({ id: r.id, name: r.name })))
-          setStationId(rows[0].id)
+          setStationId(kigamboniStation ? kigamboniStation.id : rows[0].id)
         }
       })
       .catch(() => {
