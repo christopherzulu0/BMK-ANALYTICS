@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
 import {
   BarChart,
   Bar,
@@ -16,8 +17,9 @@ import {
   Radar,
 } from "recharts"
 import { useStationComparison, type StationComparisonMetric } from "@/hooks/use-station-comparison"
-import { Suspense, useMemo } from "react"
+import { Suspense, useMemo, useState } from "react"
 import { Badge } from "@/components/ui/badge"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   ChartConfig,
   ChartContainer,
@@ -31,6 +33,9 @@ interface StationComparisonViewProps {
   dateRange: string
   userRole: "DOE" | "SHIPPER" | "DISPATCHER" | "admin"
 }
+
+const CHART_STATIONS_PER_PAGE = 6
+const TABLE_ROWS_PER_PAGE = 10
 
 export function StationComparisonSkeleton() {
   return (
@@ -63,20 +68,29 @@ export function StationComparisonSkeleton() {
 
 function StationComparisonContent({ userRole, date }: { userRole: string, date: string }) {
   const { data: comparisonData = [] } = useStationComparison(date)
+  const [chartPage, setChartPage] = useState(0)
+  const [tablePage, setTablePage] = useState(1)
 
-  // Generate dynamic chart config based on stations
+  // Paginate stations shown in charts
+  const totalChartPages = Math.ceil(comparisonData.length / CHART_STATIONS_PER_PAGE) || 1
+  const chartStations = useMemo(() => {
+    const start = chartPage * CHART_STATIONS_PER_PAGE
+    return comparisonData.slice(start, start + CHART_STATIONS_PER_PAGE)
+  }, [comparisonData, chartPage])
+
+  // Generate dynamic chart config based on visible chart stations
   const chartConfig = useMemo(() => {
     const config: ChartConfig = {}
-    comparisonData.forEach((station, idx) => {
+    chartStations.forEach((station, idx) => {
       config[station.stationName] = {
         label: station.stationName,
         color: `hsl(var(--chart-${(idx % 5) + 1}))`,
       }
     })
     return config
-  }, [comparisonData])
+  }, [chartStations])
 
-  // Transform data for metrics chart
+  // Transform data for metrics chart (only visible stations)
   const metrics = [
     { label: "Total Volume (m³)", key: "totalVolume" },
     { label: "Active Tanks", key: "activeTanks" },
@@ -87,14 +101,14 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
   const chartData = useMemo(() => {
     return metrics.map(metric => {
       const entry: any = { metric: metric.label }
-      comparisonData.forEach(station => {
+      chartStations.forEach(station => {
         entry[station.stationName] = (station as any)[metric.key]
       })
       return entry
     })
-  }, [comparisonData])
+  }, [chartStations])
 
-  // Transform data for performance radar
+  // Transform data for performance radar (only visible stations)
   const performanceCategories = [
     { label: "Capacity Usage", key: "capacityUsage" },
     { label: "Data Quality", key: "dataQuality" },
@@ -106,11 +120,29 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
   const radarData = useMemo(() => {
     return performanceCategories.map(cat => {
       const entry: any = { category: cat.label }
-      comparisonData.forEach(station => {
+      chartStations.forEach(station => {
         entry[station.stationName] = station.performance[cat.key as keyof typeof station.performance]
       })
       return entry
     })
+  }, [chartStations])
+
+  // Table pagination
+  const totalTablePages = Math.ceil(comparisonData.length / TABLE_ROWS_PER_PAGE) || 1
+  const tableStart = (tablePage - 1) * TABLE_ROWS_PER_PAGE
+  const tableEnd = tableStart + TABLE_ROWS_PER_PAGE
+  const paginatedTableData = comparisonData.slice(tableStart, tableEnd)
+
+  // Config for table row colors (all stations for consistent coloring)
+  const allStationsConfig = useMemo(() => {
+    const config: ChartConfig = {}
+    comparisonData.forEach((station, idx) => {
+      config[station.stationName] = {
+        label: station.stationName,
+        color: `hsl(var(--chart-${(idx % 5) + 1}))`,
+      }
+    })
+    return config
   }, [comparisonData])
 
   if (comparisonData.length === 0) {
@@ -120,6 +152,36 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
       </div>
     )
   }
+
+  const ChartPagination = () => (
+    <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
+      <span className="text-sm text-muted-foreground">
+        Showing stations {chartPage * CHART_STATIONS_PER_PAGE + 1}-{Math.min((chartPage + 1) * CHART_STATIONS_PER_PAGE, comparisonData.length)} of {comparisonData.length}
+      </span>
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setChartPage((p) => Math.max(0, p - 1))}
+          disabled={chartPage === 0}
+          className="gap-1"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setChartPage((p) => Math.min(totalChartPages - 1, p + 1))}
+          disabled={chartPage >= totalChartPages - 1}
+          className="gap-1"
+        >
+          Next
+          <ChevronRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  )
 
   return (
     <div className="space-y-6">
@@ -146,7 +208,7 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
               />
               <ChartTooltip content={<ChartTooltipContent />} />
               <ChartLegend content={<ChartLegendContent />} />
-              {comparisonData.map((station) => (
+              {chartStations.map((station) => (
                 <Bar
                   key={station.stationId}
                   dataKey={station.stationName}
@@ -156,6 +218,7 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
               ))}
             </BarChart>
           </ChartContainer>
+          {totalChartPages > 1 && <ChartPagination />}
         </CardContent>
       </Card>
 
@@ -180,7 +243,7 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
                   tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 10 }}
                   stroke="hsl(var(--border))"
                 />
-                {comparisonData.map((station) => (
+                {chartStations.map((station) => (
                   <Radar
                     key={station.stationId}
                     name={station.stationName}
@@ -194,6 +257,7 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
                 <ChartLegend content={<ChartLegendContent />} />
               </RadarChart>
             </ChartContainer>
+            {totalChartPages > 1 && <ChartPagination />}
           </CardContent>
         </Card>
       )}
@@ -223,7 +287,7 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
                 </tr>
               </thead>
               <tbody>
-                {comparisonData.map((station) => (
+                {paginatedTableData.map((station) => (
                   <tr key={station.stationId} className="border-b border-border hover:bg-secondary transition-colors">
                     <td className="p-3 font-medium text-foreground">
                       <div className="flex items-center gap-2">
@@ -254,6 +318,50 @@ function StationComparisonContent({ userRole, date }: { userRole: string, date: 
               </tbody>
             </table>
           </div>
+
+          {/* Table Pagination */}
+          {totalTablePages > 1 && (
+            <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
+              <span className="text-sm text-muted-foreground">
+                Showing {tableStart + 1} to {Math.min(tableEnd, comparisonData.length)} of {comparisonData.length} stations
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setTablePage((p) => Math.max(1, p - 1))}
+                  disabled={tablePage === 1}
+                  className="gap-1"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Previous
+                </Button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: totalTablePages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={tablePage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setTablePage(page)}
+                      className="min-w-9"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setTablePage((p) => Math.min(totalTablePages, p + 1))}
+                  disabled={tablePage >= totalTablePages}
+                  className="gap-1"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

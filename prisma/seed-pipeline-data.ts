@@ -28,85 +28,85 @@ const pipelineStations = [
 ]
 
 const yearlyData = {
-  2024: {
-    throughput: 842.5,
-    delivered: 812.2,
+  2026: {
+    throughput: 0,
+    delivered: 0,
     batches: [
-      { id: 'batch-1', product: 'AGO', volume: 245000, startKm: 0, endKm: 450, color: 'bg-blue-500' },
-      { id: 'batch-2', product: 'PMS', volume: 185000, startKm: 450, endKm: 920, color: 'bg-orange-500' },
-      { id: 'batch-3', product: 'DPK', volume: 120000, startKm: 920, endKm: 1380, color: 'bg-yellow-500' },
-      { id: 'batch-4', product: 'AGO', volume: 210000, startKm: 1380, endKm: 1710, color: 'bg-blue-500' },
+      // { id: 'batch-1', product: 'AGO', volume: 245000, startKm: 0, endKm: 450, color: 'bg-blue-500' },
+      // { id: 'batch-2', product: 'PMS', volume: 185000, startKm: 450, endKm: 920, color: 'bg-orange-500' },
+      // { id: 'batch-3', product: 'DPK', volume: 120000, startKm: 920, endKm: 1380, color: 'bg-yellow-500' },
+      { id: 'batch-1', product: 'LSG', volume: 0, startKm: 0, endKm:0, color: 'bg-blue-500' },
     ]
-  },
-  2023: {
-    throughput: 798.2,
-    delivered: 752.4,
-    batches: [
-      { id: 'batch-23-1', product: 'AGO', volume: 220000, startKm: 0, endKm: 600, color: 'bg-blue-500' },
-      { id: 'batch-23-2', product: 'PMS', volume: 165200, startKm: 600, endKm: 1150, color: 'bg-orange-500' },
-      { id: 'batch-23-3', product: 'AGO', volume: 198000, startKm: 1150, endKm: 1710, color: 'bg-blue-500' },
-    ]
-  },
-  2022: {
-    throughput: 745.1,
-    delivered: 710.8,
-    batches: [
-      { id: 'batch-22-1', product: 'AGO', volume: 195000, startKm: 0, endKm: 550, color: 'bg-blue-500' },
-      { id: 'batch-22-2', product: 'PMS', volume: 145000, startKm: 550, endKm: 1020, color: 'bg-orange-500' },
-      { id: 'batch-22-3', product: 'AGO', volume: 182000, startKm: 1020, endKm: 1710, color: 'bg-blue-500' },
-    ]
-  },
-  2021: {
-    throughput: 712.4,
-    delivered: 685.2,
-    batches: [
-      { id: 'batch-21-1', product: 'AGO', volume: 185000, startKm: 0, endKm: 500, color: 'bg-blue-500' },
-      { id: 'batch-21-2', product: 'PMS', volume: 135000, startKm: 500, endKm: 1080, color: 'bg-orange-500' },
-      { id: 'batch-21-3', product: 'AGO', volume: 175000, startKm: 1080, endKm: 1710, color: 'bg-blue-500' },
-    ]
-  },
-  2020: {
-    throughput: 685.2,
-    delivered: 648.9,
-    batches: [
-      { id: 'batch-20-1', product: 'LSG', volume: 220000, startKm: 0, endKm: 480, color: 'bg-emerald-500' },
-      { id: 'batch-20-2', product: 'LSG', volume: 260000, startKm: 480, endKm: 1020, color: 'bg-emerald-500' },
-      { id: 'batch-20-3', product: 'LSG', volume: 205200, startKm: 1020, endKm: 1710, color: 'bg-emerald-500' },
-    ]
-  },
+  }
+  // 2023: {
+  //   throughput: 0,
+  //   delivered: 0,
+  //   batches: [
+  //     { id: 'batch-23-1', product: 'AGO', volume: 220000, startKm: 0, endKm: 600, color: 'bg-blue-500' },
+  //     { id: 'batch-23-2', product: 'PMS', volume: 165200, startKm: 600, endKm: 1150, color: 'bg-orange-500' },
+  //     { id: 'batch-23-3', product: 'AGO', volume: 198000, startKm: 1150, endKm: 1710, color: 'bg-blue-500' },
+  //   ]
+  // },
+  // 2022: {
+  //   throughput: 745.1,
+  //   delivered: 710.8,
+  //   batches: [
+  //     { id: 'batch-22-1', product: 'AGO', volume: 195000, startKm: 0, endKm: 550, color: 'bg-blue-500' },
+  //     { id: 'batch-22-2', product: 'PMS', volume: 145000, startKm: 550, endKm: 1020, color: 'bg-orange-500' },
+  //     { id: 'batch-22-3', product: 'AGO', volume: 182000, startKm: 1020, endKm: 1710, color: 'bg-blue-500' },
+  //   ]
+  // },
+  // 2021: {
+  //   throughput: 712.4,
+  //   delivered: 685.2,
+  //   batches: [
+  //     { id: 'batch-21-1', product: 'AGO', volume: 185000, startKm: 0, endKm: 500, color: 'bg-blue-500' },
+  //     { id: 'batch-21-2', product: 'PMS', volume: 135000, startKm: 500, endKm: 1080, color: 'bg-orange-500' },
+  //     { id: 'batch-21-3', product: 'AGO', volume: 175000, startKm: 1080, endKm: 1710, color: 'bg-blue-500' },
+  //   ]
+  // },
+  // 2020: {
+  //   throughput: 685.2,
+  //   delivered: 648.9,
+  //   batches: [
+  //     { id: 'batch-20-1', product: 'LSG', volume: 220000, startKm: 0, endKm: 480, color: 'bg-emerald-500' },
+  //     { id: 'batch-20-2', product: 'LSG', volume: 260000, startKm: 480, endKm: 1020, color: 'bg-emerald-500' },
+  //     { id: 'batch-20-3', product: 'LSG', volume: 205200, startKm: 1020, endKm: 1710, color: 'bg-emerald-500' },
+  //   ]
+  // },
 }
 
-const pigs = [
-  { id: 'pig-1', name: 'Cleaning Pig #1', position: 300, speed: 8, type: 'cleaning', launched: new Date(Date.now() - 1000 * 60 * 60 * 8) },
-  { id: 'pig-2', name: 'Inspection Pig #2', position: 950, speed: 5, type: 'inspection', launched: new Date(Date.now() - 1000 * 60 * 60 * 4) },
-]
+// const pigs = [
+//   { id: 'pig-1', name: 'Cleaning Pig #1', position: 300, speed: 8, type: 'cleaning', launched: new Date(Date.now() - 1000 * 60 * 60 * 8) },
+//   { id: 'pig-2', name: 'Inspection Pig #2', position: 950, speed: 5, type: 'inspection', launched: new Date(Date.now() - 1000 * 60 * 60 * 4) },
+// ]
 
-const testAlerts = [
-  {
-    type: 'warning',
-    title: 'Low Pressure Detected',
-    message: 'Pressure dropped below optimal range. Current: 44 bar',
-    station: 'Ilula Sub-Station',
-    timestamp: new Date(Date.now() - 1000 * 60 * 15),
-    read: false,
-  },
-  {
-    type: 'critical',
-    title: 'High Temperature Alarm',
-    message: 'Extreme temperature detected at pump bearings.',
-    station: 'Morogoro Pump Station',
-    timestamp: new Date(Date.now() - 1000 * 60 * 5),
-    read: false,
-  },
-  {
-    type: 'info',
-    title: 'Maintenance Reminder',
-    message: 'Annual inspection due by end of month.',
-    station: 'Mbeya Pump Station',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
-    read: true,
-  }
-]
+// const testAlerts = [
+//   {
+//     type: 'warning',
+//     title: 'Low Pressure Detected',
+//     message: 'Pressure dropped below optimal range. Current: 44 bar',
+//     station: 'Ilula Sub-Station',
+//     timestamp: new Date(Date.now() - 1000 * 60 * 15),
+//     read: false,
+//   },
+//   {
+//     type: 'critical',
+//     title: 'High Temperature Alarm',
+//     message: 'Extreme temperature detected at pump bearings.',
+//     station: 'Morogoro Pump Station',
+//     timestamp: new Date(Date.now() - 1000 * 60 * 5),
+//     read: false,
+//   },
+//   {
+//     type: 'info',
+//     title: 'Maintenance Reminder',
+//     message: 'Annual inspection due by end of month.',
+//     station: 'Mbeya Pump Station',
+//     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
+//     read: true,
+//   }
+// ]
 
 export async function seedPipelineData() {
   console.log('Starting pipeline data seed with Facilities...')
@@ -190,163 +190,163 @@ export async function seedPipelineData() {
     }
     console.log('Yearly stats and batches seeded.')
 
-    // Seed Pig Categories
-    await prisma.pigCategory.deleteMany({})
+    // // Seed Pig Categories
+    // await prisma.pigCategory.deleteMany({})
     
-    const catCleaning = await prisma.pigCategory.create({
-      data: {
-        name: 'Cleaning',
-        description: 'Standard cleaning pigs for wax and debris removal',
-        color: 'bg-yellow-500',
-        icon: 'Truck'
-      }
-    })
+    // const catCleaning = await prisma.pigCategory.create({
+    //   data: {
+    //     name: 'Cleaning',
+    //     description: 'Standard cleaning pigs for wax and debris removal',
+    //     color: 'bg-yellow-500',
+    //     icon: 'Truck'
+    //   }
+    // })
 
-    const catInspection = await prisma.pigCategory.create({
-      data: {
-        name: 'Inspection',
-        description: 'Smart pigs with MFL or Ultrasonic sensors',
-        color: 'bg-blue-500',
-        icon: 'Activity'
-      }
-    })
+    // const catInspection = await prisma.pigCategory.create({
+    //   data: {
+    //     name: 'Inspection',
+    //     description: 'Smart pigs with MFL or Ultrasonic sensors',
+    //     color: 'bg-blue-500',
+    //     icon: 'Activity'
+    //   }
+    // })
 
-    const catBatching = await prisma.pigCategory.create({
-      data: {
-        name: 'Batching',
-        description: 'Pigs used for separating different product batches',
-        color: 'bg-purple-500',
-        icon: 'Zap'
-      }
-    })
+    // const catBatching = await prisma.pigCategory.create({
+    //   data: {
+    //     name: 'Batching',
+    //     description: 'Pigs used for separating different product batches',
+    //     color: 'bg-purple-500',
+    //     icon: 'Zap'
+    //   }
+    // })
 
-    console.log('PIG Categories seeded.')
+    // console.log('PIG Categories seeded.')
 
-    // Seed Pigs
-    await prisma.pigRun.deleteMany({})
-    await prisma.pipelinePig.deleteMany({})
+    // // Seed Pigs
+    // await prisma.pigRun.deleteMany({})
+    // await prisma.pipelinePig.deleteMany({})
 
-    const pig1 = await prisma.pipelinePig.create({
-      data: {
-        name: 'Cleaning PIG Alpha',
-        categoryId: catCleaning.id,
-        status: 'in-use',
-        condition: 'excellent',
-        runs: 24,
-        lastRun: new Date('2024-01-15T06:00:00.000Z'),
-        position: 892,
-        speed: 4.2,
-      }
-    })
+    // const pig1 = await prisma.pipelinePig.create({
+    //   data: {
+    //     name: 'Cleaning PIG Alpha',
+    //     categoryId: catCleaning.id,
+    //     status: 'in-use',
+    //     condition: 'excellent',
+    //     runs: 24,
+    //     lastRun: new Date('2024-01-15T06:00:00.000Z'),
+    //     position: 892,
+    //     speed: 4.2,
+    //   }
+    // })
 
-    const pig2 = await prisma.pipelinePig.create({
-      data: {
-        name: 'Smart PIG Beta',
-        categoryId: catInspection.id,
-        status: 'available',
-        condition: 'good',
-        runs: 8,
-        lastRun: new Date('2023-12-20T08:00:00.000Z'),
-        position: 0,
-        speed: 0,
-      }
-    })
+    // const pig2 = await prisma.pipelinePig.create({
+    //   data: {
+    //     name: 'Smart PIG Beta',
+    //     categoryId: catInspection.id,
+    //     status: 'available',
+    //     condition: 'good',
+    //     runs: 8,
+    //     lastRun: new Date('2023-12-20T08:00:00.000Z'),
+    //     position: 0,
+    //     speed: 0,
+    //   }
+    // })
 
-    const pig3 = await prisma.pipelinePig.create({
-      data: {
-        name: 'Cleaning PIG Gamma',
-        categoryId: catCleaning.id,
-        status: 'maintenance',
-        condition: 'fair',
-        runs: 32,
-        lastRun: new Date('2024-01-10T07:00:00.000Z'),
-        position: 0,
-        speed: 0,
-      }
-    })
+    // const pig3 = await prisma.pipelinePig.create({
+    //   data: {
+    //     name: 'Cleaning PIG Gamma',
+    //     categoryId: catCleaning.id,
+    //     status: 'maintenance',
+    //     condition: 'fair',
+    //     runs: 32,
+    //     lastRun: new Date('2024-01-10T07:00:00.000Z'),
+    //     position: 0,
+    //     speed: 0,
+    //   }
+    // })
 
-    const pig4 = await prisma.pipelinePig.create({
-      data: {
-        name: 'Smart PIG Alpha',
-        categoryId: catInspection.id,
-        status: 'available',
-        condition: 'excellent',
-        runs: 12,
-        lastRun: new Date('2024-01-05T06:00:00.000Z'),
-        position: 0,
-        speed: 0,
-      }
-    })
+    // const pig4 = await prisma.pipelinePig.create({
+    //   data: {
+    //     name: 'Smart PIG Alpha',
+    //     categoryId: catInspection.id,
+    //     status: 'available',
+    //     condition: 'excellent',
+    //     runs: 12,
+    //     lastRun: new Date('2024-01-05T06:00:00.000Z'),
+    //     position: 0,
+    //     speed: 0,
+    //   }
+    // })
 
-    console.log('PIG Inventory seeded.')
+    // console.log('PIG Inventory seeded.')
 
-    // Seed Pig Runs
-    await prisma.pigRun.create({
-      data: {
-        id: 'PR-2024-001',
-        pigId: pig1.id,
-        categoryId: catCleaning.id,
-        status: 'in-transit',
-        launchStation: 'Single Point Mooring',
-        receiveStation: 'Ndola Terminal',
-        launchTime: new Date('2024-01-15T06:00:00.000Z'),
-        estimatedArrival: new Date('2024-01-17T18:00:00.000Z'),
-        currentPosition: 892,
-        speed: 4.2,
-        distanceCovered: 892,
-        totalDistance: 1710,
-        operator: 'John Mwamba'
-      }
-    })
+    // // Seed Pig Runs
+    // await prisma.pigRun.create({
+    //   data: {
+    //     id: 'PR-2024-001',
+    //     pigId: pig1.id,
+    //     categoryId: catCleaning.id,
+    //     status: 'in-transit',
+    //     launchStation: 'Single Point Mooring',
+    //     receiveStation: 'Ndola Terminal',
+    //     launchTime: new Date('2024-01-15T06:00:00.000Z'),
+    //     estimatedArrival: new Date('2024-01-17T18:00:00.000Z'),
+    //     currentPosition: 892,
+    //     speed: 4.2,
+    //     distanceCovered: 892,
+    //     totalDistance: 1710,
+    //     operator: 'John Mwamba'
+    //   }
+    // })
 
-    await prisma.pigRun.create({
-      data: {
-        id: 'PR-2024-002',
-        pigId: pig2.id,
-        categoryId: catInspection.id,
-        status: 'scheduled',
-        launchStation: 'Kigamboni PS',
-        receiveStation: 'Bwana Mkubwa',
-        launchTime: new Date('2024-01-20T08:00:00.000Z'),
-        estimatedArrival: new Date('2024-01-22T14:00:00.000Z'),
-        currentPosition: 0,
-        speed: 0,
-        distanceCovered: 0,
-        totalDistance: 1635,
-        operator: 'Sarah Tembo'
-      }
-    })
+    // await prisma.pigRun.create({
+    //   data: {
+    //     id: 'PR-2024-002',
+    //     pigId: pig2.id,
+    //     categoryId: catInspection.id,
+    //     status: 'scheduled',
+    //     launchStation: 'Kigamboni PS',
+    //     receiveStation: 'Bwana Mkubwa',
+    //     launchTime: new Date('2024-01-20T08:00:00.000Z'),
+    //     estimatedArrival: new Date('2024-01-22T14:00:00.000Z'),
+    //     currentPosition: 0,
+    //     speed: 0,
+    //     distanceCovered: 0,
+    //     totalDistance: 1635,
+    //     operator: 'Sarah Tembo'
+    //   }
+    // })
 
-    await prisma.pigRun.create({
-      data: {
-        id: 'PR-2023-089',
-        pigId: pig3.id,
-        categoryId: catCleaning.id,
-        status: 'completed',
-        launchStation: 'Single Point Mooring',
-        receiveStation: 'Ndola Terminal',
-        launchTime: new Date('2024-01-10T07:00:00.000Z'),
-        estimatedArrival: new Date('2024-01-12T16:00:00.000Z'),
-        actualArrival: new Date('2024-01-12T15:30:00.000Z'),
-        currentPosition: 1710,
-        speed: 0,
-        distanceCovered: 1710,
-        totalDistance: 1710,
-        findings: 'Light wax deposits removed. Pipeline in good condition.',
-        operator: 'Michael Banda'
-      }
-    })
+    // await prisma.pigRun.create({
+    //   data: {
+    //     id: 'PR-2023-089',
+    //     pigId: pig3.id,
+    //     categoryId: catCleaning.id,
+    //     status: 'completed',
+    //     launchStation: 'Single Point Mooring',
+    //     receiveStation: 'Ndola Terminal',
+    //     launchTime: new Date('2024-01-10T07:00:00.000Z'),
+    //     estimatedArrival: new Date('2024-01-12T16:00:00.000Z'),
+    //     actualArrival: new Date('2024-01-12T15:30:00.000Z'),
+    //     currentPosition: 1710,
+    //     speed: 0,
+    //     distanceCovered: 1710,
+    //     totalDistance: 1710,
+    //     findings: 'Light wax deposits removed. Pipeline in good condition.',
+    //     operator: 'Michael Banda'
+    //   }
+    // })
 
-    console.log('PIG Runs seeded.')
+    // console.log('PIG Runs seeded.')
     
     // Seed Alerts
-    await prisma.alert.deleteMany({}) // Reset alerts
-    for (const alert of testAlerts) {
-      await prisma.alert.create({
-        data: alert
-      })
-    }
-    console.log('Test alerts seeded.')
+    // await prisma.alert.deleteMany({}) // Reset alerts
+    // for (const alert of testAlerts) {
+    //   await prisma.alert.create({
+    //     data: alert
+    //   })
+    // }
+    // console.log('Test alerts seeded.')
 
     console.log('Pipeline data seed completed successfully.')
     return { success: true }

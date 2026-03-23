@@ -9,6 +9,11 @@ import axios from "axios"
 
 const ITEMS_PER_PAGE = 5
 
+// Format number with 2 decimal places and comma separators
+const formatNumber = (value: number): string => {
+  return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
 export function ReconciliationView() {
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -105,17 +110,17 @@ export function ReconciliationView() {
                   <div className="grid grid-cols-4 gap-4">
                     <div>
                       <p className="text-xs text-gray-600">Planned MT</p>
-                      <p className="text-lg font-semibold text-gray-900">{item.plannedMT}</p>
+                      <p className="text-lg font-semibold text-gray-900">{formatNumber(item.plannedMT)}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-600">Actual MT</p>
-                      <p className="text-lg font-semibold text-gray-900">{item.actualMT}</p>
+                      <p className="text-lg font-semibold text-gray-900">{formatNumber(item.actualMT)}</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-600">Variance MT</p>
                       <p className={`text-lg font-semibold ${item.variance > 0 ? "text-red-600" : "text-green-600"}`}>
                         {item.variance > 0 ? "+" : ""}
-                        {item.variance}
+                        {formatNumber(item.variance)}
                       </p>
                     </div>
                     <div>
@@ -135,8 +140,8 @@ export function ReconciliationView() {
                       <div key={tank.tankId} className="flex items-center justify-between bg-gray-50 p-2 rounded">
                         <span className="text-sm text-gray-600">{tank.tankId}</span>
                         <div className="flex items-center gap-4 text-sm">
-                          <span>Allocated: {tank.allocated} MT</span>
-                          <span>Received: {tank.received} MT</span>
+                          <span>Allocated: {formatNumber(tank.allocated)} MT</span>
+                          <span>Received: {formatNumber(tank.received)} MT</span>
                           <span
                             className={
                               tank.allocated === tank.received

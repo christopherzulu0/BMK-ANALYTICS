@@ -153,11 +153,12 @@ export default function TankOverviewView({
       ? tempValues.reduce((sum, temp) => sum + temp, 0) / tempValues.length
       : 0
 
+    const fmt = (v: number) => v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
     return {
-      totalVolume: Number(totalVolume).toFixed(1),
-      totalVolAt20C: Number(totalVolAt20C).toFixed(1),
-      totalMts: Number(totalMts).toFixed(1),
-      avgTemp: Number(avgTemp).toFixed(1),
+      totalVolume: fmt(totalVolume),
+      totalVolAt20C: fmt(totalVolAt20C),
+      totalMts: fmt(totalMts),
+      avgTemp: fmt(avgTemp),
     }
   }
 
@@ -186,8 +187,9 @@ export default function TankOverviewView({
       return "N/A"
     }
 
-    // Format the number
-    return num.toFixed(decimals)
+    // Format the number with comma separators and 2 decimal places
+    const maxDecimals = Math.max(2, decimals)
+    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: maxDecimals })
   }
 
   // Format date for display

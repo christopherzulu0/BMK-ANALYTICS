@@ -207,7 +207,7 @@ const formatNumber = (value: any, decimals: number = 1): string => {
     return "N/A"
   }
 
-  return num.toFixed(decimals)
+  return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: decimals < 2 ? 2 : decimals })
 }
 
 const TankCard = ({ tank, userRole }: { tank: Tank; userRole: string }) => {
@@ -437,14 +437,14 @@ const SchematicView = ({
           <div className="grid grid-cols-3 gap-8 text-center">
             <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
               <p className="text-xs text-muted-foreground font-semibold mb-2">TANK CAPACITY</p>
-              <p className="text-2xl font-bold text-foreground">{totalCapacity.toLocaleString()} m³</p>
+              <p className="text-2xl font-bold text-foreground">{totalCapacity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m³</p>
               <p className="text-xs text-muted-foreground mt-1">Total Storage</p>
             </div>
             <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
               <p className="text-xs text-muted-foreground font-semibold mb-2">CURRENT VOLUME</p>
-              <p className="text-2xl font-bold text-blue-600">{totalVolume.toLocaleString()} m³</p>
+              <p className="text-2xl font-bold text-blue-600">{totalVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m³</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {totalCapacity > 0 ? ((totalVolume / totalCapacity) * 100).toFixed(1) : 0}% Utilization
+                {totalCapacity > 0 ? ((totalVolume / totalCapacity) * 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}% Utilization
               </p>
             </div>
             <div className="bg-white rounded-lg p-6 border border-slate-200 shadow-sm">
@@ -570,9 +570,9 @@ function TanksViewContent({ userRole, stationId, dateRange }: TanksViewProps) {
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Capacity</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-foreground">{totalCapacity.toFixed(0)}</p>
+            <p className="text-3xl font-bold text-foreground">{totalCapacity.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             <p className="text-xs text-muted-foreground">m³</p>
-            <p className="text-xs text-muted-foreground mt-1">Current: {totalVolume.toFixed(0)} m³</p>
+            <p className="text-xs text-muted-foreground mt-1">Current: {totalVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m³</p>
           </CardContent>
         </Card>
 
@@ -581,7 +581,7 @@ function TanksViewContent({ userRole, stationId, dateRange }: TanksViewProps) {
             <CardTitle className="text-sm font-medium text-muted-foreground">Avg Temperature</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-foreground">{avgTemp.toFixed(1)}°C</p>
+            <p className="text-3xl font-bold text-foreground">{avgTemp.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}°C</p>
           </CardContent>
         </Card>
 

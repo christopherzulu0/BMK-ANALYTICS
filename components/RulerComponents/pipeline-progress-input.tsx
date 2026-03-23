@@ -101,7 +101,7 @@ export default function PipelineProgressInput({
         </div>
 
         <Button 
-          className="w-full gap-2" 
+          className="w-full gap-2 bg-blue-500 hover:bg-blue-600 text-white" 
           onClick={handleSave}
           disabled={mutation.isPending}
         >

@@ -244,7 +244,7 @@ export default function PipelineFlowVisualization({
   }, [batches])
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       {/* Metrics Bar */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <Card className="p-3 bg-card border-border relative overflow-hidden">
@@ -294,12 +294,12 @@ export default function PipelineFlowVisualization({
       </div>
 
       {/* Main Visualization Card */}
-      <Card className="p-4 md:p-6 text-foreground">
+      <Card className="p-4 md:p-6 text-foreground ">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 ">
           <div>
             <h2 className="text-lg font-bold">Pipeline Flow Diagram</h2>
-            <p className="text-xs text-muted-foreground">Single Point Mooring (Tanzania) to Ndola Terminal (Zambia) - {TOTAL_LENGTH} km</p>
+            <p className="text-xs text-muted-foreground ">Single Point Mooring (Tanzania) to Ndola Terminal (Zambia) - {TOTAL_LENGTH} km</p>
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">
@@ -399,7 +399,7 @@ export default function PipelineFlowVisualization({
         )}
 
         {/* Flow Direction Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4 py-2 px-4 bg-muted/30 rounded-lg">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4 py-2 px-4 bg-muted/30 rounded-lg bg-red-50 border-red-200">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-orange-500" />
             <span className="text-sm font-medium">Single Point Mooring</span>
@@ -428,8 +428,8 @@ export default function PipelineFlowVisualization({
         </div>
 
         {/* Yearly Stats & Legend */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-3 bg-muted/30 rounded-lg border border-border/50">
-          <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4 p-3 bg-muted/30 rounded-lg border border-border/50 bg-red-50 border-red-200">
+          <div className="flex flex-wrap items-center gap-4 ">
             {uniqueProducts.length > 0 ? (
               uniqueProducts.map(product => (
                 <div key={product.name} className="flex items-center gap-1.5">
@@ -438,7 +438,7 @@ export default function PipelineFlowVisualization({
                 </div>
               ))
             ) : (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 ">
                 <div className="w-4 h-4 rounded bg-slate-500 opacity-20" />
                 <span className="text-sm font-medium text-muted-foreground italic">No products in pipeline</span>
               </div>
@@ -468,7 +468,7 @@ export default function PipelineFlowVisualization({
         </div>
 
         {/* Pipeline Visualization - Fixed width, horizontally scrollable */}
-        <div className="overflow-x-auto overflow-y-visible pb-4 border border-border rounded-lg bg-muted/20">
+        <div className="overflow-x-auto overflow-y-visible pb-4 border border-border rounded-lg bg-muted/20  bg-red-50 border-red-200">
           <div 
             className="relative transition-transform duration-200"
             style={{ 
