@@ -283,7 +283,7 @@ model Facility {
 
 model PipelineBatch {
   id        String   @id @default(cuid())
-  year      Int
+  date      DateTime @default(now()) @db.Date
   product   String
   volume    Float
   startKm   Float
@@ -349,9 +349,9 @@ model PigRun {
   @@index([status])
 }
 
-model PipelineYearlyStats {
+model PipelineDailyStats {
   id         String   @id @default(cuid())
-  year       Int      @unique
+  date       DateTime @default(now()) @unique @db.Date
   throughput Float
   delivered  Float
   createdAt  DateTime @default(now())
@@ -454,9 +454,9 @@ model Supplier {
 
 model PipelineProgress {
   id            String   @id @default(cuid())
-  year          Int?     @unique
+  date          DateTime? @unique @db.Date
   distanceKm    Float    @default(0)
-  totalDistance  Float    @default(1710)
+  totalDistance Float    @default(1710)
   lastStation   String?
   updatedAt     DateTime @updatedAt
 }
@@ -505,3 +505,27 @@ model OutstandingIssue {
   updatedAt  DateTime @updatedAt
 }
 
+/// User-managed station columns for the fuel consumption matrix
+model FuelStation {
+  id        String             @id @default(cuid())
+  name      String             @unique @db.NVarChar(100)
+  position  Int                @default(0)
+  createdAt DateTime           @default(now())
+  entries   FuelStationEntry[]
+}
+
+/// One entry per day per station (Consumption + Stock)
+model FuelStationEntry {
+  id          String      @id @default(cuid())
+  date        DateTime    @db.Date
+  stationId   String
+  station     FuelStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  consumption Float?
+  stock       Float?
+  remarks     String?     @db.Text
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([date, stationId])
+  @@index([date])
+}

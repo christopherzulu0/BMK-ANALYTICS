@@ -125,10 +125,10 @@ export type PipelinePig = $Result.DefaultSelection<Prisma.$PipelinePigPayload>
  */
 export type PigRun = $Result.DefaultSelection<Prisma.$PigRunPayload>
 /**
- * Model PipelineYearlyStats
+ * Model PipelineDailyStats
  * 
  */
-export type PipelineYearlyStats = $Result.DefaultSelection<Prisma.$PipelineYearlyStatsPayload>
+export type PipelineDailyStats = $Result.DefaultSelection<Prisma.$PipelineDailyStatsPayload>
 /**
  * Model DailyEntry
  * One saved report per station per day with summary fields.
@@ -171,6 +171,16 @@ export type ShiftLogEntry = $Result.DefaultSelection<Prisma.$ShiftLogEntryPayloa
  * 
  */
 export type OutstandingIssue = $Result.DefaultSelection<Prisma.$OutstandingIssuePayload>
+/**
+ * Model FuelStation
+ * User-managed station columns for the fuel consumption matrix
+ */
+export type FuelStation = $Result.DefaultSelection<Prisma.$FuelStationPayload>
+/**
+ * Model FuelStationEntry
+ * One entry per day per station (Consumption + Stock)
+ */
+export type FuelStationEntry = $Result.DefaultSelection<Prisma.$FuelStationEntryPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -514,14 +524,14 @@ export class PrismaClient<
   get pigRun(): Prisma.PigRunDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.pipelineYearlyStats`: Exposes CRUD operations for the **PipelineYearlyStats** model.
+   * `prisma.pipelineDailyStats`: Exposes CRUD operations for the **PipelineDailyStats** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more PipelineYearlyStats
-    * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findMany()
+    * // Fetch zero or more PipelineDailyStats
+    * const pipelineDailyStats = await prisma.pipelineDailyStats.findMany()
     * ```
     */
-  get pipelineYearlyStats(): Prisma.PipelineYearlyStatsDelegate<ExtArgs, ClientOptions>;
+  get pipelineDailyStats(): Prisma.PipelineDailyStatsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.dailyEntry`: Exposes CRUD operations for the **DailyEntry** model.
@@ -602,6 +612,26 @@ export class PrismaClient<
     * ```
     */
   get outstandingIssue(): Prisma.OutstandingIssueDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.fuelStation`: Exposes CRUD operations for the **FuelStation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FuelStations
+    * const fuelStations = await prisma.fuelStation.findMany()
+    * ```
+    */
+  get fuelStation(): Prisma.FuelStationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.fuelStationEntry`: Exposes CRUD operations for the **FuelStationEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FuelStationEntries
+    * const fuelStationEntries = await prisma.fuelStationEntry.findMany()
+    * ```
+    */
+  get fuelStationEntry(): Prisma.FuelStationEntryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1058,7 +1088,7 @@ export namespace Prisma {
     PigCategory: 'PigCategory',
     PipelinePig: 'PipelinePig',
     PigRun: 'PigRun',
-    PipelineYearlyStats: 'PipelineYearlyStats',
+    PipelineDailyStats: 'PipelineDailyStats',
     DailyEntry: 'DailyEntry',
     Tank: 'Tank',
     Remark: 'Remark',
@@ -1066,7 +1096,9 @@ export namespace Prisma {
     PipelineProgress: 'PipelineProgress',
     ShiftHandover: 'ShiftHandover',
     ShiftLogEntry: 'ShiftLogEntry',
-    OutstandingIssue: 'OutstandingIssue'
+    OutstandingIssue: 'OutstandingIssue',
+    FuelStation: 'FuelStation',
+    FuelStationEntry: 'FuelStationEntry'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1082,7 +1114,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "facility" | "pipelineBatch" | "pigCategory" | "pipelinePig" | "pigRun" | "pipelineYearlyStats" | "dailyEntry" | "tank" | "remark" | "supplier" | "pipelineProgress" | "shiftHandover" | "shiftLogEntry" | "outstandingIssue"
+      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "facility" | "pipelineBatch" | "pigCategory" | "pipelinePig" | "pigRun" | "pipelineDailyStats" | "dailyEntry" | "tank" | "remark" | "supplier" | "pipelineProgress" | "shiftHandover" | "shiftLogEntry" | "outstandingIssue" | "fuelStation" | "fuelStationEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2538,69 +2570,69 @@ export namespace Prisma {
           }
         }
       }
-      PipelineYearlyStats: {
-        payload: Prisma.$PipelineYearlyStatsPayload<ExtArgs>
-        fields: Prisma.PipelineYearlyStatsFieldRefs
+      PipelineDailyStats: {
+        payload: Prisma.$PipelineDailyStatsPayload<ExtArgs>
+        fields: Prisma.PipelineDailyStatsFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.PipelineYearlyStatsFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload> | null
+            args: Prisma.PipelineDailyStatsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.PipelineYearlyStatsFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+            args: Prisma.PipelineDailyStatsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload>
           }
           findFirst: {
-            args: Prisma.PipelineYearlyStatsFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload> | null
+            args: Prisma.PipelineDailyStatsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.PipelineYearlyStatsFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+            args: Prisma.PipelineDailyStatsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload>
           }
           findMany: {
-            args: Prisma.PipelineYearlyStatsFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>[]
+            args: Prisma.PipelineDailyStatsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload>[]
           }
           create: {
-            args: Prisma.PipelineYearlyStatsCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+            args: Prisma.PipelineDailyStatsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload>
           }
           createMany: {
-            args: Prisma.PipelineYearlyStatsCreateManyArgs<ExtArgs>
+            args: Prisma.PipelineDailyStatsCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           delete: {
-            args: Prisma.PipelineYearlyStatsDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+            args: Prisma.PipelineDailyStatsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload>
           }
           update: {
-            args: Prisma.PipelineYearlyStatsUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+            args: Prisma.PipelineDailyStatsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload>
           }
           deleteMany: {
-            args: Prisma.PipelineYearlyStatsDeleteManyArgs<ExtArgs>
+            args: Prisma.PipelineDailyStatsDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.PipelineYearlyStatsUpdateManyArgs<ExtArgs>
+            args: Prisma.PipelineDailyStatsUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           upsert: {
-            args: Prisma.PipelineYearlyStatsUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PipelineYearlyStatsPayload>
+            args: Prisma.PipelineDailyStatsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PipelineDailyStatsPayload>
           }
           aggregate: {
-            args: Prisma.PipelineYearlyStatsAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePipelineYearlyStats>
+            args: Prisma.PipelineDailyStatsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipelineDailyStats>
           }
           groupBy: {
-            args: Prisma.PipelineYearlyStatsGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PipelineYearlyStatsGroupByOutputType>[]
+            args: Prisma.PipelineDailyStatsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipelineDailyStatsGroupByOutputType>[]
           }
           count: {
-            args: Prisma.PipelineYearlyStatsCountArgs<ExtArgs>
-            result: $Utils.Optional<PipelineYearlyStatsCountAggregateOutputType> | number
+            args: Prisma.PipelineDailyStatsCountArgs<ExtArgs>
+            result: $Utils.Optional<PipelineDailyStatsCountAggregateOutputType> | number
           }
         }
       }
@@ -3132,6 +3164,138 @@ export namespace Prisma {
           }
         }
       }
+      FuelStation: {
+        payload: Prisma.$FuelStationPayload<ExtArgs>
+        fields: Prisma.FuelStationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FuelStationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FuelStationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload>
+          }
+          findFirst: {
+            args: Prisma.FuelStationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FuelStationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload>
+          }
+          findMany: {
+            args: Prisma.FuelStationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload>[]
+          }
+          create: {
+            args: Prisma.FuelStationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload>
+          }
+          createMany: {
+            args: Prisma.FuelStationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FuelStationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload>
+          }
+          update: {
+            args: Prisma.FuelStationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload>
+          }
+          deleteMany: {
+            args: Prisma.FuelStationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FuelStationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FuelStationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationPayload>
+          }
+          aggregate: {
+            args: Prisma.FuelStationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFuelStation>
+          }
+          groupBy: {
+            args: Prisma.FuelStationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FuelStationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FuelStationCountArgs<ExtArgs>
+            result: $Utils.Optional<FuelStationCountAggregateOutputType> | number
+          }
+        }
+      }
+      FuelStationEntry: {
+        payload: Prisma.$FuelStationEntryPayload<ExtArgs>
+        fields: Prisma.FuelStationEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FuelStationEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FuelStationEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.FuelStationEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FuelStationEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload>
+          }
+          findMany: {
+            args: Prisma.FuelStationEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload>[]
+          }
+          create: {
+            args: Prisma.FuelStationEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload>
+          }
+          createMany: {
+            args: Prisma.FuelStationEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FuelStationEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload>
+          }
+          update: {
+            args: Prisma.FuelStationEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.FuelStationEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FuelStationEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FuelStationEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FuelStationEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.FuelStationEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFuelStationEntry>
+          }
+          groupBy: {
+            args: Prisma.FuelStationEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FuelStationEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FuelStationEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<FuelStationEntryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3262,7 +3426,7 @@ export namespace Prisma {
     pigCategory?: PigCategoryOmit
     pipelinePig?: PipelinePigOmit
     pigRun?: PigRunOmit
-    pipelineYearlyStats?: PipelineYearlyStatsOmit
+    pipelineDailyStats?: PipelineDailyStatsOmit
     dailyEntry?: DailyEntryOmit
     tank?: TankOmit
     remark?: RemarkOmit
@@ -3271,6 +3435,8 @@ export namespace Prisma {
     shiftHandover?: ShiftHandoverOmit
     shiftLogEntry?: ShiftLogEntryOmit
     outstandingIssue?: OutstandingIssueOmit
+    fuelStation?: FuelStationOmit
+    fuelStationEntry?: FuelStationEntryOmit
   }
 
   /* Types for Logging */
@@ -3645,6 +3811,37 @@ export namespace Prisma {
    */
   export type DailyEntryCountOutputTypeCountRemarksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RemarkWhereInput
+  }
+
+
+  /**
+   * Count Type FuelStationCountOutputType
+   */
+
+  export type FuelStationCountOutputType = {
+    entries: number
+  }
+
+  export type FuelStationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entries?: boolean | FuelStationCountOutputTypeCountEntriesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FuelStationCountOutputType without action
+   */
+  export type FuelStationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationCountOutputType
+     */
+    select?: FuelStationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FuelStationCountOutputType without action
+   */
+  export type FuelStationCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FuelStationEntryWhereInput
   }
 
 
@@ -21645,14 +21842,12 @@ export namespace Prisma {
   }
 
   export type PipelineBatchAvgAggregateOutputType = {
-    year: number | null
     volume: number | null
     startKm: number | null
     endKm: number | null
   }
 
   export type PipelineBatchSumAggregateOutputType = {
-    year: number | null
     volume: number | null
     startKm: number | null
     endKm: number | null
@@ -21660,7 +21855,7 @@ export namespace Prisma {
 
   export type PipelineBatchMinAggregateOutputType = {
     id: string | null
-    year: number | null
+    date: Date | null
     product: string | null
     volume: number | null
     startKm: number | null
@@ -21672,7 +21867,7 @@ export namespace Prisma {
 
   export type PipelineBatchMaxAggregateOutputType = {
     id: string | null
-    year: number | null
+    date: Date | null
     product: string | null
     volume: number | null
     startKm: number | null
@@ -21684,7 +21879,7 @@ export namespace Prisma {
 
   export type PipelineBatchCountAggregateOutputType = {
     id: number
-    year: number
+    date: number
     product: number
     volume: number
     startKm: number
@@ -21697,14 +21892,12 @@ export namespace Prisma {
 
 
   export type PipelineBatchAvgAggregateInputType = {
-    year?: true
     volume?: true
     startKm?: true
     endKm?: true
   }
 
   export type PipelineBatchSumAggregateInputType = {
-    year?: true
     volume?: true
     startKm?: true
     endKm?: true
@@ -21712,7 +21905,7 @@ export namespace Prisma {
 
   export type PipelineBatchMinAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     product?: true
     volume?: true
     startKm?: true
@@ -21724,7 +21917,7 @@ export namespace Prisma {
 
   export type PipelineBatchMaxAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     product?: true
     volume?: true
     startKm?: true
@@ -21736,7 +21929,7 @@ export namespace Prisma {
 
   export type PipelineBatchCountAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     product?: true
     volume?: true
     startKm?: true
@@ -21835,7 +22028,7 @@ export namespace Prisma {
 
   export type PipelineBatchGroupByOutputType = {
     id: string
-    year: number
+    date: Date
     product: string
     volume: number
     startKm: number
@@ -21866,7 +22059,7 @@ export namespace Prisma {
 
   export type PipelineBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    year?: boolean
+    date?: boolean
     product?: boolean
     volume?: boolean
     startKm?: boolean
@@ -21880,7 +22073,7 @@ export namespace Prisma {
 
   export type PipelineBatchSelectScalar = {
     id?: boolean
-    year?: boolean
+    date?: boolean
     product?: boolean
     volume?: boolean
     startKm?: boolean
@@ -21890,14 +22083,14 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PipelineBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "year" | "product" | "volume" | "startKm" | "endKm" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelineBatch"]>
+  export type PipelineBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "product" | "volume" | "startKm" | "endKm" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelineBatch"]>
 
   export type $PipelineBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PipelineBatch"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      year: number
+      date: Date
       product: string
       volume: number
       startKm: number
@@ -22275,7 +22468,7 @@ export namespace Prisma {
    */
   interface PipelineBatchFieldRefs {
     readonly id: FieldRef<"PipelineBatch", 'String'>
-    readonly year: FieldRef<"PipelineBatch", 'Int'>
+    readonly date: FieldRef<"PipelineBatch", 'DateTime'>
     readonly product: FieldRef<"PipelineBatch", 'String'>
     readonly volume: FieldRef<"PipelineBatch", 'Float'>
     readonly startKm: FieldRef<"PipelineBatch", 'Float'>
@@ -25853,50 +26046,48 @@ export namespace Prisma {
 
 
   /**
-   * Model PipelineYearlyStats
+   * Model PipelineDailyStats
    */
 
-  export type AggregatePipelineYearlyStats = {
-    _count: PipelineYearlyStatsCountAggregateOutputType | null
-    _avg: PipelineYearlyStatsAvgAggregateOutputType | null
-    _sum: PipelineYearlyStatsSumAggregateOutputType | null
-    _min: PipelineYearlyStatsMinAggregateOutputType | null
-    _max: PipelineYearlyStatsMaxAggregateOutputType | null
+  export type AggregatePipelineDailyStats = {
+    _count: PipelineDailyStatsCountAggregateOutputType | null
+    _avg: PipelineDailyStatsAvgAggregateOutputType | null
+    _sum: PipelineDailyStatsSumAggregateOutputType | null
+    _min: PipelineDailyStatsMinAggregateOutputType | null
+    _max: PipelineDailyStatsMaxAggregateOutputType | null
   }
 
-  export type PipelineYearlyStatsAvgAggregateOutputType = {
-    year: number | null
+  export type PipelineDailyStatsAvgAggregateOutputType = {
     throughput: number | null
     delivered: number | null
   }
 
-  export type PipelineYearlyStatsSumAggregateOutputType = {
-    year: number | null
+  export type PipelineDailyStatsSumAggregateOutputType = {
     throughput: number | null
     delivered: number | null
   }
 
-  export type PipelineYearlyStatsMinAggregateOutputType = {
+  export type PipelineDailyStatsMinAggregateOutputType = {
     id: string | null
-    year: number | null
+    date: Date | null
     throughput: number | null
     delivered: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type PipelineYearlyStatsMaxAggregateOutputType = {
+  export type PipelineDailyStatsMaxAggregateOutputType = {
     id: string | null
-    year: number | null
+    date: Date | null
     throughput: number | null
     delivered: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type PipelineYearlyStatsCountAggregateOutputType = {
+  export type PipelineDailyStatsCountAggregateOutputType = {
     id: number
-    year: number
+    date: number
     throughput: number
     delivered: number
     createdAt: number
@@ -25905,39 +26096,37 @@ export namespace Prisma {
   }
 
 
-  export type PipelineYearlyStatsAvgAggregateInputType = {
-    year?: true
+  export type PipelineDailyStatsAvgAggregateInputType = {
     throughput?: true
     delivered?: true
   }
 
-  export type PipelineYearlyStatsSumAggregateInputType = {
-    year?: true
+  export type PipelineDailyStatsSumAggregateInputType = {
     throughput?: true
     delivered?: true
   }
 
-  export type PipelineYearlyStatsMinAggregateInputType = {
+  export type PipelineDailyStatsMinAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     throughput?: true
     delivered?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type PipelineYearlyStatsMaxAggregateInputType = {
+  export type PipelineDailyStatsMaxAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     throughput?: true
     delivered?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type PipelineYearlyStatsCountAggregateInputType = {
+  export type PipelineDailyStatsCountAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     throughput?: true
     delivered?: true
     createdAt?: true
@@ -25945,289 +26134,289 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type PipelineYearlyStatsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which PipelineYearlyStats to aggregate.
+     * Filter which PipelineDailyStats to aggregate.
      */
-    where?: PipelineYearlyStatsWhereInput
+    where?: PipelineDailyStatsWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PipelineYearlyStats to fetch.
+     * Determine the order of PipelineDailyStats to fetch.
      */
-    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    orderBy?: PipelineDailyStatsOrderByWithRelationInput | PipelineDailyStatsOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: PipelineYearlyStatsWhereUniqueInput
+    cursor?: PipelineDailyStatsWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     * Take `±n` PipelineDailyStats from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PipelineYearlyStats.
+     * Skip the first `n` PipelineDailyStats.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned PipelineYearlyStats
+     * Count returned PipelineDailyStats
     **/
-    _count?: true | PipelineYearlyStatsCountAggregateInputType
+    _count?: true | PipelineDailyStatsCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: PipelineYearlyStatsAvgAggregateInputType
+    _avg?: PipelineDailyStatsAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: PipelineYearlyStatsSumAggregateInputType
+    _sum?: PipelineDailyStatsSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: PipelineYearlyStatsMinAggregateInputType
+    _min?: PipelineDailyStatsMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: PipelineYearlyStatsMaxAggregateInputType
+    _max?: PipelineDailyStatsMaxAggregateInputType
   }
 
-  export type GetPipelineYearlyStatsAggregateType<T extends PipelineYearlyStatsAggregateArgs> = {
-        [P in keyof T & keyof AggregatePipelineYearlyStats]: P extends '_count' | 'count'
+  export type GetPipelineDailyStatsAggregateType<T extends PipelineDailyStatsAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipelineDailyStats]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregatePipelineYearlyStats[P]>
-      : GetScalarType<T[P], AggregatePipelineYearlyStats[P]>
+        : GetScalarType<T[P], AggregatePipelineDailyStats[P]>
+      : GetScalarType<T[P], AggregatePipelineDailyStats[P]>
   }
 
 
 
 
-  export type PipelineYearlyStatsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PipelineYearlyStatsWhereInput
-    orderBy?: PipelineYearlyStatsOrderByWithAggregationInput | PipelineYearlyStatsOrderByWithAggregationInput[]
-    by: PipelineYearlyStatsScalarFieldEnum[] | PipelineYearlyStatsScalarFieldEnum
-    having?: PipelineYearlyStatsScalarWhereWithAggregatesInput
+  export type PipelineDailyStatsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PipelineDailyStatsWhereInput
+    orderBy?: PipelineDailyStatsOrderByWithAggregationInput | PipelineDailyStatsOrderByWithAggregationInput[]
+    by: PipelineDailyStatsScalarFieldEnum[] | PipelineDailyStatsScalarFieldEnum
+    having?: PipelineDailyStatsScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: PipelineYearlyStatsCountAggregateInputType | true
-    _avg?: PipelineYearlyStatsAvgAggregateInputType
-    _sum?: PipelineYearlyStatsSumAggregateInputType
-    _min?: PipelineYearlyStatsMinAggregateInputType
-    _max?: PipelineYearlyStatsMaxAggregateInputType
+    _count?: PipelineDailyStatsCountAggregateInputType | true
+    _avg?: PipelineDailyStatsAvgAggregateInputType
+    _sum?: PipelineDailyStatsSumAggregateInputType
+    _min?: PipelineDailyStatsMinAggregateInputType
+    _max?: PipelineDailyStatsMaxAggregateInputType
   }
 
-  export type PipelineYearlyStatsGroupByOutputType = {
+  export type PipelineDailyStatsGroupByOutputType = {
     id: string
-    year: number
+    date: Date
     throughput: number
     delivered: number
     createdAt: Date
     updatedAt: Date
-    _count: PipelineYearlyStatsCountAggregateOutputType | null
-    _avg: PipelineYearlyStatsAvgAggregateOutputType | null
-    _sum: PipelineYearlyStatsSumAggregateOutputType | null
-    _min: PipelineYearlyStatsMinAggregateOutputType | null
-    _max: PipelineYearlyStatsMaxAggregateOutputType | null
+    _count: PipelineDailyStatsCountAggregateOutputType | null
+    _avg: PipelineDailyStatsAvgAggregateOutputType | null
+    _sum: PipelineDailyStatsSumAggregateOutputType | null
+    _min: PipelineDailyStatsMinAggregateOutputType | null
+    _max: PipelineDailyStatsMaxAggregateOutputType | null
   }
 
-  type GetPipelineYearlyStatsGroupByPayload<T extends PipelineYearlyStatsGroupByArgs> = Prisma.PrismaPromise<
+  type GetPipelineDailyStatsGroupByPayload<T extends PipelineDailyStatsGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<PipelineYearlyStatsGroupByOutputType, T['by']> &
+      PickEnumerable<PipelineDailyStatsGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof PipelineYearlyStatsGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof PipelineDailyStatsGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], PipelineYearlyStatsGroupByOutputType[P]>
-            : GetScalarType<T[P], PipelineYearlyStatsGroupByOutputType[P]>
+              : GetScalarType<T[P], PipelineDailyStatsGroupByOutputType[P]>
+            : GetScalarType<T[P], PipelineDailyStatsGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type PipelineYearlyStatsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type PipelineDailyStatsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    year?: boolean
+    date?: boolean
     throughput?: boolean
     delivered?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-  }, ExtArgs["result"]["pipelineYearlyStats"]>
+  }, ExtArgs["result"]["pipelineDailyStats"]>
 
 
 
-  export type PipelineYearlyStatsSelectScalar = {
+  export type PipelineDailyStatsSelectScalar = {
     id?: boolean
-    year?: boolean
+    date?: boolean
     throughput?: boolean
     delivered?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PipelineYearlyStatsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "year" | "throughput" | "delivered" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelineYearlyStats"]>
+  export type PipelineDailyStatsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "throughput" | "delivered" | "createdAt" | "updatedAt", ExtArgs["result"]["pipelineDailyStats"]>
 
-  export type $PipelineYearlyStatsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "PipelineYearlyStats"
+  export type $PipelineDailyStatsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PipelineDailyStats"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      year: number
+      date: Date
       throughput: number
       delivered: number
       createdAt: Date
       updatedAt: Date
-    }, ExtArgs["result"]["pipelineYearlyStats"]>
+    }, ExtArgs["result"]["pipelineDailyStats"]>
     composites: {}
   }
 
-  type PipelineYearlyStatsGetPayload<S extends boolean | null | undefined | PipelineYearlyStatsDefaultArgs> = $Result.GetResult<Prisma.$PipelineYearlyStatsPayload, S>
+  type PipelineDailyStatsGetPayload<S extends boolean | null | undefined | PipelineDailyStatsDefaultArgs> = $Result.GetResult<Prisma.$PipelineDailyStatsPayload, S>
 
-  type PipelineYearlyStatsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PipelineYearlyStatsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PipelineYearlyStatsCountAggregateInputType | true
+  type PipelineDailyStatsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PipelineDailyStatsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PipelineDailyStatsCountAggregateInputType | true
     }
 
-  export interface PipelineYearlyStatsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipelineYearlyStats'], meta: { name: 'PipelineYearlyStats' } }
+  export interface PipelineDailyStatsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PipelineDailyStats'], meta: { name: 'PipelineDailyStats' } }
     /**
-     * Find zero or one PipelineYearlyStats that matches the filter.
-     * @param {PipelineYearlyStatsFindUniqueArgs} args - Arguments to find a PipelineYearlyStats
+     * Find zero or one PipelineDailyStats that matches the filter.
+     * @param {PipelineDailyStatsFindUniqueArgs} args - Arguments to find a PipelineDailyStats
      * @example
-     * // Get one PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findUnique({
+     * // Get one PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends PipelineYearlyStatsFindUniqueArgs>(args: SelectSubset<T, PipelineYearlyStatsFindUniqueArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends PipelineDailyStatsFindUniqueArgs>(args: SelectSubset<T, PipelineDailyStatsFindUniqueArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one PipelineYearlyStats that matches the filter or throw an error with `error.code='P2025'`
+     * Find one PipelineDailyStats that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {PipelineYearlyStatsFindUniqueOrThrowArgs} args - Arguments to find a PipelineYearlyStats
+     * @param {PipelineDailyStatsFindUniqueOrThrowArgs} args - Arguments to find a PipelineDailyStats
      * @example
-     * // Get one PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findUniqueOrThrow({
+     * // Get one PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends PipelineYearlyStatsFindUniqueOrThrowArgs>(args: SelectSubset<T, PipelineYearlyStatsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends PipelineDailyStatsFindUniqueOrThrowArgs>(args: SelectSubset<T, PipelineDailyStatsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first PipelineYearlyStats that matches the filter.
+     * Find the first PipelineDailyStats that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PipelineYearlyStatsFindFirstArgs} args - Arguments to find a PipelineYearlyStats
+     * @param {PipelineDailyStatsFindFirstArgs} args - Arguments to find a PipelineDailyStats
      * @example
-     * // Get one PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findFirst({
+     * // Get one PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends PipelineYearlyStatsFindFirstArgs>(args?: SelectSubset<T, PipelineYearlyStatsFindFirstArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends PipelineDailyStatsFindFirstArgs>(args?: SelectSubset<T, PipelineDailyStatsFindFirstArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first PipelineYearlyStats that matches the filter or
+     * Find the first PipelineDailyStats that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PipelineYearlyStatsFindFirstOrThrowArgs} args - Arguments to find a PipelineYearlyStats
+     * @param {PipelineDailyStatsFindFirstOrThrowArgs} args - Arguments to find a PipelineDailyStats
      * @example
-     * // Get one PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findFirstOrThrow({
+     * // Get one PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends PipelineYearlyStatsFindFirstOrThrowArgs>(args?: SelectSubset<T, PipelineYearlyStatsFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends PipelineDailyStatsFindFirstOrThrowArgs>(args?: SelectSubset<T, PipelineDailyStatsFindFirstOrThrowArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more PipelineYearlyStats that matches the filter.
+     * Find zero or more PipelineDailyStats that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PipelineYearlyStatsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {PipelineDailyStatsFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findMany()
+     * // Get all PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.findMany()
      * 
-     * // Get first 10 PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.findMany({ take: 10 })
+     * // Get first 10 PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const pipelineYearlyStatsWithIdOnly = await prisma.pipelineYearlyStats.findMany({ select: { id: true } })
+     * const pipelineDailyStatsWithIdOnly = await prisma.pipelineDailyStats.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends PipelineYearlyStatsFindManyArgs>(args?: SelectSubset<T, PipelineYearlyStatsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends PipelineDailyStatsFindManyArgs>(args?: SelectSubset<T, PipelineDailyStatsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a PipelineYearlyStats.
-     * @param {PipelineYearlyStatsCreateArgs} args - Arguments to create a PipelineYearlyStats.
+     * Create a PipelineDailyStats.
+     * @param {PipelineDailyStatsCreateArgs} args - Arguments to create a PipelineDailyStats.
      * @example
-     * // Create one PipelineYearlyStats
-     * const PipelineYearlyStats = await prisma.pipelineYearlyStats.create({
+     * // Create one PipelineDailyStats
+     * const PipelineDailyStats = await prisma.pipelineDailyStats.create({
      *   data: {
-     *     // ... data to create a PipelineYearlyStats
+     *     // ... data to create a PipelineDailyStats
      *   }
      * })
      * 
      */
-    create<T extends PipelineYearlyStatsCreateArgs>(args: SelectSubset<T, PipelineYearlyStatsCreateArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends PipelineDailyStatsCreateArgs>(args: SelectSubset<T, PipelineDailyStatsCreateArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many PipelineYearlyStats.
-     * @param {PipelineYearlyStatsCreateManyArgs} args - Arguments to create many PipelineYearlyStats.
+     * Create many PipelineDailyStats.
+     * @param {PipelineDailyStatsCreateManyArgs} args - Arguments to create many PipelineDailyStats.
      * @example
-     * // Create many PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.createMany({
+     * // Create many PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends PipelineYearlyStatsCreateManyArgs>(args?: SelectSubset<T, PipelineYearlyStatsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends PipelineDailyStatsCreateManyArgs>(args?: SelectSubset<T, PipelineDailyStatsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Delete a PipelineYearlyStats.
-     * @param {PipelineYearlyStatsDeleteArgs} args - Arguments to delete one PipelineYearlyStats.
+     * Delete a PipelineDailyStats.
+     * @param {PipelineDailyStatsDeleteArgs} args - Arguments to delete one PipelineDailyStats.
      * @example
-     * // Delete one PipelineYearlyStats
-     * const PipelineYearlyStats = await prisma.pipelineYearlyStats.delete({
+     * // Delete one PipelineDailyStats
+     * const PipelineDailyStats = await prisma.pipelineDailyStats.delete({
      *   where: {
-     *     // ... filter to delete one PipelineYearlyStats
+     *     // ... filter to delete one PipelineDailyStats
      *   }
      * })
      * 
      */
-    delete<T extends PipelineYearlyStatsDeleteArgs>(args: SelectSubset<T, PipelineYearlyStatsDeleteArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends PipelineDailyStatsDeleteArgs>(args: SelectSubset<T, PipelineDailyStatsDeleteArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one PipelineYearlyStats.
-     * @param {PipelineYearlyStatsUpdateArgs} args - Arguments to update one PipelineYearlyStats.
+     * Update one PipelineDailyStats.
+     * @param {PipelineDailyStatsUpdateArgs} args - Arguments to update one PipelineDailyStats.
      * @example
-     * // Update one PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.update({
+     * // Update one PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -26237,30 +26426,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends PipelineYearlyStatsUpdateArgs>(args: SelectSubset<T, PipelineYearlyStatsUpdateArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends PipelineDailyStatsUpdateArgs>(args: SelectSubset<T, PipelineDailyStatsUpdateArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more PipelineYearlyStats.
-     * @param {PipelineYearlyStatsDeleteManyArgs} args - Arguments to filter PipelineYearlyStats to delete.
+     * Delete zero or more PipelineDailyStats.
+     * @param {PipelineDailyStatsDeleteManyArgs} args - Arguments to filter PipelineDailyStats to delete.
      * @example
-     * // Delete a few PipelineYearlyStats
-     * const { count } = await prisma.pipelineYearlyStats.deleteMany({
+     * // Delete a few PipelineDailyStats
+     * const { count } = await prisma.pipelineDailyStats.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends PipelineYearlyStatsDeleteManyArgs>(args?: SelectSubset<T, PipelineYearlyStatsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends PipelineDailyStatsDeleteManyArgs>(args?: SelectSubset<T, PipelineDailyStatsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more PipelineYearlyStats.
+     * Update zero or more PipelineDailyStats.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PipelineYearlyStatsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {PipelineDailyStatsUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.updateMany({
+     * // Update many PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -26270,56 +26459,56 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends PipelineYearlyStatsUpdateManyArgs>(args: SelectSubset<T, PipelineYearlyStatsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends PipelineDailyStatsUpdateManyArgs>(args: SelectSubset<T, PipelineDailyStatsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one PipelineYearlyStats.
-     * @param {PipelineYearlyStatsUpsertArgs} args - Arguments to update or create a PipelineYearlyStats.
+     * Create or update one PipelineDailyStats.
+     * @param {PipelineDailyStatsUpsertArgs} args - Arguments to update or create a PipelineDailyStats.
      * @example
-     * // Update or create a PipelineYearlyStats
-     * const pipelineYearlyStats = await prisma.pipelineYearlyStats.upsert({
+     * // Update or create a PipelineDailyStats
+     * const pipelineDailyStats = await prisma.pipelineDailyStats.upsert({
      *   create: {
-     *     // ... data to create a PipelineYearlyStats
+     *     // ... data to create a PipelineDailyStats
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the PipelineYearlyStats we want to update
+     *     // ... the filter for the PipelineDailyStats we want to update
      *   }
      * })
      */
-    upsert<T extends PipelineYearlyStatsUpsertArgs>(args: SelectSubset<T, PipelineYearlyStatsUpsertArgs<ExtArgs>>): Prisma__PipelineYearlyStatsClient<$Result.GetResult<Prisma.$PipelineYearlyStatsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends PipelineDailyStatsUpsertArgs>(args: SelectSubset<T, PipelineDailyStatsUpsertArgs<ExtArgs>>): Prisma__PipelineDailyStatsClient<$Result.GetResult<Prisma.$PipelineDailyStatsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of PipelineYearlyStats.
+     * Count the number of PipelineDailyStats.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PipelineYearlyStatsCountArgs} args - Arguments to filter PipelineYearlyStats to count.
+     * @param {PipelineDailyStatsCountArgs} args - Arguments to filter PipelineDailyStats to count.
      * @example
-     * // Count the number of PipelineYearlyStats
-     * const count = await prisma.pipelineYearlyStats.count({
+     * // Count the number of PipelineDailyStats
+     * const count = await prisma.pipelineDailyStats.count({
      *   where: {
-     *     // ... the filter for the PipelineYearlyStats we want to count
+     *     // ... the filter for the PipelineDailyStats we want to count
      *   }
      * })
     **/
-    count<T extends PipelineYearlyStatsCountArgs>(
-      args?: Subset<T, PipelineYearlyStatsCountArgs>,
+    count<T extends PipelineDailyStatsCountArgs>(
+      args?: Subset<T, PipelineDailyStatsCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], PipelineYearlyStatsCountAggregateOutputType>
+          : GetScalarType<T['select'], PipelineDailyStatsCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a PipelineYearlyStats.
+     * Allows you to perform aggregations operations on a PipelineDailyStats.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PipelineYearlyStatsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {PipelineDailyStatsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -26339,13 +26528,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends PipelineYearlyStatsAggregateArgs>(args: Subset<T, PipelineYearlyStatsAggregateArgs>): Prisma.PrismaPromise<GetPipelineYearlyStatsAggregateType<T>>
+    aggregate<T extends PipelineDailyStatsAggregateArgs>(args: Subset<T, PipelineDailyStatsAggregateArgs>): Prisma.PrismaPromise<GetPipelineDailyStatsAggregateType<T>>
 
     /**
-     * Group by PipelineYearlyStats.
+     * Group by PipelineDailyStats.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PipelineYearlyStatsGroupByArgs} args - Group by arguments.
+     * @param {PipelineDailyStatsGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -26360,14 +26549,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends PipelineYearlyStatsGroupByArgs,
+      T extends PipelineDailyStatsGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PipelineYearlyStatsGroupByArgs['orderBy'] }
-        : { orderBy?: PipelineYearlyStatsGroupByArgs['orderBy'] },
+        ? { orderBy: PipelineDailyStatsGroupByArgs['orderBy'] }
+        : { orderBy?: PipelineDailyStatsGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -26416,20 +26605,20 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PipelineYearlyStatsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelineYearlyStatsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, PipelineDailyStatsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelineDailyStatsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the PipelineYearlyStats model
+   * Fields of the PipelineDailyStats model
    */
-  readonly fields: PipelineYearlyStatsFieldRefs;
+  readonly fields: PipelineDailyStatsFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for PipelineYearlyStats.
+   * The delegate class that acts as a "Promise-like" for PipelineDailyStats.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__PipelineYearlyStatsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__PipelineDailyStatsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -26457,337 +26646,337 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the PipelineYearlyStats model
+   * Fields of the PipelineDailyStats model
    */
-  interface PipelineYearlyStatsFieldRefs {
-    readonly id: FieldRef<"PipelineYearlyStats", 'String'>
-    readonly year: FieldRef<"PipelineYearlyStats", 'Int'>
-    readonly throughput: FieldRef<"PipelineYearlyStats", 'Float'>
-    readonly delivered: FieldRef<"PipelineYearlyStats", 'Float'>
-    readonly createdAt: FieldRef<"PipelineYearlyStats", 'DateTime'>
-    readonly updatedAt: FieldRef<"PipelineYearlyStats", 'DateTime'>
+  interface PipelineDailyStatsFieldRefs {
+    readonly id: FieldRef<"PipelineDailyStats", 'String'>
+    readonly date: FieldRef<"PipelineDailyStats", 'DateTime'>
+    readonly throughput: FieldRef<"PipelineDailyStats", 'Float'>
+    readonly delivered: FieldRef<"PipelineDailyStats", 'Float'>
+    readonly createdAt: FieldRef<"PipelineDailyStats", 'DateTime'>
+    readonly updatedAt: FieldRef<"PipelineDailyStats", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * PipelineYearlyStats findUnique
+   * PipelineDailyStats findUnique
    */
-  export type PipelineYearlyStatsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * Filter, which PipelineYearlyStats to fetch.
+     * Filter, which PipelineDailyStats to fetch.
      */
-    where: PipelineYearlyStatsWhereUniqueInput
+    where: PipelineDailyStatsWhereUniqueInput
   }
 
   /**
-   * PipelineYearlyStats findUniqueOrThrow
+   * PipelineDailyStats findUniqueOrThrow
    */
-  export type PipelineYearlyStatsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * Filter, which PipelineYearlyStats to fetch.
+     * Filter, which PipelineDailyStats to fetch.
      */
-    where: PipelineYearlyStatsWhereUniqueInput
+    where: PipelineDailyStatsWhereUniqueInput
   }
 
   /**
-   * PipelineYearlyStats findFirst
+   * PipelineDailyStats findFirst
    */
-  export type PipelineYearlyStatsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * Filter, which PipelineYearlyStats to fetch.
+     * Filter, which PipelineDailyStats to fetch.
      */
-    where?: PipelineYearlyStatsWhereInput
+    where?: PipelineDailyStatsWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PipelineYearlyStats to fetch.
+     * Determine the order of PipelineDailyStats to fetch.
      */
-    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    orderBy?: PipelineDailyStatsOrderByWithRelationInput | PipelineDailyStatsOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for PipelineYearlyStats.
+     * Sets the position for searching for PipelineDailyStats.
      */
-    cursor?: PipelineYearlyStatsWhereUniqueInput
+    cursor?: PipelineDailyStatsWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     * Take `±n` PipelineDailyStats from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PipelineYearlyStats.
+     * Skip the first `n` PipelineDailyStats.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of PipelineYearlyStats.
+     * Filter by unique combinations of PipelineDailyStats.
      */
-    distinct?: PipelineYearlyStatsScalarFieldEnum | PipelineYearlyStatsScalarFieldEnum[]
+    distinct?: PipelineDailyStatsScalarFieldEnum | PipelineDailyStatsScalarFieldEnum[]
   }
 
   /**
-   * PipelineYearlyStats findFirstOrThrow
+   * PipelineDailyStats findFirstOrThrow
    */
-  export type PipelineYearlyStatsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * Filter, which PipelineYearlyStats to fetch.
+     * Filter, which PipelineDailyStats to fetch.
      */
-    where?: PipelineYearlyStatsWhereInput
+    where?: PipelineDailyStatsWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PipelineYearlyStats to fetch.
+     * Determine the order of PipelineDailyStats to fetch.
      */
-    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    orderBy?: PipelineDailyStatsOrderByWithRelationInput | PipelineDailyStatsOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for PipelineYearlyStats.
+     * Sets the position for searching for PipelineDailyStats.
      */
-    cursor?: PipelineYearlyStatsWhereUniqueInput
+    cursor?: PipelineDailyStatsWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     * Take `±n` PipelineDailyStats from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PipelineYearlyStats.
+     * Skip the first `n` PipelineDailyStats.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of PipelineYearlyStats.
+     * Filter by unique combinations of PipelineDailyStats.
      */
-    distinct?: PipelineYearlyStatsScalarFieldEnum | PipelineYearlyStatsScalarFieldEnum[]
+    distinct?: PipelineDailyStatsScalarFieldEnum | PipelineDailyStatsScalarFieldEnum[]
   }
 
   /**
-   * PipelineYearlyStats findMany
+   * PipelineDailyStats findMany
    */
-  export type PipelineYearlyStatsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * Filter, which PipelineYearlyStats to fetch.
+     * Filter, which PipelineDailyStats to fetch.
      */
-    where?: PipelineYearlyStatsWhereInput
+    where?: PipelineDailyStatsWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PipelineYearlyStats to fetch.
+     * Determine the order of PipelineDailyStats to fetch.
      */
-    orderBy?: PipelineYearlyStatsOrderByWithRelationInput | PipelineYearlyStatsOrderByWithRelationInput[]
+    orderBy?: PipelineDailyStatsOrderByWithRelationInput | PipelineDailyStatsOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing PipelineYearlyStats.
+     * Sets the position for listing PipelineDailyStats.
      */
-    cursor?: PipelineYearlyStatsWhereUniqueInput
+    cursor?: PipelineDailyStatsWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PipelineYearlyStats from the position of the cursor.
+     * Take `±n` PipelineDailyStats from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PipelineYearlyStats.
+     * Skip the first `n` PipelineDailyStats.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of PipelineYearlyStats.
+     * Filter by unique combinations of PipelineDailyStats.
      */
-    distinct?: PipelineYearlyStatsScalarFieldEnum | PipelineYearlyStatsScalarFieldEnum[]
+    distinct?: PipelineDailyStatsScalarFieldEnum | PipelineDailyStatsScalarFieldEnum[]
   }
 
   /**
-   * PipelineYearlyStats create
+   * PipelineDailyStats create
    */
-  export type PipelineYearlyStatsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * The data needed to create a PipelineYearlyStats.
+     * The data needed to create a PipelineDailyStats.
      */
-    data: XOR<PipelineYearlyStatsCreateInput, PipelineYearlyStatsUncheckedCreateInput>
+    data: XOR<PipelineDailyStatsCreateInput, PipelineDailyStatsUncheckedCreateInput>
   }
 
   /**
-   * PipelineYearlyStats createMany
+   * PipelineDailyStats createMany
    */
-  export type PipelineYearlyStatsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many PipelineYearlyStats.
+     * The data used to create many PipelineDailyStats.
      */
-    data: PipelineYearlyStatsCreateManyInput | PipelineYearlyStatsCreateManyInput[]
+    data: PipelineDailyStatsCreateManyInput | PipelineDailyStatsCreateManyInput[]
   }
 
   /**
-   * PipelineYearlyStats update
+   * PipelineDailyStats update
    */
-  export type PipelineYearlyStatsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * The data needed to update a PipelineYearlyStats.
+     * The data needed to update a PipelineDailyStats.
      */
-    data: XOR<PipelineYearlyStatsUpdateInput, PipelineYearlyStatsUncheckedUpdateInput>
+    data: XOR<PipelineDailyStatsUpdateInput, PipelineDailyStatsUncheckedUpdateInput>
     /**
-     * Choose, which PipelineYearlyStats to update.
+     * Choose, which PipelineDailyStats to update.
      */
-    where: PipelineYearlyStatsWhereUniqueInput
+    where: PipelineDailyStatsWhereUniqueInput
   }
 
   /**
-   * PipelineYearlyStats updateMany
+   * PipelineDailyStats updateMany
    */
-  export type PipelineYearlyStatsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update PipelineYearlyStats.
+     * The data used to update PipelineDailyStats.
      */
-    data: XOR<PipelineYearlyStatsUpdateManyMutationInput, PipelineYearlyStatsUncheckedUpdateManyInput>
+    data: XOR<PipelineDailyStatsUpdateManyMutationInput, PipelineDailyStatsUncheckedUpdateManyInput>
     /**
-     * Filter which PipelineYearlyStats to update
+     * Filter which PipelineDailyStats to update
      */
-    where?: PipelineYearlyStatsWhereInput
+    where?: PipelineDailyStatsWhereInput
     /**
-     * Limit how many PipelineYearlyStats to update.
+     * Limit how many PipelineDailyStats to update.
      */
     limit?: number
   }
 
   /**
-   * PipelineYearlyStats upsert
+   * PipelineDailyStats upsert
    */
-  export type PipelineYearlyStatsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * The filter to search for the PipelineYearlyStats to update in case it exists.
+     * The filter to search for the PipelineDailyStats to update in case it exists.
      */
-    where: PipelineYearlyStatsWhereUniqueInput
+    where: PipelineDailyStatsWhereUniqueInput
     /**
-     * In case the PipelineYearlyStats found by the `where` argument doesn't exist, create a new PipelineYearlyStats with this data.
+     * In case the PipelineDailyStats found by the `where` argument doesn't exist, create a new PipelineDailyStats with this data.
      */
-    create: XOR<PipelineYearlyStatsCreateInput, PipelineYearlyStatsUncheckedCreateInput>
+    create: XOR<PipelineDailyStatsCreateInput, PipelineDailyStatsUncheckedCreateInput>
     /**
-     * In case the PipelineYearlyStats was found with the provided `where` argument, update it with this data.
+     * In case the PipelineDailyStats was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<PipelineYearlyStatsUpdateInput, PipelineYearlyStatsUncheckedUpdateInput>
+    update: XOR<PipelineDailyStatsUpdateInput, PipelineDailyStatsUncheckedUpdateInput>
   }
 
   /**
-   * PipelineYearlyStats delete
+   * PipelineDailyStats delete
    */
-  export type PipelineYearlyStatsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
     /**
-     * Filter which PipelineYearlyStats to delete.
+     * Filter which PipelineDailyStats to delete.
      */
-    where: PipelineYearlyStatsWhereUniqueInput
+    where: PipelineDailyStatsWhereUniqueInput
   }
 
   /**
-   * PipelineYearlyStats deleteMany
+   * PipelineDailyStats deleteMany
    */
-  export type PipelineYearlyStatsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which PipelineYearlyStats to delete
+     * Filter which PipelineDailyStats to delete
      */
-    where?: PipelineYearlyStatsWhereInput
+    where?: PipelineDailyStatsWhereInput
     /**
-     * Limit how many PipelineYearlyStats to delete.
+     * Limit how many PipelineDailyStats to delete.
      */
     limit?: number
   }
 
   /**
-   * PipelineYearlyStats without action
+   * PipelineDailyStats without action
    */
-  export type PipelineYearlyStatsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PipelineDailyStatsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PipelineYearlyStats
+     * Select specific fields to fetch from the PipelineDailyStats
      */
-    select?: PipelineYearlyStatsSelect<ExtArgs> | null
+    select?: PipelineDailyStatsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PipelineYearlyStats
+     * Omit specific fields from the PipelineDailyStats
      */
-    omit?: PipelineYearlyStatsOmit<ExtArgs> | null
+    omit?: PipelineDailyStatsOmit<ExtArgs> | null
   }
 
 
@@ -30947,20 +31136,18 @@ export namespace Prisma {
   }
 
   export type PipelineProgressAvgAggregateOutputType = {
-    year: number | null
     distanceKm: number | null
     totalDistance: number | null
   }
 
   export type PipelineProgressSumAggregateOutputType = {
-    year: number | null
     distanceKm: number | null
     totalDistance: number | null
   }
 
   export type PipelineProgressMinAggregateOutputType = {
     id: string | null
-    year: number | null
+    date: Date | null
     distanceKm: number | null
     totalDistance: number | null
     lastStation: string | null
@@ -30969,7 +31156,7 @@ export namespace Prisma {
 
   export type PipelineProgressMaxAggregateOutputType = {
     id: string | null
-    year: number | null
+    date: Date | null
     distanceKm: number | null
     totalDistance: number | null
     lastStation: string | null
@@ -30978,7 +31165,7 @@ export namespace Prisma {
 
   export type PipelineProgressCountAggregateOutputType = {
     id: number
-    year: number
+    date: number
     distanceKm: number
     totalDistance: number
     lastStation: number
@@ -30988,20 +31175,18 @@ export namespace Prisma {
 
 
   export type PipelineProgressAvgAggregateInputType = {
-    year?: true
     distanceKm?: true
     totalDistance?: true
   }
 
   export type PipelineProgressSumAggregateInputType = {
-    year?: true
     distanceKm?: true
     totalDistance?: true
   }
 
   export type PipelineProgressMinAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     distanceKm?: true
     totalDistance?: true
     lastStation?: true
@@ -31010,7 +31195,7 @@ export namespace Prisma {
 
   export type PipelineProgressMaxAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     distanceKm?: true
     totalDistance?: true
     lastStation?: true
@@ -31019,7 +31204,7 @@ export namespace Prisma {
 
   export type PipelineProgressCountAggregateInputType = {
     id?: true
-    year?: true
+    date?: true
     distanceKm?: true
     totalDistance?: true
     lastStation?: true
@@ -31115,7 +31300,7 @@ export namespace Prisma {
 
   export type PipelineProgressGroupByOutputType = {
     id: string
-    year: number | null
+    date: Date | null
     distanceKm: number
     totalDistance: number
     lastStation: string | null
@@ -31143,7 +31328,7 @@ export namespace Prisma {
 
   export type PipelineProgressSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    year?: boolean
+    date?: boolean
     distanceKm?: boolean
     totalDistance?: boolean
     lastStation?: boolean
@@ -31154,21 +31339,21 @@ export namespace Prisma {
 
   export type PipelineProgressSelectScalar = {
     id?: boolean
-    year?: boolean
+    date?: boolean
     distanceKm?: boolean
     totalDistance?: boolean
     lastStation?: boolean
     updatedAt?: boolean
   }
 
-  export type PipelineProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "year" | "distanceKm" | "totalDistance" | "lastStation" | "updatedAt", ExtArgs["result"]["pipelineProgress"]>
+  export type PipelineProgressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "distanceKm" | "totalDistance" | "lastStation" | "updatedAt", ExtArgs["result"]["pipelineProgress"]>
 
   export type $PipelineProgressPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PipelineProgress"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      year: number | null
+      date: Date | null
       distanceKm: number
       totalDistance: number
       lastStation: string | null
@@ -31543,7 +31728,7 @@ export namespace Prisma {
    */
   interface PipelineProgressFieldRefs {
     readonly id: FieldRef<"PipelineProgress", 'String'>
-    readonly year: FieldRef<"PipelineProgress", 'Int'>
+    readonly date: FieldRef<"PipelineProgress", 'DateTime'>
     readonly distanceKm: FieldRef<"PipelineProgress", 'Float'>
     readonly totalDistance: FieldRef<"PipelineProgress", 'Float'>
     readonly lastStation: FieldRef<"PipelineProgress", 'String'>
@@ -34870,6 +35055,1992 @@ export namespace Prisma {
 
 
   /**
+   * Model FuelStation
+   */
+
+  export type AggregateFuelStation = {
+    _count: FuelStationCountAggregateOutputType | null
+    _avg: FuelStationAvgAggregateOutputType | null
+    _sum: FuelStationSumAggregateOutputType | null
+    _min: FuelStationMinAggregateOutputType | null
+    _max: FuelStationMaxAggregateOutputType | null
+  }
+
+  export type FuelStationAvgAggregateOutputType = {
+    position: number | null
+  }
+
+  export type FuelStationSumAggregateOutputType = {
+    position: number | null
+  }
+
+  export type FuelStationMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    position: number | null
+    createdAt: Date | null
+  }
+
+  export type FuelStationMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    position: number | null
+    createdAt: Date | null
+  }
+
+  export type FuelStationCountAggregateOutputType = {
+    id: number
+    name: number
+    position: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FuelStationAvgAggregateInputType = {
+    position?: true
+  }
+
+  export type FuelStationSumAggregateInputType = {
+    position?: true
+  }
+
+  export type FuelStationMinAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    createdAt?: true
+  }
+
+  export type FuelStationMaxAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    createdAt?: true
+  }
+
+  export type FuelStationCountAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FuelStationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FuelStation to aggregate.
+     */
+    where?: FuelStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStations to fetch.
+     */
+    orderBy?: FuelStationOrderByWithRelationInput | FuelStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FuelStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FuelStations
+    **/
+    _count?: true | FuelStationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FuelStationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FuelStationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FuelStationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FuelStationMaxAggregateInputType
+  }
+
+  export type GetFuelStationAggregateType<T extends FuelStationAggregateArgs> = {
+        [P in keyof T & keyof AggregateFuelStation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFuelStation[P]>
+      : GetScalarType<T[P], AggregateFuelStation[P]>
+  }
+
+
+
+
+  export type FuelStationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FuelStationWhereInput
+    orderBy?: FuelStationOrderByWithAggregationInput | FuelStationOrderByWithAggregationInput[]
+    by: FuelStationScalarFieldEnum[] | FuelStationScalarFieldEnum
+    having?: FuelStationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FuelStationCountAggregateInputType | true
+    _avg?: FuelStationAvgAggregateInputType
+    _sum?: FuelStationSumAggregateInputType
+    _min?: FuelStationMinAggregateInputType
+    _max?: FuelStationMaxAggregateInputType
+  }
+
+  export type FuelStationGroupByOutputType = {
+    id: string
+    name: string
+    position: number
+    createdAt: Date
+    _count: FuelStationCountAggregateOutputType | null
+    _avg: FuelStationAvgAggregateOutputType | null
+    _sum: FuelStationSumAggregateOutputType | null
+    _min: FuelStationMinAggregateOutputType | null
+    _max: FuelStationMaxAggregateOutputType | null
+  }
+
+  type GetFuelStationGroupByPayload<T extends FuelStationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FuelStationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FuelStationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FuelStationGroupByOutputType[P]>
+            : GetScalarType<T[P], FuelStationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FuelStationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    position?: boolean
+    createdAt?: boolean
+    entries?: boolean | FuelStation$entriesArgs<ExtArgs>
+    _count?: boolean | FuelStationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["fuelStation"]>
+
+
+
+  export type FuelStationSelectScalar = {
+    id?: boolean
+    name?: boolean
+    position?: boolean
+    createdAt?: boolean
+  }
+
+  export type FuelStationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "position" | "createdAt", ExtArgs["result"]["fuelStation"]>
+  export type FuelStationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entries?: boolean | FuelStation$entriesArgs<ExtArgs>
+    _count?: boolean | FuelStationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $FuelStationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FuelStation"
+    objects: {
+      entries: Prisma.$FuelStationEntryPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      position: number
+      createdAt: Date
+    }, ExtArgs["result"]["fuelStation"]>
+    composites: {}
+  }
+
+  type FuelStationGetPayload<S extends boolean | null | undefined | FuelStationDefaultArgs> = $Result.GetResult<Prisma.$FuelStationPayload, S>
+
+  type FuelStationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FuelStationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FuelStationCountAggregateInputType | true
+    }
+
+  export interface FuelStationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FuelStation'], meta: { name: 'FuelStation' } }
+    /**
+     * Find zero or one FuelStation that matches the filter.
+     * @param {FuelStationFindUniqueArgs} args - Arguments to find a FuelStation
+     * @example
+     * // Get one FuelStation
+     * const fuelStation = await prisma.fuelStation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FuelStationFindUniqueArgs>(args: SelectSubset<T, FuelStationFindUniqueArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FuelStation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FuelStationFindUniqueOrThrowArgs} args - Arguments to find a FuelStation
+     * @example
+     * // Get one FuelStation
+     * const fuelStation = await prisma.fuelStation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FuelStationFindUniqueOrThrowArgs>(args: SelectSubset<T, FuelStationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FuelStation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationFindFirstArgs} args - Arguments to find a FuelStation
+     * @example
+     * // Get one FuelStation
+     * const fuelStation = await prisma.fuelStation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FuelStationFindFirstArgs>(args?: SelectSubset<T, FuelStationFindFirstArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FuelStation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationFindFirstOrThrowArgs} args - Arguments to find a FuelStation
+     * @example
+     * // Get one FuelStation
+     * const fuelStation = await prisma.fuelStation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FuelStationFindFirstOrThrowArgs>(args?: SelectSubset<T, FuelStationFindFirstOrThrowArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FuelStations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FuelStations
+     * const fuelStations = await prisma.fuelStation.findMany()
+     * 
+     * // Get first 10 FuelStations
+     * const fuelStations = await prisma.fuelStation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const fuelStationWithIdOnly = await prisma.fuelStation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FuelStationFindManyArgs>(args?: SelectSubset<T, FuelStationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FuelStation.
+     * @param {FuelStationCreateArgs} args - Arguments to create a FuelStation.
+     * @example
+     * // Create one FuelStation
+     * const FuelStation = await prisma.fuelStation.create({
+     *   data: {
+     *     // ... data to create a FuelStation
+     *   }
+     * })
+     * 
+     */
+    create<T extends FuelStationCreateArgs>(args: SelectSubset<T, FuelStationCreateArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FuelStations.
+     * @param {FuelStationCreateManyArgs} args - Arguments to create many FuelStations.
+     * @example
+     * // Create many FuelStations
+     * const fuelStation = await prisma.fuelStation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FuelStationCreateManyArgs>(args?: SelectSubset<T, FuelStationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a FuelStation.
+     * @param {FuelStationDeleteArgs} args - Arguments to delete one FuelStation.
+     * @example
+     * // Delete one FuelStation
+     * const FuelStation = await prisma.fuelStation.delete({
+     *   where: {
+     *     // ... filter to delete one FuelStation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FuelStationDeleteArgs>(args: SelectSubset<T, FuelStationDeleteArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FuelStation.
+     * @param {FuelStationUpdateArgs} args - Arguments to update one FuelStation.
+     * @example
+     * // Update one FuelStation
+     * const fuelStation = await prisma.fuelStation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FuelStationUpdateArgs>(args: SelectSubset<T, FuelStationUpdateArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FuelStations.
+     * @param {FuelStationDeleteManyArgs} args - Arguments to filter FuelStations to delete.
+     * @example
+     * // Delete a few FuelStations
+     * const { count } = await prisma.fuelStation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FuelStationDeleteManyArgs>(args?: SelectSubset<T, FuelStationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FuelStations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FuelStations
+     * const fuelStation = await prisma.fuelStation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FuelStationUpdateManyArgs>(args: SelectSubset<T, FuelStationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FuelStation.
+     * @param {FuelStationUpsertArgs} args - Arguments to update or create a FuelStation.
+     * @example
+     * // Update or create a FuelStation
+     * const fuelStation = await prisma.fuelStation.upsert({
+     *   create: {
+     *     // ... data to create a FuelStation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FuelStation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FuelStationUpsertArgs>(args: SelectSubset<T, FuelStationUpsertArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FuelStations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationCountArgs} args - Arguments to filter FuelStations to count.
+     * @example
+     * // Count the number of FuelStations
+     * const count = await prisma.fuelStation.count({
+     *   where: {
+     *     // ... the filter for the FuelStations we want to count
+     *   }
+     * })
+    **/
+    count<T extends FuelStationCountArgs>(
+      args?: Subset<T, FuelStationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FuelStationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FuelStation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FuelStationAggregateArgs>(args: Subset<T, FuelStationAggregateArgs>): Prisma.PrismaPromise<GetFuelStationAggregateType<T>>
+
+    /**
+     * Group by FuelStation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FuelStationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FuelStationGroupByArgs['orderBy'] }
+        : { orderBy?: FuelStationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FuelStationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFuelStationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FuelStation model
+   */
+  readonly fields: FuelStationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FuelStation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FuelStationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    entries<T extends FuelStation$entriesArgs<ExtArgs> = {}>(args?: Subset<T, FuelStation$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FuelStation model
+   */
+  interface FuelStationFieldRefs {
+    readonly id: FieldRef<"FuelStation", 'String'>
+    readonly name: FieldRef<"FuelStation", 'String'>
+    readonly position: FieldRef<"FuelStation", 'Int'>
+    readonly createdAt: FieldRef<"FuelStation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FuelStation findUnique
+   */
+  export type FuelStationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStation to fetch.
+     */
+    where: FuelStationWhereUniqueInput
+  }
+
+  /**
+   * FuelStation findUniqueOrThrow
+   */
+  export type FuelStationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStation to fetch.
+     */
+    where: FuelStationWhereUniqueInput
+  }
+
+  /**
+   * FuelStation findFirst
+   */
+  export type FuelStationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStation to fetch.
+     */
+    where?: FuelStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStations to fetch.
+     */
+    orderBy?: FuelStationOrderByWithRelationInput | FuelStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FuelStations.
+     */
+    cursor?: FuelStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FuelStations.
+     */
+    distinct?: FuelStationScalarFieldEnum | FuelStationScalarFieldEnum[]
+  }
+
+  /**
+   * FuelStation findFirstOrThrow
+   */
+  export type FuelStationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStation to fetch.
+     */
+    where?: FuelStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStations to fetch.
+     */
+    orderBy?: FuelStationOrderByWithRelationInput | FuelStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FuelStations.
+     */
+    cursor?: FuelStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FuelStations.
+     */
+    distinct?: FuelStationScalarFieldEnum | FuelStationScalarFieldEnum[]
+  }
+
+  /**
+   * FuelStation findMany
+   */
+  export type FuelStationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStations to fetch.
+     */
+    where?: FuelStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStations to fetch.
+     */
+    orderBy?: FuelStationOrderByWithRelationInput | FuelStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FuelStations.
+     */
+    cursor?: FuelStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FuelStations.
+     */
+    distinct?: FuelStationScalarFieldEnum | FuelStationScalarFieldEnum[]
+  }
+
+  /**
+   * FuelStation create
+   */
+  export type FuelStationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FuelStation.
+     */
+    data: XOR<FuelStationCreateInput, FuelStationUncheckedCreateInput>
+  }
+
+  /**
+   * FuelStation createMany
+   */
+  export type FuelStationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FuelStations.
+     */
+    data: FuelStationCreateManyInput | FuelStationCreateManyInput[]
+  }
+
+  /**
+   * FuelStation update
+   */
+  export type FuelStationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FuelStation.
+     */
+    data: XOR<FuelStationUpdateInput, FuelStationUncheckedUpdateInput>
+    /**
+     * Choose, which FuelStation to update.
+     */
+    where: FuelStationWhereUniqueInput
+  }
+
+  /**
+   * FuelStation updateMany
+   */
+  export type FuelStationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FuelStations.
+     */
+    data: XOR<FuelStationUpdateManyMutationInput, FuelStationUncheckedUpdateManyInput>
+    /**
+     * Filter which FuelStations to update
+     */
+    where?: FuelStationWhereInput
+    /**
+     * Limit how many FuelStations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FuelStation upsert
+   */
+  export type FuelStationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FuelStation to update in case it exists.
+     */
+    where: FuelStationWhereUniqueInput
+    /**
+     * In case the FuelStation found by the `where` argument doesn't exist, create a new FuelStation with this data.
+     */
+    create: XOR<FuelStationCreateInput, FuelStationUncheckedCreateInput>
+    /**
+     * In case the FuelStation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FuelStationUpdateInput, FuelStationUncheckedUpdateInput>
+  }
+
+  /**
+   * FuelStation delete
+   */
+  export type FuelStationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+    /**
+     * Filter which FuelStation to delete.
+     */
+    where: FuelStationWhereUniqueInput
+  }
+
+  /**
+   * FuelStation deleteMany
+   */
+  export type FuelStationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FuelStations to delete
+     */
+    where?: FuelStationWhereInput
+    /**
+     * Limit how many FuelStations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FuelStation.entries
+   */
+  export type FuelStation$entriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    where?: FuelStationEntryWhereInput
+    orderBy?: FuelStationEntryOrderByWithRelationInput | FuelStationEntryOrderByWithRelationInput[]
+    cursor?: FuelStationEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FuelStationEntryScalarFieldEnum | FuelStationEntryScalarFieldEnum[]
+  }
+
+  /**
+   * FuelStation without action
+   */
+  export type FuelStationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStation
+     */
+    select?: FuelStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStation
+     */
+    omit?: FuelStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FuelStationEntry
+   */
+
+  export type AggregateFuelStationEntry = {
+    _count: FuelStationEntryCountAggregateOutputType | null
+    _avg: FuelStationEntryAvgAggregateOutputType | null
+    _sum: FuelStationEntrySumAggregateOutputType | null
+    _min: FuelStationEntryMinAggregateOutputType | null
+    _max: FuelStationEntryMaxAggregateOutputType | null
+  }
+
+  export type FuelStationEntryAvgAggregateOutputType = {
+    consumption: number | null
+    stock: number | null
+  }
+
+  export type FuelStationEntrySumAggregateOutputType = {
+    consumption: number | null
+    stock: number | null
+  }
+
+  export type FuelStationEntryMinAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    stationId: string | null
+    consumption: number | null
+    stock: number | null
+    remarks: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FuelStationEntryMaxAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    stationId: string | null
+    consumption: number | null
+    stock: number | null
+    remarks: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FuelStationEntryCountAggregateOutputType = {
+    id: number
+    date: number
+    stationId: number
+    consumption: number
+    stock: number
+    remarks: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FuelStationEntryAvgAggregateInputType = {
+    consumption?: true
+    stock?: true
+  }
+
+  export type FuelStationEntrySumAggregateInputType = {
+    consumption?: true
+    stock?: true
+  }
+
+  export type FuelStationEntryMinAggregateInputType = {
+    id?: true
+    date?: true
+    stationId?: true
+    consumption?: true
+    stock?: true
+    remarks?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FuelStationEntryMaxAggregateInputType = {
+    id?: true
+    date?: true
+    stationId?: true
+    consumption?: true
+    stock?: true
+    remarks?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FuelStationEntryCountAggregateInputType = {
+    id?: true
+    date?: true
+    stationId?: true
+    consumption?: true
+    stock?: true
+    remarks?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FuelStationEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FuelStationEntry to aggregate.
+     */
+    where?: FuelStationEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStationEntries to fetch.
+     */
+    orderBy?: FuelStationEntryOrderByWithRelationInput | FuelStationEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FuelStationEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStationEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStationEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FuelStationEntries
+    **/
+    _count?: true | FuelStationEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FuelStationEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FuelStationEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FuelStationEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FuelStationEntryMaxAggregateInputType
+  }
+
+  export type GetFuelStationEntryAggregateType<T extends FuelStationEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateFuelStationEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFuelStationEntry[P]>
+      : GetScalarType<T[P], AggregateFuelStationEntry[P]>
+  }
+
+
+
+
+  export type FuelStationEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FuelStationEntryWhereInput
+    orderBy?: FuelStationEntryOrderByWithAggregationInput | FuelStationEntryOrderByWithAggregationInput[]
+    by: FuelStationEntryScalarFieldEnum[] | FuelStationEntryScalarFieldEnum
+    having?: FuelStationEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FuelStationEntryCountAggregateInputType | true
+    _avg?: FuelStationEntryAvgAggregateInputType
+    _sum?: FuelStationEntrySumAggregateInputType
+    _min?: FuelStationEntryMinAggregateInputType
+    _max?: FuelStationEntryMaxAggregateInputType
+  }
+
+  export type FuelStationEntryGroupByOutputType = {
+    id: string
+    date: Date
+    stationId: string
+    consumption: number | null
+    stock: number | null
+    remarks: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FuelStationEntryCountAggregateOutputType | null
+    _avg: FuelStationEntryAvgAggregateOutputType | null
+    _sum: FuelStationEntrySumAggregateOutputType | null
+    _min: FuelStationEntryMinAggregateOutputType | null
+    _max: FuelStationEntryMaxAggregateOutputType | null
+  }
+
+  type GetFuelStationEntryGroupByPayload<T extends FuelStationEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FuelStationEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FuelStationEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FuelStationEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], FuelStationEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FuelStationEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    stationId?: boolean
+    consumption?: boolean
+    stock?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    station?: boolean | FuelStationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["fuelStationEntry"]>
+
+
+
+  export type FuelStationEntrySelectScalar = {
+    id?: boolean
+    date?: boolean
+    stationId?: boolean
+    consumption?: boolean
+    stock?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FuelStationEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "stationId" | "consumption" | "stock" | "remarks" | "createdAt" | "updatedAt", ExtArgs["result"]["fuelStationEntry"]>
+  export type FuelStationEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    station?: boolean | FuelStationDefaultArgs<ExtArgs>
+  }
+
+  export type $FuelStationEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FuelStationEntry"
+    objects: {
+      station: Prisma.$FuelStationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      date: Date
+      stationId: string
+      consumption: number | null
+      stock: number | null
+      remarks: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["fuelStationEntry"]>
+    composites: {}
+  }
+
+  type FuelStationEntryGetPayload<S extends boolean | null | undefined | FuelStationEntryDefaultArgs> = $Result.GetResult<Prisma.$FuelStationEntryPayload, S>
+
+  type FuelStationEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FuelStationEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FuelStationEntryCountAggregateInputType | true
+    }
+
+  export interface FuelStationEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FuelStationEntry'], meta: { name: 'FuelStationEntry' } }
+    /**
+     * Find zero or one FuelStationEntry that matches the filter.
+     * @param {FuelStationEntryFindUniqueArgs} args - Arguments to find a FuelStationEntry
+     * @example
+     * // Get one FuelStationEntry
+     * const fuelStationEntry = await prisma.fuelStationEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FuelStationEntryFindUniqueArgs>(args: SelectSubset<T, FuelStationEntryFindUniqueArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FuelStationEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FuelStationEntryFindUniqueOrThrowArgs} args - Arguments to find a FuelStationEntry
+     * @example
+     * // Get one FuelStationEntry
+     * const fuelStationEntry = await prisma.fuelStationEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FuelStationEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, FuelStationEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FuelStationEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationEntryFindFirstArgs} args - Arguments to find a FuelStationEntry
+     * @example
+     * // Get one FuelStationEntry
+     * const fuelStationEntry = await prisma.fuelStationEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FuelStationEntryFindFirstArgs>(args?: SelectSubset<T, FuelStationEntryFindFirstArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FuelStationEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationEntryFindFirstOrThrowArgs} args - Arguments to find a FuelStationEntry
+     * @example
+     * // Get one FuelStationEntry
+     * const fuelStationEntry = await prisma.fuelStationEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FuelStationEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, FuelStationEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FuelStationEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FuelStationEntries
+     * const fuelStationEntries = await prisma.fuelStationEntry.findMany()
+     * 
+     * // Get first 10 FuelStationEntries
+     * const fuelStationEntries = await prisma.fuelStationEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const fuelStationEntryWithIdOnly = await prisma.fuelStationEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FuelStationEntryFindManyArgs>(args?: SelectSubset<T, FuelStationEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FuelStationEntry.
+     * @param {FuelStationEntryCreateArgs} args - Arguments to create a FuelStationEntry.
+     * @example
+     * // Create one FuelStationEntry
+     * const FuelStationEntry = await prisma.fuelStationEntry.create({
+     *   data: {
+     *     // ... data to create a FuelStationEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends FuelStationEntryCreateArgs>(args: SelectSubset<T, FuelStationEntryCreateArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FuelStationEntries.
+     * @param {FuelStationEntryCreateManyArgs} args - Arguments to create many FuelStationEntries.
+     * @example
+     * // Create many FuelStationEntries
+     * const fuelStationEntry = await prisma.fuelStationEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FuelStationEntryCreateManyArgs>(args?: SelectSubset<T, FuelStationEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a FuelStationEntry.
+     * @param {FuelStationEntryDeleteArgs} args - Arguments to delete one FuelStationEntry.
+     * @example
+     * // Delete one FuelStationEntry
+     * const FuelStationEntry = await prisma.fuelStationEntry.delete({
+     *   where: {
+     *     // ... filter to delete one FuelStationEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FuelStationEntryDeleteArgs>(args: SelectSubset<T, FuelStationEntryDeleteArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FuelStationEntry.
+     * @param {FuelStationEntryUpdateArgs} args - Arguments to update one FuelStationEntry.
+     * @example
+     * // Update one FuelStationEntry
+     * const fuelStationEntry = await prisma.fuelStationEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FuelStationEntryUpdateArgs>(args: SelectSubset<T, FuelStationEntryUpdateArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FuelStationEntries.
+     * @param {FuelStationEntryDeleteManyArgs} args - Arguments to filter FuelStationEntries to delete.
+     * @example
+     * // Delete a few FuelStationEntries
+     * const { count } = await prisma.fuelStationEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FuelStationEntryDeleteManyArgs>(args?: SelectSubset<T, FuelStationEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FuelStationEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FuelStationEntries
+     * const fuelStationEntry = await prisma.fuelStationEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FuelStationEntryUpdateManyArgs>(args: SelectSubset<T, FuelStationEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FuelStationEntry.
+     * @param {FuelStationEntryUpsertArgs} args - Arguments to update or create a FuelStationEntry.
+     * @example
+     * // Update or create a FuelStationEntry
+     * const fuelStationEntry = await prisma.fuelStationEntry.upsert({
+     *   create: {
+     *     // ... data to create a FuelStationEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FuelStationEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FuelStationEntryUpsertArgs>(args: SelectSubset<T, FuelStationEntryUpsertArgs<ExtArgs>>): Prisma__FuelStationEntryClient<$Result.GetResult<Prisma.$FuelStationEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FuelStationEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationEntryCountArgs} args - Arguments to filter FuelStationEntries to count.
+     * @example
+     * // Count the number of FuelStationEntries
+     * const count = await prisma.fuelStationEntry.count({
+     *   where: {
+     *     // ... the filter for the FuelStationEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends FuelStationEntryCountArgs>(
+      args?: Subset<T, FuelStationEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FuelStationEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FuelStationEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FuelStationEntryAggregateArgs>(args: Subset<T, FuelStationEntryAggregateArgs>): Prisma.PrismaPromise<GetFuelStationEntryAggregateType<T>>
+
+    /**
+     * Group by FuelStationEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FuelStationEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FuelStationEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FuelStationEntryGroupByArgs['orderBy'] }
+        : { orderBy?: FuelStationEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FuelStationEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFuelStationEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FuelStationEntry model
+   */
+  readonly fields: FuelStationEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FuelStationEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FuelStationEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    station<T extends FuelStationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FuelStationDefaultArgs<ExtArgs>>): Prisma__FuelStationClient<$Result.GetResult<Prisma.$FuelStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FuelStationEntry model
+   */
+  interface FuelStationEntryFieldRefs {
+    readonly id: FieldRef<"FuelStationEntry", 'String'>
+    readonly date: FieldRef<"FuelStationEntry", 'DateTime'>
+    readonly stationId: FieldRef<"FuelStationEntry", 'String'>
+    readonly consumption: FieldRef<"FuelStationEntry", 'Float'>
+    readonly stock: FieldRef<"FuelStationEntry", 'Float'>
+    readonly remarks: FieldRef<"FuelStationEntry", 'String'>
+    readonly createdAt: FieldRef<"FuelStationEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"FuelStationEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FuelStationEntry findUnique
+   */
+  export type FuelStationEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStationEntry to fetch.
+     */
+    where: FuelStationEntryWhereUniqueInput
+  }
+
+  /**
+   * FuelStationEntry findUniqueOrThrow
+   */
+  export type FuelStationEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStationEntry to fetch.
+     */
+    where: FuelStationEntryWhereUniqueInput
+  }
+
+  /**
+   * FuelStationEntry findFirst
+   */
+  export type FuelStationEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStationEntry to fetch.
+     */
+    where?: FuelStationEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStationEntries to fetch.
+     */
+    orderBy?: FuelStationEntryOrderByWithRelationInput | FuelStationEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FuelStationEntries.
+     */
+    cursor?: FuelStationEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStationEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStationEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FuelStationEntries.
+     */
+    distinct?: FuelStationEntryScalarFieldEnum | FuelStationEntryScalarFieldEnum[]
+  }
+
+  /**
+   * FuelStationEntry findFirstOrThrow
+   */
+  export type FuelStationEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStationEntry to fetch.
+     */
+    where?: FuelStationEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStationEntries to fetch.
+     */
+    orderBy?: FuelStationEntryOrderByWithRelationInput | FuelStationEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FuelStationEntries.
+     */
+    cursor?: FuelStationEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStationEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStationEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FuelStationEntries.
+     */
+    distinct?: FuelStationEntryScalarFieldEnum | FuelStationEntryScalarFieldEnum[]
+  }
+
+  /**
+   * FuelStationEntry findMany
+   */
+  export type FuelStationEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which FuelStationEntries to fetch.
+     */
+    where?: FuelStationEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FuelStationEntries to fetch.
+     */
+    orderBy?: FuelStationEntryOrderByWithRelationInput | FuelStationEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FuelStationEntries.
+     */
+    cursor?: FuelStationEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FuelStationEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FuelStationEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FuelStationEntries.
+     */
+    distinct?: FuelStationEntryScalarFieldEnum | FuelStationEntryScalarFieldEnum[]
+  }
+
+  /**
+   * FuelStationEntry create
+   */
+  export type FuelStationEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FuelStationEntry.
+     */
+    data: XOR<FuelStationEntryCreateInput, FuelStationEntryUncheckedCreateInput>
+  }
+
+  /**
+   * FuelStationEntry createMany
+   */
+  export type FuelStationEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FuelStationEntries.
+     */
+    data: FuelStationEntryCreateManyInput | FuelStationEntryCreateManyInput[]
+  }
+
+  /**
+   * FuelStationEntry update
+   */
+  export type FuelStationEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FuelStationEntry.
+     */
+    data: XOR<FuelStationEntryUpdateInput, FuelStationEntryUncheckedUpdateInput>
+    /**
+     * Choose, which FuelStationEntry to update.
+     */
+    where: FuelStationEntryWhereUniqueInput
+  }
+
+  /**
+   * FuelStationEntry updateMany
+   */
+  export type FuelStationEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FuelStationEntries.
+     */
+    data: XOR<FuelStationEntryUpdateManyMutationInput, FuelStationEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which FuelStationEntries to update
+     */
+    where?: FuelStationEntryWhereInput
+    /**
+     * Limit how many FuelStationEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FuelStationEntry upsert
+   */
+  export type FuelStationEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FuelStationEntry to update in case it exists.
+     */
+    where: FuelStationEntryWhereUniqueInput
+    /**
+     * In case the FuelStationEntry found by the `where` argument doesn't exist, create a new FuelStationEntry with this data.
+     */
+    create: XOR<FuelStationEntryCreateInput, FuelStationEntryUncheckedCreateInput>
+    /**
+     * In case the FuelStationEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FuelStationEntryUpdateInput, FuelStationEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * FuelStationEntry delete
+   */
+  export type FuelStationEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+    /**
+     * Filter which FuelStationEntry to delete.
+     */
+    where: FuelStationEntryWhereUniqueInput
+  }
+
+  /**
+   * FuelStationEntry deleteMany
+   */
+  export type FuelStationEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FuelStationEntries to delete
+     */
+    where?: FuelStationEntryWhereInput
+    /**
+     * Limit how many FuelStationEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FuelStationEntry without action
+   */
+  export type FuelStationEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FuelStationEntry
+     */
+    select?: FuelStationEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FuelStationEntry
+     */
+    omit?: FuelStationEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FuelStationEntryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -35156,7 +37327,7 @@ export namespace Prisma {
 
   export const PipelineBatchScalarFieldEnum: {
     id: 'id',
-    year: 'year',
+    date: 'date',
     product: 'product',
     volume: 'volume',
     startKm: 'startKm',
@@ -35223,16 +37394,16 @@ export namespace Prisma {
   export type PigRunScalarFieldEnum = (typeof PigRunScalarFieldEnum)[keyof typeof PigRunScalarFieldEnum]
 
 
-  export const PipelineYearlyStatsScalarFieldEnum: {
+  export const PipelineDailyStatsScalarFieldEnum: {
     id: 'id',
-    year: 'year',
+    date: 'date',
     throughput: 'throughput',
     delivered: 'delivered',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
-  export type PipelineYearlyStatsScalarFieldEnum = (typeof PipelineYearlyStatsScalarFieldEnum)[keyof typeof PipelineYearlyStatsScalarFieldEnum]
+  export type PipelineDailyStatsScalarFieldEnum = (typeof PipelineDailyStatsScalarFieldEnum)[keyof typeof PipelineDailyStatsScalarFieldEnum]
 
 
   export const DailyEntryScalarFieldEnum: {
@@ -35300,7 +37471,7 @@ export namespace Prisma {
 
   export const PipelineProgressScalarFieldEnum: {
     id: 'id',
-    year: 'year',
+    date: 'date',
     distanceKm: 'distanceKm',
     totalDistance: 'totalDistance',
     lastStation: 'lastStation',
@@ -35361,6 +37532,30 @@ export namespace Prisma {
   };
 
   export type OutstandingIssueScalarFieldEnum = (typeof OutstandingIssueScalarFieldEnum)[keyof typeof OutstandingIssueScalarFieldEnum]
+
+
+  export const FuelStationScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    position: 'position',
+    createdAt: 'createdAt'
+  };
+
+  export type FuelStationScalarFieldEnum = (typeof FuelStationScalarFieldEnum)[keyof typeof FuelStationScalarFieldEnum]
+
+
+  export const FuelStationEntryScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    stationId: 'stationId',
+    consumption: 'consumption',
+    stock: 'stock',
+    remarks: 'remarks',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FuelStationEntryScalarFieldEnum = (typeof FuelStationEntryScalarFieldEnum)[keyof typeof FuelStationEntryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -36803,7 +38998,7 @@ export namespace Prisma {
     OR?: PipelineBatchWhereInput[]
     NOT?: PipelineBatchWhereInput | PipelineBatchWhereInput[]
     id?: StringFilter<"PipelineBatch"> | string
-    year?: IntFilter<"PipelineBatch"> | number
+    date?: DateTimeFilter<"PipelineBatch"> | Date | string
     product?: StringFilter<"PipelineBatch"> | string
     volume?: FloatFilter<"PipelineBatch"> | number
     startKm?: FloatFilter<"PipelineBatch"> | number
@@ -36815,7 +39010,7 @@ export namespace Prisma {
 
   export type PipelineBatchOrderByWithRelationInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     product?: SortOrder
     volume?: SortOrder
     startKm?: SortOrder
@@ -36830,7 +39025,7 @@ export namespace Prisma {
     AND?: PipelineBatchWhereInput | PipelineBatchWhereInput[]
     OR?: PipelineBatchWhereInput[]
     NOT?: PipelineBatchWhereInput | PipelineBatchWhereInput[]
-    year?: IntFilter<"PipelineBatch"> | number
+    date?: DateTimeFilter<"PipelineBatch"> | Date | string
     product?: StringFilter<"PipelineBatch"> | string
     volume?: FloatFilter<"PipelineBatch"> | number
     startKm?: FloatFilter<"PipelineBatch"> | number
@@ -36842,7 +39037,7 @@ export namespace Prisma {
 
   export type PipelineBatchOrderByWithAggregationInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     product?: SortOrder
     volume?: SortOrder
     startKm?: SortOrder
@@ -36862,7 +39057,7 @@ export namespace Prisma {
     OR?: PipelineBatchScalarWhereWithAggregatesInput[]
     NOT?: PipelineBatchScalarWhereWithAggregatesInput | PipelineBatchScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"PipelineBatch"> | string
-    year?: IntWithAggregatesFilter<"PipelineBatch"> | number
+    date?: DateTimeWithAggregatesFilter<"PipelineBatch"> | Date | string
     product?: StringWithAggregatesFilter<"PipelineBatch"> | string
     volume?: FloatWithAggregatesFilter<"PipelineBatch"> | number
     startKm?: FloatWithAggregatesFilter<"PipelineBatch"> | number
@@ -37155,63 +39350,63 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"PigRun"> | Date | string
   }
 
-  export type PipelineYearlyStatsWhereInput = {
-    AND?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
-    OR?: PipelineYearlyStatsWhereInput[]
-    NOT?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
-    id?: StringFilter<"PipelineYearlyStats"> | string
-    year?: IntFilter<"PipelineYearlyStats"> | number
-    throughput?: FloatFilter<"PipelineYearlyStats"> | number
-    delivered?: FloatFilter<"PipelineYearlyStats"> | number
-    createdAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
-    updatedAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
+  export type PipelineDailyStatsWhereInput = {
+    AND?: PipelineDailyStatsWhereInput | PipelineDailyStatsWhereInput[]
+    OR?: PipelineDailyStatsWhereInput[]
+    NOT?: PipelineDailyStatsWhereInput | PipelineDailyStatsWhereInput[]
+    id?: StringFilter<"PipelineDailyStats"> | string
+    date?: DateTimeFilter<"PipelineDailyStats"> | Date | string
+    throughput?: FloatFilter<"PipelineDailyStats"> | number
+    delivered?: FloatFilter<"PipelineDailyStats"> | number
+    createdAt?: DateTimeFilter<"PipelineDailyStats"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelineDailyStats"> | Date | string
   }
 
-  export type PipelineYearlyStatsOrderByWithRelationInput = {
+  export type PipelineDailyStatsOrderByWithRelationInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     throughput?: SortOrder
     delivered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type PipelineYearlyStatsWhereUniqueInput = Prisma.AtLeast<{
+  export type PipelineDailyStatsWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    year?: number
-    AND?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
-    OR?: PipelineYearlyStatsWhereInput[]
-    NOT?: PipelineYearlyStatsWhereInput | PipelineYearlyStatsWhereInput[]
-    throughput?: FloatFilter<"PipelineYearlyStats"> | number
-    delivered?: FloatFilter<"PipelineYearlyStats"> | number
-    createdAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
-    updatedAt?: DateTimeFilter<"PipelineYearlyStats"> | Date | string
-  }, "id" | "year">
+    date?: Date | string
+    AND?: PipelineDailyStatsWhereInput | PipelineDailyStatsWhereInput[]
+    OR?: PipelineDailyStatsWhereInput[]
+    NOT?: PipelineDailyStatsWhereInput | PipelineDailyStatsWhereInput[]
+    throughput?: FloatFilter<"PipelineDailyStats"> | number
+    delivered?: FloatFilter<"PipelineDailyStats"> | number
+    createdAt?: DateTimeFilter<"PipelineDailyStats"> | Date | string
+    updatedAt?: DateTimeFilter<"PipelineDailyStats"> | Date | string
+  }, "id" | "date">
 
-  export type PipelineYearlyStatsOrderByWithAggregationInput = {
+  export type PipelineDailyStatsOrderByWithAggregationInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     throughput?: SortOrder
     delivered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    _count?: PipelineYearlyStatsCountOrderByAggregateInput
-    _avg?: PipelineYearlyStatsAvgOrderByAggregateInput
-    _max?: PipelineYearlyStatsMaxOrderByAggregateInput
-    _min?: PipelineYearlyStatsMinOrderByAggregateInput
-    _sum?: PipelineYearlyStatsSumOrderByAggregateInput
+    _count?: PipelineDailyStatsCountOrderByAggregateInput
+    _avg?: PipelineDailyStatsAvgOrderByAggregateInput
+    _max?: PipelineDailyStatsMaxOrderByAggregateInput
+    _min?: PipelineDailyStatsMinOrderByAggregateInput
+    _sum?: PipelineDailyStatsSumOrderByAggregateInput
   }
 
-  export type PipelineYearlyStatsScalarWhereWithAggregatesInput = {
-    AND?: PipelineYearlyStatsScalarWhereWithAggregatesInput | PipelineYearlyStatsScalarWhereWithAggregatesInput[]
-    OR?: PipelineYearlyStatsScalarWhereWithAggregatesInput[]
-    NOT?: PipelineYearlyStatsScalarWhereWithAggregatesInput | PipelineYearlyStatsScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"PipelineYearlyStats"> | string
-    year?: IntWithAggregatesFilter<"PipelineYearlyStats"> | number
-    throughput?: FloatWithAggregatesFilter<"PipelineYearlyStats"> | number
-    delivered?: FloatWithAggregatesFilter<"PipelineYearlyStats"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"PipelineYearlyStats"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"PipelineYearlyStats"> | Date | string
+  export type PipelineDailyStatsScalarWhereWithAggregatesInput = {
+    AND?: PipelineDailyStatsScalarWhereWithAggregatesInput | PipelineDailyStatsScalarWhereWithAggregatesInput[]
+    OR?: PipelineDailyStatsScalarWhereWithAggregatesInput[]
+    NOT?: PipelineDailyStatsScalarWhereWithAggregatesInput | PipelineDailyStatsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PipelineDailyStats"> | string
+    date?: DateTimeWithAggregatesFilter<"PipelineDailyStats"> | Date | string
+    throughput?: FloatWithAggregatesFilter<"PipelineDailyStats"> | number
+    delivered?: FloatWithAggregatesFilter<"PipelineDailyStats"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"PipelineDailyStats"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PipelineDailyStats"> | Date | string
   }
 
   export type DailyEntryWhereInput = {
@@ -37547,7 +39742,7 @@ export namespace Prisma {
     OR?: PipelineProgressWhereInput[]
     NOT?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
     id?: StringFilter<"PipelineProgress"> | string
-    year?: IntNullableFilter<"PipelineProgress"> | number | null
+    date?: DateTimeNullableFilter<"PipelineProgress"> | Date | string | null
     distanceKm?: FloatFilter<"PipelineProgress"> | number
     totalDistance?: FloatFilter<"PipelineProgress"> | number
     lastStation?: StringNullableFilter<"PipelineProgress"> | string | null
@@ -37556,7 +39751,7 @@ export namespace Prisma {
 
   export type PipelineProgressOrderByWithRelationInput = {
     id?: SortOrder
-    year?: SortOrderInput | SortOrder
+    date?: SortOrderInput | SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrderInput | SortOrder
@@ -37565,7 +39760,7 @@ export namespace Prisma {
 
   export type PipelineProgressWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    year?: number
+    date?: Date | string
     AND?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
     OR?: PipelineProgressWhereInput[]
     NOT?: PipelineProgressWhereInput | PipelineProgressWhereInput[]
@@ -37573,11 +39768,11 @@ export namespace Prisma {
     totalDistance?: FloatFilter<"PipelineProgress"> | number
     lastStation?: StringNullableFilter<"PipelineProgress"> | string | null
     updatedAt?: DateTimeFilter<"PipelineProgress"> | Date | string
-  }, "id" | "year">
+  }, "id" | "date">
 
   export type PipelineProgressOrderByWithAggregationInput = {
     id?: SortOrder
-    year?: SortOrderInput | SortOrder
+    date?: SortOrderInput | SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrderInput | SortOrder
@@ -37594,7 +39789,7 @@ export namespace Prisma {
     OR?: PipelineProgressScalarWhereWithAggregatesInput[]
     NOT?: PipelineProgressScalarWhereWithAggregatesInput | PipelineProgressScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"PipelineProgress"> | string
-    year?: IntNullableWithAggregatesFilter<"PipelineProgress"> | number | null
+    date?: DateTimeNullableWithAggregatesFilter<"PipelineProgress"> | Date | string | null
     distanceKm?: FloatWithAggregatesFilter<"PipelineProgress"> | number
     totalDistance?: FloatWithAggregatesFilter<"PipelineProgress"> | number
     lastStation?: StringNullableWithAggregatesFilter<"PipelineProgress"> | string | null
@@ -37861,6 +40056,131 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"OutstandingIssue"> | string
     createdAt?: DateTimeWithAggregatesFilter<"OutstandingIssue"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"OutstandingIssue"> | Date | string
+  }
+
+  export type FuelStationWhereInput = {
+    AND?: FuelStationWhereInput | FuelStationWhereInput[]
+    OR?: FuelStationWhereInput[]
+    NOT?: FuelStationWhereInput | FuelStationWhereInput[]
+    id?: StringFilter<"FuelStation"> | string
+    name?: StringFilter<"FuelStation"> | string
+    position?: IntFilter<"FuelStation"> | number
+    createdAt?: DateTimeFilter<"FuelStation"> | Date | string
+    entries?: FuelStationEntryListRelationFilter
+  }
+
+  export type FuelStationOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    entries?: FuelStationEntryOrderByRelationAggregateInput
+  }
+
+  export type FuelStationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: FuelStationWhereInput | FuelStationWhereInput[]
+    OR?: FuelStationWhereInput[]
+    NOT?: FuelStationWhereInput | FuelStationWhereInput[]
+    position?: IntFilter<"FuelStation"> | number
+    createdAt?: DateTimeFilter<"FuelStation"> | Date | string
+    entries?: FuelStationEntryListRelationFilter
+  }, "id" | "name">
+
+  export type FuelStationOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    _count?: FuelStationCountOrderByAggregateInput
+    _avg?: FuelStationAvgOrderByAggregateInput
+    _max?: FuelStationMaxOrderByAggregateInput
+    _min?: FuelStationMinOrderByAggregateInput
+    _sum?: FuelStationSumOrderByAggregateInput
+  }
+
+  export type FuelStationScalarWhereWithAggregatesInput = {
+    AND?: FuelStationScalarWhereWithAggregatesInput | FuelStationScalarWhereWithAggregatesInput[]
+    OR?: FuelStationScalarWhereWithAggregatesInput[]
+    NOT?: FuelStationScalarWhereWithAggregatesInput | FuelStationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FuelStation"> | string
+    name?: StringWithAggregatesFilter<"FuelStation"> | string
+    position?: IntWithAggregatesFilter<"FuelStation"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"FuelStation"> | Date | string
+  }
+
+  export type FuelStationEntryWhereInput = {
+    AND?: FuelStationEntryWhereInput | FuelStationEntryWhereInput[]
+    OR?: FuelStationEntryWhereInput[]
+    NOT?: FuelStationEntryWhereInput | FuelStationEntryWhereInput[]
+    id?: StringFilter<"FuelStationEntry"> | string
+    date?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    stationId?: StringFilter<"FuelStationEntry"> | string
+    consumption?: FloatNullableFilter<"FuelStationEntry"> | number | null
+    stock?: FloatNullableFilter<"FuelStationEntry"> | number | null
+    remarks?: StringNullableFilter<"FuelStationEntry"> | string | null
+    createdAt?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    station?: XOR<FuelStationScalarRelationFilter, FuelStationWhereInput>
+  }
+
+  export type FuelStationEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrderInput | SortOrder
+    stock?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    station?: FuelStationOrderByWithRelationInput
+  }
+
+  export type FuelStationEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    date_stationId?: FuelStationEntryDateStationIdCompoundUniqueInput
+    AND?: FuelStationEntryWhereInput | FuelStationEntryWhereInput[]
+    OR?: FuelStationEntryWhereInput[]
+    NOT?: FuelStationEntryWhereInput | FuelStationEntryWhereInput[]
+    date?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    stationId?: StringFilter<"FuelStationEntry"> | string
+    consumption?: FloatNullableFilter<"FuelStationEntry"> | number | null
+    stock?: FloatNullableFilter<"FuelStationEntry"> | number | null
+    remarks?: StringNullableFilter<"FuelStationEntry"> | string | null
+    createdAt?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    station?: XOR<FuelStationScalarRelationFilter, FuelStationWhereInput>
+  }, "id" | "date_stationId">
+
+  export type FuelStationEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrderInput | SortOrder
+    stock?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FuelStationEntryCountOrderByAggregateInput
+    _avg?: FuelStationEntryAvgOrderByAggregateInput
+    _max?: FuelStationEntryMaxOrderByAggregateInput
+    _min?: FuelStationEntryMinOrderByAggregateInput
+    _sum?: FuelStationEntrySumOrderByAggregateInput
+  }
+
+  export type FuelStationEntryScalarWhereWithAggregatesInput = {
+    AND?: FuelStationEntryScalarWhereWithAggregatesInput | FuelStationEntryScalarWhereWithAggregatesInput[]
+    OR?: FuelStationEntryScalarWhereWithAggregatesInput[]
+    NOT?: FuelStationEntryScalarWhereWithAggregatesInput | FuelStationEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FuelStationEntry"> | string
+    date?: DateTimeWithAggregatesFilter<"FuelStationEntry"> | Date | string
+    stationId?: StringWithAggregatesFilter<"FuelStationEntry"> | string
+    consumption?: FloatNullableWithAggregatesFilter<"FuelStationEntry"> | number | null
+    stock?: FloatNullableWithAggregatesFilter<"FuelStationEntry"> | number | null
+    remarks?: StringNullableWithAggregatesFilter<"FuelStationEntry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"FuelStationEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FuelStationEntry"> | Date | string
   }
 
   export type AccountCreateInput = {
@@ -39395,7 +41715,7 @@ export namespace Prisma {
 
   export type PipelineBatchCreateInput = {
     id?: string
-    year: number
+    date?: Date | string
     product: string
     volume: number
     startKm: number
@@ -39407,7 +41727,7 @@ export namespace Prisma {
 
   export type PipelineBatchUncheckedCreateInput = {
     id?: string
-    year: number
+    date?: Date | string
     product: string
     volume: number
     startKm: number
@@ -39419,7 +41739,7 @@ export namespace Prisma {
 
   export type PipelineBatchUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: StringFieldUpdateOperationsInput | string
     volume?: FloatFieldUpdateOperationsInput | number
     startKm?: FloatFieldUpdateOperationsInput | number
@@ -39431,7 +41751,7 @@ export namespace Prisma {
 
   export type PipelineBatchUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: StringFieldUpdateOperationsInput | string
     volume?: FloatFieldUpdateOperationsInput | number
     startKm?: FloatFieldUpdateOperationsInput | number
@@ -39443,7 +41763,7 @@ export namespace Prisma {
 
   export type PipelineBatchCreateManyInput = {
     id?: string
-    year: number
+    date?: Date | string
     product: string
     volume: number
     startKm: number
@@ -39455,7 +41775,7 @@ export namespace Prisma {
 
   export type PipelineBatchUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: StringFieldUpdateOperationsInput | string
     volume?: FloatFieldUpdateOperationsInput | number
     startKm?: FloatFieldUpdateOperationsInput | number
@@ -39467,7 +41787,7 @@ export namespace Prisma {
 
   export type PipelineBatchUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     product?: StringFieldUpdateOperationsInput | string
     volume?: FloatFieldUpdateOperationsInput | number
     startKm?: FloatFieldUpdateOperationsInput | number
@@ -39801,63 +42121,63 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PipelineYearlyStatsCreateInput = {
+  export type PipelineDailyStatsCreateInput = {
     id?: string
-    year: number
+    date?: Date | string
     throughput: number
     delivered: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type PipelineYearlyStatsUncheckedCreateInput = {
+  export type PipelineDailyStatsUncheckedCreateInput = {
     id?: string
-    year: number
+    date?: Date | string
     throughput: number
     delivered: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type PipelineYearlyStatsUpdateInput = {
+  export type PipelineDailyStatsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     throughput?: FloatFieldUpdateOperationsInput | number
     delivered?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PipelineYearlyStatsUncheckedUpdateInput = {
+  export type PipelineDailyStatsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     throughput?: FloatFieldUpdateOperationsInput | number
     delivered?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PipelineYearlyStatsCreateManyInput = {
+  export type PipelineDailyStatsCreateManyInput = {
     id?: string
-    year: number
+    date?: Date | string
     throughput: number
     delivered: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type PipelineYearlyStatsUpdateManyMutationInput = {
+  export type PipelineDailyStatsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     throughput?: FloatFieldUpdateOperationsInput | number
     delivered?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PipelineYearlyStatsUncheckedUpdateManyInput = {
+  export type PipelineDailyStatsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
     throughput?: FloatFieldUpdateOperationsInput | number
     delivered?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40228,7 +42548,7 @@ export namespace Prisma {
 
   export type PipelineProgressCreateInput = {
     id?: string
-    year?: number | null
+    date?: Date | string | null
     distanceKm?: number
     totalDistance?: number
     lastStation?: string | null
@@ -40237,7 +42557,7 @@ export namespace Prisma {
 
   export type PipelineProgressUncheckedCreateInput = {
     id?: string
-    year?: number | null
+    date?: Date | string | null
     distanceKm?: number
     totalDistance?: number
     lastStation?: string | null
@@ -40246,7 +42566,7 @@ export namespace Prisma {
 
   export type PipelineProgressUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40255,7 +42575,7 @@ export namespace Prisma {
 
   export type PipelineProgressUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40264,7 +42584,7 @@ export namespace Prisma {
 
   export type PipelineProgressCreateManyInput = {
     id?: string
-    year?: number | null
+    date?: Date | string | null
     distanceKm?: number
     totalDistance?: number
     lastStation?: string | null
@@ -40273,7 +42593,7 @@ export namespace Prisma {
 
   export type PipelineProgressUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40282,7 +42602,7 @@ export namespace Prisma {
 
   export type PipelineProgressUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    year?: NullableIntFieldUpdateOperationsInput | number | null
+    date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     distanceKm?: FloatFieldUpdateOperationsInput | number
     totalDistance?: FloatFieldUpdateOperationsInput | number
     lastStation?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40581,6 +42901,135 @@ export namespace Prisma {
     reportedBy?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationCreateInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+    entries?: FuelStationEntryCreateNestedManyWithoutStationInput
+  }
+
+  export type FuelStationUncheckedCreateInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+    entries?: FuelStationEntryUncheckedCreateNestedManyWithoutStationInput
+  }
+
+  export type FuelStationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: FuelStationEntryUpdateManyWithoutStationNestedInput
+  }
+
+  export type FuelStationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: FuelStationEntryUncheckedUpdateManyWithoutStationNestedInput
+  }
+
+  export type FuelStationCreateManyInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+  }
+
+  export type FuelStationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationEntryCreateInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    station: FuelStationCreateNestedOneWithoutEntriesInput
+  }
+
+  export type FuelStationEntryUncheckedCreateInput = {
+    id?: string
+    date: Date | string
+    stationId: string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FuelStationEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    station?: FuelStationUpdateOneRequiredWithoutEntriesNestedInput
+  }
+
+  export type FuelStationEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    stationId?: StringFieldUpdateOperationsInput | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationEntryCreateManyInput = {
+    id?: string
+    date: Date | string
+    stationId: string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FuelStationEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    stationId?: StringFieldUpdateOperationsInput | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41700,7 +44149,7 @@ export namespace Prisma {
 
   export type PipelineBatchCountOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     product?: SortOrder
     volume?: SortOrder
     startKm?: SortOrder
@@ -41711,7 +44160,6 @@ export namespace Prisma {
   }
 
   export type PipelineBatchAvgOrderByAggregateInput = {
-    year?: SortOrder
     volume?: SortOrder
     startKm?: SortOrder
     endKm?: SortOrder
@@ -41719,7 +44167,7 @@ export namespace Prisma {
 
   export type PipelineBatchMaxOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     product?: SortOrder
     volume?: SortOrder
     startKm?: SortOrder
@@ -41731,7 +44179,7 @@ export namespace Prisma {
 
   export type PipelineBatchMinOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     product?: SortOrder
     volume?: SortOrder
     startKm?: SortOrder
@@ -41742,7 +44190,6 @@ export namespace Prisma {
   }
 
   export type PipelineBatchSumOrderByAggregateInput = {
-    year?: SortOrder
     volume?: SortOrder
     startKm?: SortOrder
     endKm?: SortOrder
@@ -41964,41 +44411,39 @@ export namespace Prisma {
     totalDistance?: SortOrder
   }
 
-  export type PipelineYearlyStatsCountOrderByAggregateInput = {
+  export type PipelineDailyStatsCountOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     throughput?: SortOrder
     delivered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type PipelineYearlyStatsAvgOrderByAggregateInput = {
-    year?: SortOrder
+  export type PipelineDailyStatsAvgOrderByAggregateInput = {
     throughput?: SortOrder
     delivered?: SortOrder
   }
 
-  export type PipelineYearlyStatsMaxOrderByAggregateInput = {
+  export type PipelineDailyStatsMaxOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     throughput?: SortOrder
     delivered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type PipelineYearlyStatsMinOrderByAggregateInput = {
+  export type PipelineDailyStatsMinOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     throughput?: SortOrder
     delivered?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type PipelineYearlyStatsSumOrderByAggregateInput = {
-    year?: SortOrder
+  export type PipelineDailyStatsSumOrderByAggregateInput = {
     throughput?: SortOrder
     delivered?: SortOrder
   }
@@ -42310,7 +44755,7 @@ export namespace Prisma {
 
   export type PipelineProgressCountOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrder
@@ -42318,14 +44763,13 @@ export namespace Prisma {
   }
 
   export type PipelineProgressAvgOrderByAggregateInput = {
-    year?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
   }
 
   export type PipelineProgressMaxOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrder
@@ -42334,7 +44778,7 @@ export namespace Prisma {
 
   export type PipelineProgressMinOrderByAggregateInput = {
     id?: SortOrder
-    year?: SortOrder
+    date?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
     lastStation?: SortOrder
@@ -42342,7 +44786,6 @@ export namespace Prisma {
   }
 
   export type PipelineProgressSumOrderByAggregateInput = {
-    year?: SortOrder
     distanceKm?: SortOrder
     totalDistance?: SortOrder
   }
@@ -42509,6 +44952,98 @@ export namespace Prisma {
 
   export type OutstandingIssueSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type FuelStationEntryListRelationFilter = {
+    every?: FuelStationEntryWhereInput
+    some?: FuelStationEntryWhereInput
+    none?: FuelStationEntryWhereInput
+  }
+
+  export type FuelStationEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FuelStationCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FuelStationAvgOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type FuelStationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FuelStationMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FuelStationSumOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type FuelStationScalarRelationFilter = {
+    is?: FuelStationWhereInput
+    isNot?: FuelStationWhereInput
+  }
+
+  export type FuelStationEntryDateStationIdCompoundUniqueInput = {
+    date: Date | string
+    stationId: string
+  }
+
+  export type FuelStationEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrder
+    stock?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FuelStationEntryAvgOrderByAggregateInput = {
+    consumption?: SortOrder
+    stock?: SortOrder
+  }
+
+  export type FuelStationEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrder
+    stock?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FuelStationEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrder
+    stock?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FuelStationEntrySumOrderByAggregateInput = {
+    consumption?: SortOrder
+    stock?: SortOrder
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -43391,6 +45926,62 @@ export namespace Prisma {
     upsert?: DailyEntryUpsertWithoutRemarksInput
     connect?: DailyEntryWhereUniqueInput
     update?: XOR<XOR<DailyEntryUpdateToOneWithWhereWithoutRemarksInput, DailyEntryUpdateWithoutRemarksInput>, DailyEntryUncheckedUpdateWithoutRemarksInput>
+  }
+
+  export type FuelStationEntryCreateNestedManyWithoutStationInput = {
+    create?: XOR<FuelStationEntryCreateWithoutStationInput, FuelStationEntryUncheckedCreateWithoutStationInput> | FuelStationEntryCreateWithoutStationInput[] | FuelStationEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: FuelStationEntryCreateOrConnectWithoutStationInput | FuelStationEntryCreateOrConnectWithoutStationInput[]
+    createMany?: FuelStationEntryCreateManyStationInputEnvelope
+    connect?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+  }
+
+  export type FuelStationEntryUncheckedCreateNestedManyWithoutStationInput = {
+    create?: XOR<FuelStationEntryCreateWithoutStationInput, FuelStationEntryUncheckedCreateWithoutStationInput> | FuelStationEntryCreateWithoutStationInput[] | FuelStationEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: FuelStationEntryCreateOrConnectWithoutStationInput | FuelStationEntryCreateOrConnectWithoutStationInput[]
+    createMany?: FuelStationEntryCreateManyStationInputEnvelope
+    connect?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+  }
+
+  export type FuelStationEntryUpdateManyWithoutStationNestedInput = {
+    create?: XOR<FuelStationEntryCreateWithoutStationInput, FuelStationEntryUncheckedCreateWithoutStationInput> | FuelStationEntryCreateWithoutStationInput[] | FuelStationEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: FuelStationEntryCreateOrConnectWithoutStationInput | FuelStationEntryCreateOrConnectWithoutStationInput[]
+    upsert?: FuelStationEntryUpsertWithWhereUniqueWithoutStationInput | FuelStationEntryUpsertWithWhereUniqueWithoutStationInput[]
+    createMany?: FuelStationEntryCreateManyStationInputEnvelope
+    set?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    disconnect?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    delete?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    connect?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    update?: FuelStationEntryUpdateWithWhereUniqueWithoutStationInput | FuelStationEntryUpdateWithWhereUniqueWithoutStationInput[]
+    updateMany?: FuelStationEntryUpdateManyWithWhereWithoutStationInput | FuelStationEntryUpdateManyWithWhereWithoutStationInput[]
+    deleteMany?: FuelStationEntryScalarWhereInput | FuelStationEntryScalarWhereInput[]
+  }
+
+  export type FuelStationEntryUncheckedUpdateManyWithoutStationNestedInput = {
+    create?: XOR<FuelStationEntryCreateWithoutStationInput, FuelStationEntryUncheckedCreateWithoutStationInput> | FuelStationEntryCreateWithoutStationInput[] | FuelStationEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: FuelStationEntryCreateOrConnectWithoutStationInput | FuelStationEntryCreateOrConnectWithoutStationInput[]
+    upsert?: FuelStationEntryUpsertWithWhereUniqueWithoutStationInput | FuelStationEntryUpsertWithWhereUniqueWithoutStationInput[]
+    createMany?: FuelStationEntryCreateManyStationInputEnvelope
+    set?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    disconnect?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    delete?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    connect?: FuelStationEntryWhereUniqueInput | FuelStationEntryWhereUniqueInput[]
+    update?: FuelStationEntryUpdateWithWhereUniqueWithoutStationInput | FuelStationEntryUpdateWithWhereUniqueWithoutStationInput[]
+    updateMany?: FuelStationEntryUpdateManyWithWhereWithoutStationInput | FuelStationEntryUpdateManyWithWhereWithoutStationInput[]
+    deleteMany?: FuelStationEntryScalarWhereInput | FuelStationEntryScalarWhereInput[]
+  }
+
+  export type FuelStationCreateNestedOneWithoutEntriesInput = {
+    create?: XOR<FuelStationCreateWithoutEntriesInput, FuelStationUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: FuelStationCreateOrConnectWithoutEntriesInput
+    connect?: FuelStationWhereUniqueInput
+  }
+
+  export type FuelStationUpdateOneRequiredWithoutEntriesNestedInput = {
+    create?: XOR<FuelStationCreateWithoutEntriesInput, FuelStationUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: FuelStationCreateOrConnectWithoutEntriesInput
+    upsert?: FuelStationUpsertWithoutEntriesInput
+    connect?: FuelStationWhereUniqueInput
+    update?: XOR<XOR<FuelStationUpdateToOneWithWhereWithoutEntriesInput, FuelStationUpdateWithoutEntriesInput>, FuelStationUncheckedUpdateWithoutEntriesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -45529,6 +48120,109 @@ export namespace Prisma {
     tanks?: TankUncheckedUpdateManyWithoutEntryNestedInput
   }
 
+  export type FuelStationEntryCreateWithoutStationInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FuelStationEntryUncheckedCreateWithoutStationInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FuelStationEntryCreateOrConnectWithoutStationInput = {
+    where: FuelStationEntryWhereUniqueInput
+    create: XOR<FuelStationEntryCreateWithoutStationInput, FuelStationEntryUncheckedCreateWithoutStationInput>
+  }
+
+  export type FuelStationEntryCreateManyStationInputEnvelope = {
+    data: FuelStationEntryCreateManyStationInput | FuelStationEntryCreateManyStationInput[]
+  }
+
+  export type FuelStationEntryUpsertWithWhereUniqueWithoutStationInput = {
+    where: FuelStationEntryWhereUniqueInput
+    update: XOR<FuelStationEntryUpdateWithoutStationInput, FuelStationEntryUncheckedUpdateWithoutStationInput>
+    create: XOR<FuelStationEntryCreateWithoutStationInput, FuelStationEntryUncheckedCreateWithoutStationInput>
+  }
+
+  export type FuelStationEntryUpdateWithWhereUniqueWithoutStationInput = {
+    where: FuelStationEntryWhereUniqueInput
+    data: XOR<FuelStationEntryUpdateWithoutStationInput, FuelStationEntryUncheckedUpdateWithoutStationInput>
+  }
+
+  export type FuelStationEntryUpdateManyWithWhereWithoutStationInput = {
+    where: FuelStationEntryScalarWhereInput
+    data: XOR<FuelStationEntryUpdateManyMutationInput, FuelStationEntryUncheckedUpdateManyWithoutStationInput>
+  }
+
+  export type FuelStationEntryScalarWhereInput = {
+    AND?: FuelStationEntryScalarWhereInput | FuelStationEntryScalarWhereInput[]
+    OR?: FuelStationEntryScalarWhereInput[]
+    NOT?: FuelStationEntryScalarWhereInput | FuelStationEntryScalarWhereInput[]
+    id?: StringFilter<"FuelStationEntry"> | string
+    date?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    stationId?: StringFilter<"FuelStationEntry"> | string
+    consumption?: FloatNullableFilter<"FuelStationEntry"> | number | null
+    stock?: FloatNullableFilter<"FuelStationEntry"> | number | null
+    remarks?: StringNullableFilter<"FuelStationEntry"> | string | null
+    createdAt?: DateTimeFilter<"FuelStationEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"FuelStationEntry"> | Date | string
+  }
+
+  export type FuelStationCreateWithoutEntriesInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+  }
+
+  export type FuelStationUncheckedCreateWithoutEntriesInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+  }
+
+  export type FuelStationCreateOrConnectWithoutEntriesInput = {
+    where: FuelStationWhereUniqueInput
+    create: XOR<FuelStationCreateWithoutEntriesInput, FuelStationUncheckedCreateWithoutEntriesInput>
+  }
+
+  export type FuelStationUpsertWithoutEntriesInput = {
+    update: XOR<FuelStationUpdateWithoutEntriesInput, FuelStationUncheckedUpdateWithoutEntriesInput>
+    create: XOR<FuelStationCreateWithoutEntriesInput, FuelStationUncheckedCreateWithoutEntriesInput>
+    where?: FuelStationWhereInput
+  }
+
+  export type FuelStationUpdateToOneWithWhereWithoutEntriesInput = {
+    where?: FuelStationWhereInput
+    data: XOR<FuelStationUpdateWithoutEntriesInput, FuelStationUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type FuelStationUpdateWithoutEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationUncheckedUpdateWithoutEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RoleUpdateWithoutUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46201,6 +48895,46 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     position?: IntFieldUpdateOperationsInput | number
     text?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type FuelStationEntryCreateManyStationInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FuelStationEntryUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationEntryUncheckedUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FuelStationEntryUncheckedUpdateManyWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

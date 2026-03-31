@@ -3,34 +3,31 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
-export async function getPipelineProgress(year: number = 2024) {
+export async function getPipelineProgress(date: Date = new Date()) {
   try {
+    const targetDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0))
     let progress = await prisma.pipelineProgress.findUnique({
-      where: { year }
+      where: { date: targetDate }
     })
 
     if (!progress) {
-      // Initialize if not exists
-      try {
-        progress = await prisma.pipelineProgress.create({
-          data: {
-            year,
-            distanceKm: year < 2024 ? 1710 : 0, 
-            totalDistance: 1710,
-            lastStation: year < 2024 ? 'Ndola Fuel Terminal' : 'Single Point Mooring'
-          }
-        })
-      } catch (e) {
-        console.error('Failed to create initial progress:', e)
-        // Return fallback if create fails
-        return {
-          id: 'fallback',
-          year,
-          distanceKm: year < 2024 ? 1710 : 0,
-          totalDistance: 1710,
-          lastStation: year < 2024 ? 'Ndola Fuel Terminal' : 'Single Point Mooring',
-          updatedAt: new Date()
-        }
+      // Find the latest record prior to this date to inherit progress
+      const previousProgress = await prisma.pipelineProgress.findFirst({
+        where: { date: { lt: targetDate } },
+        orderBy: { date: 'desc' }
+      })
+
+      const startingDistance = previousProgress ? previousProgress.distanceKm : 0
+      const startingStation = previousProgress ? previousProgress.lastStation : 'Single Point Mooring'
+
+      // Return a virtual record instead of persisting to DB so that un-saved dates don't appear in the history
+      return {
+        id: 'virtual-new-record',
+        date: targetDate,
+        distanceKm: startingDistance,
+        totalDistance: 1703,
+        lastStation: startingStation,
+        updatedAt: new Date()
       }
     }
 
@@ -40,28 +37,29 @@ export async function getPipelineProgress(year: number = 2024) {
     // Fallback for UI if DB is not available
     return {
       id: 'fallback',
-      year,
-      distanceKm: year < 2024 ? 1710 : 0,
-      totalDistance: 1710,
-      lastStation: year < 2024 ? 'Ndola Fuel Terminal' : 'Single Point Mooring',
+      date: new Date(date),
+      distanceKm: 0,
+      totalDistance: 1703,
+      lastStation: 'Single Point Mooring',
       updatedAt: new Date()
     }
   }
 }
 
-export async function updatePipelineProgress(distanceKm: number, lastStation: string, year: number = 2024) {
+export async function updatePipelineProgress(distanceKm: number, lastStation: string, date: Date = new Date()) {
   try {
+    const targetDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0))
     await prisma.pipelineProgress.upsert({
-      where: { year },
+      where: { date: targetDate },
       update: {
         distanceKm,
         lastStation,
         updatedAt: new Date()
       },
       create: {
-        year,
+        date: targetDate,
         distanceKm,
-        totalDistance: 1710,
+        totalDistance: 1703,
         lastStation
       }
     })
@@ -74,10 +72,23 @@ export async function updatePipelineProgress(distanceKm: number, lastStation: st
   }
 }
 
-export async function getPipelineBatches(year: number) {
+export async function getAllPipelineProgress() {
   try {
+    const records = await prisma.pipelineProgress.findMany({
+      orderBy: { updatedAt: 'desc' }
+    })
+    return records
+  } catch (error) {
+    console.error('Error fetching all pipeline progress records:', error)
+    return []
+  }
+}
+
+export async function getPipelineBatches(date: Date) {
+  try {
+    const targetDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0))
     const batches = await prisma.pipelineBatch.findMany({
-      where: { year },
+      where: { date: targetDate },
       orderBy: { startKm: 'asc' }
     })
     return batches
@@ -87,10 +98,11 @@ export async function getPipelineBatches(year: number) {
   }
 }
 
-export async function getPipelineStats(year: number) {
+export async function getPipelineStats(date: Date) {
   try {
-    const stats = await prisma.pipelineYearlyStats.findUnique({
-      where: { year }
+    const targetDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0))
+    const stats = await prisma.pipelineDailyStats.findUnique({
+      where: { date: targetDate }
     })
     return stats
   } catch (error) {
@@ -153,5 +165,16 @@ export async function getPipelineMetrics() {
       activeStations: 0,
       warningAlerts: 0
     }
+  }
+}
+
+export async function deletePipelineProgress(id: string) {
+  try {
+    await prisma.pipelineProgress.delete({ where: { id } })
+    revalidatePath('/RulerTracker')
+    return { success: true }
+  } catch (error: any) {
+    console.error('Error deleting pipeline progress:', error)
+    throw new Error(`Failed to delete record: ${error.message || 'Unknown error'}`)
   }
 }

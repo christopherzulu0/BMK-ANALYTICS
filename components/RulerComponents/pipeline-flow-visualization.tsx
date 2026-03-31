@@ -43,8 +43,8 @@ import { getFacilities } from '@/lib/actions/facilities'
 interface FlowVisualizationProps {
   selectedStation?: string | null
   onStationSelect?: (stationName: string) => void
-  selectedYear: number
-  onYearChange: (year: number) => void
+  selectedDate: Date
+  onDateChange: (date: Date) => void
 }
 
 interface Facility {
@@ -62,7 +62,7 @@ interface Facility {
 
 interface PipelineBatch {
   id: string
-  year: number
+  date: Date
   product: string
   volume: number
   startKm: number
@@ -70,8 +70,8 @@ interface PipelineBatch {
   color: string
 }
 
-interface YearlyStats {
-  year: number
+interface DailyStats {
+  date: Date
   throughput: number
   delivered: number
 }
@@ -97,8 +97,8 @@ const BORDER_KM = 1330
 export default function PipelineFlowVisualization({ 
   selectedStation, 
   onStationSelect,
-  selectedYear,
-  onYearChange
+  selectedDate,
+  onDateChange
 }: FlowVisualizationProps) {
   const [zoom, setZoom] = useState(1)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -118,13 +118,13 @@ export default function PipelineFlowVisualization({
   })
 
   const { data: batches, isLoading: isLoadingBatches } = useQuery<PipelineBatch[]>({
-    queryKey: ['pipeline-batches', selectedYear],
-    queryFn: () => getPipelineBatches(selectedYear),
+    queryKey: ['pipeline-batches', selectedDate],
+    queryFn: () => getPipelineBatches(selectedDate),
   })
 
-  const { data: yearlyStats, isLoading: isLoadingStats } = useQuery<YearlyStats | null>({
-    queryKey: ['pipeline-stats', selectedYear],
-    queryFn: () => getPipelineStats(selectedYear),
+  const { data: dailyStats, isLoading: isLoadingStats } = useQuery<DailyStats | null>({
+    queryKey: ['pipeline-stats', selectedDate],
+    queryFn: () => getPipelineStats(selectedDate),
   })
 
   const { data: pigs, isLoading: isLoadingPigs } = useQuery<PigTracker[]>({
@@ -135,8 +135,8 @@ export default function PipelineFlowVisualization({
 
   // Fetch real-time progress from DB
   const { data: dbProgress, isLoading: isLoadingProgress } = useQuery({
-    queryKey: ['pipeline-progress', selectedYear],
-    queryFn: () => getPipelineProgress(selectedYear),
+    queryKey: ['pipeline-progress', selectedDate],
+    queryFn: () => getPipelineProgress(selectedDate),
     refetchInterval: 10000,
   })
 
@@ -303,23 +303,21 @@ export default function PipelineFlowVisualization({
           </div>
           
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Date Selection instead of Year Selector */}
-            <Select value={selectedYear.toString()} onValueChange={(v) => onYearChange(parseInt(v))}>
-              <SelectTrigger className="w-[120px] h-8 bg-secondary border-border text-xs">
-                <CalendarIcon className="mr-2 h-3.5 w-3.5" />
-                <SelectValue placeholder="Year" />
-              </SelectTrigger>
-              <SelectContent className="bg-card border-border">
-                {Array.from(
-                  { length: Math.max(new Date().getFullYear() - 2019, 7) }, 
-                  (_, i) => Math.max(new Date().getFullYear(), 2026) - i
-                ).map(year => (
-                  <SelectItem key={year} value={year.toString()}>
-                    {year}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {/* Date Selection */}
+            <div className="flex items-center relative">
+              <CalendarIcon className="absolute left-2.5 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+              <input 
+                type="date" 
+                className="flex h-8 w-[140px] appearance-none rounded-md border border-input bg-secondary pl-8 pr-3 py-1 text-xs shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring text-foreground"
+                value={`${selectedDate.getFullYear()}-${(selectedDate.getMonth()+1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    const [y, m, d] = e.target.value.split('-').map(Number);
+                    onDateChange(new Date(y, m - 1, d));
+                  }
+                }}
+              />
+            </div>
 
             <Button
               variant="outline"
@@ -450,19 +448,19 @@ export default function PipelineFlowVisualization({
           </div>
           <div className="flex items-center gap-4 text-xs">
             <div className="text-center">
-              <p className="text-muted-foreground">Throughput ({selectedYear})</p>
-              <p className="font-bold text-base">{yearlyStats?.throughput?.toFixed(1) || '0.0'} <span className="text-muted-foreground font-normal">ML</span></p>
+              <p className="text-muted-foreground">Throughput</p>
+              <p className="font-bold text-base">{dailyStats?.throughput?.toFixed(1) || '0.0'} <span className="text-muted-foreground font-normal">ML</span></p>
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="text-center">
               <p className="text-muted-foreground">Delivered</p>
-              <p className="font-bold text-base">{yearlyStats?.delivered?.toFixed(1) || '0.0'} <span className="text-muted-foreground font-normal">ML</span></p>
+              <p className="font-bold text-base">{dailyStats?.delivered?.toFixed(1) || '0.0'} <span className="text-muted-foreground font-normal">ML</span></p>
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="text-center">
               <p className="text-muted-foreground">Efficiency</p>
               <p className="font-bold text-base text-green-500">
-                {yearlyStats && yearlyStats.throughput > 0 ? ((yearlyStats.delivered / yearlyStats.throughput) * 100).toFixed(1) : '0.0'}%
+                {dailyStats && dailyStats.throughput > 0 ? ((dailyStats.delivered / dailyStats.throughput) * 100).toFixed(1) : '0.0'}%
               </p>
             </div>
           </div>
@@ -542,11 +540,17 @@ export default function PipelineFlowVisualization({
                     const pipelineWidth = 2200 * zoom - 160
                     const particlePx = ((animationOffset + i * 5) % 100) / 100 * pipelineWidth
                     return (
-                      <div
+                      <svg
                         key={i}
-                        className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-primary/50 rounded-full"
+                        className="absolute top-1/2 -translate-y-1/2 w-4 h-4 text-primary/70"
                         style={{ left: `${particlePx}px` }}
-                      />
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
                     )
                   })}
                 </div>
@@ -555,7 +559,7 @@ export default function PipelineFlowVisualization({
               {/* Border Line */}
               {(() => {
                 if (!facilities) return null
-                const pipelineWidth = 2200 * zoom - 160
+                const pipelineWidth = 2050 * zoom - 160
                 const firstZambiaIndex = facilities.findIndex(s => s.country === 'Zambia')
                 if (firstZambiaIndex === -1) return null
                 const borderLeftPx = ((firstZambiaIndex - 0.5) / (facilities.length - 1)) * pipelineWidth
