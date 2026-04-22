@@ -17,8 +17,8 @@ import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
 const MONTHS = [
-  'January','February','March','April','May','June',
-  'July','August','September','October','November','December'
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
 ]
 
 const LOW_STOCK_DEFAULT = 500
@@ -120,10 +120,10 @@ export default function DraInput() {
   const queryClient = useQueryClient()
 
   const now = new Date()
-  const [year, setYear]   = useState(now.getFullYear())
+  const [year, setYear] = useState(now.getFullYear())
   const [month, setMonth] = useState(now.getMonth() + 1)
   const [newStationName, setNewStationName] = useState('')
-  const [addingStation, setAddingStation]   = useState(false)
+  const [addingStation, setAddingStation] = useState(false)
   const [lowStockThreshold, setLowStockThreshold] = useState(LOW_STOCK_DEFAULT)
 
   // ── Queries ────────────────────────────────────────────────────────────────
@@ -223,7 +223,7 @@ export default function DraInput() {
       upsertMutation.mutate({
         date, stationId,
         consumption: field === 'consumption' ? val : (existing?.consumption ?? null),
-        stock:       field === 'stock'       ? val : (existing?.stock       ?? null),
+        stock: field === 'stock' ? val : (existing?.stock ?? null),
         remarks: existing?.remarks,
       })
     },
@@ -246,10 +246,10 @@ export default function DraInput() {
     const totalsRow = ['TOTAL', ...stations.flatMap(s => [colTotals[s.id]?.consumption || 0, colTotals[s.id]?.stock || 0]), '', '', '']
     const csv = [headers, ...rows, totalsRow].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-    const url  = URL.createObjectURL(blob)
-    const a    = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
     a.href = url
-    a.download = `fuel-consumption-${MONTHS[month-1]}-${year}.csv`
+    a.download = `fuel-consumption-${MONTHS[month - 1]}-${year}.csv`
     a.click()
     URL.revokeObjectURL(url)
     toast.success('Exported to CSV')
@@ -263,7 +263,7 @@ export default function DraInput() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold tracking-tight">DRA Consumption</h1>
+          <h1 className="text-xl font-bold tracking-tight">DRA Fuel Consumption</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
             {MONTHS[month - 1].toUpperCase()}, {year}
           </p>
