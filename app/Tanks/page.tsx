@@ -699,25 +699,25 @@ export default function Page() {
         
           <SummaryCard
             title="Kigamboni Discharge"
-            value={`${formatNumber(summary.kigamboniDischargeM3)} m3`}
+            value={`${formatNumber(summary.kigamboniDischargeM3)} m³`}
             icon={<Factory className="h-4 w-4" />}
             color="from-amber-500/20 to-amber-500/0"
           />
             <SummaryCard
             title="T/Farm Discharge"
-            value={`${formatNumber(summary.tfarmDischargeM3)} m3`}
+            value={`${formatNumber(summary.tfarmDischargeM3)} m³`}
             icon={<Droplet className="h-4 w-4" />}
             color="from-emerald-500/15 to-emerald-500/0"
           />
           <SummaryCard
             title="Net Delivery @ 20C"
-            value={`${formatNumber(summary.netDeliveryM3At20C)} m3`}
+            value={`${formatNumber(summary.netDeliveryM3At20C)} m³`}
             icon={<Thermometer className="h-4 w-4" />}
             color="from-rose-500/15 to-rose-500/0"
           />
           <SummaryCard
             title="Net Delivery (MT)"
-            value={`${formatNumber(summary.netDeliveryMT)} MT`}
+            value={`${formatNumber(summary.netDeliveryMT)}  m³`}
             icon={<Package className="h-4 w-4" />}
             color="from-violet-500/15 to-violet-500/0"
           />
