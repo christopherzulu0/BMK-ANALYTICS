@@ -34,6 +34,11 @@ export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTok
  */
 export type FuelInputEntry = $Result.DefaultSelection<Prisma.$FuelInputEntryPayload>
 /**
+ * Model DraInputEntry
+ * 
+ */
+export type DraInputEntry = $Result.DefaultSelection<Prisma.$DraInputEntryPayload>
+/**
  * Model PipelineData
  * 
  */
@@ -181,6 +186,16 @@ export type FuelStation = $Result.DefaultSelection<Prisma.$FuelStationPayload>
  * One entry per day per station (Consumption + Stock)
  */
 export type FuelStationEntry = $Result.DefaultSelection<Prisma.$FuelStationEntryPayload>
+/**
+ * Model DraStation
+ * 
+ */
+export type DraStation = $Result.DefaultSelection<Prisma.$DraStationPayload>
+/**
+ * Model DraEntry
+ * One entry per day per station (Consumption + Stock)
+ */
+export type DraEntry = $Result.DefaultSelection<Prisma.$DraEntryPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -342,6 +357,16 @@ export class PrismaClient<
     * ```
     */
   get fuelInputEntry(): Prisma.FuelInputEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.draInputEntry`: Exposes CRUD operations for the **DraInputEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DraInputEntries
+    * const draInputEntries = await prisma.draInputEntry.findMany()
+    * ```
+    */
+  get draInputEntry(): Prisma.DraInputEntryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.pipelineData`: Exposes CRUD operations for the **PipelineData** model.
@@ -632,6 +657,26 @@ export class PrismaClient<
     * ```
     */
   get fuelStationEntry(): Prisma.FuelStationEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.draStation`: Exposes CRUD operations for the **DraStation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DraStations
+    * const draStations = await prisma.draStation.findMany()
+    * ```
+    */
+  get draStation(): Prisma.DraStationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.draEntry`: Exposes CRUD operations for the **DraEntry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DraEntries
+    * const draEntries = await prisma.draEntry.findMany()
+    * ```
+    */
+  get draEntry(): Prisma.DraEntryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1070,6 +1115,7 @@ export namespace Prisma {
     Session: 'Session',
     VerificationToken: 'VerificationToken',
     FuelInputEntry: 'FuelInputEntry',
+    DraInputEntry: 'DraInputEntry',
     PipelineData: 'PipelineData',
     ReadingLines: 'ReadingLines',
     Shipment: 'Shipment',
@@ -1098,7 +1144,9 @@ export namespace Prisma {
     ShiftLogEntry: 'ShiftLogEntry',
     OutstandingIssue: 'OutstandingIssue',
     FuelStation: 'FuelStation',
-    FuelStationEntry: 'FuelStationEntry'
+    FuelStationEntry: 'FuelStationEntry',
+    DraStation: 'DraStation',
+    DraEntry: 'DraEntry'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1114,7 +1162,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "facility" | "pipelineBatch" | "pigCategory" | "pipelinePig" | "pigRun" | "pipelineDailyStats" | "dailyEntry" | "tank" | "remark" | "supplier" | "pipelineProgress" | "shiftHandover" | "shiftLogEntry" | "outstandingIssue" | "fuelStation" | "fuelStationEntry"
+      modelProps: "account" | "session" | "verificationToken" | "fuelInputEntry" | "draInputEntry" | "pipelineData" | "readingLines" | "shipment" | "alert" | "user" | "passwordReset" | "setting" | "maintenance" | "inventoryTransaction" | "role" | "permission" | "auditLog" | "station" | "facility" | "pipelineBatch" | "pigCategory" | "pipelinePig" | "pigRun" | "pipelineDailyStats" | "dailyEntry" | "tank" | "remark" | "supplier" | "pipelineProgress" | "shiftHandover" | "shiftLogEntry" | "outstandingIssue" | "fuelStation" | "fuelStationEntry" | "draStation" | "draEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1379,6 +1427,72 @@ export namespace Prisma {
           count: {
             args: Prisma.FuelInputEntryCountArgs<ExtArgs>
             result: $Utils.Optional<FuelInputEntryCountAggregateOutputType> | number
+          }
+        }
+      }
+      DraInputEntry: {
+        payload: Prisma.$DraInputEntryPayload<ExtArgs>
+        fields: Prisma.DraInputEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DraInputEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DraInputEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.DraInputEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DraInputEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload>
+          }
+          findMany: {
+            args: Prisma.DraInputEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload>[]
+          }
+          create: {
+            args: Prisma.DraInputEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload>
+          }
+          createMany: {
+            args: Prisma.DraInputEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DraInputEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload>
+          }
+          update: {
+            args: Prisma.DraInputEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.DraInputEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DraInputEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DraInputEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraInputEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.DraInputEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDraInputEntry>
+          }
+          groupBy: {
+            args: Prisma.DraInputEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DraInputEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DraInputEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<DraInputEntryCountAggregateOutputType> | number
           }
         }
       }
@@ -3296,6 +3410,138 @@ export namespace Prisma {
           }
         }
       }
+      DraStation: {
+        payload: Prisma.$DraStationPayload<ExtArgs>
+        fields: Prisma.DraStationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DraStationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DraStationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload>
+          }
+          findFirst: {
+            args: Prisma.DraStationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DraStationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload>
+          }
+          findMany: {
+            args: Prisma.DraStationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload>[]
+          }
+          create: {
+            args: Prisma.DraStationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload>
+          }
+          createMany: {
+            args: Prisma.DraStationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DraStationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload>
+          }
+          update: {
+            args: Prisma.DraStationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload>
+          }
+          deleteMany: {
+            args: Prisma.DraStationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DraStationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DraStationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraStationPayload>
+          }
+          aggregate: {
+            args: Prisma.DraStationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDraStation>
+          }
+          groupBy: {
+            args: Prisma.DraStationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DraStationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DraStationCountArgs<ExtArgs>
+            result: $Utils.Optional<DraStationCountAggregateOutputType> | number
+          }
+        }
+      }
+      DraEntry: {
+        payload: Prisma.$DraEntryPayload<ExtArgs>
+        fields: Prisma.DraEntryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DraEntryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DraEntryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload>
+          }
+          findFirst: {
+            args: Prisma.DraEntryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DraEntryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload>
+          }
+          findMany: {
+            args: Prisma.DraEntryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload>[]
+          }
+          create: {
+            args: Prisma.DraEntryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload>
+          }
+          createMany: {
+            args: Prisma.DraEntryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.DraEntryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload>
+          }
+          update: {
+            args: Prisma.DraEntryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload>
+          }
+          deleteMany: {
+            args: Prisma.DraEntryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DraEntryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.DraEntryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DraEntryPayload>
+          }
+          aggregate: {
+            args: Prisma.DraEntryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDraEntry>
+          }
+          groupBy: {
+            args: Prisma.DraEntryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DraEntryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DraEntryCountArgs<ExtArgs>
+            result: $Utils.Optional<DraEntryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3408,6 +3654,7 @@ export namespace Prisma {
     session?: SessionOmit
     verificationToken?: VerificationTokenOmit
     fuelInputEntry?: FuelInputEntryOmit
+    draInputEntry?: DraInputEntryOmit
     pipelineData?: PipelineDataOmit
     readingLines?: ReadingLinesOmit
     shipment?: ShipmentOmit
@@ -3437,6 +3684,8 @@ export namespace Prisma {
     outstandingIssue?: OutstandingIssueOmit
     fuelStation?: FuelStationOmit
     fuelStationEntry?: FuelStationEntryOmit
+    draStation?: DraStationOmit
+    draEntry?: DraEntryOmit
   }
 
   /* Types for Logging */
@@ -3842,6 +4091,37 @@ export namespace Prisma {
    */
   export type FuelStationCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FuelStationEntryWhereInput
+  }
+
+
+  /**
+   * Count Type DraStationCountOutputType
+   */
+
+  export type DraStationCountOutputType = {
+    entries: number
+  }
+
+  export type DraStationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entries?: boolean | DraStationCountOutputTypeCountEntriesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DraStationCountOutputType without action
+   */
+  export type DraStationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStationCountOutputType
+     */
+    select?: DraStationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DraStationCountOutputType without action
+   */
+  export type DraStationCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DraEntryWhereInput
   }
 
 
@@ -7767,6 +8047,1067 @@ export namespace Prisma {
      * Omit specific fields from the FuelInputEntry
      */
     omit?: FuelInputEntryOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DraInputEntry
+   */
+
+  export type AggregateDraInputEntry = {
+    _count: DraInputEntryCountAggregateOutputType | null
+    _avg: DraInputEntryAvgAggregateOutputType | null
+    _sum: DraInputEntrySumAggregateOutputType | null
+    _min: DraInputEntryMinAggregateOutputType | null
+    _max: DraInputEntryMaxAggregateOutputType | null
+  }
+
+  export type DraInputEntryAvgAggregateOutputType = {
+    id: number | null
+    litres: number | null
+    temperature: number | null
+    density: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
+  }
+
+  export type DraInputEntrySumAggregateOutputType = {
+    id: number | null
+    litres: number | null
+    temperature: number | null
+    density: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
+  }
+
+  export type DraInputEntryMinAggregateOutputType = {
+    id: number | null
+    date: Date | null
+    supplier: string | null
+    vessel: string | null
+    litres: number | null
+    status: string | null
+    deliveryType: string | null
+    temperature: number | null
+    density: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
+    qualityGrade: string | null
+    batchNo: string | null
+    receiptNo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DraInputEntryMaxAggregateOutputType = {
+    id: number | null
+    date: Date | null
+    supplier: string | null
+    vessel: string | null
+    litres: number | null
+    status: string | null
+    deliveryType: string | null
+    temperature: number | null
+    density: number | null
+    apiGravity: number | null
+    sulphurContent: number | null
+    qualityGrade: string | null
+    batchNo: string | null
+    receiptNo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DraInputEntryCountAggregateOutputType = {
+    id: number
+    date: number
+    supplier: number
+    vessel: number
+    litres: number
+    status: number
+    deliveryType: number
+    temperature: number
+    density: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade: number
+    batchNo: number
+    receiptNo: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DraInputEntryAvgAggregateInputType = {
+    id?: true
+    litres?: true
+    temperature?: true
+    density?: true
+    apiGravity?: true
+    sulphurContent?: true
+  }
+
+  export type DraInputEntrySumAggregateInputType = {
+    id?: true
+    litres?: true
+    temperature?: true
+    density?: true
+    apiGravity?: true
+    sulphurContent?: true
+  }
+
+  export type DraInputEntryMinAggregateInputType = {
+    id?: true
+    date?: true
+    supplier?: true
+    vessel?: true
+    litres?: true
+    status?: true
+    deliveryType?: true
+    temperature?: true
+    density?: true
+    apiGravity?: true
+    sulphurContent?: true
+    qualityGrade?: true
+    batchNo?: true
+    receiptNo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DraInputEntryMaxAggregateInputType = {
+    id?: true
+    date?: true
+    supplier?: true
+    vessel?: true
+    litres?: true
+    status?: true
+    deliveryType?: true
+    temperature?: true
+    density?: true
+    apiGravity?: true
+    sulphurContent?: true
+    qualityGrade?: true
+    batchNo?: true
+    receiptNo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DraInputEntryCountAggregateInputType = {
+    id?: true
+    date?: true
+    supplier?: true
+    vessel?: true
+    litres?: true
+    status?: true
+    deliveryType?: true
+    temperature?: true
+    density?: true
+    apiGravity?: true
+    sulphurContent?: true
+    qualityGrade?: true
+    batchNo?: true
+    receiptNo?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DraInputEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DraInputEntry to aggregate.
+     */
+    where?: DraInputEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraInputEntries to fetch.
+     */
+    orderBy?: DraInputEntryOrderByWithRelationInput | DraInputEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DraInputEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraInputEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraInputEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DraInputEntries
+    **/
+    _count?: true | DraInputEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DraInputEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DraInputEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DraInputEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DraInputEntryMaxAggregateInputType
+  }
+
+  export type GetDraInputEntryAggregateType<T extends DraInputEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateDraInputEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDraInputEntry[P]>
+      : GetScalarType<T[P], AggregateDraInputEntry[P]>
+  }
+
+
+
+
+  export type DraInputEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DraInputEntryWhereInput
+    orderBy?: DraInputEntryOrderByWithAggregationInput | DraInputEntryOrderByWithAggregationInput[]
+    by: DraInputEntryScalarFieldEnum[] | DraInputEntryScalarFieldEnum
+    having?: DraInputEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DraInputEntryCountAggregateInputType | true
+    _avg?: DraInputEntryAvgAggregateInputType
+    _sum?: DraInputEntrySumAggregateInputType
+    _min?: DraInputEntryMinAggregateInputType
+    _max?: DraInputEntryMaxAggregateInputType
+  }
+
+  export type DraInputEntryGroupByOutputType = {
+    id: number
+    date: Date
+    supplier: string | null
+    vessel: string | null
+    litres: number
+    status: string
+    deliveryType: string
+    temperature: number
+    density: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade: string
+    batchNo: string | null
+    receiptNo: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DraInputEntryCountAggregateOutputType | null
+    _avg: DraInputEntryAvgAggregateOutputType | null
+    _sum: DraInputEntrySumAggregateOutputType | null
+    _min: DraInputEntryMinAggregateOutputType | null
+    _max: DraInputEntryMaxAggregateOutputType | null
+  }
+
+  type GetDraInputEntryGroupByPayload<T extends DraInputEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DraInputEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DraInputEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DraInputEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], DraInputEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DraInputEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    supplier?: boolean
+    vessel?: boolean
+    litres?: boolean
+    status?: boolean
+    deliveryType?: boolean
+    temperature?: boolean
+    density?: boolean
+    apiGravity?: boolean
+    sulphurContent?: boolean
+    qualityGrade?: boolean
+    batchNo?: boolean
+    receiptNo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["draInputEntry"]>
+
+
+
+  export type DraInputEntrySelectScalar = {
+    id?: boolean
+    date?: boolean
+    supplier?: boolean
+    vessel?: boolean
+    litres?: boolean
+    status?: boolean
+    deliveryType?: boolean
+    temperature?: boolean
+    density?: boolean
+    apiGravity?: boolean
+    sulphurContent?: boolean
+    qualityGrade?: boolean
+    batchNo?: boolean
+    receiptNo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DraInputEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "supplier" | "vessel" | "litres" | "status" | "deliveryType" | "temperature" | "density" | "apiGravity" | "sulphurContent" | "qualityGrade" | "batchNo" | "receiptNo" | "createdAt" | "updatedAt", ExtArgs["result"]["draInputEntry"]>
+
+  export type $DraInputEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DraInputEntry"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      date: Date
+      supplier: string | null
+      vessel: string | null
+      litres: number
+      status: string
+      deliveryType: string
+      temperature: number
+      density: number
+      apiGravity: number
+      sulphurContent: number
+      qualityGrade: string
+      batchNo: string | null
+      receiptNo: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["draInputEntry"]>
+    composites: {}
+  }
+
+  type DraInputEntryGetPayload<S extends boolean | null | undefined | DraInputEntryDefaultArgs> = $Result.GetResult<Prisma.$DraInputEntryPayload, S>
+
+  type DraInputEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DraInputEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DraInputEntryCountAggregateInputType | true
+    }
+
+  export interface DraInputEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DraInputEntry'], meta: { name: 'DraInputEntry' } }
+    /**
+     * Find zero or one DraInputEntry that matches the filter.
+     * @param {DraInputEntryFindUniqueArgs} args - Arguments to find a DraInputEntry
+     * @example
+     * // Get one DraInputEntry
+     * const draInputEntry = await prisma.draInputEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DraInputEntryFindUniqueArgs>(args: SelectSubset<T, DraInputEntryFindUniqueArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DraInputEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DraInputEntryFindUniqueOrThrowArgs} args - Arguments to find a DraInputEntry
+     * @example
+     * // Get one DraInputEntry
+     * const draInputEntry = await prisma.draInputEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DraInputEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, DraInputEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DraInputEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraInputEntryFindFirstArgs} args - Arguments to find a DraInputEntry
+     * @example
+     * // Get one DraInputEntry
+     * const draInputEntry = await prisma.draInputEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DraInputEntryFindFirstArgs>(args?: SelectSubset<T, DraInputEntryFindFirstArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DraInputEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraInputEntryFindFirstOrThrowArgs} args - Arguments to find a DraInputEntry
+     * @example
+     * // Get one DraInputEntry
+     * const draInputEntry = await prisma.draInputEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DraInputEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, DraInputEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DraInputEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraInputEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DraInputEntries
+     * const draInputEntries = await prisma.draInputEntry.findMany()
+     * 
+     * // Get first 10 DraInputEntries
+     * const draInputEntries = await prisma.draInputEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const draInputEntryWithIdOnly = await prisma.draInputEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DraInputEntryFindManyArgs>(args?: SelectSubset<T, DraInputEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DraInputEntry.
+     * @param {DraInputEntryCreateArgs} args - Arguments to create a DraInputEntry.
+     * @example
+     * // Create one DraInputEntry
+     * const DraInputEntry = await prisma.draInputEntry.create({
+     *   data: {
+     *     // ... data to create a DraInputEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends DraInputEntryCreateArgs>(args: SelectSubset<T, DraInputEntryCreateArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DraInputEntries.
+     * @param {DraInputEntryCreateManyArgs} args - Arguments to create many DraInputEntries.
+     * @example
+     * // Create many DraInputEntries
+     * const draInputEntry = await prisma.draInputEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DraInputEntryCreateManyArgs>(args?: SelectSubset<T, DraInputEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DraInputEntry.
+     * @param {DraInputEntryDeleteArgs} args - Arguments to delete one DraInputEntry.
+     * @example
+     * // Delete one DraInputEntry
+     * const DraInputEntry = await prisma.draInputEntry.delete({
+     *   where: {
+     *     // ... filter to delete one DraInputEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DraInputEntryDeleteArgs>(args: SelectSubset<T, DraInputEntryDeleteArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DraInputEntry.
+     * @param {DraInputEntryUpdateArgs} args - Arguments to update one DraInputEntry.
+     * @example
+     * // Update one DraInputEntry
+     * const draInputEntry = await prisma.draInputEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DraInputEntryUpdateArgs>(args: SelectSubset<T, DraInputEntryUpdateArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DraInputEntries.
+     * @param {DraInputEntryDeleteManyArgs} args - Arguments to filter DraInputEntries to delete.
+     * @example
+     * // Delete a few DraInputEntries
+     * const { count } = await prisma.draInputEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DraInputEntryDeleteManyArgs>(args?: SelectSubset<T, DraInputEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DraInputEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraInputEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DraInputEntries
+     * const draInputEntry = await prisma.draInputEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DraInputEntryUpdateManyArgs>(args: SelectSubset<T, DraInputEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DraInputEntry.
+     * @param {DraInputEntryUpsertArgs} args - Arguments to update or create a DraInputEntry.
+     * @example
+     * // Update or create a DraInputEntry
+     * const draInputEntry = await prisma.draInputEntry.upsert({
+     *   create: {
+     *     // ... data to create a DraInputEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DraInputEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DraInputEntryUpsertArgs>(args: SelectSubset<T, DraInputEntryUpsertArgs<ExtArgs>>): Prisma__DraInputEntryClient<$Result.GetResult<Prisma.$DraInputEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DraInputEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraInputEntryCountArgs} args - Arguments to filter DraInputEntries to count.
+     * @example
+     * // Count the number of DraInputEntries
+     * const count = await prisma.draInputEntry.count({
+     *   where: {
+     *     // ... the filter for the DraInputEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends DraInputEntryCountArgs>(
+      args?: Subset<T, DraInputEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DraInputEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DraInputEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraInputEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DraInputEntryAggregateArgs>(args: Subset<T, DraInputEntryAggregateArgs>): Prisma.PrismaPromise<GetDraInputEntryAggregateType<T>>
+
+    /**
+     * Group by DraInputEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraInputEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DraInputEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DraInputEntryGroupByArgs['orderBy'] }
+        : { orderBy?: DraInputEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DraInputEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDraInputEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DraInputEntry model
+   */
+  readonly fields: DraInputEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DraInputEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DraInputEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DraInputEntry model
+   */
+  interface DraInputEntryFieldRefs {
+    readonly id: FieldRef<"DraInputEntry", 'Int'>
+    readonly date: FieldRef<"DraInputEntry", 'DateTime'>
+    readonly supplier: FieldRef<"DraInputEntry", 'String'>
+    readonly vessel: FieldRef<"DraInputEntry", 'String'>
+    readonly litres: FieldRef<"DraInputEntry", 'Float'>
+    readonly status: FieldRef<"DraInputEntry", 'String'>
+    readonly deliveryType: FieldRef<"DraInputEntry", 'String'>
+    readonly temperature: FieldRef<"DraInputEntry", 'Float'>
+    readonly density: FieldRef<"DraInputEntry", 'Float'>
+    readonly apiGravity: FieldRef<"DraInputEntry", 'Float'>
+    readonly sulphurContent: FieldRef<"DraInputEntry", 'Float'>
+    readonly qualityGrade: FieldRef<"DraInputEntry", 'String'>
+    readonly batchNo: FieldRef<"DraInputEntry", 'String'>
+    readonly receiptNo: FieldRef<"DraInputEntry", 'String'>
+    readonly createdAt: FieldRef<"DraInputEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"DraInputEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DraInputEntry findUnique
+   */
+  export type DraInputEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which DraInputEntry to fetch.
+     */
+    where: DraInputEntryWhereUniqueInput
+  }
+
+  /**
+   * DraInputEntry findUniqueOrThrow
+   */
+  export type DraInputEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which DraInputEntry to fetch.
+     */
+    where: DraInputEntryWhereUniqueInput
+  }
+
+  /**
+   * DraInputEntry findFirst
+   */
+  export type DraInputEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which DraInputEntry to fetch.
+     */
+    where?: DraInputEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraInputEntries to fetch.
+     */
+    orderBy?: DraInputEntryOrderByWithRelationInput | DraInputEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DraInputEntries.
+     */
+    cursor?: DraInputEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraInputEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraInputEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraInputEntries.
+     */
+    distinct?: DraInputEntryScalarFieldEnum | DraInputEntryScalarFieldEnum[]
+  }
+
+  /**
+   * DraInputEntry findFirstOrThrow
+   */
+  export type DraInputEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which DraInputEntry to fetch.
+     */
+    where?: DraInputEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraInputEntries to fetch.
+     */
+    orderBy?: DraInputEntryOrderByWithRelationInput | DraInputEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DraInputEntries.
+     */
+    cursor?: DraInputEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraInputEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraInputEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraInputEntries.
+     */
+    distinct?: DraInputEntryScalarFieldEnum | DraInputEntryScalarFieldEnum[]
+  }
+
+  /**
+   * DraInputEntry findMany
+   */
+  export type DraInputEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * Filter, which DraInputEntries to fetch.
+     */
+    where?: DraInputEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraInputEntries to fetch.
+     */
+    orderBy?: DraInputEntryOrderByWithRelationInput | DraInputEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DraInputEntries.
+     */
+    cursor?: DraInputEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraInputEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraInputEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraInputEntries.
+     */
+    distinct?: DraInputEntryScalarFieldEnum | DraInputEntryScalarFieldEnum[]
+  }
+
+  /**
+   * DraInputEntry create
+   */
+  export type DraInputEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to create a DraInputEntry.
+     */
+    data: XOR<DraInputEntryCreateInput, DraInputEntryUncheckedCreateInput>
+  }
+
+  /**
+   * DraInputEntry createMany
+   */
+  export type DraInputEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DraInputEntries.
+     */
+    data: DraInputEntryCreateManyInput | DraInputEntryCreateManyInput[]
+  }
+
+  /**
+   * DraInputEntry update
+   */
+  export type DraInputEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * The data needed to update a DraInputEntry.
+     */
+    data: XOR<DraInputEntryUpdateInput, DraInputEntryUncheckedUpdateInput>
+    /**
+     * Choose, which DraInputEntry to update.
+     */
+    where: DraInputEntryWhereUniqueInput
+  }
+
+  /**
+   * DraInputEntry updateMany
+   */
+  export type DraInputEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DraInputEntries.
+     */
+    data: XOR<DraInputEntryUpdateManyMutationInput, DraInputEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which DraInputEntries to update
+     */
+    where?: DraInputEntryWhereInput
+    /**
+     * Limit how many DraInputEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DraInputEntry upsert
+   */
+  export type DraInputEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * The filter to search for the DraInputEntry to update in case it exists.
+     */
+    where: DraInputEntryWhereUniqueInput
+    /**
+     * In case the DraInputEntry found by the `where` argument doesn't exist, create a new DraInputEntry with this data.
+     */
+    create: XOR<DraInputEntryCreateInput, DraInputEntryUncheckedCreateInput>
+    /**
+     * In case the DraInputEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DraInputEntryUpdateInput, DraInputEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * DraInputEntry delete
+   */
+  export type DraInputEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
+    /**
+     * Filter which DraInputEntry to delete.
+     */
+    where: DraInputEntryWhereUniqueInput
+  }
+
+  /**
+   * DraInputEntry deleteMany
+   */
+  export type DraInputEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DraInputEntries to delete
+     */
+    where?: DraInputEntryWhereInput
+    /**
+     * Limit how many DraInputEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DraInputEntry without action
+   */
+  export type DraInputEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraInputEntry
+     */
+    select?: DraInputEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraInputEntry
+     */
+    omit?: DraInputEntryOmit<ExtArgs> | null
   }
 
 
@@ -37041,6 +38382,1992 @@ export namespace Prisma {
 
 
   /**
+   * Model DraStation
+   */
+
+  export type AggregateDraStation = {
+    _count: DraStationCountAggregateOutputType | null
+    _avg: DraStationAvgAggregateOutputType | null
+    _sum: DraStationSumAggregateOutputType | null
+    _min: DraStationMinAggregateOutputType | null
+    _max: DraStationMaxAggregateOutputType | null
+  }
+
+  export type DraStationAvgAggregateOutputType = {
+    position: number | null
+  }
+
+  export type DraStationSumAggregateOutputType = {
+    position: number | null
+  }
+
+  export type DraStationMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    position: number | null
+    createdAt: Date | null
+  }
+
+  export type DraStationMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    position: number | null
+    createdAt: Date | null
+  }
+
+  export type DraStationCountAggregateOutputType = {
+    id: number
+    name: number
+    position: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type DraStationAvgAggregateInputType = {
+    position?: true
+  }
+
+  export type DraStationSumAggregateInputType = {
+    position?: true
+  }
+
+  export type DraStationMinAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    createdAt?: true
+  }
+
+  export type DraStationMaxAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    createdAt?: true
+  }
+
+  export type DraStationCountAggregateInputType = {
+    id?: true
+    name?: true
+    position?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type DraStationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DraStation to aggregate.
+     */
+    where?: DraStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraStations to fetch.
+     */
+    orderBy?: DraStationOrderByWithRelationInput | DraStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DraStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DraStations
+    **/
+    _count?: true | DraStationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DraStationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DraStationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DraStationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DraStationMaxAggregateInputType
+  }
+
+  export type GetDraStationAggregateType<T extends DraStationAggregateArgs> = {
+        [P in keyof T & keyof AggregateDraStation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDraStation[P]>
+      : GetScalarType<T[P], AggregateDraStation[P]>
+  }
+
+
+
+
+  export type DraStationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DraStationWhereInput
+    orderBy?: DraStationOrderByWithAggregationInput | DraStationOrderByWithAggregationInput[]
+    by: DraStationScalarFieldEnum[] | DraStationScalarFieldEnum
+    having?: DraStationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DraStationCountAggregateInputType | true
+    _avg?: DraStationAvgAggregateInputType
+    _sum?: DraStationSumAggregateInputType
+    _min?: DraStationMinAggregateInputType
+    _max?: DraStationMaxAggregateInputType
+  }
+
+  export type DraStationGroupByOutputType = {
+    id: string
+    name: string
+    position: number
+    createdAt: Date
+    _count: DraStationCountAggregateOutputType | null
+    _avg: DraStationAvgAggregateOutputType | null
+    _sum: DraStationSumAggregateOutputType | null
+    _min: DraStationMinAggregateOutputType | null
+    _max: DraStationMaxAggregateOutputType | null
+  }
+
+  type GetDraStationGroupByPayload<T extends DraStationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DraStationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DraStationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DraStationGroupByOutputType[P]>
+            : GetScalarType<T[P], DraStationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DraStationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    position?: boolean
+    createdAt?: boolean
+    entries?: boolean | DraStation$entriesArgs<ExtArgs>
+    _count?: boolean | DraStationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["draStation"]>
+
+
+
+  export type DraStationSelectScalar = {
+    id?: boolean
+    name?: boolean
+    position?: boolean
+    createdAt?: boolean
+  }
+
+  export type DraStationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "position" | "createdAt", ExtArgs["result"]["draStation"]>
+  export type DraStationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    entries?: boolean | DraStation$entriesArgs<ExtArgs>
+    _count?: boolean | DraStationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $DraStationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DraStation"
+    objects: {
+      entries: Prisma.$DraEntryPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      position: number
+      createdAt: Date
+    }, ExtArgs["result"]["draStation"]>
+    composites: {}
+  }
+
+  type DraStationGetPayload<S extends boolean | null | undefined | DraStationDefaultArgs> = $Result.GetResult<Prisma.$DraStationPayload, S>
+
+  type DraStationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DraStationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DraStationCountAggregateInputType | true
+    }
+
+  export interface DraStationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DraStation'], meta: { name: 'DraStation' } }
+    /**
+     * Find zero or one DraStation that matches the filter.
+     * @param {DraStationFindUniqueArgs} args - Arguments to find a DraStation
+     * @example
+     * // Get one DraStation
+     * const draStation = await prisma.draStation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DraStationFindUniqueArgs>(args: SelectSubset<T, DraStationFindUniqueArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DraStation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DraStationFindUniqueOrThrowArgs} args - Arguments to find a DraStation
+     * @example
+     * // Get one DraStation
+     * const draStation = await prisma.draStation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DraStationFindUniqueOrThrowArgs>(args: SelectSubset<T, DraStationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DraStation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraStationFindFirstArgs} args - Arguments to find a DraStation
+     * @example
+     * // Get one DraStation
+     * const draStation = await prisma.draStation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DraStationFindFirstArgs>(args?: SelectSubset<T, DraStationFindFirstArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DraStation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraStationFindFirstOrThrowArgs} args - Arguments to find a DraStation
+     * @example
+     * // Get one DraStation
+     * const draStation = await prisma.draStation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DraStationFindFirstOrThrowArgs>(args?: SelectSubset<T, DraStationFindFirstOrThrowArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DraStations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraStationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DraStations
+     * const draStations = await prisma.draStation.findMany()
+     * 
+     * // Get first 10 DraStations
+     * const draStations = await prisma.draStation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const draStationWithIdOnly = await prisma.draStation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DraStationFindManyArgs>(args?: SelectSubset<T, DraStationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DraStation.
+     * @param {DraStationCreateArgs} args - Arguments to create a DraStation.
+     * @example
+     * // Create one DraStation
+     * const DraStation = await prisma.draStation.create({
+     *   data: {
+     *     // ... data to create a DraStation
+     *   }
+     * })
+     * 
+     */
+    create<T extends DraStationCreateArgs>(args: SelectSubset<T, DraStationCreateArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DraStations.
+     * @param {DraStationCreateManyArgs} args - Arguments to create many DraStations.
+     * @example
+     * // Create many DraStations
+     * const draStation = await prisma.draStation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DraStationCreateManyArgs>(args?: SelectSubset<T, DraStationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DraStation.
+     * @param {DraStationDeleteArgs} args - Arguments to delete one DraStation.
+     * @example
+     * // Delete one DraStation
+     * const DraStation = await prisma.draStation.delete({
+     *   where: {
+     *     // ... filter to delete one DraStation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DraStationDeleteArgs>(args: SelectSubset<T, DraStationDeleteArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DraStation.
+     * @param {DraStationUpdateArgs} args - Arguments to update one DraStation.
+     * @example
+     * // Update one DraStation
+     * const draStation = await prisma.draStation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DraStationUpdateArgs>(args: SelectSubset<T, DraStationUpdateArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DraStations.
+     * @param {DraStationDeleteManyArgs} args - Arguments to filter DraStations to delete.
+     * @example
+     * // Delete a few DraStations
+     * const { count } = await prisma.draStation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DraStationDeleteManyArgs>(args?: SelectSubset<T, DraStationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DraStations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraStationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DraStations
+     * const draStation = await prisma.draStation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DraStationUpdateManyArgs>(args: SelectSubset<T, DraStationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DraStation.
+     * @param {DraStationUpsertArgs} args - Arguments to update or create a DraStation.
+     * @example
+     * // Update or create a DraStation
+     * const draStation = await prisma.draStation.upsert({
+     *   create: {
+     *     // ... data to create a DraStation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DraStation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DraStationUpsertArgs>(args: SelectSubset<T, DraStationUpsertArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DraStations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraStationCountArgs} args - Arguments to filter DraStations to count.
+     * @example
+     * // Count the number of DraStations
+     * const count = await prisma.draStation.count({
+     *   where: {
+     *     // ... the filter for the DraStations we want to count
+     *   }
+     * })
+    **/
+    count<T extends DraStationCountArgs>(
+      args?: Subset<T, DraStationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DraStationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DraStation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraStationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DraStationAggregateArgs>(args: Subset<T, DraStationAggregateArgs>): Prisma.PrismaPromise<GetDraStationAggregateType<T>>
+
+    /**
+     * Group by DraStation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraStationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DraStationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DraStationGroupByArgs['orderBy'] }
+        : { orderBy?: DraStationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DraStationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDraStationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DraStation model
+   */
+  readonly fields: DraStationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DraStation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DraStationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    entries<T extends DraStation$entriesArgs<ExtArgs> = {}>(args?: Subset<T, DraStation$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DraStation model
+   */
+  interface DraStationFieldRefs {
+    readonly id: FieldRef<"DraStation", 'String'>
+    readonly name: FieldRef<"DraStation", 'String'>
+    readonly position: FieldRef<"DraStation", 'Int'>
+    readonly createdAt: FieldRef<"DraStation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DraStation findUnique
+   */
+  export type DraStationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * Filter, which DraStation to fetch.
+     */
+    where: DraStationWhereUniqueInput
+  }
+
+  /**
+   * DraStation findUniqueOrThrow
+   */
+  export type DraStationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * Filter, which DraStation to fetch.
+     */
+    where: DraStationWhereUniqueInput
+  }
+
+  /**
+   * DraStation findFirst
+   */
+  export type DraStationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * Filter, which DraStation to fetch.
+     */
+    where?: DraStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraStations to fetch.
+     */
+    orderBy?: DraStationOrderByWithRelationInput | DraStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DraStations.
+     */
+    cursor?: DraStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraStations.
+     */
+    distinct?: DraStationScalarFieldEnum | DraStationScalarFieldEnum[]
+  }
+
+  /**
+   * DraStation findFirstOrThrow
+   */
+  export type DraStationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * Filter, which DraStation to fetch.
+     */
+    where?: DraStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraStations to fetch.
+     */
+    orderBy?: DraStationOrderByWithRelationInput | DraStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DraStations.
+     */
+    cursor?: DraStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraStations.
+     */
+    distinct?: DraStationScalarFieldEnum | DraStationScalarFieldEnum[]
+  }
+
+  /**
+   * DraStation findMany
+   */
+  export type DraStationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * Filter, which DraStations to fetch.
+     */
+    where?: DraStationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraStations to fetch.
+     */
+    orderBy?: DraStationOrderByWithRelationInput | DraStationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DraStations.
+     */
+    cursor?: DraStationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraStations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraStations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraStations.
+     */
+    distinct?: DraStationScalarFieldEnum | DraStationScalarFieldEnum[]
+  }
+
+  /**
+   * DraStation create
+   */
+  export type DraStationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DraStation.
+     */
+    data: XOR<DraStationCreateInput, DraStationUncheckedCreateInput>
+  }
+
+  /**
+   * DraStation createMany
+   */
+  export type DraStationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DraStations.
+     */
+    data: DraStationCreateManyInput | DraStationCreateManyInput[]
+  }
+
+  /**
+   * DraStation update
+   */
+  export type DraStationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DraStation.
+     */
+    data: XOR<DraStationUpdateInput, DraStationUncheckedUpdateInput>
+    /**
+     * Choose, which DraStation to update.
+     */
+    where: DraStationWhereUniqueInput
+  }
+
+  /**
+   * DraStation updateMany
+   */
+  export type DraStationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DraStations.
+     */
+    data: XOR<DraStationUpdateManyMutationInput, DraStationUncheckedUpdateManyInput>
+    /**
+     * Filter which DraStations to update
+     */
+    where?: DraStationWhereInput
+    /**
+     * Limit how many DraStations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DraStation upsert
+   */
+  export type DraStationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DraStation to update in case it exists.
+     */
+    where: DraStationWhereUniqueInput
+    /**
+     * In case the DraStation found by the `where` argument doesn't exist, create a new DraStation with this data.
+     */
+    create: XOR<DraStationCreateInput, DraStationUncheckedCreateInput>
+    /**
+     * In case the DraStation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DraStationUpdateInput, DraStationUncheckedUpdateInput>
+  }
+
+  /**
+   * DraStation delete
+   */
+  export type DraStationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+    /**
+     * Filter which DraStation to delete.
+     */
+    where: DraStationWhereUniqueInput
+  }
+
+  /**
+   * DraStation deleteMany
+   */
+  export type DraStationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DraStations to delete
+     */
+    where?: DraStationWhereInput
+    /**
+     * Limit how many DraStations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DraStation.entries
+   */
+  export type DraStation$entriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    where?: DraEntryWhereInput
+    orderBy?: DraEntryOrderByWithRelationInput | DraEntryOrderByWithRelationInput[]
+    cursor?: DraEntryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DraEntryScalarFieldEnum | DraEntryScalarFieldEnum[]
+  }
+
+  /**
+   * DraStation without action
+   */
+  export type DraStationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraStation
+     */
+    select?: DraStationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraStation
+     */
+    omit?: DraStationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraStationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DraEntry
+   */
+
+  export type AggregateDraEntry = {
+    _count: DraEntryCountAggregateOutputType | null
+    _avg: DraEntryAvgAggregateOutputType | null
+    _sum: DraEntrySumAggregateOutputType | null
+    _min: DraEntryMinAggregateOutputType | null
+    _max: DraEntryMaxAggregateOutputType | null
+  }
+
+  export type DraEntryAvgAggregateOutputType = {
+    consumption: number | null
+    stock: number | null
+  }
+
+  export type DraEntrySumAggregateOutputType = {
+    consumption: number | null
+    stock: number | null
+  }
+
+  export type DraEntryMinAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    stationId: string | null
+    consumption: number | null
+    stock: number | null
+    remarks: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DraEntryMaxAggregateOutputType = {
+    id: string | null
+    date: Date | null
+    stationId: string | null
+    consumption: number | null
+    stock: number | null
+    remarks: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DraEntryCountAggregateOutputType = {
+    id: number
+    date: number
+    stationId: number
+    consumption: number
+    stock: number
+    remarks: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DraEntryAvgAggregateInputType = {
+    consumption?: true
+    stock?: true
+  }
+
+  export type DraEntrySumAggregateInputType = {
+    consumption?: true
+    stock?: true
+  }
+
+  export type DraEntryMinAggregateInputType = {
+    id?: true
+    date?: true
+    stationId?: true
+    consumption?: true
+    stock?: true
+    remarks?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DraEntryMaxAggregateInputType = {
+    id?: true
+    date?: true
+    stationId?: true
+    consumption?: true
+    stock?: true
+    remarks?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DraEntryCountAggregateInputType = {
+    id?: true
+    date?: true
+    stationId?: true
+    consumption?: true
+    stock?: true
+    remarks?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DraEntryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DraEntry to aggregate.
+     */
+    where?: DraEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraEntries to fetch.
+     */
+    orderBy?: DraEntryOrderByWithRelationInput | DraEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DraEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DraEntries
+    **/
+    _count?: true | DraEntryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DraEntryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DraEntrySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DraEntryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DraEntryMaxAggregateInputType
+  }
+
+  export type GetDraEntryAggregateType<T extends DraEntryAggregateArgs> = {
+        [P in keyof T & keyof AggregateDraEntry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDraEntry[P]>
+      : GetScalarType<T[P], AggregateDraEntry[P]>
+  }
+
+
+
+
+  export type DraEntryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DraEntryWhereInput
+    orderBy?: DraEntryOrderByWithAggregationInput | DraEntryOrderByWithAggregationInput[]
+    by: DraEntryScalarFieldEnum[] | DraEntryScalarFieldEnum
+    having?: DraEntryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DraEntryCountAggregateInputType | true
+    _avg?: DraEntryAvgAggregateInputType
+    _sum?: DraEntrySumAggregateInputType
+    _min?: DraEntryMinAggregateInputType
+    _max?: DraEntryMaxAggregateInputType
+  }
+
+  export type DraEntryGroupByOutputType = {
+    id: string
+    date: Date
+    stationId: string
+    consumption: number | null
+    stock: number | null
+    remarks: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: DraEntryCountAggregateOutputType | null
+    _avg: DraEntryAvgAggregateOutputType | null
+    _sum: DraEntrySumAggregateOutputType | null
+    _min: DraEntryMinAggregateOutputType | null
+    _max: DraEntryMaxAggregateOutputType | null
+  }
+
+  type GetDraEntryGroupByPayload<T extends DraEntryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DraEntryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DraEntryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DraEntryGroupByOutputType[P]>
+            : GetScalarType<T[P], DraEntryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DraEntrySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    date?: boolean
+    stationId?: boolean
+    consumption?: boolean
+    stock?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    station?: boolean | DraStationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["draEntry"]>
+
+
+
+  export type DraEntrySelectScalar = {
+    id?: boolean
+    date?: boolean
+    stationId?: boolean
+    consumption?: boolean
+    stock?: boolean
+    remarks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DraEntryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "date" | "stationId" | "consumption" | "stock" | "remarks" | "createdAt" | "updatedAt", ExtArgs["result"]["draEntry"]>
+  export type DraEntryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    station?: boolean | DraStationDefaultArgs<ExtArgs>
+  }
+
+  export type $DraEntryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DraEntry"
+    objects: {
+      station: Prisma.$DraStationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      date: Date
+      stationId: string
+      consumption: number | null
+      stock: number | null
+      remarks: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["draEntry"]>
+    composites: {}
+  }
+
+  type DraEntryGetPayload<S extends boolean | null | undefined | DraEntryDefaultArgs> = $Result.GetResult<Prisma.$DraEntryPayload, S>
+
+  type DraEntryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DraEntryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DraEntryCountAggregateInputType | true
+    }
+
+  export interface DraEntryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DraEntry'], meta: { name: 'DraEntry' } }
+    /**
+     * Find zero or one DraEntry that matches the filter.
+     * @param {DraEntryFindUniqueArgs} args - Arguments to find a DraEntry
+     * @example
+     * // Get one DraEntry
+     * const draEntry = await prisma.draEntry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DraEntryFindUniqueArgs>(args: SelectSubset<T, DraEntryFindUniqueArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DraEntry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DraEntryFindUniqueOrThrowArgs} args - Arguments to find a DraEntry
+     * @example
+     * // Get one DraEntry
+     * const draEntry = await prisma.draEntry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DraEntryFindUniqueOrThrowArgs>(args: SelectSubset<T, DraEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DraEntry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraEntryFindFirstArgs} args - Arguments to find a DraEntry
+     * @example
+     * // Get one DraEntry
+     * const draEntry = await prisma.draEntry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DraEntryFindFirstArgs>(args?: SelectSubset<T, DraEntryFindFirstArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DraEntry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraEntryFindFirstOrThrowArgs} args - Arguments to find a DraEntry
+     * @example
+     * // Get one DraEntry
+     * const draEntry = await prisma.draEntry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DraEntryFindFirstOrThrowArgs>(args?: SelectSubset<T, DraEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DraEntries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraEntryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DraEntries
+     * const draEntries = await prisma.draEntry.findMany()
+     * 
+     * // Get first 10 DraEntries
+     * const draEntries = await prisma.draEntry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const draEntryWithIdOnly = await prisma.draEntry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DraEntryFindManyArgs>(args?: SelectSubset<T, DraEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DraEntry.
+     * @param {DraEntryCreateArgs} args - Arguments to create a DraEntry.
+     * @example
+     * // Create one DraEntry
+     * const DraEntry = await prisma.draEntry.create({
+     *   data: {
+     *     // ... data to create a DraEntry
+     *   }
+     * })
+     * 
+     */
+    create<T extends DraEntryCreateArgs>(args: SelectSubset<T, DraEntryCreateArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DraEntries.
+     * @param {DraEntryCreateManyArgs} args - Arguments to create many DraEntries.
+     * @example
+     * // Create many DraEntries
+     * const draEntry = await prisma.draEntry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DraEntryCreateManyArgs>(args?: SelectSubset<T, DraEntryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DraEntry.
+     * @param {DraEntryDeleteArgs} args - Arguments to delete one DraEntry.
+     * @example
+     * // Delete one DraEntry
+     * const DraEntry = await prisma.draEntry.delete({
+     *   where: {
+     *     // ... filter to delete one DraEntry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DraEntryDeleteArgs>(args: SelectSubset<T, DraEntryDeleteArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DraEntry.
+     * @param {DraEntryUpdateArgs} args - Arguments to update one DraEntry.
+     * @example
+     * // Update one DraEntry
+     * const draEntry = await prisma.draEntry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DraEntryUpdateArgs>(args: SelectSubset<T, DraEntryUpdateArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DraEntries.
+     * @param {DraEntryDeleteManyArgs} args - Arguments to filter DraEntries to delete.
+     * @example
+     * // Delete a few DraEntries
+     * const { count } = await prisma.draEntry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DraEntryDeleteManyArgs>(args?: SelectSubset<T, DraEntryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DraEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraEntryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DraEntries
+     * const draEntry = await prisma.draEntry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DraEntryUpdateManyArgs>(args: SelectSubset<T, DraEntryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DraEntry.
+     * @param {DraEntryUpsertArgs} args - Arguments to update or create a DraEntry.
+     * @example
+     * // Update or create a DraEntry
+     * const draEntry = await prisma.draEntry.upsert({
+     *   create: {
+     *     // ... data to create a DraEntry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DraEntry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DraEntryUpsertArgs>(args: SelectSubset<T, DraEntryUpsertArgs<ExtArgs>>): Prisma__DraEntryClient<$Result.GetResult<Prisma.$DraEntryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DraEntries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraEntryCountArgs} args - Arguments to filter DraEntries to count.
+     * @example
+     * // Count the number of DraEntries
+     * const count = await prisma.draEntry.count({
+     *   where: {
+     *     // ... the filter for the DraEntries we want to count
+     *   }
+     * })
+    **/
+    count<T extends DraEntryCountArgs>(
+      args?: Subset<T, DraEntryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DraEntryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DraEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraEntryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DraEntryAggregateArgs>(args: Subset<T, DraEntryAggregateArgs>): Prisma.PrismaPromise<GetDraEntryAggregateType<T>>
+
+    /**
+     * Group by DraEntry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DraEntryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DraEntryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DraEntryGroupByArgs['orderBy'] }
+        : { orderBy?: DraEntryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DraEntryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDraEntryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DraEntry model
+   */
+  readonly fields: DraEntryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DraEntry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DraEntryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    station<T extends DraStationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DraStationDefaultArgs<ExtArgs>>): Prisma__DraStationClient<$Result.GetResult<Prisma.$DraStationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DraEntry model
+   */
+  interface DraEntryFieldRefs {
+    readonly id: FieldRef<"DraEntry", 'String'>
+    readonly date: FieldRef<"DraEntry", 'DateTime'>
+    readonly stationId: FieldRef<"DraEntry", 'String'>
+    readonly consumption: FieldRef<"DraEntry", 'Float'>
+    readonly stock: FieldRef<"DraEntry", 'Float'>
+    readonly remarks: FieldRef<"DraEntry", 'String'>
+    readonly createdAt: FieldRef<"DraEntry", 'DateTime'>
+    readonly updatedAt: FieldRef<"DraEntry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DraEntry findUnique
+   */
+  export type DraEntryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which DraEntry to fetch.
+     */
+    where: DraEntryWhereUniqueInput
+  }
+
+  /**
+   * DraEntry findUniqueOrThrow
+   */
+  export type DraEntryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which DraEntry to fetch.
+     */
+    where: DraEntryWhereUniqueInput
+  }
+
+  /**
+   * DraEntry findFirst
+   */
+  export type DraEntryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which DraEntry to fetch.
+     */
+    where?: DraEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraEntries to fetch.
+     */
+    orderBy?: DraEntryOrderByWithRelationInput | DraEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DraEntries.
+     */
+    cursor?: DraEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraEntries.
+     */
+    distinct?: DraEntryScalarFieldEnum | DraEntryScalarFieldEnum[]
+  }
+
+  /**
+   * DraEntry findFirstOrThrow
+   */
+  export type DraEntryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which DraEntry to fetch.
+     */
+    where?: DraEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraEntries to fetch.
+     */
+    orderBy?: DraEntryOrderByWithRelationInput | DraEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DraEntries.
+     */
+    cursor?: DraEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraEntries.
+     */
+    distinct?: DraEntryScalarFieldEnum | DraEntryScalarFieldEnum[]
+  }
+
+  /**
+   * DraEntry findMany
+   */
+  export type DraEntryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * Filter, which DraEntries to fetch.
+     */
+    where?: DraEntryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DraEntries to fetch.
+     */
+    orderBy?: DraEntryOrderByWithRelationInput | DraEntryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DraEntries.
+     */
+    cursor?: DraEntryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DraEntries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DraEntries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DraEntries.
+     */
+    distinct?: DraEntryScalarFieldEnum | DraEntryScalarFieldEnum[]
+  }
+
+  /**
+   * DraEntry create
+   */
+  export type DraEntryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DraEntry.
+     */
+    data: XOR<DraEntryCreateInput, DraEntryUncheckedCreateInput>
+  }
+
+  /**
+   * DraEntry createMany
+   */
+  export type DraEntryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DraEntries.
+     */
+    data: DraEntryCreateManyInput | DraEntryCreateManyInput[]
+  }
+
+  /**
+   * DraEntry update
+   */
+  export type DraEntryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DraEntry.
+     */
+    data: XOR<DraEntryUpdateInput, DraEntryUncheckedUpdateInput>
+    /**
+     * Choose, which DraEntry to update.
+     */
+    where: DraEntryWhereUniqueInput
+  }
+
+  /**
+   * DraEntry updateMany
+   */
+  export type DraEntryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DraEntries.
+     */
+    data: XOR<DraEntryUpdateManyMutationInput, DraEntryUncheckedUpdateManyInput>
+    /**
+     * Filter which DraEntries to update
+     */
+    where?: DraEntryWhereInput
+    /**
+     * Limit how many DraEntries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DraEntry upsert
+   */
+  export type DraEntryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DraEntry to update in case it exists.
+     */
+    where: DraEntryWhereUniqueInput
+    /**
+     * In case the DraEntry found by the `where` argument doesn't exist, create a new DraEntry with this data.
+     */
+    create: XOR<DraEntryCreateInput, DraEntryUncheckedCreateInput>
+    /**
+     * In case the DraEntry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DraEntryUpdateInput, DraEntryUncheckedUpdateInput>
+  }
+
+  /**
+   * DraEntry delete
+   */
+  export type DraEntryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+    /**
+     * Filter which DraEntry to delete.
+     */
+    where: DraEntryWhereUniqueInput
+  }
+
+  /**
+   * DraEntry deleteMany
+   */
+  export type DraEntryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DraEntries to delete
+     */
+    where?: DraEntryWhereInput
+    /**
+     * Limit how many DraEntries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DraEntry without action
+   */
+  export type DraEntryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DraEntry
+     */
+    select?: DraEntrySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DraEntry
+     */
+    omit?: DraEntryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DraEntryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -37112,6 +40439,28 @@ export namespace Prisma {
   };
 
   export type FuelInputEntryScalarFieldEnum = (typeof FuelInputEntryScalarFieldEnum)[keyof typeof FuelInputEntryScalarFieldEnum]
+
+
+  export const DraInputEntryScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    supplier: 'supplier',
+    vessel: 'vessel',
+    litres: 'litres',
+    status: 'status',
+    deliveryType: 'deliveryType',
+    temperature: 'temperature',
+    density: 'density',
+    apiGravity: 'apiGravity',
+    sulphurContent: 'sulphurContent',
+    qualityGrade: 'qualityGrade',
+    batchNo: 'batchNo',
+    receiptNo: 'receiptNo',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DraInputEntryScalarFieldEnum = (typeof DraInputEntryScalarFieldEnum)[keyof typeof DraInputEntryScalarFieldEnum]
 
 
   export const PipelineDataScalarFieldEnum: {
@@ -37558,6 +40907,30 @@ export namespace Prisma {
   export type FuelStationEntryScalarFieldEnum = (typeof FuelStationEntryScalarFieldEnum)[keyof typeof FuelStationEntryScalarFieldEnum]
 
 
+  export const DraStationScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    position: 'position',
+    createdAt: 'createdAt'
+  };
+
+  export type DraStationScalarFieldEnum = (typeof DraStationScalarFieldEnum)[keyof typeof DraStationScalarFieldEnum]
+
+
+  export const DraEntryScalarFieldEnum: {
+    id: 'id',
+    date: 'date',
+    stationId: 'stationId',
+    consumption: 'consumption',
+    stock: 'stock',
+    remarks: 'remarks',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DraEntryScalarFieldEnum = (typeof DraEntryScalarFieldEnum)[keyof typeof DraEntryScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -37920,6 +41293,115 @@ export namespace Prisma {
     receiptNo?: StringNullableWithAggregatesFilter<"FuelInputEntry"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FuelInputEntry"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FuelInputEntry"> | Date | string
+  }
+
+  export type DraInputEntryWhereInput = {
+    AND?: DraInputEntryWhereInput | DraInputEntryWhereInput[]
+    OR?: DraInputEntryWhereInput[]
+    NOT?: DraInputEntryWhereInput | DraInputEntryWhereInput[]
+    id?: IntFilter<"DraInputEntry"> | number
+    date?: DateTimeFilter<"DraInputEntry"> | Date | string
+    supplier?: StringNullableFilter<"DraInputEntry"> | string | null
+    vessel?: StringNullableFilter<"DraInputEntry"> | string | null
+    litres?: FloatFilter<"DraInputEntry"> | number
+    status?: StringFilter<"DraInputEntry"> | string
+    deliveryType?: StringFilter<"DraInputEntry"> | string
+    temperature?: FloatFilter<"DraInputEntry"> | number
+    density?: FloatFilter<"DraInputEntry"> | number
+    apiGravity?: FloatFilter<"DraInputEntry"> | number
+    sulphurContent?: FloatFilter<"DraInputEntry"> | number
+    qualityGrade?: StringFilter<"DraInputEntry"> | string
+    batchNo?: StringNullableFilter<"DraInputEntry"> | string | null
+    receiptNo?: StringNullableFilter<"DraInputEntry"> | string | null
+    createdAt?: DateTimeFilter<"DraInputEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"DraInputEntry"> | Date | string
+  }
+
+  export type DraInputEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    supplier?: SortOrderInput | SortOrder
+    vessel?: SortOrderInput | SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
+    temperature?: SortOrder
+    density?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrderInput | SortOrder
+    receiptNo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DraInputEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: DraInputEntryWhereInput | DraInputEntryWhereInput[]
+    OR?: DraInputEntryWhereInput[]
+    NOT?: DraInputEntryWhereInput | DraInputEntryWhereInput[]
+    date?: DateTimeFilter<"DraInputEntry"> | Date | string
+    supplier?: StringNullableFilter<"DraInputEntry"> | string | null
+    vessel?: StringNullableFilter<"DraInputEntry"> | string | null
+    litres?: FloatFilter<"DraInputEntry"> | number
+    status?: StringFilter<"DraInputEntry"> | string
+    deliveryType?: StringFilter<"DraInputEntry"> | string
+    temperature?: FloatFilter<"DraInputEntry"> | number
+    density?: FloatFilter<"DraInputEntry"> | number
+    apiGravity?: FloatFilter<"DraInputEntry"> | number
+    sulphurContent?: FloatFilter<"DraInputEntry"> | number
+    qualityGrade?: StringFilter<"DraInputEntry"> | string
+    batchNo?: StringNullableFilter<"DraInputEntry"> | string | null
+    receiptNo?: StringNullableFilter<"DraInputEntry"> | string | null
+    createdAt?: DateTimeFilter<"DraInputEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"DraInputEntry"> | Date | string
+  }, "id">
+
+  export type DraInputEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    supplier?: SortOrderInput | SortOrder
+    vessel?: SortOrderInput | SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
+    temperature?: SortOrder
+    density?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrderInput | SortOrder
+    receiptNo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DraInputEntryCountOrderByAggregateInput
+    _avg?: DraInputEntryAvgOrderByAggregateInput
+    _max?: DraInputEntryMaxOrderByAggregateInput
+    _min?: DraInputEntryMinOrderByAggregateInput
+    _sum?: DraInputEntrySumOrderByAggregateInput
+  }
+
+  export type DraInputEntryScalarWhereWithAggregatesInput = {
+    AND?: DraInputEntryScalarWhereWithAggregatesInput | DraInputEntryScalarWhereWithAggregatesInput[]
+    OR?: DraInputEntryScalarWhereWithAggregatesInput[]
+    NOT?: DraInputEntryScalarWhereWithAggregatesInput | DraInputEntryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"DraInputEntry"> | number
+    date?: DateTimeWithAggregatesFilter<"DraInputEntry"> | Date | string
+    supplier?: StringNullableWithAggregatesFilter<"DraInputEntry"> | string | null
+    vessel?: StringNullableWithAggregatesFilter<"DraInputEntry"> | string | null
+    litres?: FloatWithAggregatesFilter<"DraInputEntry"> | number
+    status?: StringWithAggregatesFilter<"DraInputEntry"> | string
+    deliveryType?: StringWithAggregatesFilter<"DraInputEntry"> | string
+    temperature?: FloatWithAggregatesFilter<"DraInputEntry"> | number
+    density?: FloatWithAggregatesFilter<"DraInputEntry"> | number
+    apiGravity?: FloatWithAggregatesFilter<"DraInputEntry"> | number
+    sulphurContent?: FloatWithAggregatesFilter<"DraInputEntry"> | number
+    qualityGrade?: StringWithAggregatesFilter<"DraInputEntry"> | string
+    batchNo?: StringNullableWithAggregatesFilter<"DraInputEntry"> | string | null
+    receiptNo?: StringNullableWithAggregatesFilter<"DraInputEntry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DraInputEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DraInputEntry"> | Date | string
   }
 
   export type PipelineDataWhereInput = {
@@ -40183,6 +43665,131 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"FuelStationEntry"> | Date | string
   }
 
+  export type DraStationWhereInput = {
+    AND?: DraStationWhereInput | DraStationWhereInput[]
+    OR?: DraStationWhereInput[]
+    NOT?: DraStationWhereInput | DraStationWhereInput[]
+    id?: StringFilter<"DraStation"> | string
+    name?: StringFilter<"DraStation"> | string
+    position?: IntFilter<"DraStation"> | number
+    createdAt?: DateTimeFilter<"DraStation"> | Date | string
+    entries?: DraEntryListRelationFilter
+  }
+
+  export type DraStationOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    entries?: DraEntryOrderByRelationAggregateInput
+  }
+
+  export type DraStationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: DraStationWhereInput | DraStationWhereInput[]
+    OR?: DraStationWhereInput[]
+    NOT?: DraStationWhereInput | DraStationWhereInput[]
+    position?: IntFilter<"DraStation"> | number
+    createdAt?: DateTimeFilter<"DraStation"> | Date | string
+    entries?: DraEntryListRelationFilter
+  }, "id" | "name">
+
+  export type DraStationOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    _count?: DraStationCountOrderByAggregateInput
+    _avg?: DraStationAvgOrderByAggregateInput
+    _max?: DraStationMaxOrderByAggregateInput
+    _min?: DraStationMinOrderByAggregateInput
+    _sum?: DraStationSumOrderByAggregateInput
+  }
+
+  export type DraStationScalarWhereWithAggregatesInput = {
+    AND?: DraStationScalarWhereWithAggregatesInput | DraStationScalarWhereWithAggregatesInput[]
+    OR?: DraStationScalarWhereWithAggregatesInput[]
+    NOT?: DraStationScalarWhereWithAggregatesInput | DraStationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DraStation"> | string
+    name?: StringWithAggregatesFilter<"DraStation"> | string
+    position?: IntWithAggregatesFilter<"DraStation"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DraStation"> | Date | string
+  }
+
+  export type DraEntryWhereInput = {
+    AND?: DraEntryWhereInput | DraEntryWhereInput[]
+    OR?: DraEntryWhereInput[]
+    NOT?: DraEntryWhereInput | DraEntryWhereInput[]
+    id?: StringFilter<"DraEntry"> | string
+    date?: DateTimeFilter<"DraEntry"> | Date | string
+    stationId?: StringFilter<"DraEntry"> | string
+    consumption?: FloatNullableFilter<"DraEntry"> | number | null
+    stock?: FloatNullableFilter<"DraEntry"> | number | null
+    remarks?: StringNullableFilter<"DraEntry"> | string | null
+    createdAt?: DateTimeFilter<"DraEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"DraEntry"> | Date | string
+    station?: XOR<DraStationScalarRelationFilter, DraStationWhereInput>
+  }
+
+  export type DraEntryOrderByWithRelationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrderInput | SortOrder
+    stock?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    station?: DraStationOrderByWithRelationInput
+  }
+
+  export type DraEntryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    date_stationId?: DraEntryDateStationIdCompoundUniqueInput
+    AND?: DraEntryWhereInput | DraEntryWhereInput[]
+    OR?: DraEntryWhereInput[]
+    NOT?: DraEntryWhereInput | DraEntryWhereInput[]
+    date?: DateTimeFilter<"DraEntry"> | Date | string
+    stationId?: StringFilter<"DraEntry"> | string
+    consumption?: FloatNullableFilter<"DraEntry"> | number | null
+    stock?: FloatNullableFilter<"DraEntry"> | number | null
+    remarks?: StringNullableFilter<"DraEntry"> | string | null
+    createdAt?: DateTimeFilter<"DraEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"DraEntry"> | Date | string
+    station?: XOR<DraStationScalarRelationFilter, DraStationWhereInput>
+  }, "id" | "date_stationId">
+
+  export type DraEntryOrderByWithAggregationInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrderInput | SortOrder
+    stock?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DraEntryCountOrderByAggregateInput
+    _avg?: DraEntryAvgOrderByAggregateInput
+    _max?: DraEntryMaxOrderByAggregateInput
+    _min?: DraEntryMinOrderByAggregateInput
+    _sum?: DraEntrySumOrderByAggregateInput
+  }
+
+  export type DraEntryScalarWhereWithAggregatesInput = {
+    AND?: DraEntryScalarWhereWithAggregatesInput | DraEntryScalarWhereWithAggregatesInput[]
+    OR?: DraEntryScalarWhereWithAggregatesInput[]
+    NOT?: DraEntryScalarWhereWithAggregatesInput | DraEntryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DraEntry"> | string
+    date?: DateTimeWithAggregatesFilter<"DraEntry"> | Date | string
+    stationId?: StringWithAggregatesFilter<"DraEntry"> | string
+    consumption?: FloatNullableWithAggregatesFilter<"DraEntry"> | number | null
+    stock?: FloatNullableWithAggregatesFilter<"DraEntry"> | number | null
+    remarks?: StringNullableWithAggregatesFilter<"DraEntry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"DraEntry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DraEntry"> | Date | string
+  }
+
   export type AccountCreateInput = {
     id?: string
     type: string
@@ -40492,6 +44099,135 @@ export namespace Prisma {
   }
 
   export type FuelInputEntryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
+    temperature?: FloatFieldUpdateOperationsInput | number
+    density?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraInputEntryCreateInput = {
+    date: Date | string
+    supplier?: string | null
+    vessel?: string | null
+    litres: number
+    status?: string
+    deliveryType?: string
+    temperature: number
+    density: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade?: string
+    batchNo?: string | null
+    receiptNo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraInputEntryUncheckedCreateInput = {
+    id?: number
+    date: Date | string
+    supplier?: string | null
+    vessel?: string | null
+    litres: number
+    status?: string
+    deliveryType?: string
+    temperature: number
+    density: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade?: string
+    batchNo?: string | null
+    receiptNo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraInputEntryUpdateInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
+    temperature?: FloatFieldUpdateOperationsInput | number
+    density?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraInputEntryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
+    temperature?: FloatFieldUpdateOperationsInput | number
+    density?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraInputEntryCreateManyInput = {
+    date: Date | string
+    supplier?: string | null
+    vessel?: string | null
+    litres: number
+    status?: string
+    deliveryType?: string
+    temperature: number
+    density: number
+    apiGravity: number
+    sulphurContent: number
+    qualityGrade?: string
+    batchNo?: string | null
+    receiptNo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraInputEntryUpdateManyMutationInput = {
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    supplier?: NullableStringFieldUpdateOperationsInput | string | null
+    vessel?: NullableStringFieldUpdateOperationsInput | string | null
+    litres?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    deliveryType?: StringFieldUpdateOperationsInput | string
+    temperature?: FloatFieldUpdateOperationsInput | number
+    density?: FloatFieldUpdateOperationsInput | number
+    apiGravity?: FloatFieldUpdateOperationsInput | number
+    sulphurContent?: FloatFieldUpdateOperationsInput | number
+    qualityGrade?: StringFieldUpdateOperationsInput | string
+    batchNo?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraInputEntryUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     supplier?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43034,6 +46770,135 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DraStationCreateInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+    entries?: DraEntryCreateNestedManyWithoutStationInput
+  }
+
+  export type DraStationUncheckedCreateInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+    entries?: DraEntryUncheckedCreateNestedManyWithoutStationInput
+  }
+
+  export type DraStationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: DraEntryUpdateManyWithoutStationNestedInput
+  }
+
+  export type DraStationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entries?: DraEntryUncheckedUpdateManyWithoutStationNestedInput
+  }
+
+  export type DraStationCreateManyInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+  }
+
+  export type DraStationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraStationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraEntryCreateInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    station: DraStationCreateNestedOneWithoutEntriesInput
+  }
+
+  export type DraEntryUncheckedCreateInput = {
+    id?: string
+    date: Date | string
+    stationId: string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraEntryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    station?: DraStationUpdateOneRequiredWithoutEntriesNestedInput
+  }
+
+  export type DraEntryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    stationId?: StringFieldUpdateOperationsInput | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraEntryCreateManyInput = {
+    id?: string
+    date: Date | string
+    stationId: string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraEntryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraEntryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    stationId?: StringFieldUpdateOperationsInput | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -43397,6 +47262,81 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type DraInputEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    supplier?: SortOrder
+    vessel?: SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
+    temperature?: SortOrder
+    density?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrder
+    receiptNo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DraInputEntryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    litres?: SortOrder
+    temperature?: SortOrder
+    density?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+  }
+
+  export type DraInputEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    supplier?: SortOrder
+    vessel?: SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
+    temperature?: SortOrder
+    density?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrder
+    receiptNo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DraInputEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    supplier?: SortOrder
+    vessel?: SortOrder
+    litres?: SortOrder
+    status?: SortOrder
+    deliveryType?: SortOrder
+    temperature?: SortOrder
+    density?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
+    qualityGrade?: SortOrder
+    batchNo?: SortOrder
+    receiptNo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DraInputEntrySumOrderByAggregateInput = {
+    id?: SortOrder
+    litres?: SortOrder
+    temperature?: SortOrder
+    density?: SortOrder
+    apiGravity?: SortOrder
+    sulphurContent?: SortOrder
   }
 
   export type PipelineDataCountOrderByAggregateInput = {
@@ -45046,6 +48986,98 @@ export namespace Prisma {
     stock?: SortOrder
   }
 
+  export type DraEntryListRelationFilter = {
+    every?: DraEntryWhereInput
+    some?: DraEntryWhereInput
+    none?: DraEntryWhereInput
+  }
+
+  export type DraEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DraStationCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DraStationAvgOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type DraStationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DraStationMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DraStationSumOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type DraStationScalarRelationFilter = {
+    is?: DraStationWhereInput
+    isNot?: DraStationWhereInput
+  }
+
+  export type DraEntryDateStationIdCompoundUniqueInput = {
+    date: Date | string
+    stationId: string
+  }
+
+  export type DraEntryCountOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrder
+    stock?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DraEntryAvgOrderByAggregateInput = {
+    consumption?: SortOrder
+    stock?: SortOrder
+  }
+
+  export type DraEntryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrder
+    stock?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DraEntryMinOrderByAggregateInput = {
+    id?: SortOrder
+    date?: SortOrder
+    stationId?: SortOrder
+    consumption?: SortOrder
+    stock?: SortOrder
+    remarks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DraEntrySumOrderByAggregateInput = {
+    consumption?: SortOrder
+    stock?: SortOrder
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -45982,6 +50014,62 @@ export namespace Prisma {
     upsert?: FuelStationUpsertWithoutEntriesInput
     connect?: FuelStationWhereUniqueInput
     update?: XOR<XOR<FuelStationUpdateToOneWithWhereWithoutEntriesInput, FuelStationUpdateWithoutEntriesInput>, FuelStationUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type DraEntryCreateNestedManyWithoutStationInput = {
+    create?: XOR<DraEntryCreateWithoutStationInput, DraEntryUncheckedCreateWithoutStationInput> | DraEntryCreateWithoutStationInput[] | DraEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: DraEntryCreateOrConnectWithoutStationInput | DraEntryCreateOrConnectWithoutStationInput[]
+    createMany?: DraEntryCreateManyStationInputEnvelope
+    connect?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+  }
+
+  export type DraEntryUncheckedCreateNestedManyWithoutStationInput = {
+    create?: XOR<DraEntryCreateWithoutStationInput, DraEntryUncheckedCreateWithoutStationInput> | DraEntryCreateWithoutStationInput[] | DraEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: DraEntryCreateOrConnectWithoutStationInput | DraEntryCreateOrConnectWithoutStationInput[]
+    createMany?: DraEntryCreateManyStationInputEnvelope
+    connect?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+  }
+
+  export type DraEntryUpdateManyWithoutStationNestedInput = {
+    create?: XOR<DraEntryCreateWithoutStationInput, DraEntryUncheckedCreateWithoutStationInput> | DraEntryCreateWithoutStationInput[] | DraEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: DraEntryCreateOrConnectWithoutStationInput | DraEntryCreateOrConnectWithoutStationInput[]
+    upsert?: DraEntryUpsertWithWhereUniqueWithoutStationInput | DraEntryUpsertWithWhereUniqueWithoutStationInput[]
+    createMany?: DraEntryCreateManyStationInputEnvelope
+    set?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    disconnect?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    delete?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    connect?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    update?: DraEntryUpdateWithWhereUniqueWithoutStationInput | DraEntryUpdateWithWhereUniqueWithoutStationInput[]
+    updateMany?: DraEntryUpdateManyWithWhereWithoutStationInput | DraEntryUpdateManyWithWhereWithoutStationInput[]
+    deleteMany?: DraEntryScalarWhereInput | DraEntryScalarWhereInput[]
+  }
+
+  export type DraEntryUncheckedUpdateManyWithoutStationNestedInput = {
+    create?: XOR<DraEntryCreateWithoutStationInput, DraEntryUncheckedCreateWithoutStationInput> | DraEntryCreateWithoutStationInput[] | DraEntryUncheckedCreateWithoutStationInput[]
+    connectOrCreate?: DraEntryCreateOrConnectWithoutStationInput | DraEntryCreateOrConnectWithoutStationInput[]
+    upsert?: DraEntryUpsertWithWhereUniqueWithoutStationInput | DraEntryUpsertWithWhereUniqueWithoutStationInput[]
+    createMany?: DraEntryCreateManyStationInputEnvelope
+    set?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    disconnect?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    delete?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    connect?: DraEntryWhereUniqueInput | DraEntryWhereUniqueInput[]
+    update?: DraEntryUpdateWithWhereUniqueWithoutStationInput | DraEntryUpdateWithWhereUniqueWithoutStationInput[]
+    updateMany?: DraEntryUpdateManyWithWhereWithoutStationInput | DraEntryUpdateManyWithWhereWithoutStationInput[]
+    deleteMany?: DraEntryScalarWhereInput | DraEntryScalarWhereInput[]
+  }
+
+  export type DraStationCreateNestedOneWithoutEntriesInput = {
+    create?: XOR<DraStationCreateWithoutEntriesInput, DraStationUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: DraStationCreateOrConnectWithoutEntriesInput
+    connect?: DraStationWhereUniqueInput
+  }
+
+  export type DraStationUpdateOneRequiredWithoutEntriesNestedInput = {
+    create?: XOR<DraStationCreateWithoutEntriesInput, DraStationUncheckedCreateWithoutEntriesInput>
+    connectOrCreate?: DraStationCreateOrConnectWithoutEntriesInput
+    upsert?: DraStationUpsertWithoutEntriesInput
+    connect?: DraStationWhereUniqueInput
+    update?: XOR<XOR<DraStationUpdateToOneWithWhereWithoutEntriesInput, DraStationUpdateWithoutEntriesInput>, DraStationUncheckedUpdateWithoutEntriesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -48223,6 +52311,109 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DraEntryCreateWithoutStationInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraEntryUncheckedCreateWithoutStationInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraEntryCreateOrConnectWithoutStationInput = {
+    where: DraEntryWhereUniqueInput
+    create: XOR<DraEntryCreateWithoutStationInput, DraEntryUncheckedCreateWithoutStationInput>
+  }
+
+  export type DraEntryCreateManyStationInputEnvelope = {
+    data: DraEntryCreateManyStationInput | DraEntryCreateManyStationInput[]
+  }
+
+  export type DraEntryUpsertWithWhereUniqueWithoutStationInput = {
+    where: DraEntryWhereUniqueInput
+    update: XOR<DraEntryUpdateWithoutStationInput, DraEntryUncheckedUpdateWithoutStationInput>
+    create: XOR<DraEntryCreateWithoutStationInput, DraEntryUncheckedCreateWithoutStationInput>
+  }
+
+  export type DraEntryUpdateWithWhereUniqueWithoutStationInput = {
+    where: DraEntryWhereUniqueInput
+    data: XOR<DraEntryUpdateWithoutStationInput, DraEntryUncheckedUpdateWithoutStationInput>
+  }
+
+  export type DraEntryUpdateManyWithWhereWithoutStationInput = {
+    where: DraEntryScalarWhereInput
+    data: XOR<DraEntryUpdateManyMutationInput, DraEntryUncheckedUpdateManyWithoutStationInput>
+  }
+
+  export type DraEntryScalarWhereInput = {
+    AND?: DraEntryScalarWhereInput | DraEntryScalarWhereInput[]
+    OR?: DraEntryScalarWhereInput[]
+    NOT?: DraEntryScalarWhereInput | DraEntryScalarWhereInput[]
+    id?: StringFilter<"DraEntry"> | string
+    date?: DateTimeFilter<"DraEntry"> | Date | string
+    stationId?: StringFilter<"DraEntry"> | string
+    consumption?: FloatNullableFilter<"DraEntry"> | number | null
+    stock?: FloatNullableFilter<"DraEntry"> | number | null
+    remarks?: StringNullableFilter<"DraEntry"> | string | null
+    createdAt?: DateTimeFilter<"DraEntry"> | Date | string
+    updatedAt?: DateTimeFilter<"DraEntry"> | Date | string
+  }
+
+  export type DraStationCreateWithoutEntriesInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+  }
+
+  export type DraStationUncheckedCreateWithoutEntriesInput = {
+    id?: string
+    name: string
+    position?: number
+    createdAt?: Date | string
+  }
+
+  export type DraStationCreateOrConnectWithoutEntriesInput = {
+    where: DraStationWhereUniqueInput
+    create: XOR<DraStationCreateWithoutEntriesInput, DraStationUncheckedCreateWithoutEntriesInput>
+  }
+
+  export type DraStationUpsertWithoutEntriesInput = {
+    update: XOR<DraStationUpdateWithoutEntriesInput, DraStationUncheckedUpdateWithoutEntriesInput>
+    create: XOR<DraStationCreateWithoutEntriesInput, DraStationUncheckedCreateWithoutEntriesInput>
+    where?: DraStationWhereInput
+  }
+
+  export type DraStationUpdateToOneWithWhereWithoutEntriesInput = {
+    where?: DraStationWhereInput
+    data: XOR<DraStationUpdateWithoutEntriesInput, DraStationUncheckedUpdateWithoutEntriesInput>
+  }
+
+  export type DraStationUpdateWithoutEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraStationUncheckedUpdateWithoutEntriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RoleUpdateWithoutUsersInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48928,6 +53119,46 @@ export namespace Prisma {
   }
 
   export type FuelStationEntryUncheckedUpdateManyWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraEntryCreateManyStationInput = {
+    id?: string
+    date: Date | string
+    consumption?: number | null
+    stock?: number | null
+    remarks?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DraEntryUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraEntryUncheckedUpdateWithoutStationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumption?: NullableFloatFieldUpdateOperationsInput | number | null
+    stock?: NullableFloatFieldUpdateOperationsInput | number | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DraEntryUncheckedUpdateManyWithoutStationInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
     consumption?: NullableFloatFieldUpdateOperationsInput | number | null

@@ -67,6 +67,25 @@ model FuelInputEntry {
   updatedAt      DateTime @updatedAt
 }
 
+model DraInputEntry {
+  id             Int      @id @default(autoincrement())
+  date           DateTime
+  supplier       String?
+  vessel         String?
+  litres         Float
+  status         String   @default("pending") // "pending" | "verified" | "rejected"
+  deliveryType   String   @default("vessel") // "vessel" | "truck"
+  temperature    Float
+  density        Float
+  apiGravity     Float
+  sulphurContent Float
+  qualityGrade   String   @default("A")
+  batchNo        String?
+  receiptNo      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
 model PipelineData {
   id                     Int      @id @default(autoincrement())
   date                   DateTime
@@ -517,6 +536,31 @@ model FuelStationEntry {
   remarks     String?     @db.Text
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  @@unique([date, stationId])
+  @@index([date])
+}
+
+//DRA Station & entry
+model DraStation {
+  id        String     @id @default(cuid())
+  name      String     @unique @db.NVarChar(100)
+  position  Int        @default(0)
+  createdAt DateTime   @default(now())
+  entries   DraEntry[]
+}
+
+/// One entry per day per station (Consumption + Stock)
+model DraEntry {
+  id          String     @id @default(cuid())
+  date        DateTime   @db.Date
+  stationId   String
+  station     DraStation @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  consumption Float?
+  stock       Float?
+  remarks     String?    @db.Text
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   @@unique([date, stationId])
   @@index([date])

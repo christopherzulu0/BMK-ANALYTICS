@@ -56,6 +56,7 @@ import {
   Trash2
 } from "lucide-react"
 import { toast } from "sonner"
+import DraInput from "@/components/RulerComponents/DraInput"
 
 
 // const invoices = [
@@ -239,6 +240,7 @@ export default function Home() {
               <TabsList className="bg-secondary flex-wrap h-auto gap-1 p-1">
                 {/* <TabsTrigger value="overview">Overview</TabsTrigger> */}
                 <TabsTrigger value="fuel-input">Fuel Input</TabsTrigger>
+                 <TabsTrigger value="DraConsumption">Dra Consumption</TabsTrigger>
                 {/* <TabsTrigger value="inventory">Inventory</TabsTrigger> */}
                 {/* <TabsTrigger value="maintenance">Maintenance</TabsTrigger> */}
                 <TabsTrigger value="shift">Shift Handover</TabsTrigger>
@@ -590,6 +592,9 @@ export default function Home() {
                  
                   <TabsContent value="fuel-input" className="space-y-6 mt-0">
                 <DailyFuelInput />
+              </TabsContent>
+               <TabsContent value="DraConsumption" className="space-y-6 mt-0">
+                <DraInput />
               </TabsContent>
 
                  {/* <TabsContent value="maintenance" className="space-y-6 mt-0">

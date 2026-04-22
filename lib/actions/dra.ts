@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache'
 
 // export async function getFuelInputs() {
 //   try {
-//     const inputs = await prisma.fuelInputEntry.findMany({
+//     const inputs = await prisma.DraInputEntry.findMany({
 //       orderBy: { date: 'desc' }
 //     })
 //     return inputs
@@ -31,7 +31,7 @@ import { revalidatePath } from 'next/cache'
 //   receiptNo?: string
 // }) {
 //   try {
-//     const input = await prisma.fuelInputEntry.create({
+//     const input = await prisma.DraInputEntry.create({
 //       data: {
 //         ...data,
 //         date: new Date(data.date),
@@ -50,7 +50,7 @@ import { revalidatePath } from 'next/cache'
 
 // export async function updateFuelInput(id: number, data: any) {
 //   try {
-//     const input = await prisma.fuelInputEntry.update({
+//     const input = await prisma.DraInputEntry.update({
 //       where: { id },
 //       data: {
 //         ...data,
@@ -67,7 +67,7 @@ import { revalidatePath } from 'next/cache'
 
 // export async function deleteFuelInput(id: number) {
 //   try {
-//     await prisma.fuelInputEntry.delete({ where: { id } })
+//     await prisma.DraInputEntry.delete({ where: { id } })
 //     revalidatePath('/RulerTracker')
 //     return { success: true }
 //   } catch (error) {
@@ -92,7 +92,7 @@ export async function getSuppliers() {
 
 export async function getFuelStations() {
   try {
-    return await prisma.fuelStation.findMany({
+    return await prisma.DraStation.findMany({
       orderBy: { position: 'asc' }
     })
   } catch (error) {
@@ -103,8 +103,8 @@ export async function getFuelStations() {
 
 export async function createFuelStation(name: string) {
   try {
-    const maxPos = await prisma.fuelStation.aggregate({ _max: { position: true } })
-    const station = await prisma.fuelStation.create({
+    const maxPos = await prisma.DraStation.aggregate({ _max: { position: true } })
+    const station = await prisma.DraStation.create({
       data: { name, position: (maxPos._max.position ?? -1) + 1 }
     })
     revalidatePath('/RulerTracker')
@@ -117,7 +117,7 @@ export async function createFuelStation(name: string) {
 
 export async function deleteFuelStation(id: string) {
   try {
-    await prisma.fuelStation.delete({ where: { id } })
+    await prisma.DraStation.delete({ where: { id } })
     revalidatePath('/RulerTracker')
     return { success: true }
   } catch (error) {
@@ -128,7 +128,7 @@ export async function deleteFuelStation(id: string) {
 
 export async function renameFuelStation(id: string, name: string) {
   try {
-    const station = await prisma.fuelStation.update({ where: { id }, data: { name } })
+    const station = await prisma.DraStation.update({ where: { id }, data: { name } })
     revalidatePath('/RulerTracker')
     return station
   } catch (error) {
@@ -141,7 +141,7 @@ export async function getMonthlyFuelData(year: number, month: number) {
   try {
     const start = new Date(Date.UTC(year, month - 1, 1))
     const end   = new Date(Date.UTC(year, month, 1))
-    return await prisma.fuelStationEntry.findMany({
+    return await prisma.DraEntry.findMany({
       where: { date: { gte: start, lt: end } },
       include: { station: true }
     })
@@ -160,7 +160,7 @@ export async function upsertFuelEntry(
 ) {
   try {
     const dateKey = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
-    return await prisma.fuelStationEntry.upsert({
+    return await prisma.DraEntry.upsert({
       where: { date_stationId: { date: dateKey, stationId } },
       update: { consumption, stock, remarks },
       create: { date: dateKey, stationId, consumption, stock, remarks }
