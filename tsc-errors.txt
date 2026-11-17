@@ -1,0 +1,33 @@
+
+app/Dispatch/tankage/page.tsx(296,5): error TS2322: Type 'any' is not assignable to type 'never'.
+app/Dispatch/tankage/page.tsx(848,11): error TS2719: Type 'Tank[]' is not assignable to type 'Tank[]'. Two different types with this name exist, but they are unrelated.
+app/Reports/Controllers/AnalyticsController.tsx(24,26): error TS18046: 'err' is of type 'unknown'.
+app/Reports/Controllers/AnalyticsController.tsx(38,25): error TS2322: Type 'import("C:/Users/Software Engineer/Videos/BMK-ANALYTICS-main/types/pipelineData").PipelineDataItem[]' is not assignable to type 'PipelineDataItem[]'.
+app/Reports/Controllers/FlowMeterReadingController.tsx(39,31): error TS2322: Type '{ data: ReadingsData[]; }' is not assignable to type 'IntrinsicAttributes'.
+app/Reports/Controllers/MetricsController.tsx(26,26): error TS18046: 'err' is of type 'unknown'.
+app/Reports/Controllers/MetricsController.tsx(40,21): error TS2322: Type 'import("C:/Users/Software Engineer/Videos/BMK-ANALYTICS-main/types/pipelineData").PipelineDataItem[]' is not assignable to type 'PipelineDataItem[]'.
+app/Reports/Controllers/PipelineController.tsx(25,26): error TS18046: 'err' is of type 'unknown'.
+app/Reports/Controllers/PipelineController.tsx(39,27): error TS2322: Type 'import("C:/Users/Software Engineer/Videos/BMK-ANALYTICS-main/types/pipelineData").PipelineDataItem[]' is not assignable to type 'PipelineDataItem[]'.
+app/Reports/page.tsx(85,47): error TS2322: Type 'Date | undefined' is not assignable to type 'DateArg<Date>'.
+app/Reports/page.tsx(85,77): error TS2322: Type 'Date | undefined' is not assignable to type 'DateArg<Date>'.
+components/AnalyticsPieChart.tsx(26,16): error TS2345: Argument of type '{ name: string; value: number; }[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+components/DailyReadings.tsx(79,13): error TS2345: Argument of type '(a: ReadingsData, b: ReadingsData) => number' is not assignable to parameter of type '(a: { reading: string; flowMeter1: number; originalReading: string; }, b: { reading: string; flowMeter1: number; originalReading: string; }) => number'.
+components/DailyReadings.tsx(89,21): error TS2345: Argument of type '({ reading: string; flowMeter1: number; originalReading: string; } | { reading: string; flowMeter1: number; })[]' is not assignable to parameter of type 'SetStateAction<ReadingsData[]>'.
+components/dashboard-overview.tsx(543,55): error TS7006: Parameter 'tank' implicitly has an 'any' type.
+components/date-range-picker.tsx(13,11): error TS2430: Interface 'DateRangePickerProps' incorrectly extends interface 'HTMLAttributes<HTMLDivElement>'.
+components/DOE/ui/command.tsx(53,9): error TS2322: Type '{ children: Element; className: string; showCloseButton: boolean; }' is not assignable to type 'IntrinsicAttributes & Omit<DialogContentProps & RefAttributes<HTMLDivElement>, "ref"> & RefAttributes<...>'.
+components/filters/advanced-filter.tsx(96,16): error TS2345: Argument of type '{ tanks: never[]; volumeRange: number[]; tempRange: number[]; waterContent: number[]; sgRange: number[]; status: string[]; } | { tanks: never[]; volumeRange: number[]; tempRange: number[]; waterContent: number[]; sgRange: number[]; status: string[]; } | { ...; }' is not assignable to parameter of type 'SetStateAction<FilterState>'.
+components/FlowRateGraph.tsx(25,18): error TS2345: Argument of type '{ date: any; totalFlowRate: number; }[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+components/FlowRateGraph.tsx(31,23): error TS7006: Parameter 'date' implicitly has an 'any' type.
+components/permissions/user-permissions.tsx(292,25): error TS2322: Type 'string | number' is not assignable to type 'string'.
+components/permissions/user-permissions.tsx(292,43): error TS2322: Type 'number' is not assignable to type 'string'.
+components/permissions/user-permissions.tsx(294,53): error TS2367: This comparison appears to be unintentional because the types 'string' and 'number' have no overlap.
+components/permissions/user-permissions.tsx(514,70): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+components/PipelineOperations.tsx(45,24): error TS2322: Type '{ isAnomaly: boolean; totalFlowRate: number; metricTons?: number | undefined; }[]' is not assignable to type '{ date: string; metricTons: number; }[]'.
+components/PipelineOperations.tsx(61,101): error TS2339: Property 'date' does not exist on type '{ isAnomaly: boolean; totalFlowRate: number; metricTons?: number | undefined; }'.
+components/recent-shipments.tsx(153,25): error TS7006: Parameter 'shipment' implicitly has an 'any' type.
+components/shipment-overview.tsx(73,28): error TS7006: Parameter 'shipment' implicitly has an 'any' type.
+prisma/seed-pipeline-data.ts(160,20): error TS2551: Property 'pipelineYearlyStats' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean 'pipelineDailyStats'?
+prisma/seed-pipeline-data.ts(175,18): error TS2353: Object literal may only specify known properties, and 'year' does not exist in type 'PipelineBatchWhereInput'.
+prisma/seed-pipeline-data.ts(181,13): error TS2353: Object literal may only specify known properties, and 'year' does not exist in type '((Without<PipelineBatchCreateInput, PipelineBatchUncheckedCreateInput> & PipelineBatchUncheckedCreateInput) | (Without<...> & PipelineBatchCreateInput)) & object'.
+

@@ -1,0 +1,6 @@
+/* D.O.E specific styles - scoped to avoid conflicts with global styles */
+/* CSS variables are inherited from globals.css - do not redefine global variables here */
+/* Only add D.O.E-specific component styles if needed */
+
+/* Removed conflicting CSS variable redefinitions that were overriding global styles */
+/* The navbar and other components depend on the CSS variables defined in globals.css */
