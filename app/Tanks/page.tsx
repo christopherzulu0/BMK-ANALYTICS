@@ -850,6 +850,10 @@ export default function Page() {
                       <TableCell className="text-right font-semibold">24 Days</TableCell>
                       <TableCell />
                       <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
                     </TableRow>
                     <TableRow>
                       {/* <TableCell className="font-semibold">Total Vol @20</TableCell> */}
