@@ -840,13 +840,24 @@ export default function Page() {
                       <TableCell />
                       <TableCell />
                     </TableRow>
-                    <TableRow>
+                     <TableRow>
                       <TableCell className="font-semibold">Pumpable Days</TableCell>
                       <TableCell />
                       {/* <TableCell />
                       <TableCell />
                       <TableCell />
                       <TableCell /> */}
+                      <TableCell className="text-right font-semibold">24 Days</TableCell>
+                      <TableCell />
+                      <TableCell />
+                    </TableRow>
+                    <TableRow>
+                      {/* <TableCell className="font-semibold">Total Vol @20</TableCell> */}
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalVol20C)}</TableCell>
                       <TableCell />
                       <TableCell />
@@ -873,6 +884,30 @@ export default function Page() {
                       <TableCell />
                       <TableCell />
                     </TableRow> */}
+
+
+                      <TableRow>
+                      {/* <TableCell className="font-semibold">TOTAL MTS</TableCell> */}
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell className="text-right font-semibold">{formatNumber(totals.totalMTS)}</TableCell>
+                      <TableCell />
+                    </TableRow>
+                    <TableRow>
+                      {/* <TableCell className="font-semibold">Op ULLAGE Volume@ 20°C</TableCell> */}
+                      <TableCell />
+                      <TableCell className="text-right font-semibold">{formatNumber(summary.opUllageVolM3)}</TableCell>
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                      <TableCell />
+                    </TableRow> 
                   </TableFooter>
                 </Table>
               </div>
