@@ -830,7 +830,7 @@ export default function Page() {
                   </TableBody>
                   <TableFooter>
                     <TableRow>
-                      <TableCell className="font-semibold">TOTAL VOLUME</TableCell>
+                      <TableCell className="font-semibold">Pumpable Volume @ 20°C </TableCell>
                       <TableCell />
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalVolume)}</TableCell>
                       <TableCell />
@@ -863,7 +863,7 @@ export default function Page() {
                       <TableCell />
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-semibold">@ 20°C</TableCell>
+                      <TableCell className="font-semibold">Op ULLAGE Volume@ 20°C</TableCell>
                       <TableCell />
                       <TableCell className="text-right font-semibold">{formatNumber(summary.opUllageVolM3)}</TableCell>
                       <TableCell />
@@ -960,7 +960,7 @@ export default function Page() {
                     </div>
                     <Separator />
                     <FieldNumber
-                      label="@ 20°C"
+                      label="Op ULLAGE Volume@ 20°C"
                       value={summary.opUllageVolM3}
                       onChange={(v) => setSummary({ ...summary, opUllageVolM3: v })}
                     />
