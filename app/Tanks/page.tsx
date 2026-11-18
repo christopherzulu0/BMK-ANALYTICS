@@ -858,6 +858,7 @@ export default function Page() {
                       <TableCell />
                       <TableCell />
                       <TableCell />
+                      <TableCell />
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalVol20C)}</TableCell>
                       <TableCell />
                       <TableCell />
@@ -889,6 +890,7 @@ export default function Page() {
                       <TableRow>
                       {/* <TableCell className="font-semibold">TOTAL MTS</TableCell> */}
                       <TableCell />
+                       <TableCell />
                       <TableCell />
                       <TableCell />
                       <TableCell />
@@ -897,8 +899,8 @@ export default function Page() {
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalMTS)}</TableCell>
                       <TableCell />
                     </TableRow>
-                    <TableRow>
-                      {/* <TableCell className="font-semibold">Op ULLAGE Volume@ 20°C</TableCell> */}
+                    {/* <TableRow>
+                      <TableCell className="font-semibold">Op ULLAGE Volume@ 20°C</TableCell>
                       <TableCell />
                       <TableCell className="text-right font-semibold">{formatNumber(summary.opUllageVolM3)}</TableCell>
                       <TableCell />
@@ -907,7 +909,7 @@ export default function Page() {
                       <TableCell />
                       <TableCell />
                       <TableCell />
-                    </TableRow> 
+                    </TableRow>  */}
                   </TableFooter>
                 </Table>
               </div>
