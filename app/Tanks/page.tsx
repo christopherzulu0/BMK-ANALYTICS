@@ -836,8 +836,8 @@ export default function Page() {
                       <TableCell />
                       <TableCell />
                       <TableCell />
-                      <TableCell />
-                      <TableCell />
+                      <TableCell className="text-right font-semibold">111,258.434</TableCell>
+                       <TableCell className="text-right font-semibold">91,333.923</TableCell>
                       <TableCell />
                     </TableRow>
                      <TableRow>
@@ -855,8 +855,8 @@ export default function Page() {
                       <TableCell />
                       <TableCell />
                     </TableRow>
-                    <TableRow>
-                      {/* <TableCell className="font-semibold">Total Vol @20</TableCell> */}
+                    {/* <TableRow>
+                      <TableCell className="font-semibold">Total Vol @20</TableCell>
                       <TableCell />
                       <TableCell />
                       <TableCell />
@@ -866,7 +866,7 @@ export default function Page() {
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalVol20C)}</TableCell>
                       <TableCell />
                       <TableCell />
-                    </TableRow>
+                    </TableRow> */}
                     {/* <TableRow>
                       <TableCell className="font-semibold">TOTAL MTS</TableCell>
                       <TableCell />
@@ -891,8 +891,8 @@ export default function Page() {
                     </TableRow> */}
 
 
-                      <TableRow>
-                      {/* <TableCell className="font-semibold">TOTAL MTS</TableCell> */}
+                      {/* <TableRow>
+                      <TableCell className="font-semibold">TOTAL MTS</TableCell>
                       <TableCell />
                        <TableCell />
                       <TableCell />
@@ -902,7 +902,7 @@ export default function Page() {
                       <TableCell />
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalMTS)}</TableCell>
                       <TableCell />
-                    </TableRow>
+                    </TableRow> */}
                     {/* <TableRow>
                       <TableCell className="font-semibold">Op ULLAGE Volume@ 20°C</TableCell>
                       <TableCell />
@@ -1000,11 +1000,11 @@ export default function Page() {
                       />
                     </div>
                     <Separator />
-                    <FieldNumber
+                    {/* <FieldNumber
                       label="Op ULLAGE Volume@ 20°C"
                       value={summary.opUllageVolM3}
                       onChange={(v) => setSummary({ ...summary, opUllageVolM3: v })}
-                    />
+                    /> */}
 
                     <div className="flex flex-wrap gap-2 pt-2">
                       <Button
