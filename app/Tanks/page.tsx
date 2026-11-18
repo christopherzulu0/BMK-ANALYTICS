@@ -830,7 +830,7 @@ export default function Page() {
                   </TableBody>
                   <TableFooter>
                     <TableRow>
-                      <TableCell className="font-semibold">Pumpable Volume @ 20°C </TableCell>
+                      <TableCell className="font-semibold">Total </TableCell>
                       <TableCell />
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalVolume)}</TableCell>
                       <TableCell />
@@ -841,17 +841,17 @@ export default function Page() {
                       <TableCell />
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-semibold">TOTAL VOL @ 20°C</TableCell>
+                      <TableCell className="font-semibold">Pumpable Days</TableCell>
+                      <TableCell />
+                      {/* <TableCell />
                       <TableCell />
                       <TableCell />
-                      <TableCell />
-                      <TableCell />
-                      <TableCell />
+                      <TableCell /> */}
                       <TableCell className="text-right font-semibold">{formatNumber(totals.totalVol20C)}</TableCell>
                       <TableCell />
                       <TableCell />
                     </TableRow>
-                    <TableRow>
+                    {/* <TableRow>
                       <TableCell className="font-semibold">TOTAL MTS</TableCell>
                       <TableCell />
                       <TableCell />
@@ -872,7 +872,7 @@ export default function Page() {
                       <TableCell />
                       <TableCell />
                       <TableCell />
-                    </TableRow>
+                    </TableRow> */}
                   </TableFooter>
                 </Table>
               </div>
